@@ -206,6 +206,26 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff0e1" stroke="#f5c9b4" id="Karnat
     
     <div id="map-tooltip"></div>
     
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all state paths
+        const statePaths = document.querySelectorAll('#chart .regions path');
+        
+        // Add click event to each state
+        statePaths.forEach(state => {
+            state.addEventListener('click', function() {
+                const stateName = this.id;
+                if (stateName) {
+                    // Convert to lowercase and replace spaces with hyphens
+                    const formattedStateName = stateName.toLowerCase().replace(/\s+/g, '-');
+                    // Redirect to the state page
+                    window.location.href = `/state/${formattedStateName}`;
+                }
+            });
+        });
+    });
+    </script>
+    
     <div id="providers-section" class="providers-container">
         <p>Select a state to view solar providers</p>
     </div>
