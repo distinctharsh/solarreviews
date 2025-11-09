@@ -156,11 +156,13 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 0 2rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.3s ease;
+            white-space: nowrap;
+            font-size: 1rem;
         }
         
         .search-btn:hover {
@@ -432,13 +434,6 @@
                 padding: 3rem 1rem;
             }
         }
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
         .btn-primary {
             background-color: var(--secondary-color);
             color: white;
@@ -496,6 +491,130 @@
             max-width: 600px;
             margin: 0 auto;
         }
+
+
+
+        .hero {
+            position: relative;
+            height: 80vh;
+            min-height: 600px;
+            background: url("{{ asset('images/solar-panel.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            padding: 2rem 5%;
+            margin-bottom: 4rem;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+            padding: 3rem;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%);
+            border-radius: 0 15px 15px 0;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            margin-left: -5%;
+            min-height: 70%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin: 0 0 2rem 0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .search-bar {
+            display: flex;
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1.2rem 2rem;
+            border: none;
+            font-size: 1.1rem;
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        
+        .search-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0 2.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            background: #2563eb;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                height: auto;
+                padding: 6rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                border-radius: 12px;
+            }
+            
+            .search-input,
+            .search-btn {
+                width: 100%;
+                padding: 1rem;
+                border-radius: 0;
+            }
+            
+            .search-btn {
+                border-radius: 0 0 12px 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -525,15 +644,14 @@
             </div>
         </div>
     </nav>
-
-    <!-- Hero Section -->
+    
     <section class="hero">
         <div class="hero-content">
             <h1>Find the Best Solar Solutions for Your Home</h1>
-            <p>Compare prices, read reviews, and connect with top-rated solar installers in your area.</p>
+            <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Enter your address or zip code...">
-                <button class="search-btn">Get Free Quotes</button>
+                <input type="text" class="search-input" placeholder="Enter your zip code">
+                <button class="search-btn">Calculate Now</button>
             </div>
         </div>
     </section>
