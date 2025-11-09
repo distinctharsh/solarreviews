@@ -18,12 +18,14 @@ class CompanyReview extends Model
         'review_text',
         'review_date',
         'source',
-        'is_featured'
+        'is_featured',
+        'is_approved'
     ];
 
     protected $casts = [
         'review_date' => 'date',
         'is_featured' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     public function company(): BelongsTo

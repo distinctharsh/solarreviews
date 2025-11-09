@@ -11,6 +11,36 @@ use Illuminate\Support\Facades\DB;
 class ReviewController extends Controller
 {
     /**
+     * Show the form for creating a new review.
+     */
+    public function create()
+    {
+        $companies = Company::orderBy('name')->get();
+        return view('admin.reviews.create', compact('companies'));
+    }
+
+    /**
+     * Store a newly created review in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'reviewer_name' => 'required|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+            'review_text' => 'required|string',
+            'review_date' => 'required|date',
+            'source' => 'required|string|max:50',
+            'is_featured' => 'boolean',
+        ]);
+
+        CompanyReview::create($validated);
+
+        return redirect()->route('admin.reviews.index')
+            ->with('success', 'Review created successfully.');
+    }
+
+    /**
      * Display a listing of the reviews.
      */
     public function index()

@@ -129,49 +129,18 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- State -->
             <div>
-                <x-input-label for="state" :value="__('State')" />
-                <select id="state" name="state" 
+                <x-input-label for="state_id" :value="__('State')" />
+                <select id="state_id" name="state_id" 
                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                    onchange="loadCitiesByState(this.value)">
+                    onchange="loadCities(this.value)">
                     <option value="">Select State</option>
-                    <option value="Andhra Pradesh" {{ old('state', $product->state ?? '') == 'Andhra Pradesh' ? 'selected' : '' }}>Andhra Pradesh</option>
-                    <option value="Arunachal Pradesh" {{ old('state', $product->state ?? '') == 'Arunachal Pradesh' ? 'selected' : '' }}>Arunachal Pradesh</option>
-                    <option value="Assam" {{ old('state', $product->state ?? '') == 'Assam' ? 'selected' : '' }}>Assam</option>
-                    <option value="Bihar" {{ old('state', $product->state ?? '') == 'Bihar' ? 'selected' : '' }}>Bihar</option>
-                    <option value="Chhattisgarh" {{ old('state', $product->state ?? '') == 'Chhattisgarh' ? 'selected' : '' }}>Chhattisgarh</option>
-                    <option value="Goa" {{ old('state', $product->state ?? '') == 'Goa' ? 'selected' : '' }}>Goa</option>
-                    <option value="Gujarat" {{ old('state', $product->state ?? '') == 'Gujarat' ? 'selected' : '' }}>Gujarat</option>
-                    <option value="Haryana" {{ old('state', $product->state ?? '') == 'Haryana' ? 'selected' : '' }}>Haryana</option>
-                    <option value="Himachal Pradesh" {{ old('state', $product->state ?? '') == 'Himachal Pradesh' ? 'selected' : '' }}>Himachal Pradesh</option>
-                    <option value="Jharkhand" {{ old('state', $product->state ?? '') == 'Jharkhand' ? 'selected' : '' }}>Jharkhand</option>
-                    <option value="Karnataka" {{ old('state', $product->state ?? '') == 'Karnataka' ? 'selected' : '' }}>Karnataka</option>
-                    <option value="Kerala" {{ old('state', $product->state ?? '') == 'Kerala' ? 'selected' : '' }}>Kerala</option>
-                    <option value="Madhya Pradesh" {{ old('state', $product->state ?? '') == 'Madhya Pradesh' ? 'selected' : '' }}>Madhya Pradesh</option>
-                    <option value="Maharashtra" {{ old('state', $product->state ?? '') == 'Maharashtra' ? 'selected' : '' }}>Maharashtra</option>
-                    <option value="Manipur" {{ old('state', $product->state ?? '') == 'Manipur' ? 'selected' : '' }}>Manipur</option>
-                    <option value="Meghalaya" {{ old('state', $product->state ?? '') == 'Meghalaya' ? 'selected' : '' }}>Meghalaya</option>
-                    <option value="Mizoram" {{ old('state', $product->state ?? '') == 'Mizoram' ? 'selected' : '' }}>Mizoram</option>
-                    <option value="Nagaland" {{ old('state', $product->state ?? '') == 'Nagaland' ? 'selected' : '' }}>Nagaland</option>
-                    <option value="Odisha" {{ old('state', $product->state ?? '') == 'Odisha' ? 'selected' : '' }}>Odisha</option>
-                    <option value="Punjab" {{ old('state', $product->state ?? '') == 'Punjab' ? 'selected' : '' }}>Punjab</option>
-                    <option value="Rajasthan" {{ old('state', $product->state ?? '') == 'Rajasthan' ? 'selected' : '' }}>Rajasthan</option>
-                    <option value="Sikkim" {{ old('state', $product->state ?? '') == 'Sikkim' ? 'selected' : '' }}>Sikkim</option>
-                    <option value="Tamil Nadu" {{ old('state', $product->state ?? '') == 'Tamil Nadu' ? 'selected' : '' }}>Tamil Nadu</option>
-                    <option value="Telangana" {{ old('state', $product->state ?? '') == 'Telangana' ? 'selected' : '' }}>Telangana</option>
-                    <option value="Tripura" {{ old('state', $product->state ?? '') == 'Tripura' ? 'selected' : '' }}>Tripura</option>
-                    <option value="Uttar Pradesh" {{ old('state', $product->state ?? '') == 'Uttar Pradesh' ? 'selected' : '' }}>Uttar Pradesh</option>
-                    <option value="Uttarakhand" {{ old('state', $product->state ?? '') == 'Uttarakhand' ? 'selected' : '' }}>Uttarakhand</option>
-                    <option value="West Bengal" {{ old('state', $product->state ?? '') == 'West Bengal' ? 'selected' : '' }}>West Bengal</option>
-                    <option value="Andaman and Nicobar Islands" {{ old('state', $product->state ?? '') == 'Andaman and Nicobar Islands' ? 'selected' : '' }}>Andaman and Nicobar Islands</option>
-                    <option value="Chandigarh" {{ old('state', $product->state ?? '') == 'Chandigarh' ? 'selected' : '' }}>Chandigarh</option>
-                    <option value="Dadra and Nagar Haveli and Daman and Diu" {{ old('state', $product->state ?? '') == 'Dadra and Nagar Haveli and Daman and Diu' ? 'selected' : '' }}>Dadra and Nagar Haveli and Daman and Diu</option>
-                    <option value="Delhi" {{ old('state', $product->state ?? '') == 'Delhi' ? 'selected' : '' }}>Delhi</option>
-                    <option value="Jammu and Kashmir" {{ old('state', $product->state ?? '') == 'Jammu and Kashmir' ? 'selected' : '' }}>Jammu and Kashmir</option>
-                    <option value="Ladakh" {{ old('state', $product->state ?? '') == 'Ladakh' ? 'selected' : '' }}>Ladakh</option>
-                    <option value="Lakshadweep" {{ old('state', $product->state ?? '') == 'Lakshadweep' ? 'selected' : '' }}>Lakshadweep</option>
-                    <option value="Puducherry" {{ old('state', $product->state ?? '') == 'Puducherry' ? 'selected' : '' }}>Puducherry</option>
+                    @foreach(\App\Models\State::orderBy('name')->get() as $state)
+                        <option value="{{ $state->id }}" {{ old('state_id', $product->state_id ?? '') == $state->id ? 'selected' : '' }}>
+                            {{ $state->name }}
+                        </option>
+                    @endforeach
                 </select>
-                <x-input-error :messages="$errors->get('state')" class="mt-2" />
+                <x-input-error :messages="$errors->get('state_id')" class="mt-2" />
             </div>
 
             <!-- City -->
@@ -258,11 +227,16 @@
         fetch(`/api/states/${stateId}/cities`)
             .then(response => response.json())
             .then(data => {
-                let options = '<option value="">Select City</option>';
+                citySelect.innerHTML = '<option value="">Select City</option>';
                 data.forEach(city => {
-                    options += `<option value="${city.id}">${city.name}</option>`;
+                    const option = new Option(city.name, city.id);
+                    citySelect.add(option);
                 });
-                citySelect.innerHTML = options;
+                
+                // If editing, select the previously saved city
+                @if(isset($product) && $product->city_id)
+                    citySelect.value = '{{ $product->city_id }}';
+                @endif
             })
             .catch(error => {
                 console.error('Error loading cities:', error);

@@ -8,21 +8,25 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Quick Actions -->
-            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="flex space-x-4">
+            <div class="mb-6">
+                <div class="flex flex-wrap gap-4">
                     <a href="{{ route('admin.companies.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m4 0h4m-4-4h4m-4-4h4m-4-4h4" />
+                        </svg>
                         Add Company
                     </a>
                     <a href="{{ route('admin.products.create') }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
                         Add Product
                     </a>
-                </div>
-                <div class="flex space-x-4">
-                    <a href="{{ route('admin.states.create') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        Add State
-                    </a>
-                    <a href="{{ route('admin.cities.create') }}" class="inline-flex items-center px-4 py-2 bg-pink-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-pink-700 focus:bg-pink-700 active:bg-pink-800 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        Add City
+                    <a href="{{ route('admin.reviews.create') }}" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                        Create Review
                     </a>
                 </div>
             </div>
@@ -40,7 +44,7 @@
                             </div>
                             <div class="ml-5">
                                 <p class="text-sm font-medium text-gray-500">Total Companies</p>
-                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_companies'] }}</p>
+                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_companies'] ?? 0 }}</p>
                             </div>
                         </div>
                     </div>
@@ -57,14 +61,14 @@
                             </div>
                             <div class="ml-5">
                                 <p class="text-sm font-medium text-gray-500">Total Products</p>
-                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_products'] }}</p>
+                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_products'] ?? 0 }}</p>
                             </div>
                         </div>
                     </div>
                 </a>
 
                 <!-- Total Reviews -->
-                <a href="#recent-reviews" class="block hover:opacity-90 transition-opacity">
+                <a href="{{ route('admin.reviews.index') }}" class="block hover:opacity-90 transition-opacity">
                     <div class="p-5 bg-white rounded-lg shadow">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
@@ -74,7 +78,7 @@
                             </div>
                             <div class="ml-5">
                                 <p class="text-sm font-medium text-gray-500">Total Reviews</p>
-                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_reviews'] }}</p>
+                                <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_reviews'] ?? 0 }}</p>
                             </div>
                         </div>
                     </div>
@@ -83,14 +87,14 @@
                 <!-- Total Users -->
                 <div class="p-5 bg-white rounded-lg shadow">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <div class="p-3 rounded-full bg-red-100 text-red-600">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                             </svg>
                         </div>
                         <div class="ml-5">
                             <p class="text-sm font-medium text-gray-500">Total Users</p>
-                            <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_users'] }}</p>
+                            <p class="text-2xl font-semibold text-gray-700">{{ $stats['total_users'] ?? 0 }}</p>
                         </div>
                     </div>
                 </div>
