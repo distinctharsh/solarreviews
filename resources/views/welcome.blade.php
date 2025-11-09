@@ -169,6 +169,115 @@
             background-color: var(--secondary-color);
         }
         
+        /* Products Section */
+        .products-section {
+            padding: 5rem 0;
+            background-color: #f8fafc;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-content {
+            padding: 1.5rem;
+        }
+        
+        .product-content h3 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin: 0 0 1rem 0;
+        }
+        
+        .product-content p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .product-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .product-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+        
         /* Categories Section */
         .section {
             padding: 5rem 1rem;
@@ -664,6 +773,54 @@
             <div class="search-bar">
                 <input type="text" class="search-input" placeholder="Enter your zip code">
                 <button class="search-btn">Calculate Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Unbiased & Unfiltered Reviews</h2>
+                <p>Find expert reviews of the solar equipment you need</p>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Panel Card -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ asset('images/panels.png') }}" alt="Solar Panels">
+                    </div>
+                    <div class="product-content">
+                        <h3>Solar Panels</h3>
+                        <p>Compare efficiency, prices, and reviews of solar panels from top manufacturers.</p>
+                        <a href="#" class="product-btn">Compare Now</a>
+                    </div>
+                </div>
+                
+                <!-- Battery Card -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries">
+                    </div>
+                    <div class="product-content">
+                        <h3>Solar Batteries</h3>
+                        <p>Compare battery capacity, lifespan, and user ratings for the best energy storage.</p>
+                        <a href="#" class="product-btn">Compare Now</a>
+                    </div>
+                </div>
+                
+                <!-- Inverter Card -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters">
+                    </div>
+                    <div class="product-content">
+                        <h3>Solar Inverters</h3>
+                        <p>Compare performance and reliability of inverters from leading brands.</p>
+                        <a href="#" class="product-btn">Compare Now</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
