@@ -1020,20 +1020,18 @@
                 font-size: 1.8rem;
             }
         }
-
-
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="/" class="logo">
+            <a href="http://solarreviews.in" class="logo">
                 <i class="fas fa-solar-panel"></i>
                 SolarReviews
             </a>
             <div class="nav-links">
-                <a href="/reviews">Reviews</a>
+                <a href="/solar-calculator">Solar Calculator</a>
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}">Dashboard</a>
@@ -1050,7 +1048,7 @@
     
     <section class="hero">
         <div class="hero-content">
-            <h1 class="text-white">Find the Best Solar Solutions for Your Home</h1>
+            <h1 class="text-white">Find the Best Solar Solutions for Your Dashboard</h1>
             <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
             <div class="search-bar">
                 <input type="text" class="search-input" placeholder="Enter your zip code">
@@ -1132,7 +1130,7 @@
                     <h2>The most accurate solar panel cost and savings calculator available</h2>
                     <p class="description">
                         Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
-                        Homeowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
+                        Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
                         the economics of installing solar panels on their homes.
                     </p>
                     <a href="#" class="solar-btn">Use Our Solar Calculator</a>

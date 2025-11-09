@@ -1,43 +1,54 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\StateController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-// Public routes
+// Frontend Routes
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
+});
 
-// State Map
-Route::get('/state-map', function () {
-    return view('state-map');
-})->name('state.map');
-
-// State Details
-Route::get('/state/{state}', function ($state) {
-    // Convert URL-encoded state name back to normal format
-    $stateName = str_replace('-', ' ', $state);
-    $stateName = ucwords($stateName);
+// Admin Routes
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'App\Http\Middleware\Admin'])
+    ->namespace('App\Http\Controllers\Admin')
+    ->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    return view('state-details', [
-        'stateName' => $stateName
-    ]);
-})->where('state', '[A-Za-z-]+')->name('state.details');
+    // Companies
+    Route::resource('companies', CompanyController::class);
+    
+    // Products
+    Route::resource('products', ProductController::class);
+    
+    // Reviews
+    Route::resource('reviews', ReviewController::class);
+    Route::post('reviews/{review}/toggle-featured', [ReviewController::class, 'toggleFeatured'])->name('reviews.toggle-featured');
+    
+    // States
+    Route::resource('states', StateController::class)->except(['show']);
+    
+    // Cities
+    Route::resource('cities', CityController::class)->except(['show']);
+});
 
-// Auth routes
-require __DIR__.'/auth.php';
+// User Dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-// Admin routes
-require __DIR__.'/admin.php';
-
-// User dashboard (if needed)
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    // Profile routes
+// Profile Routes
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+require __DIR__.'/auth.php';

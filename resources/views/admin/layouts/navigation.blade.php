@@ -15,14 +15,17 @@
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                        {{ __('Products') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-                        {{ __('Categories') }}
+                    <x-nav-link :href="route('admin.companies.index')" :active="request()->routeIs('admin.companies.*')">
+                        {{ __('Companies') }}
                     </x-nav-link>
                     <x-nav-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')">
                         {{ __('Reviews') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.states.index')" :active="request()->routeIs('admin.states.*')">
+                        {{ __('States') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.cities.index')" :active="request()->routeIs('admin.cities.*')">
+                        {{ __('Cities') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -75,14 +78,17 @@
             <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                {{ __('Products') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
-                {{ __('Categories') }}
+            <x-responsive-nav-link :href="route('admin.companies.index')" :active="request()->routeIs('admin.companies.*')">
+                {{ __('Companies') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.reviews.index')" :active="request()->routeIs('admin.reviews.*')">
                 {{ __('Reviews') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.states.index')" :active="request()->routeIs('admin.states.*')">
+                {{ __('States') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.cities.index')" :active="request()->routeIs('admin.cities.*')">
+                {{ __('Cities') }}
             </x-responsive-nav-link>
         </div>
 

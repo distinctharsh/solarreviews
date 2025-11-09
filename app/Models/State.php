@@ -13,12 +13,30 @@ class State extends Model
     protected $fillable = [
         'name',
         'code',
+        'slug',
+        'description',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * Get all cities for the state.
+     */
+    public function cities(): HasMany
+    {
+        return $this->hasMany(City::class);
+    }
+
+    /**
+     * Get all companies in this state through cities.
+     */
+    public function companies()
+    {
+        return $this->hasManyThrough(Company::class, City::class);
+    }
 
     public function productVariants(): HasMany
     {
