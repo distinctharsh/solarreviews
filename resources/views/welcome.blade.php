@@ -797,50 +797,61 @@
 
 
         .testimonial-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2.5rem;
-}
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
 
-.testimonial-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-}
+        .testimonial-card {
+            background-color: rgb(241 248 254);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 350px;
+            position: relative;
+        }
 
-.testimonial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
 
-.testimonial-card h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #000;
-}
+        .testimonial-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
 
-.testimonial-card .stars {
-    color: #ffb400;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-}
+        .testimonial-card .stars {
+            color: #ffb400;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
 
-.testimonial-card p {
-    font-size: 0.95rem;
-    color: #333;
-    line-height: 1.6;
-}
+        .testimonial-card p {
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
 
-.google-logo {
-    width: 28px;
-    height: 28px;
-    margin: 1rem auto 1rem auto;
-}
+        .google-logo {
+            width: 28px;
+            height: 28px;
+            margin: 0 auto;
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
 
 
@@ -923,8 +934,28 @@
         </div>
     </section>
 
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to Go Solar?</h2>
+        <p>Join thousands of homeowners who are saving money with solar energy.</p>
+        <a href="/get-quotes" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
+    </section>
+
+    <!-- State Map Section -->
+    <section class="section" id="state-map-section" style="padding: 4rem 0; ">
+        <div class="container">
+            <div class="section-title" style="margin-bottom: 2.5rem; text-align: center;">
+                <h2 style="font-size: 2.25rem; color: #1e40af; margin-bottom: 1rem; font-weight: 700;">Find Solar Solutions in Your State</h2>
+                <p style="color: #4b5563; max-width: 600px; margin: 0 auto;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
+            </div>
+            
+            <!-- India Map Component -->
+            @include('components.india-map')
+        </div>
+    </section>
+
     <!-- Testimonials Section -->
-    <section id="testimonials" style="padding: 4rem 0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+    <section id="testimonials" style="padding: 4rem 0; background-color: white;">
         <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; text-align: center;">
             <a href="#" style="color: #007bff; font-weight: 500; text-decoration: none;">
                 See What Others Are Saying About Us
@@ -969,26 +1000,6 @@
                     <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <h2>Ready to Go Solar?</h2>
-        <p>Join thousands of homeowners who are saving money with solar energy.</p>
-        <a href="/get-quotes" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
-    </section>
-
-    <!-- State Map Section -->
-    <section class="section" id="state-map-section" style="padding: 4rem 0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
-        <div class="container">
-            <div class="section-title" style="margin-bottom: 2.5rem; text-align: center;">
-                <h2 style="font-size: 2.25rem; color: #1e40af; margin-bottom: 1rem; font-weight: 700;">Find Solar Solutions in Your State</h2>
-                <p style="color: #4b5563; max-width: 600px; margin: 0 auto;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
-            </div>
-            
-            <!-- India Map Component -->
-            @include('components.india-map')
         </div>
     </section>
 
