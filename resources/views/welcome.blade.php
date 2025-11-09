@@ -695,7 +695,6 @@
             position: relative;
             z-index: 2;
             padding: 2.5rem;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%);
             border-radius: 0 15px 15px 0;
             backdrop-filter: blur(5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -810,6 +809,7 @@
     padding: 2rem;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
 }
 
 .testimonial-card:hover {
@@ -839,7 +839,7 @@
 .google-logo {
     width: 28px;
     height: 28px;
-    margin-top: 1.5rem;
+    margin: 1rem auto 1rem auto;
 }
 
 
