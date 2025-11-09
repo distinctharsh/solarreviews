@@ -496,8 +496,8 @@
 
         .hero {
             position: relative;
-            height: 80vh;
-            min-height: 600px;
+            height: calc(100vh - 80px);
+            min-height: 500px;
             background: url("{{ asset('images/solar-panel.jpg') }}");
             background-size: cover;
             background-position: center;
@@ -506,8 +506,10 @@
             align-items: center;
             justify-content: flex-start;
             color: white;
-            padding: 2rem 5%;
-            margin-bottom: 4rem;
+            padding: 0 5%;
+            margin: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
         
         .hero::before {
@@ -523,9 +525,10 @@
         
         .hero-content {
             max-width: 600px;
+            width: 100%;
             position: relative;
             z-index: 2;
-            padding: 3rem;
+            padding: 2.5rem;
             background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%);
             border-radius: 0 15px 15px 0;
             backdrop-filter: blur(5px);
@@ -533,18 +536,27 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: left;
             margin-left: -5%;
-            min-height: 70%;
+            min-height: 60%;
+            max-height: 80%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            overflow: visible;
+            box-sizing: border-box;
         }
         
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             line-height: 1.2;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Ensure no horizontal scroll */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         .hero p {
