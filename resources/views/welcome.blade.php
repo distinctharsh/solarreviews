@@ -171,104 +171,160 @@
         
         /* Products Section */
         .products-section {
-            padding: 5rem 0;
-            background-color: #f8fafc;
+            padding: 4rem 0;
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1140px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
         }
         
         .section-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
         }
         
         .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            font-size: 2.25rem;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-header h2:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .section-header p {
-            color: #6b7280;
+            color: #64748b;
             font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 700px;
+            margin: 1rem auto 0;
+            line-height: 1.7;
         }
         
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 0 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 0 0.5rem;
         }
         
         .product-card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #e2e8f0;
         }
         
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
         }
         
         .product-image {
             height: 200px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .product-image:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-card:hover .product-image:before {
+            opacity: 1;
         }
         
         .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             transition: transform 0.5s ease;
+            mix-blend-mode: multiply;
         }
         
         .product-card:hover .product-image img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         
         .product-content {
-            padding: 1.5rem;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            border-top: 1px solid #f1f5f9;
         }
         
         .product-content h3 {
-            font-size: 1.5rem;
+            font-size: 1.375rem;
             color: #1e293b;
             margin: 0 0 1rem 0;
+            font-weight: 600;
         }
         
         .product-content p {
             color: #64748b;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            margin-bottom: 1.75rem;
+            line-height: 1.7;
+            flex-grow: 1;
+            font-size: 0.975rem;
         }
         
         .product-btn {
             display: inline-block;
             background-color: var(--primary-color);
             color: white;
-            padding: 0.6rem 1.5rem;
+            padding: 0.7rem 1.75rem;
             border-radius: 6px;
             text-decoration: none;
             font-weight: 500;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: auto;
+            align-self: flex-start;
+            font-size: 0.95rem;
+            border: 1px solid transparent;
         }
         
         .product-btn:hover {
             background-color: var(--secondary-color);
-        }
-        
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: 1fr;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                 max-width: 500px;
                 margin: 0 auto;
             }
@@ -777,12 +833,12 @@
         </div>
     </section>
 
-    <!-- Products Section -->
+    <!-- Products Comparison Section -->
     <section class="products-section">
         <div class="container">
             <div class="section-header">
                 <h2>Unbiased & Unfiltered Reviews</h2>
-                <p>Find expert reviews of the solar equipment you need</p>
+                <p>Compare and find the best solar equipment based on expert analysis and real user reviews</p>
             </div>
             
             <div class="products-grid">
@@ -793,8 +849,6 @@
                     </div>
                     <div class="product-content">
                         <h3>Solar Panels</h3>
-                        <p>Compare efficiency, prices, and reviews of solar panels from top manufacturers.</p>
-                        <a href="#" class="product-btn">Compare Now</a>
                     </div>
                 </div>
                 
@@ -805,8 +859,6 @@
                     </div>
                     <div class="product-content">
                         <h3>Solar Batteries</h3>
-                        <p>Compare battery capacity, lifespan, and user ratings for the best energy storage.</p>
-                        <a href="#" class="product-btn">Compare Now</a>
                     </div>
                 </div>
                 
@@ -817,8 +869,6 @@
                     </div>
                     <div class="product-content">
                         <h3>Solar Inverters</h3>
-                        <p>Compare performance and reliability of inverters from leading brands.</p>
-                        <a href="#" class="product-btn">Compare Now</a>
                     </div>
                 </div>
             </div>
