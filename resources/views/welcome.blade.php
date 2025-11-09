@@ -696,9 +696,9 @@
             z-index: 2;
             padding: 2.5rem;
             border-radius: 0 15px 15px 0;
-            backdrop-filter: blur(5px);
+            /* backdrop-filter: blur(5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1); */
             text-align: left;
             margin-left: -5%;
             min-height: 60%;
@@ -854,6 +854,173 @@
         }
 
 
+        .solar-section {
+            padding: 5rem 0;
+            background: #fff;
+        }
+
+        .solar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .solar-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .solar-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .solar-text .small-heading {
+            color: #1e73be;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .solar-text h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000;
+            line-height: 1.3;
+        }
+
+        .solar-text .description {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .solar-btn {
+            display: inline-block;
+            background-color: #0056d2;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .solar-btn:hover {
+            background-color: #003f9e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .solar-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .solar-image img {
+                max-width: 100%;
+            }
+
+            .solar-text {
+                margin-top: 2rem;
+            }
+        }
+
+        .reviews-hero {
+            position: relative;
+            background: url('{{ asset("images/couple-on-computer.jpg") }}') no-repeat center center/cover;
+            color: #000;
+            padding: 8rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .reviews-hero .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* background: rgba(255,255,255,0.6);  */
+            backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+
+        .reviews-hero .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-content .small-heading {
+            color: #1e73be;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .hero-content h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            line-height: 1.3;
+        }
+
+        .hero-content .description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #222;
+            margin-bottom: 2rem;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background-color: #0056d2;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            background-color: #003f9e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .reviews-hero {
+                text-align: center;
+                justify-content: center;
+                padding: 6rem 1.5rem;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+        }
+
 
     </style>
 </head>
@@ -883,7 +1050,7 @@
     
     <section class="hero">
         <div class="hero-content">
-            <h1>Find the Best Solar Solutions for Your Home</h1>
+            <h1 class="text-white">Find the Best Solar Solutions for Your Home</h1>
             <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
             <div class="search-bar">
                 <input type="text" class="search-input" placeholder="Enter your zip code">
@@ -929,6 +1096,46 @@
                     <div class="product-content">
                         <h3>Solar Inverters</h3>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    
+    <section class="reviews-hero">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <p class="small-heading">Real People, Real Reviews</p>
+                <h1>Unbiased consumer reviews of almost all solar companies in India</h1>
+                <p class="description">
+                    SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
+                    to help you identify the best solar panel installation companies in your area.
+                </p>
+                <a href="#" class="hero-btn">See Reviews of Companies Near You</a>
+            </div>
+        </div>
+    </section>
+    <section id="solar-calculator" class="solar-section">
+        <div class="container">
+            <div class="solar-content">
+                <!-- Left Side - Image -->
+                <div class="solar-image">
+                    <img src="{{ asset('images/electric-bill-chart.png') }}" alt="Monthly Electric Bill Chart">
+                </div>
+
+                <!-- Right Side - Text -->
+                <div class="solar-text">
+                    <p class="small-heading">Solar Calculator</p>
+                    <h2>The most accurate solar panel cost and savings calculator available</h2>
+                    <p class="description">
+                        Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
+                        Homeowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
+                        the economics of installing solar panels on their homes.
+                    </p>
+                    <a href="#" class="solar-btn">Use Our Solar Calculator</a>
                 </div>
             </div>
         </div>
