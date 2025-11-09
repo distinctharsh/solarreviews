@@ -30,10 +30,11 @@
         .navbar {
             background-color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem 2rem;
+            padding: 1.5rem 1.5rem 1.5rem 1.5rem;
             position: sticky;
             top: 0;
             z-index: 1000;
+            
         }
         
         .nav-container {
@@ -792,6 +793,57 @@
                 border-radius: 0 0 12px 12px;
             }
         }
+
+
+
+
+        .testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+.testimonial-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.testimonial-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.testimonial-card .stars {
+    color: #ffb400;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.testimonial-card p {
+    font-size: 0.95rem;
+    color: #333;
+    line-height: 1.6;
+}
+
+.google-logo {
+    width: 28px;
+    height: 28px;
+    margin-top: 1.5rem;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -803,18 +855,14 @@
                 SolarReviews
             </a>
             <div class="nav-links">
-                <a href="/">Home</a>
                 <a href="/reviews">Reviews</a>
-                <a href="/solar-companies">Companies</a>
-                <a href="/learn">Learn</a>
-                <a href="/about">About Us</a>
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="btn btn-outline">Dashboard</a>
+                        <a href="{{ url('/dashboard') }}">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-outline">Log in</a>
+                        <a href="{{ route('login') }}">Log in</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn btn-primary">Sign up</a>
+                            <a href="{{ route('register') }}">Sign up</a>
                         @endif
                     @endauth
                 @endif
@@ -875,106 +923,50 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="section">
-        <div class="section-title">
-            <h2>Popular Solar Categories</h2>
-            <p>Browse through our top categories to find the perfect solar solution</p>
-        </div>
-        <div class="categories-grid">
-            <div class="category-card">
-                <img src="/images/first.png" alt="Residential Solar" class="category-img">
-                <div class="category-content">
-                    <h3 class="category-title">Residential Solar</h3>
-                    <p class="category-desc">Solar solutions for your home to reduce electricity bills and carbon footprint.</p>
-                    <a href="/categories/residential" class="btn btn-outline">Explore</a>
-                </div>
-            </div>
-            <div class="category-card">
-                <img src="/images/second.png" alt="Commercial Solar" class="category-img">
-                <div class="category-content">
-                    <h3 class="category-title">Commercial Solar</h3>
-                    <p class="category-desc">Cost-effective solar solutions for businesses of all sizes.</p>
-                    <a href="/categories/commercial" class="btn btn-outline">Explore</a>
-                </div>
-            </div>
-            <div class="category-card">
-                <img src="/images/third.png" alt="Solar Panels" class="category-img">
-                <div class="category-content">
-                    <h3 class="category-title">Solar Panels</h3>
-                    <p class="category-desc">Compare the best solar panels from top manufacturers.</p>
-                    <a href="/categories/panels" class="btn btn-outline">Explore</a>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Testimonials Section -->
+    <section id="testimonials" style="padding: 4rem 0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+        <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; text-align: center;">
+            <a href="#" style="color: #007bff; font-weight: 500; text-decoration: none;">
+                See What Others Are Saying About Us
+            </a>
+            <h2 style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem; color: #000;">
+                See What Others Are Saying About Us
+            </h2>
 
-    <!-- How It Works -->
-    <section class="section" style="background-color: #f3f4f6;">
-        <div class="section-title">
-            <h2>How It Works</h2>
-            <p>Get started with solar in just a few simple steps</p>
-        </div>
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="icon-circle" style="margin: 1.5rem auto;">
-                    <i class="fas fa-search" style="font-size: 1.5rem;"></i>
+            <div class="testimonial-grid">
+                <!-- Card 1 -->
+                <div class="testimonial-card">
+                    <h3>Bill Hardy</h3>
+                    <div class="stars">★★★★★</div>
+                    <p>
+                        "Calculator was easy to use and very accurate. I had solar installed a couple of years ago. 
+                        I wanted to check what the calculator would give as a recommendation and forecast compared to my actual experience. 
+                        My actual experience was well within the ranges given. GREAT TOOL."
+                    </p>
+                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
                 </div>
-                <div class="category-content">
-                    <h3 class="category-title">1. Compare Quotes</h3>
-                    <p class="category-desc">Get multiple quotes from verified solar installers in your area.</p>
-                </div>
-            </div>
-            <div class="category-card">
-                <div class="icon-circle" style="margin: 1.5rem auto; background-color: rgba(59, 130, 246, 0.1);">
-                    <i class="fas fa-solar-panel" style="font-size: 1.5rem; color: var(--primary-color);"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">2. Choose Installer</h3>
-                    <p class="category-desc">Select the best solar solution based on reviews and pricing.</p>
-                </div>
-            </div>
-            <div class="category-card">
-                <div class="icon-circle" style="margin: 1.5rem auto; background-color: rgba(16, 185, 129, 0.1);">
-                    <i class="fas fa-bolt" style="font-size: 1.5rem; color: #10b981;"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">3. Go Solar</h3>
-                    <p class="category-desc">Enjoy clean, renewable energy and lower electricity bills.</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Testimonials -->
-    <section class="section testimonials">
-        <div class="section-title">
-            <h2>What Our Users Say</h2>
-            <p>Read reviews from homeowners who went solar with us</p>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-text">
-                    "SolarReviews helped me find the perfect solar solution for my home. I'm saving over 70% on my electricity bills!"
+                <!-- Card 2 -->
+                <div class="testimonial-card">
+                    <h3>Michael Le</h3>
+                    <div class="stars">★★★★★</div>
+                    <p>
+                        “Very responsive and helpful. Got a friendly phone call right away after filling out online 
+                        estimate to gather additional information. Knowledgeable and friendly. Can’t ask for more.”
+                    </p>
+                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
                 </div>
-                <div class="testimonial-author">
-                    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Sarah J." class="author-img">
-                    <div class="author-info">
-                        <h4>Sarah J.</h4>
-                        <p>Homeowner, California</p>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-text">
-                    "The process was so simple. I compared multiple installers and found the best deal in my area. Highly recommended!"
-                </div>
-                <div class="testimonial-author">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="author-img">
-                    <div class="author-info">
-                        <h4>Michael T.</h4>
-                        <p>Business Owner, Texas</p>
-                    </div>
+
+                <!-- Card 3 -->
+                <div class="testimonial-card">
+                    <h3>Adrian Uribe</h3>
+                    <div class="stars">★★★★★</div>
+                    <p>
+                        "Very helpful with information about cost, effectiveness and options for various solar panel installations. 
+                        Very quick to reach out to me and explain things clearly so I understood exactly what my obligations would be 
+                        and what I should expect from the system."
+                    </p>
+                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
                 </div>
             </div>
         </div>
@@ -1016,7 +1008,6 @@
             <div class="footer-links">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="/about">About Us</a></li>
                     <li><a href="/how-it-works">How It Works</a></li>
                     <li><a href="/solar-companies">Solar Companies</a></li>
                     <li><a href="/reviews">Reviews</a></li>
