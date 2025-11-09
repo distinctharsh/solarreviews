@@ -1,9 +1,5 @@
 <div class="state-map-container">
     <div class="state-selector">
-        <div class="select-box" onclick="toggleDropdown()">
-            <span id="selected-state-display">Select your state</span>
-            <i class="fas fa-chevron-down"></i>
-        </div>
         <div id="state-dropdown" class="state-dropdown hidden">
             <!-- States will be populated by JavaScript -->
         </div>
@@ -226,9 +222,6 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff0e1" stroke="#f5c9b4" id="Karnat
     });
     </script>
     
-    <div id="providers-section" class="providers-container">
-        <p>Select a state to view solar providers</p>
-    </div>
 </div>
 
 
