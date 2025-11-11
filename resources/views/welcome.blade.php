@@ -1160,7 +1160,7 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section id="testimonials" style="padding: 4rem 0; background-color: white;">
+    <section id="testimonials" style="padding: 4rem 0; background-color: white; margin-bottom: 4rem;">
         <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; text-align: center;">
             <a href="#" style="color: #007bff; font-weight: 500; text-decoration: none;">
                 See What Others Are Saying About Us
