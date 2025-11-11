@@ -17,6 +17,13 @@ Route::get('/', function () {
 Route::get('/state/{stateSlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'stateCompanies'])
     ->name('state.companies');
 
+// Review Routes
+Route::prefix('reviews')->group(function () {
+    Route::post('/', [\App\Http\Controllers\Frontend\ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/send-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'sendOtp'])->name('reviews.send-otp');
+    Route::post('/verify-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'verifyOtp'])->name('reviews.verify-otp');
+});
+
 // Admin Routes
 Route::prefix('admin')
     ->name('admin.')

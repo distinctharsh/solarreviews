@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Solar Companies in {{ $state['name'] }} - Solar Reviews</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0; padding: 0; box-sizing: border-box;
@@ -176,10 +178,198 @@
             cursor: pointer;
         }
 
+        .get-quote-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .write-review-btn {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         @media(max-width: 992px) {
             .page-wrapper { flex-direction: column; }
             .sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
             .content { width: 100%; }
+        }
+
+        /* Custom Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .custom-modal-header {
+            padding: 15px 20px;
+            background: #3498db;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .custom-modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .custom-modal-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        #sendOtpBtn,
+        #verifyOtpBtn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        #sendOtpBtn:hover,
+        #verifyOtpBtn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .cancel-btn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .submit-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        /* Rating Stars */
+        .rating-stars {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .rating-stars i {
+            margin-right: 5px;
+        }
+
+        .rating-stars .fas {
+            color: #f1c40f;
+        }
+
+        .otp-status {
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .otp-status.success {
+            color: #27ae60;
+        }
+
+        .otp-status.error {
+            color: #e74c3c;
         }
     </style>
 </head>
@@ -246,7 +436,9 @@
                         <div class="company-desc">
                             {{ Str::limit($company->description ?? 'No description available.', 180) }}
                             @if(strlen($company->description ?? '') > 180)
-                                <a href="#" class="read-more">Read more</a>
+                                <button type="button" class="get-quote-btn write-review-btn" data-company-id="{{ $company->id }}" data-company-name="{{ $company->name }}">
+                                    Write a Review
+                                </button>
                             @endif
                         </div>
                         <div class="rating-bar">
@@ -261,7 +453,9 @@
                 </div>
 
                 <div>
-                    <button class="get-quote">Get Quote</button>
+                    <button type="button" class="get-quote write-review-btn" data-company-id="{{ $company->id }}" data-company-name="{{ $company->name }}">
+                        Write a Review
+                    </button>
                 </div>
             </div>
         @empty
@@ -272,6 +466,349 @@
         @endforelse
     </div>
 </div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <div class="custom-modal-header">
+            <h3>Write a Review</h3>
+            <span class="close-btn">&times;</span>
+        </div>
+        <form id="reviewForm" method="POST" action="{{ route('reviews.store') }}">
+            @csrf
+            <input type="hidden" name="company_id" id="companyId">
+            <div class="custom-modal-body">
+                <div class="form-group">
+                    <label for="state">Select State *</label>
+                    <select id="state" name="state_id" required>
+                        <option value="">Select State</option>
+                        @foreach($states as $state)
+                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Rate your experience with <span id="companyNameInModal"></span> *</label>
+                    <div class="rating-stars">
+                        @for($i = 1; $i <= 5; $i++)
+                            <i class="far fa-star" data-rating="{{ $i }}"></i>
+                        @endfor
+                        <input type="hidden" name="rating" id="rating" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewTitle">Review Title (Optional)</label>
+                    <input type="text" id="reviewTitle" name="review_title" placeholder="Summarize your experience">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewText">Your Review *</label>
+                    <textarea id="reviewText" name="review_text" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reviewerName">Your Name *</label>
+                    <input type="text" id="reviewerName" name="reviewer_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" required>
+                        <button type="button" id="sendOtpBtn">Send OTP</button>
+                    </div>
+                    <small>We'll send a verification code to this email</small>
+                </div>
+                
+                <div class="form-group" id="otpField" style="display: none;">
+                    <label for="otp">Enter OTP *</label>
+                    <div class="input-group">
+                        <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP">
+                        <button type="button" id="verifyOtpBtn">Verify</button>
+                    </div>
+                    <div class="otp-status" id="otpStatus"></div>
+                </div>
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" class="cancel-btn">Close</button>
+                <button type="submit" class="submit-btn" id="submitReviewBtn" disabled>Submit Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- SweetAlert2 for alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Existing JavaScript
+    
+    // Review Modal Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all DOM elements
+        const reviewModal = document.getElementById('reviewModal');
+        const writeReviewBtns = document.querySelectorAll('.write-review-btn');
+        const closeBtn = document.querySelector('.close-btn');
+        const cancelBtn = document.querySelector('.cancel-btn');
+        const companyNameInModal = document.getElementById('companyNameInModal');
+        const companyIdInput = document.getElementById('companyId');
+        const ratingStars = document.querySelectorAll('.rating-stars i');
+        const ratingInput = document.getElementById('rating');
+        const emailInput = document.getElementById('email');
+        const otpField = document.getElementById('otpField');
+        const otpInput = document.getElementById('otp');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const otpStatus = document.getElementById('otpStatus');
+        const submitReviewBtn = document.getElementById('submitReviewBtn');
+        
+        // Initialize state variables
+        let otpSent = false;
+        let otpVerified = false;
+        
+        // Make sure ratingInput is properly initialized
+        if (!ratingInput) {
+            console.error('Rating input not found!');
+        }
+        
+        // Open review modal with company data
+        writeReviewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const companyId = this.getAttribute('data-company-id');
+                const companyName = this.getAttribute('data-company-name');
+                
+                companyIdInput.value = companyId;
+                companyNameInModal.textContent = companyName;
+                
+                // Reset form
+                resetReviewForm();
+                
+                // Show modal
+                reviewModal.style.display = 'flex';
+            });
+        });
+        
+        // Handle star rating
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.getAttribute('data-rating'));
+                ratingInput.value = rating;
+                
+                // Update star display
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                        s.classList.add('fas');
+                        s.classList.remove('far');
+                    } else {
+                        s.classList.remove('active');
+                        s.classList.add('far');
+                        s.classList.remove('fas');
+                    }
+                });
+            });
+        });
+        
+        // Send OTP
+        sendOtpBtn.addEventListener('click', function() {
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                showAlert('Error', 'Please enter your email address', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = sendOtpBtn.innerHTML;
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            
+            // Simulate API call (replace with actual API call)
+            setTimeout(() => {
+                // In a real app, you would make an AJAX call to your backend
+                console.log('Sending OTP to:', email);
+                
+                // Show success message
+                showAlert('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
+                
+                // Show OTP field
+                otpField.style.display = 'block';
+                otpSent = true;
+                
+                // Reset button
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerHTML = 'Resend OTP';
+                
+                // Focus OTP input
+                otpInput.focus();
+                
+                // In a real app, you would handle the response from your backend
+                // and show appropriate messages
+            }, 1000);
+        });
+        
+        // Handle OTP verification
+        if (verifyOtpBtn && otpInput && otpStatus) {
+            verifyOtpBtn.addEventListener('click', function() {
+                const otp = otpInput.value.trim();
+                
+                if (!otp || otp.length !== 6) {
+                    showAlert('Error', 'Please enter a valid 6-digit OTP', 'error');
+                    return;
+                }
+
+                // Show loading state
+                const originalText = verifyOtpBtn.innerHTML;
+                verifyOtpBtn.disabled = true;
+                verifyOtpBtn.innerHTML = 'Verifying...';
+
+                // Simulate OTP verification (replace with actual API call)
+                setTimeout(() => {
+                    // In a real app, you would verify the OTP with your backend
+                    console.log('Verifying OTP:', otp);
+                    
+                    // For demo purposes, we'll assume the OTP is always '123456'
+                    if (otp === '123456') {
+                        otpVerified = true;
+                        if (submitReviewBtn) submitReviewBtn.disabled = false;
+                        otpStatus.textContent = 'OTP verified successfully!';
+                        otpStatus.className = 'otp-status success';
+                        verifyOtpBtn.innerHTML = 'Verified';
+                        verifyOtpBtn.disabled = true;
+                    } else {
+                        otpStatus.textContent = 'Invalid OTP. Please try again.';
+                        otpStatus.className = 'otp-status error';
+                        verifyOtpBtn.disabled = false;
+                        verifyOtpBtn.innerHTML = originalText;
+                    }
+                }, 1000);
+            });
+        }
+
+        // Form submission
+        const reviewForm = document.getElementById('reviewForm');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!otpVerified) {
+                    showAlert('Error', 'Please verify your email with OTP first', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                submitReviewBtn.disabled = true;
+                submitReviewBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                
+                // Get form data
+                const formData = new FormData(this);
+                
+                // Submit form via AJAX
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert('Success', 'Thank you for your review! It will be visible after approval.', 'success');
+                        reviewModal.style.display = 'none';
+                        // Reload the page to see the updated reviews
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        throw new Error(data.message || 'Failed to submit review');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Error', error.message || 'Failed to submit review. Please try again.', 'error');
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = 'Submit Review';
+                });
+            });
+        }
+
+        // Close modal when clicking the close button
+        closeBtn.addEventListener('click', function() {
+            reviewModal.style.display = 'none';
+            resetReviewForm();
+        });
+
+        // Close modal when clicking the cancel button
+        cancelBtn.addEventListener('click', function() {
+            reviewModal.style.display = 'none';
+            resetReviewForm();
+        });
+
+        // Close modal when clicking outside the modal content
+        window.addEventListener('click', function(event) {
+            if (event.target === reviewModal) {
+                reviewModal.style.display = 'none';
+                resetReviewForm();
+            }
+        });
+    });
+
+    // Handle OTP verification - Moved inside DOMContentLoaded to ensure proper scoping
+
+        // Helper function to reset the review form
+        function resetReviewForm() {
+            const form = document.getElementById('reviewForm');
+            const ratingInput = document.getElementById('rating');
+            
+            if (form) form.reset();
+            if (ratingInput) ratingInput.value = '';
+            
+            // Reset OTP state
+            otpSent = false;
+            otpVerified = false;
+            
+            // Reset OTP UI
+            if (otpField) otpField.style.display = 'none';
+            if (otpStatus) {
+                otpStatus.textContent = '';
+                otpStatus.className = 'otp-status';
+            }
+            
+            // Reset buttons
+            if (submitReviewBtn) submitReviewBtn.disabled = true;
+            if (verifyOtpBtn) {
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerHTML = 'Verify';
+                verifyOtpBtn.className = '';
+            }
+            if (sendOtpBtn) sendOtpBtn.innerHTML = 'Send OTP';
+
+            // Reset stars
+            const stars = document.querySelectorAll('.rating-stars i');
+            if (stars && stars.length > 0) {
+                stars.forEach(star => {
+                    if (star) {
+                        star.classList.remove('fas');
+                        star.classList.add('far');
+                    }
+                });
+            }
+}
+
+// Helper function to show alerts
+function showAlert(title, text, icon) {
+    Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        confirmButtonText: 'OK'
+    });
+}
+</script>
 
 </body>
 </html>

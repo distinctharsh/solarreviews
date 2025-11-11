@@ -17,11 +17,9 @@ class CompanyController extends Controller
     public function stateCompanies($stateSlug)
     {
         // Get all active states for the sidebar
-        $states = State::select('name', 'slug')
-            ->where('is_active', true)
+        $states = State::where('is_active', true)
             ->orderBy('name')
-            ->get()
-            ->toArray();
+            ->get();
             
         // Get the current state from the URL
         $currentState = State::where('slug', $stateSlug)
