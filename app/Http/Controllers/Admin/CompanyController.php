@@ -52,29 +52,51 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'state_id' => 'required|exists:states,id',
             'description' => 'nullable|string',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean'
         ]);
 
-        // Generate slug from name
-        $validated['slug'] = Str::slug($validated['name']);
-        
-        // Handle logo upload
-        if ($request->hasFile('logo')) {
-            $path = $request->file('logo')->store('public/company-logos');
-            $validated['logo'] = str_replace('public/', '', $path);
+        try {
+            // Generate slug from name
+            $validated['slug'] = Str::slug($validated['name']);
+            
+            // Handle logo upload - Save directly to public directory
+            if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+                $file = $request->file('logo');
+                $uploadPath = public_path('uploads/company');
+                
+                // Create directory if it doesn't exist
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
+                // Generate unique filename
+                $fileName = 'company_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                
+                // Move the file to the public directory
+                if ($file->move($uploadPath, $fileName)) {
+                    // Save the relative path to the database
+                    $validated['logo'] = 'uploads/company/'.$fileName;
+                } else {
+                    throw new \Exception('Failed to move uploaded file');
+                }
+            }
+            
+            // Set default values
+            $validated['average_rating'] = 0;
+            $validated['total_reviews'] = 0;
+            $validated['is_active'] = $request->has('is_active');
+            
+            $company = Company::create($validated);
+            
+            return redirect()
+                ->route('admin.companies.index')
+                ->with('success', 'Company created successfully.');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error creating company: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error creating company: ' . $e->getMessage());
         }
-        
-        // Set default values
-        $validated['average_rating'] = 0;
-        $validated['total_reviews'] = 0;
-        $validated['is_active'] = $request->has('is_active');
-        
-        $company = Company::create($validated);
-        
-        return redirect()
-            ->route('admin.companies.index')
-            ->with('success', 'Company created successfully.');
     }
 
     /**
@@ -105,27 +127,49 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'state_id' => 'required|exists:states,id',
             'description' => 'nullable|string',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
         ]);
         
-        // Handle logo upload
-        if ($request->hasFile('logo')) {
-            // Delete old logo if exists
-            if ($company->logo) {
-                Storage::delete('public/' . $company->logo);
+        try {
+            // Handle logo upload - Save directly to public directory
+            if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+                $file = $request->file('logo');
+                $uploadPath = public_path('uploads/company');
+                
+                // Create directory if it doesn't exist
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+                
+                // Delete old logo if exists
+                if ($company->logo && file_exists(public_path($company->logo))) {
+                    unlink(public_path($company->logo));
+                }
+                
+                // Generate unique filename
+                $fileName = 'company_'.time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                
+                // Move the file to the public directory
+                if ($file->move($uploadPath, $fileName)) {
+                    // Save the relative path to the database
+                    $validated['logo'] = 'uploads/company/'.$fileName;
+                } else {
+                    throw new \Exception('Failed to move uploaded file');
+                }
             }
             
-            $path = $request->file('logo')->store('public/company-logos');
-            $validated['logo'] = str_replace('public/', '', $path);
+            // Update company
+            $company->update($validated);
+            
+            return redirect()
+                ->route('admin.companies.index')
+                ->with('success', 'Company updated successfully.');
+                
+        } catch (\Exception $e) {
+            \Log::error('Error updating company: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Error updating company: ' . $e->getMessage());
         }
-        
-        $validated['is_active'] = $request->has('is_active');
-        $company->update($validated);
-        
-        return redirect()
-            ->route('admin.companies.index')
-            ->with('success', 'Company updated successfully.');
     }
 
     /**
@@ -134,8 +178,8 @@ class CompanyController extends Controller
     public function destroy(Company $company)
     {
         // Delete logo if exists
-        if ($company->logo) {
-            Storage::delete('public/' . $company->logo);
+        if ($company->logo && file_exists(public_path($company->logo))) {
+            unlink(public_path($company->logo));
         }
         
         $company->delete();

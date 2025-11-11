@@ -1,205 +1,277 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Solar Companies in {{ $state['name'] }} - Solar Reviews</title>
+    <style>
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f6f9fc;
+            color: #333;
+        }
 
-@section('content')
-<div class="container py-5">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Solar Companies in {{ $state['name'] }}</li>
-        </ol>
-    </nav>
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
 
-    <!-- Page Header -->
-    <div class="text-center mb-5">
-        <h1 class="display-5 fw-bold mb-3">Top Solar Companies in {{ $state['name'] }}</h1>
-        <p class="lead text-muted">Compare the best solar installation companies in {{ $state['name'] }} based on verified customer reviews and ratings.</p>
+        /* Left Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-right: 25px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 14px;
+        }
+
+        .calculator {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .calculator input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .calculator button {
+            width: 100%;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 0;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Right Content */
+        .content {
+            max-width: 850px;
+            flex: 1;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .company-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .company-left {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .company-logo {
+            width: 90px;
+            height: 70px;
+            object-fit: contain;
+            margin-right: 20px;
+            border: 1px solid #eee;
+            padding: 5px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        .company-info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stars {
+            color: #f5a623;
+            font-size: 15px;
+        }
+
+        .rating-text {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .company-desc {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .company-desc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .rating-bar {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .blue-bar {
+            background: #3498db;
+            height: 8px;
+            width: 60px;
+            border-radius: 3px;
+            margin-right: 6px;
+        }
+
+        .get-quote {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media(max-width: 992px) {
+            .page-wrapper { flex-direction: column; }
+            .sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
+            .content { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Solar in your state </h3>
+        <ul>
+            @foreach($states as $s)
+                <li><a href="{{ url('state/'.$s['slug']) }}">{{ $s['name'] }}</a></li>
+            @endforeach
+        </ul>
+
+        <div class="calculator">
+            <h3>Try our solar cost calculator</h3>
+            <input type="text" placeholder="Enter your PIN code">
+            <button>Calculate Now</button>
+        </div>
     </div>
 
-    <!-- Sorting and Filtering -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="d-flex align-items-center">
-                <span class="me-2">Sort by:</span>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-outline-primary active">Highest Rated</button>
-                    <button type="button" class="btn btn-outline-primary">Most Reviews</button>
-                    <button type="button" class="btn btn-outline-primary">Alphabetical</button>
-                </div>
-            </div>
+    <!-- Content -->
+    <div class="content">
+        <div class="header">
+            <h1>Top Solar Companies in {{ $state['name'] }}</h1>
+            <p>Compare verified solar installation companies in {{ $state['name'] }} with customer reviews and ratings.</p>
         </div>
-        <div class="col-md-6 text-md-end">
-            <div class="input-group" style="max-width: 300px; margin-left: auto;">
-                <input type="text" class="form-control" placeholder="Search companies...">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Companies List -->
-    <div class="row g-4">
         @forelse($companies as $company)
-            <div class="col-12">
-                <div class="card shadow-sm h-100">
-                    <div class="row g-0">
-                        <div class="col-md-2 d-flex align-items-center justify-content-center p-3 bg-light">
-                            @if($company['logo'])
-                                <img src="{{ $company['logo'] }}" class="img-fluid" alt="{{ $company['name'] }}" style="max-height: 80px; width: auto;">
-                            @else
-                                <div class="text-center">
-                                    <i class="fas fa-solar-panel fa-3x text-muted"></i>
-                                </div>
+            @php
+                $company = (object) $company; // Convert array to object for easier access
+            @endphp
+            <div class="company-card">
+                <div class="company-left">
+                    @if(!empty($company->logo) && $company->logo !== 'null')
+                        <img src="{{ $company->logo }}" class="company-logo" alt="{{ $company->name ?? 'Company Logo' }}">
+                    @else
+                        <img src="{{ asset('images/default-logo.png') }}" class="company-logo" alt="Default Logo">
+                    @endif
+
+                    <div class="company-info">
+                        <h2>{{ $company->name ?? 'Company Name' }}</h2>
+                        <div class="stars">
+                            @php
+                                $rating = $company->average_rating ?? 0;
+                                $fullStars = floor($rating);
+                                $hasHalfStar = $rating - $fullStars >= 0.5;
+                            @endphp
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= $fullStars)
+                                    ★
+                                @elseif($i == $fullStars + 1 && $hasHalfStar)
+                                    ☆
+                                @else
+                                    ☆
+                                @endif
+                            @endfor
+                            <span class="rating-text">
+                                {{ number_format($rating, 1) }} 
+                                ({{ $company->total_reviews ?? 0 }} {{ $company->total_reviews == 1 ? 'review' : 'reviews' }})
+                            </span>
+                        </div>
+                        <div class="company-desc">
+                            {{ Str::limit($company->description ?? 'No description available.', 180) }}
+                            @if(strlen($company->description ?? '') > 180)
+                                <a href="#" class="read-more">Read more</a>
                             @endif
                         </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h3 class="h5 mb-0">
-                                        <a href="{{ route('company.show', ['state' => $state['slug'], 'company' => $company['slug']]) }}" class="text-decoration-none">
-                                            {{ $company['name'] }}
-                                        </a>
-                                    </h3>
-                                    <div class="rating">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= $company['average_rating'])
-                                                <i class="fas fa-star text-warning"></i>
-                                            @elseif($i - 0.5 <= $company['average_rating'])
-                                                <i class="fas fa-star-half-alt text-warning"></i>
-                                            @else
-                                                <i class="far fa-star text-warning"></i>
-                                            @endif
-                                        @endfor
-                                        <span class="ms-1">{{ number_format($company['average_rating'], 1) }}</span>
-                                        <small class="text-muted">({{ $company['total_reviews'] }} reviews)</small>
-                                    </div>
-                                </div>
-                                
-                                <p class="text-muted mb-2">
-                                    <i class="fas fa-map-marker-alt me-1"></i> {{ $company['city'] }}, {{ $state['name'] }}
-                                </p>
-                                
-                                @if($company['website'])
-                                    <p class="mb-2">
-                                        <i class="fas fa-globe me-1"></i> 
-                                        <a href="{{ $company['website'] }}" target="_blank" class="text-decoration-none">
-                                            {{ parse_url($company['website'], PHP_URL_HOST) }}
-                                        </a>
-                                    </p>
-                                @endif
-                                
-                                @if($company['featured_review'])
-                                    <div class="mt-3 p-3 bg-light rounded">
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="me-2">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    @if($i <= $company['featured_review']['rating'])
-                                                        <i class="fas fa-star text-warning"></i>
-                                                    @else
-                                                        <i class="far fa-star text-warning"></i>
-                                                    @endif
-                                                @endfor
-                                            </div>
-                                            <strong class="me-2">{{ $company['featured_review']['reviewer_name'] }}</strong>
-                                            <small class="text-muted">{{ $company['featured_review']['date'] }}</small>
-                                        </div>
-                                        <p class="mb-0">"{{ Str::limit($company['featured_review']['review_text'], 150) }}"</p>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-3 d-flex align-items-center justify-content-center p-3 border-start">
-                            <div class="text-center">
-                                <div class="display-6 fw-bold text-primary">{{ number_format($company['average_rating'], 1) }}</div>
-                                <div class="text-warning mb-2">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        @if($i <= $company['average_rating'])
-                                            <i class="fas fa-star"></i>
-                                        @elseif($i - 0.5 <= $company['average_rating'])
-                                            <i class="fas fa-star-half-alt"></i>
-                                        @else
-                                            <i class="far fa-star"></i>
-                                        @endif
-                                    @endfor
-                                </div>
-                                <p class="text-muted mb-3">{{ $company['total_reviews'] }} verified reviews</p>
-                                <a href="{{ route('company.show', ['state' => $state['slug'], 'company' => $company['slug']]) }}" 
-                                   class="btn btn-primary">
-                                    View Company
-                                </a>
-                            </div>
+                        <div class="rating-bar">
+                            <div class="blue-bar"></div>
+                            <div class="blue-bar"></div>
+                            <div class="blue-bar"></div>
+                            <div class="blue-bar"></div>
+                            <div class="blue-bar"></div>
+                            <span style="color:#777; font-size:13px; margin-left:5px;">Elite</span>
                         </div>
                     </div>
+                </div>
+
+                <div>
+                    <button class="get-quote">Get Quote</button>
                 </div>
             </div>
         @empty
-            <div class="col-12">
-                <div class="text-center py-5">
-                    <i class="fas fa-building fa-3x text-muted mb-3"></i>
-                    <h3>No companies found in {{ $state['name'] }}</h3>
-                    <p class="text-muted">Check back later or view companies in other states.</p>
-                </div>
+            <div style="background:#fff; padding:30px; text-align:center; border-radius:8px; border:1px solid #eee;">
+                <h3>No companies found in {{ $state['name'] }}</h3>
+                <p>Check back later or explore other nearby states.</p>
             </div>
         @endforelse
     </div>
-
-    <!-- Pagination -->
-    @if(method_exists($companies, 'links'))
-        <div class="d-flex justify-content-center mt-5">
-            {{ $companies->links() }}
-        </div>
-    @endif
-
-    <!-- Call to Action -->
-    <div class="card bg-light mt-5">
-        <div class="card-body text-center p-5">
-            <h2 class="h3 mb-3">Can't find your company?</h2>
-            <p class="lead mb-4">Add your company to our directory and start receiving reviews from your customers.</p>
-            <a href="#" class="btn btn-primary btn-lg">List Your Company</a>
-        </div>
-    </div>
 </div>
 
-<!-- How It Works Section -->
-<section class="bg-light py-5 mt-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="h1">How It Works</h2>
-            <p class="lead text-muted">Find the best solar company for your needs</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 text-center p-4">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <i class="fas fa-search fa-2x"></i>
-                    </div>
-                    <h3 class="h5">1. Search Companies</h3>
-                    <p class="text-muted mb-0">Browse and compare top-rated solar companies in your area.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 text-center p-4">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <i class="fas fa-file-invoice-dollar fa-2x"></i>
-                    </div>
-                    <h3 class="h5">2. Get Quotes</h3>
-                    <p class="text-muted mb-0">Request free quotes from multiple installers.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 text-center p-4">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" 
-                         style="width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <i class="fas fa-solar-panel fa-2x"></i>
-                    </div>
-                    <h3 class="h5">3. Go Solar</h3>
-                    <p class="text-muted mb-0">Choose the best option and start saving with solar energy.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-@endsection
+</body>
+</html>

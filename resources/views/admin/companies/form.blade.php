@@ -206,13 +206,16 @@
                         <div class="logo-upload">
                             @if($company->logo)
                                 <div class="logo-preview">
-                                    <img src="{{ asset('storage/' . $company->logo) }}" 
+                                    <img src="{{ asset($company->logo) }}" 
                                          alt="{{ $company->name }} logo"
-                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                         style="width: 100%; height: 100%; object-fit: cover; max-width: 200px; max-height: 200px;">
                                 </div>
-                                <div style="flex: 1;">
+                                <div style="flex: 1; margin-left: 20px;">
                                     <input type="file" id="logo" name="logo" accept="image/*" 
-                                           class="form-input" style="padding: 5px;">
+                                           class="form-input" style="padding: 5px; margin-bottom: 10px;">
+                                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                        Current logo will be replaced
+                                    </div>
                                 </div>
                             @else
                                 <label class="logo-preview" style="cursor: pointer;">

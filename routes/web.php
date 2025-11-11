@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// State Companies
+Route::get('/state/{stateSlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'stateCompanies'])
+    ->name('state.companies');
+
 // Admin Routes
 Route::prefix('admin')
     ->name('admin.')

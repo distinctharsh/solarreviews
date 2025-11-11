@@ -16,15 +16,24 @@ class CompanyController extends Controller
      */
     public function stateCompanies($stateSlug)
     {
+        // Get all active states for the sidebar
+        $states = State::select('name', 'slug')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->toArray();
+            
+        // Get the current state from the URL
+        $currentState = State::where('slug', $stateSlug)
+            ->select('id', 'name', 'slug')
+            ->firstOrFail();
+            
         $cacheKey = "state_companies_{$stateSlug}";
         
-        $data = Cache::remember($cacheKey, now()->addHours(12), function () use ($stateSlug) {
-            $state = State::where('slug', $stateSlug)->firstOrFail();
-            
-            $companies = Company::with(['city', 'reviews'])
-                ->whereHas('city', function($query) use ($state) {
-                    $query->where('state_id', $state->id);
-                })
+        // Only cache the companies data, not the state data
+        $companies = Cache::remember($cacheKey, now()->addHours(12), function () use ($currentState) {
+            return Company::with(['state', 'reviews'])
+                ->where('state_id', $currentState->id)
                 ->where('is_active', true)
                 ->orderBy('average_rating', 'desc')
                 ->get()
@@ -34,6 +43,8 @@ class CompanyController extends Controller
                         'name' => $company->name,
                         'slug' => $company->slug,
                         'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
+                        'state' => $company->state->name,
+                        'description' => $company->description,
                         'average_rating' => (float) $company->average_rating,
                         'total_reviews' => $company->total_reviews,
                         'featured_review' => $company->reviews->where('is_featured', true)->first() ? [
@@ -44,15 +55,17 @@ class CompanyController extends Controller
                         ] : null
                     ];
                 });
-            
-            return [
-                'state' => [
-                    'name' => $state->name,
-                    'slug' => $state->slug,
-                ],
-                'companies' => $companies
-            ];
         });
+        
+        // Prepare the data for the view
+        $data = [
+            'state' => [
+                'name' => $currentState->name,
+                'slug' => $currentState->slug,
+            ],
+            'states' => $states,
+            'companies' => $companies
+        ];
         
         return view('frontend.companies.state', $data);
     }
