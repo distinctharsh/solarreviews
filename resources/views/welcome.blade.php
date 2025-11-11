@@ -939,10 +939,10 @@
             position: relative;
             background: url('{{ asset("images/couple-on-computer.jpg") }}') no-repeat center center/cover;
             color: #000;
-            padding: 8rem 0;
+            padding: 4rem 0; /* Reduced from 8rem */
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            min-height: 400px; /* Added fixed height */
         }
 
         .reviews-hero .overlay {
@@ -960,8 +960,9 @@
             position: relative;
             z-index: 2;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            margin: 0; /* Changed from auto to 0 */
+            padding: 0 2rem 0 8rem; /* Added more left padding */
+            width: 100%;
         }
 
         .hero-content {
@@ -980,12 +981,13 @@
             font-weight: 700;
             margin-bottom: 1.2rem;
             line-height: 1.3;
+            color: #fff;
         }
 
         .hero-content .description {
             font-size: 1rem;
             line-height: 1.6;
-            color: #222;
+            color: #fff;
             margin-bottom: 2rem;
         }
 
@@ -995,21 +997,26 @@
             color: #fff;
             font-weight: 600;
             text-decoration: none;
-            padding: 0.9rem 1.8rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 8px;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            width: auto;
         }
 
         .hero-btn:hover {
             background-color: #003f9e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .reviews-hero {
-                text-align: center;
-                justify-content: center;
-                padding: 6rem 1.5rem;
+                text-align: left;
+                justify-content: flex-start;
+                padding: 3rem 1.5rem;
+                min-height: auto;
             }
 
             .hero-content {
@@ -1172,7 +1179,7 @@
             <div class="testimonial-grid">
                 <!-- Card 1 -->
                 <div class="testimonial-card">
-                    <h3>Bill Hardy</h3>
+                    <h3>Kunal Verma</h3>
                     <div class="stars">★★★★★</div>
                     <p>
                         "Calculator was easy to use and very accurate. I had solar installed a couple of years ago. 
@@ -1184,7 +1191,7 @@
 
                 <!-- Card 2 -->
                 <div class="testimonial-card">
-                    <h3>Michael Le</h3>
+                    <h3>Dipankar Mishara</h3>
                     <div class="stars">★★★★★</div>
                     <p>
                         “Very responsive and helpful. Got a friendly phone call right away after filling out online 
@@ -1195,7 +1202,7 @@
 
                 <!-- Card 3 -->
                 <div class="testimonial-card">
-                    <h3>Adrian Uribe</h3>
+                    <h3>Sunita Verma</h3>
                     <div class="stars">★★★★★</div>
                     <p>
                         "Very helpful with information about cost, effectiveness and options for various solar panel installations. 
