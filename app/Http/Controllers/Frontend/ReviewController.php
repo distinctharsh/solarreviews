@@ -102,13 +102,26 @@ class ReviewController extends Controller
         $email = $request->email;
         $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
         
-        // In a real app, you would save this OTP to the database with an expiration time
-        // and send it to the user's email
+        // Save OTP to session for verification
+        session(['otp' => $otp, 'otp_email' => $email, 'otp_expires_at' => now()->addMinutes(10)]);
         
-        // For demo, we'll just log it
-        Log::info("OTP for $email: $otp");
+        // Log OTP to file for testing
+        $logMessage = "[" . now() . "] OTP for $email: $otp\n";
+        file_put_contents(storage_path('logs/otp.log'), $logMessage, FILE_APPEND);
         
-        // In a real app, you would send an email here
+        // Log to Laravel log
+        \Log::info("OTP for $email: $otp");
+        
+        // For local development, we'll just log the email
+        if (app()->environment('local')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'OTP logged to storage/logs/otp.log',
+                'otp' => $otp // Only for development
+            ]);
+        }
+        
+        // In production, send the email
         Mail::to($email)->send(new OtpMail($otp));
         
         return response()->json([
@@ -127,21 +140,69 @@ class ReviewController extends Controller
             'otp' => 'required|string|size:6',
         ]);
 
-        // In a real app, you would verify the OTP from the database
-        // For demo, we'll just check if it's 6 digits
-        $isValid = strlen($request->otp) === 6;
-        
-        if ($isValid) {
+        $savedOtp = session('otp');
+        $otpEmail = session('otp_email');
+        $otpExpiresAt = session('otp_expires_at');
+
+        // Debug log
+        \Log::info('OTP Verification Attempt', [
+            'email' => $request->email,
+            'otp' => $request->otp,
+            'saved_otp' => $savedOtp,
+            'otp_email' => $otpEmail,
+            'otp_expires_at' => $otpExpiresAt
+        ]);
+
+        // Check if OTP exists and not expired
+        if (!$savedOtp || !$otpEmail || !$otpExpiresAt) {
+            \Log::warning('OTP not found or expired in session');
             return response()->json([
-                'success' => true,
-                'message' => 'OTP verified successfully.'
-            ]);
+                'success' => false,
+                'message' => 'No OTP found or OTP expired. Please request a new one.'
+            ], 400);
         }
-        
+
+        if (now()->gt($otpExpiresAt)) {
+            \Log::warning('OTP has expired');
+            return response()->json([
+                'success' => false,
+                'message' => 'OTP has expired. Please request a new one.'
+            ], 400);
+        }
+
+        if ($otpEmail !== $request->email) {
+            \Log::warning('Email does not match', [
+                'expected' => $otpEmail,
+                'actual' => $request->email
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Email does not match the one OTP was sent to.'
+            ], 400);
+        }
+
+        if ($savedOtp !== $request->otp) {
+            \Log::warning('Invalid OTP', [
+                'expected' => $savedOtp,
+                'actual' => $request->otp
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid OTP. Please try again.'
+            ], 400);
+        }
+
+        // Clear the OTP after successful verification
+        session()->forget(['otp', 'otp_email', 'otp_expires_at']);
+
+        // Mark email as verified in session
+        session(['email_verified' => true]);
+
+        \Log::info('OTP verified successfully');
         return response()->json([
-            'success' => false,
-            'message' => 'Invalid OTP. Please try again.'
-        ], 422);
+            'success' => true,
+            'message' => 'OTP verified successfully.'
+        ]);
     }
 
 

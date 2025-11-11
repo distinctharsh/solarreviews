@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Top Solar Companies in {{ $state['name'] }} - Solar Reviews</title>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -624,34 +625,55 @@
             sendOtpBtn.disabled = true;
             sendOtpBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
             
-            // Simulate API call (replace with actual API call)
-            setTimeout(() => {
-                // In a real app, you would make an AJAX call to your backend
-                console.log('Sending OTP to:', email);
+            // Make AJAX call to send OTP
+            fetch('{{ route("reviews.send-otp") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('OTP Response:', data);
                 
-                // Show success message
-                showAlert('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
-                
-                // Show OTP field
-                otpField.style.display = 'block';
-                otpSent = true;
-                
-                // Reset button
+                if (data.success) {
+                    // In development, show OTP in console
+                    if (data.otp) {
+                        console.log('Your OTP for testing:', data.otp);
+                        showAlert('OTP Sent', `OTP sent to ${email}. Check console for OTP (for testing).`, 'success');
+                    } else {
+                        showAlert('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
+                    }
+                    
+                    // Show OTP field
+                    otpField.style.display = 'block';
+                    otpSent = true;
+                    
+                    // Focus OTP input
+                    otpInput.focus();
+                } else {
+                    throw new Error(data.message || 'Failed to send OTP');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending OTP:', error);
+                showAlert('Error', error.message || 'Failed to send OTP. Please try again.', 'error');
+            })
+            .finally(() => {
+                // Reset button state
                 sendOtpBtn.disabled = false;
                 sendOtpBtn.innerHTML = 'Resend OTP';
-                
-                // Focus OTP input
-                otpInput.focus();
-                
-                // In a real app, you would handle the response from your backend
-                // and show appropriate messages
-            }, 1000);
+            });
         });
         
         // Handle OTP verification
         if (verifyOtpBtn && otpInput && otpStatus) {
             verifyOtpBtn.addEventListener('click', function() {
                 const otp = otpInput.value.trim();
+                const email = emailInput ? emailInput.value.trim() : '';
                 
                 if (!otp || otp.length !== 6) {
                     showAlert('Error', 'Please enter a valid 6-digit OTP', 'error');
@@ -663,26 +685,47 @@
                 verifyOtpBtn.disabled = true;
                 verifyOtpBtn.innerHTML = 'Verifying...';
 
-                // Simulate OTP verification (replace with actual API call)
-                setTimeout(() => {
-                    // In a real app, you would verify the OTP with your backend
-                    console.log('Verifying OTP:', otp);
+                // Make API call to verify OTP
+                fetch('{{ route("reviews.verify-otp") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        otp: otp
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('OTP Verification Response:', data);
                     
-                    // For demo purposes, we'll assume the OTP is always '123456'
-                    if (otp === '123456') {
+                    if (data.success) {
                         otpVerified = true;
                         if (submitReviewBtn) submitReviewBtn.disabled = false;
                         otpStatus.textContent = 'OTP verified successfully!';
                         otpStatus.className = 'otp-status success';
                         verifyOtpBtn.innerHTML = 'Verified';
                         verifyOtpBtn.disabled = true;
+                        
+                        // Show success message
+                        showAlert('Success', 'OTP verified successfully!', 'success');
                     } else {
-                        otpStatus.textContent = 'Invalid OTP. Please try again.';
-                        otpStatus.className = 'otp-status error';
-                        verifyOtpBtn.disabled = false;
-                        verifyOtpBtn.innerHTML = originalText;
+                        throw new Error(data.message || 'Failed to verify OTP');
                     }
-                }, 1000);
+                })
+                .catch(error => {
+                    console.error('Error verifying OTP:', error);
+                    otpStatus.textContent = error.message || 'Failed to verify OTP. Please try again.';
+                    otpStatus.className = 'otp-status error';
+                    verifyOtpBtn.disabled = false;
+                    verifyOtpBtn.innerHTML = originalText;
+                    
+                    // Show error message
+                    showAlert('Error', error.message || 'Failed to verify OTP. Please try again.', 'error');
+                });
             });
         }
 
@@ -704,10 +747,24 @@
                 // Get form data
                 const formData = new FormData(this);
                 
+                // Convert FormData to JSON
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+                
+                // Add email if not already in form
+                if (emailInput && emailInput.value) {
+                    formObject['email'] = emailInput.value;
+                }
+                
+                // Debug: Log the data being sent
+                console.log('Submitting form data:', formObject);
+                
                 // Submit form via AJAX
                 fetch(this.action, {
                     method: 'POST',
-                    body: formData,
+                    body: JSON.stringify(formObject),
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                         'Accept': 'application/json',
