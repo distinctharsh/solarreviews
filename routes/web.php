@@ -37,6 +37,9 @@ Route::prefix('admin')
     
     // Cities
     Route::resource('cities', CityController::class)->except(['show']);
+    
+    // Users
+    Route::resource('users', 'App\Http\Controllers\Admin\UserController');
 });
 
 // User Dashboard
