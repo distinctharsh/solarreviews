@@ -15,189 +15,275 @@
     @endphp
 @endif
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">{{ $title }}</h1>
-        <a href="{{ route('admin.companies.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Companies
+<style>
+    .form-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .form-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1a202c;
+    }
+    .form-section {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #4a5568;
+    }
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: #3182ce;
+        box-shadow: 0 0 0 1px #3182ce;
+    }
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    .btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+    }
+    .btn-primary {
+        background: #3182ce;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #2c5282;
+    }
+    .btn-secondary {
+        background: #e2e8f0;
+        color: #4a5568;
+    }
+    .btn-secondary:hover {
+        background: #cbd5e0;
+    }
+    .error-message {
+        color: #e53e3e;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .logo-upload {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .logo-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #f7fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .logo-placeholder {
+        color: #a0aec0;
+        font-size: 12px;
+    }
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e2e8f0;
+    }
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <div class="form-header">
+        <h1 class="form-title">{{ $title }}</h1>
+        <a href="{{ route('admin.companies.index') }}" class="btn btn-secondary">
+            &larr; Back to Companies
         </a>
     </div>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method($method)
+    @if(isset($company) && $company->exists)
+    <div style="margin-bottom: 20px; color: #4a5568; font-size: 14px;">
+        <div>Created: {{ $company->created_at->format('M d, Y') }}</div>
+        @if($company->total_reviews > 0)
+            <div>Rating: {{ number_format($company->average_rating, 1) }} ({{ $company->total_reviews }} reviews)</div>
+        @endif
+    </div>
+    @endif
 
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Company Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                   id="name" name="name" value="{{ old('name', $company->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+    <div class="form-section">
+        <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method($method)
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="city_id" class="form-label">Location <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('city_id') is-invalid @enderror" 
-                                            id="city_id" name="city_id" required>
-                                        <option value="">Select City</option>
-                                        @foreach($cities as $state => $stateCities)
-                                            <optgroup label="{{ $state }}">
-                                                @foreach($stateCities as $city)
-                                                    <option value="{{ $city->id }}" 
-                                                        {{ old('city_id', $company->city_id) == $city->id ? 'selected' : '' }}>
-                                                        {{ $city->name }}, {{ $city->state->code }}
-                                                    </option>
-                                                @endforeach
-                                            </optgroup>
-                                        @endforeach
-                                    </select>
-                                    @error('city_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="website" class="form-label">Website</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                                        <input type="url" class="form-control @error('website') is-invalid @enderror" 
-                                               id="website" name="website" value="{{ old('website', $company->website) }}">
-                                        @error('website')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                               id="email" name="email" value="{{ old('email', $company->email) }}">
-                                        @error('email')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="phone" class="form-label">Phone</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                        <input type="tel" class="form-control @error('phone') is-invalid @enderror" 
-                                               id="phone" name="phone" value="{{ old('phone', $company->phone) }}">
-                                        @error('phone')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control @error('address') is-invalid @enderror" 
-                                      id="address" name="address" rows="2">{{ old('address', $company->address) }}</textarea>
-                            @error('address')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" 
-                                      id="description" name="description" rows="4">{{ old('description', $company->description) }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        @if(isset($company) && $company->exists)
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
-                                       value="1" {{ old('is_active', $company->is_active) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="is_active">Active</label>
-                            </div>
-                        @endif
+            <div class="form-row">
+                <!-- Left Column -->
+                <div>
+                    <!-- Company Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">
+                            Company Name <span style="color: #e53e3e;">*</span>
+                        </label>
+                        <input type="text" name="name" id="name" required
+                               class="form-input @error('name') border-red-500 @enderror"
+                               value="{{ old('name', $company->name) }}">
+                        @error('name')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="mb-0">Company Logo</h5>
-                            </div>
-                            <div class="card-body text-center">
-                                <div class="mb-3">
-                                    @if($company->logo)
-                                        <img src="{{ asset('storage/' . $company->logo) }}" 
-                                             alt="{{ $company->name }}" 
-                                             class="img-fluid mb-3" 
-                                             style="max-height: 200px;">
-                                    @else
-                                        <div class="bg-light p-5 text-center mb-3">
-                                            <i class="fas fa-building fa-4x text-muted"></i>
-                                            <p class="mt-2 mb-0">No logo uploaded</p>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <input type="file" class="form-control @error('logo') is-invalid @enderror" 
-                                           id="logo" name="logo" accept="image/*">
-                                    @error('logo')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div class="form-text">Recommended size: 300x300px. Max size: 2MB.</div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- State -->
+                    <div class="form-group">
+                        <label for="state_id" class="form-label">
+                            State <span style="color: #e53e3e;">*</span>
+                        </label>
+                        <select id="state_id" name="state_id" required
+                                class="form-input @error('state_id') border-red-500 @enderror">
+                            <option value="">Select State</option>
+                            @foreach($states as $state)
+                                <option value="{{ $state->id }}" {{ old('state_id', $company->state_id) == $state->id ? 'selected' : '' }}>
+                                    {{ $state->name }} ({{ $state->code }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('state_id')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
 
-                        <div class="d-grid gap-2 mt-3">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="fas fa-save me-2"></i> {{ $buttonText }}
-                            </button>
-                        </div>
+                <!-- Right Column -->
+                <div>
 
-                        @if(isset($company) && $company->exists)
-                            <div class="mt-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="text-muted">Created</span>
-                                    <span>{{ $company->created_at->format('M d, Y') }}</span>
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" rows="4"
+                                  class="form-input form-textarea @error('description') border-red-500 @enderror">{{ old('description', $company->description) }}</textarea>
+                        @error('description')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Logo Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Company Logo</label>
+                        <div class="logo-upload">
+                            @if($company->logo)
+                                <div class="logo-preview">
+                                    <img src="{{ asset('storage/' . $company->logo) }}" 
+                                         alt="{{ $company->name }} logo"
+                                         style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="text-muted">Last Updated</span>
-                                    <span>{{ $company->updated_at->format('M d, Y') }}</span>
+                                <div style="flex: 1;">
+                                    <input type="file" id="logo" name="logo" accept="image/*" 
+                                           class="form-input" style="padding: 5px;">
                                 </div>
-                                @if($company->total_reviews > 0)
-                                    <div class="mt-2 text-center">
-                                        <div class="text-warning">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                @if($i <= $company->average_rating)
-                                                    <i class="fas fa-star"></i>
-                                                @elseif($i - 0.5 <= $company->average_rating)
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                @else
-                                                    <i class="far fa-star"></i>
-                                                @endif
-                                            @endfor
-                                            <span class="ms-1">{{ number_format($company->average_rating, 1) }} ({{ $company->total_reviews }} reviews)</span>
-                                        </div>
+                            @else
+                                <label class="logo-preview" style="cursor: pointer;">
+                                    <div class="logo-placeholder">
+                                        <div>Logo</div>
+                                        <div>+</div>
                                     </div>
-                                @endif
-                            </div>
-                        @endif
+                                    <input type="file" id="logo" name="logo" accept="image/*" 
+                                           style="display: none;">
+                                </label>
+                                <div>
+                                    <div style="font-size: 14px; margin-bottom: 4px;">Click to upload logo</div>
+                                    <div style="font-size: 12px; color: #a0aec0;">PNG, JPG up to 2MB</div>
+                                </div>
+                            @endif
+                        </div>
+                        @error('logo')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Active Status (only for edit) -->
+                    @if(isset($company) && $company->exists)
+                        <div class="form-group" style="display: flex; align-items: center;">
+                            <input type="hidden" name="is_active" value="0">
+                            <input type="checkbox" id="is_active" name="is_active" value="1" 
+                                   style="margin-right: 8px;"
+                                   {{ old('is_active', $company->is_active) ? 'checked' : '' }}>
+                            <label for="is_active" class="form-label" style="margin: 0;">
+                                Active Company
+                            </label>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{{ route('admin.companies.index') }}" 
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {{ $buttonText }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Simple JavaScript for logo preview
+    document.addEventListener('DOMContentLoaded', function() {
+        const logoInput = document.getElementById('logo');
+        if (logoInput) {
+            logoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const logoPreview = document.querySelector('.logo-preview');
+                        if (logoPreview) {
+                            logoPreview.innerHTML = `<img src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+</script>
                     </div>
                 </div>
             </form>

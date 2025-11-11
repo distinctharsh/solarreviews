@@ -68,7 +68,7 @@
                 </a>
 
                 <!-- Total Reviews -->
-                <a href="{{ route('admin.reviews.index') }}" class="block hover:opacity-90 transition-opacity">
+                <!-- <a href="{{ route('admin.reviews.index') }}" class="block hover:opacity-90 transition-opacity">
                     <div class="p-5 bg-white rounded-lg shadow">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                     </div>
-                </a>
+                </a> -->
 
                 <!-- Total Users -->
                 <div class="p-5 bg-white rounded-lg shadow">

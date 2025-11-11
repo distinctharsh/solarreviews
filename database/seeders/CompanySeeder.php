@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\City;
+use App\Models\State;
 use App\Models\Company;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -19,20 +19,17 @@ class CompanySeeder extends Seeder
 
     public function run()
     {
-        $cities = City::all();
+        $states = State::all();
         
         foreach ($this->companyNames as $companyName) {
-            $city = $cities->random();
+            $state = $states->random();
             
             $company = Company::create([
                 'name' => $companyName,
                 'slug' => Str::slug($companyName),
-                'description' => $this->generateDescription($companyName, $city->name),
-                'city_id' => $city->id,
-                'website' => 'https://' . Str::slug($companyName) . '.com',
-                'phone' => $this->generatePhoneNumber(),
-                'email' => 'info@' . Str::slug($companyName) . '.com',
-                'address' => rand(100, 9999) . ' ' . $this->getRandomStreet() . ', ' . $city->name,
+                'description' => $this->generateDescription($companyName, $state->name),
+                'state_id' => $state->id,
+                'logo' => null,
                 'average_rating' => 0,
                 'total_reviews' => 0,
                 'is_active' => true,
@@ -53,14 +50,4 @@ class CompanySeeder extends Seeder
         return $descriptions[array_rand($descriptions)];
     }
 
-    private function generatePhoneNumber()
-    {
-        return sprintf('(%03d) %03d-%04d', rand(200, 999), rand(100, 999), rand(1000, 9999));
-    }
-
-    private function getRandomStreet()
-    {
-        $streets = ['Main St', 'Oak Ave', 'Pine St', 'Maple Dr', 'Cedar Ln', 'Elm St', 'Washington Blvd', 'Park Ave', 'Lake View Dr', 'Sunset Blvd'];
-        return $streets[array_rand($streets)];
-    }
 }

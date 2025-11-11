@@ -31,11 +31,11 @@ class State extends Model
     }
 
     /**
-     * Get all companies in this state through cities.
+     * Get all companies in this state.
      */
     public function companies()
     {
-        return $this->hasManyThrough(Company::class, City::class);
+        return $this->hasMany(Company::class);
     }
 
     public function productVariants(): HasMany

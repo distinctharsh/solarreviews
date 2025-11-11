@@ -16,11 +16,7 @@ class Company extends Model
         'slug',
         'description',
         'logo',
-        'website',
-        'phone',
-        'email',
-        'address',
-        'city_id',
+        'state_id',
         'average_rating',
         'total_reviews',
         'is_active'
@@ -31,9 +27,9 @@ class Company extends Model
         'average_rating' => 'float',
     ];
 
-    public function city(): BelongsTo
+    public function state(): BelongsTo
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(State::class);
     }
 
     public function companyReviews(): HasMany
@@ -47,10 +43,6 @@ class Company extends Model
         return $this->companyReviews();
     }
 
-    public function state()
-    {
-        return $this->belongsTo(State::class, 'state_id');
-    }
 
     public function updateAverageRating()
     {

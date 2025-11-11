@@ -84,11 +84,7 @@ class CompanyController extends Controller
                 'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
                 'average_rating' => (float) $company->average_rating,
                 'total_reviews' => $company->reviews_count,
-                'website' => $company->website,
-                'phone' => $company->phone,
-                'email' => $company->email,
                 'address' => $company->address,
-                'city' => $company->city->name,
                 'state' => $company->city->state->name,
                 'reviews' => $reviews
             ]);

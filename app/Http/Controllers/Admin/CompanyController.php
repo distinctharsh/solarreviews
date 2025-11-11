@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
-use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,7 +17,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::with(['city.state'])
+        $companies = Company::with('state')
             ->orderBy('name')
             ->paginate(20);
             
@@ -29,12 +29,18 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        $cities = City::with('state')
+        $states = State::where('is_active', true)
             ->orderBy('name')
-            ->get()
-            ->groupBy('state.name');
+            ->get();
             
-        return view('admin.companies.create', compact('cities'));
+        return view('admin.companies.form', [
+            'company' => new Company(),
+            'states' => $states,
+            'title' => 'Add New Company',
+            'buttonText' => 'Create Company',
+            'route' => route('admin.companies.store'),
+            'method' => 'POST'
+        ]);
     }
 
     /**
@@ -44,13 +50,10 @@ class CompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'city_id' => 'required|exists:cities,id',
+            'state_id' => 'required|exists:states,id',
             'description' => 'nullable|string',
             'logo' => 'nullable|image|max:2048',
-            'website' => 'nullable|url',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-            'address' => 'nullable|string|max:255',
+            'is_active' => 'boolean'
         ]);
 
         // Generate slug from name
@@ -65,12 +68,12 @@ class CompanyController extends Controller
         // Set default values
         $validated['average_rating'] = 0;
         $validated['total_reviews'] = 0;
-        $validated['is_active'] = true;
+        $validated['is_active'] = $request->has('is_active');
         
         $company = Company::create($validated);
         
         return redirect()
-            ->route('admin.companies.edit', $company)
+            ->route('admin.companies.index')
             ->with('success', 'Company created successfully.');
     }
 
@@ -79,12 +82,18 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
-        $cities = City::with('state')
+        $states = State::where('is_active', true)
             ->orderBy('name')
-            ->get()
-            ->groupBy('state.name');
+            ->get();
             
-        return view('admin.companies.edit', compact('company', 'cities'));
+        return view('admin.companies.form', [
+            'company' => $company,
+            'states' => $states,
+            'title' => 'Edit Company',
+            'buttonText' => 'Update Company',
+            'route' => route('admin.companies.update', $company),
+            'method' => 'PUT'
+        ]);
     }
 
     /**
@@ -94,13 +103,9 @@ class CompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'city_id' => 'required|exists:cities,id',
+            'state_id' => 'required|exists:states,id',
             'description' => 'nullable|string',
             'logo' => 'nullable|image|max:2048',
-            'website' => 'nullable|url',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email',
-            'address' => 'nullable|string|max:255',
             'is_active' => 'boolean',
         ]);
         
@@ -115,10 +120,11 @@ class CompanyController extends Controller
             $validated['logo'] = str_replace('public/', '', $path);
         }
         
+        $validated['is_active'] = $request->has('is_active');
         $company->update($validated);
         
         return redirect()
-            ->route('admin.companies.edit', $company)
+            ->route('admin.companies.index')
             ->with('success', 'Company updated successfully.');
     }
 

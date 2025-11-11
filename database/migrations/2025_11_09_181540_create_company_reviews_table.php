@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->date('review_date');
                 $table->string('source')->default('website');
                 $table->boolean('is_featured')->default(false);
+                $table->boolean('is_approved')->default(false);
                 $table->timestamps();
                 $table->softDeletes();
             });
