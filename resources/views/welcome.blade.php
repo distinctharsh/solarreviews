@@ -47,6 +47,8 @@
         }
         
         .logo {
+            display: flex;
+            align-items: center;
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary-color);
@@ -1075,8 +1077,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="http://solarreviews.in" class="logo">
-                <i class="fas fa-solar-panel"></i>
-                SolarReviews
+                <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" />
             </a>
             <div class="nav-links">
                 <a href="#">Solar Calculator</a>
@@ -1260,7 +1261,9 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-about">
-                <a href="/" class="footer-logo">SolarReviews</a>
+                <a href="/" class="footer-logo">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 40px;">
+                </a>
                 <p>Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
                 <div class="social-links">
                     <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
