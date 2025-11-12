@@ -6,7 +6,8 @@
     <title>Solar Reviews - Compare & Find Best Solar Solutions</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         :root {
             --primary-color: #1e40af;
@@ -939,10 +940,10 @@
             position: relative;
             background: url('{{ asset("images/couple-on-computer.jpg") }}') no-repeat center center/cover;
             color: #000;
-            padding: 4rem 0; /* Reduced from 8rem */
+            padding: 6rem 0;
             display: flex;
             align-items: center;
-            min-height: 400px; /* Added fixed height */
+            min-height: 500px;
         }
 
         .reviews-hero .overlay {
@@ -951,7 +952,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* background: rgba(255,255,255,0.6);  */
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(2px);
             z-index: 1;
         }
@@ -960,20 +961,25 @@
             position: relative;
             z-index: 2;
             max-width: 1200px;
-            margin: 0; /* Changed from auto to 0 */
-            padding: 0 2rem 0 8rem; /* Added more left padding */
+            margin: 0 auto;
+            padding: 0 2rem;
             width: 100%;
         }
 
         .hero-content {
             max-width: 600px;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
         }
 
         .hero-content .small-heading {
-            color: #1e73be;
+            color: #4da8ff;
             font-weight: 600;
             margin-bottom: 0.8rem;
             font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .hero-content h1 {
@@ -987,8 +993,43 @@
         .hero-content .description {
             font-size: 1rem;
             line-height: 1.6;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 2rem;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .reviews-hero {
+                padding: 4rem 0;
+                min-height: 400px;
+                text-align: center;
+            }
+
+            .reviews-hero .container {
+                padding: 0 1rem;
+                display: flex;
+                justify-content: center;
+            }
+
+            .hero-content {
+                max-width: 100%;
+                padding: 1.5rem;
+                margin: 0 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-content .small-heading {
+                font-size: 0.9rem;
+            }
+
+            .hero-content .description {
+                font-size: 0.95rem;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .hero-btn {
@@ -1038,14 +1079,14 @@
                 SolarReviews
             </a>
             <div class="nav-links">
-                <a href="/solar-calculator">Solar Calculator</a>
+                <a href="#">Solar Calculator</a>
                 @if (Route::has('login'))
                     @auth
                         <a href="{{ url('/dashboard') }}">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}">Log in</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Sign up</a>
+                            <!--<a href="{{ route('register') }}">Sign up</a>-->
                         @endif
                     @endauth
                 @endif
@@ -1150,7 +1191,7 @@
     <section class="cta">
         <h2>Ready to Go Solar?</h2>
         <p>Join thousands of homeowners who are saving money with solar energy.</p>
-        <a href="/get-quotes" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
+        <a href="#" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
     </section>
 
     <!-- State Map Section -->
@@ -1231,30 +1272,30 @@
             <div class="footer-links">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="/how-it-works">How It Works</a></li>
-                    <li><a href="/solar-companies">Solar Companies</a></li>
-                    <li><a href="/reviews">Reviews</a></li>
-                    <li><a href="/blog">Blog</a></li>
-                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Solar Companies</a></li>
+                    <li><a href="#">Reviews</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h3>Solar Resources</h3>
                 <ul>
-                    <li><a href="/solar-guides">Solar Guides</a></li>
-                    <li><a href="/solar-calculator">Solar Calculator</a></li>
-                    <li><a href="/solar-incentives">Solar Incentives</a></li>
-                    <li><a href="/solar-financing">Financing Options</a></li>
-                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="#">Solar Guides</a></li>
+                    <li><a href="#">Solar Calculator</a></li>
+                    <li><a href="#">Solar Incentives</a></li>
+                    <li><a href="#">Financing Options</a></li>
+                    <li><a href="#">FAQ</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h3>Legal</h3>
                 <ul>
-                    <li><a href="/privacy-policy">Privacy Policy</a></li>
-                    <li><a href="/terms-of-service">Terms of Service</a></li>
-                    <li><a href="/cookie-policy">Cookie Policy</a></li>
-                    <li><a href="/sitemap">Sitemap</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Sitemap</a></li>
                 </ul>
             </div>
         </div>
