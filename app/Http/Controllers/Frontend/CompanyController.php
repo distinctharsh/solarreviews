@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\CompanyReview;
 use App\Models\State;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -56,16 +57,46 @@ class CompanyController extends Controller
         });
         
         // Prepare the data for the view
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
         $data = [
             'state' => [
                 'name' => $currentState->name,
                 'slug' => $currentState->slug,
             ],
             'states' => $states,
-            'companies' => $companies
+            'companies' => $companies,
+            'categories' => $categories,
         ];
         
         return view('frontend.companies.state', $data);
+    }
+
+    /**
+     * Show top 20 companies for a given category based on reviews.
+     */
+    public function categoryComparison($categorySlug)
+    {
+        $category = Category::where('slug', $categorySlug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $companies = Company::whereHas('categories', function ($q) use ($category) {
+                $q->where('categories.id', $category->id);
+            })
+            ->where('is_active', true)
+            ->orderByDesc('average_rating')
+            ->orderByDesc('total_reviews')
+            ->limit(20)
+            ->get();
+
+        return view('frontend.companies.category-comparison', [
+            'category' => $category,
+            'companies' => $companies,
+        ]);
     }
 
     /**

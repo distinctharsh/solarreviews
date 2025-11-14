@@ -1116,34 +1116,34 @@
             
             <div class="products-grid">
                 <!-- Panel Card -->
-                <div class="product-card">
+                <a href="{{ url('compare/panels') }}" class="product-card" style="text-decoration:none; color:inherit;">
                     <div class="product-image">
                         <img src="{{ asset('images/panels.png') }}" alt="Solar Panels">
                     </div>
                     <div class="product-content">
                         <h3>Solar Panels</h3>
                     </div>
-                </div>
+                </a>
                 
                 <!-- Battery Card -->
-                <div class="product-card">
+                <a href="{{ url('compare/batteries') }}" class="product-card" style="text-decoration:none; color:inherit;">
                     <div class="product-image">
                         <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries">
                     </div>
                     <div class="product-content">
                         <h3>Solar Batteries</h3>
                     </div>
-                </div>
+                </a>
                 
                 <!-- Inverter Card -->
-                <div class="product-card">
+                <a href="{{ url('compare/inverters') }}" class="product-card" style="text-decoration:none; color:inherit;">
                     <div class="product-image">
                         <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters">
                     </div>
                     <div class="product-content">
                         <h3>Solar Inverters</h3>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>

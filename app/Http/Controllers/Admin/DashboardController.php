@@ -30,8 +30,8 @@ class DashboardController extends Controller
             'total_users' => User::count(),
         ];
 
-        // Recent reviews with company and product info
-        $recentReviews = CompanyReview::with(['company', 'product'])
+        // Recent reviews with company and category info
+        $recentReviews = CompanyReview::with(['company', 'category'])
             ->latest()
             ->take(5)
             ->get()
@@ -47,9 +47,9 @@ class DashboardController extends Controller
                         'name' => (string)$review->company->name,
                         'logo' => $review->company->logo ? (string)$review->company->logo : null,
                     ] : null,
-                    'product' => $review->product ? [
-                        'id' => (string)$review->product->id,
-                        'name' => (string)$review->product->name,
+                    'category' => $review->category ? [
+                        'id' => (string)$review->category->id,
+                        'name' => (string)$review->category->name,
                     ] : null,
                 ];
             });

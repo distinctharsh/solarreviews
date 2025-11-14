@@ -12,7 +12,7 @@ class CompanyReview extends Model
 
     protected $fillable = [
         'company_id',
-        'product_id',
+        'category_id',
         'reviewer_name',
         'rating',
         'review_text',
@@ -33,8 +33,8 @@ class CompanyReview extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function product(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Category::class);
     }
 }

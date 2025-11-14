@@ -136,11 +136,11 @@
                                                         {{ $review['company']['name'] }}
                                                     </a>
                                                 @endif
-                                                @if($review['product'])
+                                                @if(!empty($review['category']))
                                                     <span class="mx-1">•</span>
-                                                    <a href="{{ route('admin.products.edit', $review['product']['id']) }}" class="text-green-600 hover:text-green-800">
-                                                        {{ $review['product']['name'] }}
-                                                    </a>
+                                                    <span class="text-gray-600">
+                                                        {{ $review['category']['name'] }}
+                                                    </span>
                                                 @endif
                                             </div>
                                         </div>

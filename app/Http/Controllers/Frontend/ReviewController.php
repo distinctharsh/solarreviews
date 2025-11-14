@@ -22,6 +22,7 @@ class ReviewController extends Controller
         $validated = $request->validate([
             'company_id' => 'required|exists:companies,id',
             'state_id' => 'required|exists:states,id',
+            'category_id' => 'required|exists:categories,id',
             'reviewer_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'rating' => 'required|integer|min:1|max:5',
@@ -47,6 +48,7 @@ class ReviewController extends Controller
             $review = new CompanyReview();
             $review->company_id = $validated['company_id'];
             $review->state_id = $validated['state_id'];
+            $review->category_id = $validated['category_id'];
             $review->reviewer_name = $validated['reviewer_name'];
             $review->email = $validated['email'];
             $review->rating = $validated['rating'];

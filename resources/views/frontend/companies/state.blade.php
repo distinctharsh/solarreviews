@@ -488,6 +488,18 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="category">Select Category *</label>
+                    <select id="category" name="category_id" required>
+                        <option value="">Select Category</option>
+                        @if(isset($categories))
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <label>Rate your experience with <span id="companyNameInModal"></span> *</label>

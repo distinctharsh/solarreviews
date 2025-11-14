@@ -185,6 +185,27 @@
                             <p class="error-message">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Categories -->
+                    <div class="form-group">
+                        <label for="category_ids" class="form-label">
+                            Categories (Products Provided)
+                        </label>
+                        <select id="category_ids" name="category_ids[]" multiple
+                                class="form-input @error('category_ids') border-red-500 @enderror">
+                            @if(isset($categories))
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ in_array($category->id, old('category_ids', isset($company) ? $company->categories()->pluck('id')->toArray() : [])) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        @error('category_ids')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Right Column -->

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\State;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -32,10 +33,15 @@ class CompanyController extends Controller
         $states = State::where('is_active', true)
             ->orderBy('name')
             ->get();
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
             
         return view('admin.companies.form', [
             'company' => new Company(),
             'states' => $states,
+            'categories' => $categories,
             'title' => 'Add New Company',
             'buttonText' => 'Create Company',
             'route' => route('admin.companies.store'),
@@ -53,7 +59,9 @@ class CompanyController extends Controller
             'state_id' => 'required|exists:states,id',
             'description' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
 
         try {
@@ -88,6 +96,9 @@ class CompanyController extends Controller
             $validated['is_active'] = $request->has('is_active');
             
             $company = Company::create($validated);
+
+            // Sync categories
+            $company->categories()->sync($request->input('category_ids', []));
             
             return redirect()
                 ->route('admin.companies.index')
@@ -107,10 +118,15 @@ class CompanyController extends Controller
         $states = State::where('is_active', true)
             ->orderBy('name')
             ->get();
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
             
         return view('admin.companies.form', [
             'company' => $company,
             'states' => $states,
+            'categories' => $categories,
             'title' => 'Edit Company',
             'buttonText' => 'Update Company',
             'route' => route('admin.companies.update', $company),
@@ -129,6 +145,8 @@ class CompanyController extends Controller
             'description' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'exists:categories,id',
         ]);
         
         try {
@@ -161,6 +179,9 @@ class CompanyController extends Controller
             
             // Update company
             $company->update($validated);
+
+            // Sync categories
+            $company->categories()->sync($request->input('category_ids', []));
             
             return redirect()
                 ->route('admin.companies.index')
