@@ -292,12 +292,10 @@
                     <tr>
                         <td>
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                @if($company->logo)
+                                @if(!empty($company->logo))
                                     <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }}" class="company-logo">
                                 @else
-                                    <div class="logo-placeholder">
-                                        <i class="fas fa-building"></i>
-                                    </div>
+                                    <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo" class="company-logo">
                                 @endif
                                 <span style="font-weight: 500;">{{ $company->name }}</span>
                             </div>

@@ -194,9 +194,14 @@
                         <select id="category_ids" name="category_ids[]" multiple
                                 class="form-input @error('category_ids') border-red-500 @enderror">
                             @if(isset($categories))
+                                @php
+                                    $selectedCategoryIds = old('category_ids', isset($company)
+                                        ? $company->categories()->pluck('categories.id')->toArray()
+                                        : []);
+                                @endphp
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}"
-                                        {{ in_array($category->id, old('category_ids', isset($company) ? $company->categories()->pluck('id')->toArray() : [])) ? 'selected' : '' }}>
+                                        {{ in_array($category->id, $selectedCategoryIds) ? 'selected' : '' }}>
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
@@ -258,18 +263,16 @@
                         @enderror
                     </div>
 
-                    <!-- Active Status (only for edit) -->
-                    @if(isset($company) && $company->exists)
-                        <div class="form-group" style="display: flex; align-items: center;">
-                            <input type="hidden" name="is_active" value="0">
-                            <input type="checkbox" id="is_active" name="is_active" value="1" 
-                                   style="margin-right: 8px;"
-                                   {{ old('is_active', $company->is_active) ? 'checked' : '' }}>
-                            <label for="is_active" class="form-label" style="margin: 0;">
-                                Active Company
-                            </label>
-                        </div>
-                    @endif
+                    <!-- Active Status -->
+                    <div class="form-group" style="display: flex; align-items: center;">
+                        <input type="hidden" name="is_active" value="0">
+                        <input type="checkbox" id="is_active" name="is_active" value="1" 
+                               style="margin-right: 8px;"
+                               {{ old('is_active', $company->is_active ?? 1) ? 'checked' : '' }}>
+                        <label for="is_active" class="form-label" style="margin: 0;">
+                            Active Company
+                        </label>
+                    </div>
                 </div>
             </div>
 

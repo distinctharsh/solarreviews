@@ -27,11 +27,13 @@ class CompanyController extends Controller
             ->select('id', 'name', 'slug')
             ->firstOrFail();
             
-        $cacheKey = "state_companies_{$stateSlug}";
+        // Include a version suffix in the cache key to invalidate old cached data
+        // (needed after adding category_ids and other new fields)
+        $cacheKey = "state_companies_{$stateSlug}_v2";
         
         // Only cache the companies data, not the state data
         $companies = Cache::remember($cacheKey, now()->addHours(12), function () use ($currentState) {
-            return Company::with(['state', 'reviews'])
+            return Company::with(['state', 'reviews', 'categories'])
                 ->where('state_id', $currentState->id)
                 ->where('is_active', true)
                 ->orderBy('average_rating', 'desc')
@@ -46,6 +48,7 @@ class CompanyController extends Controller
                         'description' => $company->description,
                         'average_rating' => (float) $company->average_rating,
                         'total_reviews' => $company->total_reviews,
+                        'category_ids' => $company->categories->pluck('id')->toArray(),
                         'featured_review' => $company->reviews->where('is_featured', true)->first() ? [
                             'reviewer_name' => $company->reviews->where('is_featured', true)->first()->reviewer_name,
                             'review_text' => $company->reviews->where('is_featured', true)->first()->review_text,
@@ -64,6 +67,7 @@ class CompanyController extends Controller
 
         $data = [
             'state' => [
+                'id' => $currentState->id,
                 'name' => $currentState->name,
                 'slug' => $currentState->slug,
             ],

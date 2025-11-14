@@ -498,9 +498,14 @@
                         <div class="company-desc">
                             {{ Str::limit($company->description ?? 'No description available.', 180) }}
                             @if(strlen($company->description ?? '') > 180)
-                                <button type="button" class="get-quote-btn write-review-btn" data-company-id="{{ $company->id }}" data-company-name="{{ $company->name }}">
-                                    Write a Review
-                                </button>
+                                @if(!(auth()->check() && auth()->user()->is_admin))
+                                    <button type="button" class="get-quote-btn write-review-btn"
+                                            data-company-id="{{ $company->id }}"
+                                            data-company-name="{{ $company->name }}"
+                                            data-category-ids="{{ implode(',', $company->category_ids ?? []) }}">
+                                        Write a Review
+                                    </button>
+                                @endif
                             @endif
                         </div>
                         <div class="rating-bar">
@@ -515,9 +520,14 @@
                 </div>
 
                 <div>
-                    <button type="button" class="get-quote write-review-btn" data-company-id="{{ $company->id }}" data-company-name="{{ $company->name }}">
-                        Write a Review
-                    </button>
+                    @if(!(auth()->check() && auth()->user()->is_admin))
+                        <button type="button" class="get-quote write-review-btn" 
+                                data-company-id="{{ $company->id }}" 
+                                data-company-name="{{ $company->name }}"
+                                data-category-ids="{{ implode(',', $company->category_ids ?? []) }}">
+                            Write a Review
+                        </button>
+                    @endif
                 </div>
             </div>
         @empty
@@ -541,12 +551,13 @@
             <input type="hidden" name="company_id" id="companyId">
             <div class="custom-modal-body">
                 <div class="form-group">
-                    <label for="state">Select State *</label>
-                    <select id="state" name="state_id" required>
-                        <option value="">Select State</option>
-                        @foreach($states as $state)
-                            <option value="{{ $state->id }}">{{ $state->name }}</option>
-                        @endforeach
+                    <label for="state">State *</label>
+                    {{-- Fix state to current page state --}}
+                    <input type="hidden" name="state_id" value="{{ $state['id'] ?? ($state->id ?? '') }}">
+                    <select id="state" disabled>
+                        <option value="">
+                            {{ $state['name'] ?? ($state->name ?? 'State') }}
+                        </option>
                     </select>
                 </div>
 
@@ -556,7 +567,7 @@
                         <option value="">Select Category</option>
                         @if(isset($categories))
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" data-category-id="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         @endif
                     </select>
@@ -630,6 +641,7 @@
         const ratingStars = document.querySelectorAll('.rating-stars i');
         const ratingInput = document.getElementById('rating');
         const emailInput = document.getElementById('email');
+        const categorySelect = document.getElementById('category');
         const otpField = document.getElementById('otpField');
         const otpInput = document.getElementById('otp');
         const sendOtpBtn = document.getElementById('sendOtpBtn');
@@ -646,14 +658,70 @@
             console.error('Rating input not found!');
         }
         
+        // Cache original category options for filtering
+        let originalCategoryOptions = [];
+        if (categorySelect) {
+            originalCategoryOptions = Array.from(categorySelect.options).map(option => ({
+                value: option.value,
+                text: option.text,
+                categoryId: option.getAttribute('data-category-id')
+            }));
+        }
+
+        function filterCategoriesForCompany(categoryIdsCsv) {
+            if (!categorySelect || originalCategoryOptions.length === 0) return;
+
+            const categoryIds = (categoryIdsCsv || '')
+                .split(',')
+                .map(id => id.trim())
+                .filter(id => id !== '');
+
+            // Clear current options
+            categorySelect.innerHTML = '';
+
+            // Add placeholder
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Select Category';
+            categorySelect.appendChild(placeholder);
+
+            let optionsToShow = [];
+
+            // If company has specific categories, filter; otherwise show none
+            if (categoryIds.length) {
+                optionsToShow = originalCategoryOptions.filter(opt =>
+                    opt.categoryId && categoryIds.includes(String(opt.categoryId))
+                );
+            } else {
+                optionsToShow = [];
+            }
+
+            // Enable/disable select based on availability
+            categorySelect.disabled = optionsToShow.length === 0;
+
+            optionsToShow.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.text;
+                if (opt.categoryId) {
+                    option.setAttribute('data-category-id', opt.categoryId);
+                }
+                categorySelect.appendChild(option);
+            });
+        }
+
         // Open review modal with company data
         writeReviewBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 const companyId = this.getAttribute('data-company-id');
                 const companyName = this.getAttribute('data-company-name');
+                const companyCategoryIds = this.getAttribute('data-category-ids');
                 
                 companyIdInput.value = companyId;
                 companyNameInModal.textContent = companyName;
+
+                // Filter categories for this company
+                filterCategoriesForCompany(companyCategoryIds);
                 
                 // Reset form
                 resetReviewForm();
