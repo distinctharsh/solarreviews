@@ -1,23 +1,3 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               10.4.32-MariaDB - mariadb.org binary distribution
--- Server OS:                    Win64
--- HeidiSQL Version:             12.12.0.7122
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
--- Dumping database structure for solar
-CREATE DATABASE IF NOT EXISTS `solar` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
-USE `solar`;
 
 -- Dumping structure for table solar.cache
 CREATE TABLE IF NOT EXISTS `cache` (
@@ -43,6 +23,94 @@ CREATE TABLE IF NOT EXISTS `cache_locks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table solar.cache_locks: ~0 rows (approximately)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Dumping structure for table solar.states
+CREATE TABLE IF NOT EXISTS `states` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `code` varchar(2) NOT NULL COMMENT 'State code like CA, NY, etc.',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `states_name_unique` (`name`),
+  UNIQUE KEY `states_code_unique` (`code`),
+  UNIQUE KEY `states_slug_unique` (`slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table solar.states: ~36 rows (approximately)
+INSERT INTO `states` (`id`, `name`, `slug`, `description`, `code`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	(1, 'Andhra Pradesh', 'andhra-pradesh', 'Top solar companies in Andhra Pradesh', 'AP', 1, '2025-11-11 02:56:10', '2025-11-11 02:56:10', NULL),
+	(2, 'Arunachal Pradesh', 'arunachal-pradesh', 'Top solar companies in Arunachal Pradesh', 'AR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(3, 'Assam', 'assam', 'Top solar companies in Assam', 'AS', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(4, 'Bihar', 'bihar', 'Top solar companies in Bihar', 'BR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(5, 'Chhattisgarh', 'chhattisgarh', 'Top solar companies in Chhattisgarh', 'CG', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(6, 'Goa', 'goa', 'Top solar companies in Goa', 'GA', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(7, 'Gujarat', 'gujarat', 'Top solar companies in Gujarat', 'GJ', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(8, 'Haryana', 'haryana', 'Top solar companies in Haryana', 'HR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(9, 'Himachal Pradesh', 'himachal-pradesh', 'Top solar companies in Himachal Pradesh', 'HP', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(10, 'Jharkhand', 'jharkhand', 'Top solar companies in Jharkhand', 'JH', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
+	(11, 'Karnataka', 'karnataka', 'Top solar companies in Karnataka', 'KA', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(12, 'Kerala', 'kerala', 'Top solar companies in Kerala', 'KL', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(13, 'Madhya Pradesh', 'madhya-pradesh', 'Top solar companies in Madhya Pradesh', 'MP', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(14, 'Maharashtra', 'maharashtra', 'Top solar companies in Maharashtra', 'MH', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(15, 'Manipur', 'manipur', 'Top solar companies in Manipur', 'MN', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(16, 'Meghalaya', 'meghalaya', 'Top solar companies in Meghalaya', 'ML', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(17, 'Mizoram', 'mizoram', 'Top solar companies in Mizoram', 'MZ', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(18, 'Nagaland', 'nagaland', 'Top solar companies in Nagaland', 'NL', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(19, 'Odisha', 'odisha', 'Top solar companies in Odisha', 'OD', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(20, 'Punjab', 'punjab', 'Top solar companies in Punjab', 'PB', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
+	(21, 'Rajasthan', 'rajasthan', 'Top solar companies in Rajasthan', 'RJ', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(22, 'Sikkim', 'sikkim', 'Top solar companies in Sikkim', 'SK', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(23, 'Tamil Nadu', 'tamil-nadu', 'Top solar companies in Tamil Nadu', 'TN', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(24, 'Telangana', 'telangana', 'Top solar companies in Telangana', 'TG', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(25, 'Tripura', 'tripura', 'Top solar companies in Tripura', 'TR', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(26, 'Uttar Pradesh', 'uttar-pradesh', 'Top solar companies in Uttar Pradesh', 'UP', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(27, 'Uttarakhand', 'uttarakhand', 'Top solar companies in Uttarakhand', 'UK', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(28, 'West Bengal', 'west-bengal', 'Top solar companies in West Bengal', 'WB', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
+	(29, 'Andaman and Nicobar Islands', 'andaman-and-nicobar-islands', 'Top solar companies in Andaman and Nicobar Islands', 'AN', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(30, 'Chandigarh', 'chandigarh', 'Top solar companies in Chandigarh', 'CH', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(31, 'Dadra and Nagar Haveli and Daman and Diu', 'dadra-and-nagar-haveli-and-daman-and-diu', 'Top solar companies in Dadra and Nagar Haveli and Daman and Diu', 'DN', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(32, 'Delhi', 'delhi', 'Top solar companies in Delhi', 'DL', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(33, 'Jammu and Kashmir', 'jammu-and-kashmir', 'Top solar companies in Jammu and Kashmir', 'JK', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(34, 'Ladakh', 'ladakh', 'Top solar companies in Ladakh', 'LA', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
+	(35, 'Lakshadweep', 'lakshadweep', 'Top solar companies in Lakshadweep', 'LD', 1, '2025-11-11 02:56:15', '2025-11-11 02:56:15', NULL),
+	(36, 'Puducherry', 'puducherry', 'Top solar companies in Puducherry', 'PY', 1, '2025-11-11 02:56:15', '2025-11-11 02:56:15', NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- Dumping structure for table solar.categories
 CREATE TABLE IF NOT EXISTS `categories` (
@@ -413,7 +481,7 @@ INSERT INTO `company_reviews` (`id`, `company_id`, `category_id`, `state_id`, `r
 	(234, 20, NULL, NULL, 'Emily Miller F', NULL, NULL, 5, 'SunPower by Sunworks made going solar easy and stress-free. Great customer service!', '2024-02-09', 'Facebook', 0, 0, '2024-02-09 02:56:45', '2024-02-09 02:56:45', NULL, NULL, 0, NULL),
 	(235, 20, NULL, NULL, 'Jane Rodriguez', NULL, NULL, 4, 'Our experience with SunPower by Sunworks was outstanding from start to finish. Highly recommend!', '2024-02-24', 'Website', 0, 0, '2024-02-24 02:56:45', '2024-02-24 02:56:45', NULL, NULL, 0, NULL),
 	(236, 20, NULL, NULL, 'Jennifer Wilson', NULL, NULL, 3, 'Very satisfied with the service from SunPower by Sunworks. Our energy bills have dropped significantly.', '2023-08-30', 'Google', 0, 0, '2023-08-30 02:56:45', '2023-08-30 02:56:45', NULL, NULL, 0, NULL),
-	(237, 1, NULL, 32, 'Harsh', 'Good Products', 'distinctharsh@gmail.com', 3, 'Their solar inverter was of excellent quality â€” installation was smooth, and the performance exceeded expectations. Both the product and service were truly top-notch.â€ âš¡â˜€ï¸', '2025-11-11', 'website', 1, 0, '2025-11-11 05:12:19', '2025-11-11 06:57:46', NULL, NULL, 0, NULL);
+	(237, 1, NULL, 32, 'Harsh', 'Good Products', 'distinctharsh@gmail.com', 3, 'Their solar inverter was of excellent quality Ã¢â‚¬â€ installation was smooth, and the performance exceeded expectations. Both the product and service were truly top-notch.Ã¢â‚¬Â Ã¢Å¡Â¡Ã¢Ëœâ‚¬Ã¯Â¸Â', '2025-11-11', 'website', 1, 0, '2025-11-11 05:12:19', '2025-11-11 06:57:46', NULL, NULL, 0, NULL);
 
 -- Dumping structure for table solar.failed_jobs
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -527,41 +595,35 @@ CREATE TABLE IF NOT EXISTS `products` (
 
 -- Dumping data for table solar.products: ~0 rows (approximately)
 
--- Dumping structure for table solar.product_variants
-CREATE TABLE IF NOT EXISTS `product_variants` (
+-- Dumping structure for table solar.users
+CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `product_id` bigint(20) unsigned NOT NULL,
-  `state_id` bigint(20) unsigned NOT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `sale_price` decimal(10,2) DEFAULT NULL,
-  `sale_start_date` date DEFAULT NULL,
-  `sale_end_date` date DEFAULT NULL,
-  `stock_quantity` int(11) NOT NULL DEFAULT 0,
-  `sku` varchar(255) DEFAULT NULL,
-  `weight` decimal(8,2) DEFAULT NULL COMMENT 'in kg',
-  `length` decimal(8,2) DEFAULT NULL COMMENT 'in cm',
-  `width` decimal(8,2) DEFAULT NULL COMMENT 'in cm',
-  `height` decimal(8,2) DEFAULT NULL COMMENT 'in cm',
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `is_available` tinyint(1) NOT NULL DEFAULT 1,
-  `specifications` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`specifications`)),
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
+  `password` varchar(255) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `product_variants_product_id_state_id_unique` (`product_id`,`state_id`),
-  UNIQUE KEY `product_variants_sku_unique` (`sku`),
-  KEY `product_variants_state_id_foreign` (`state_id`),
-  CONSTRAINT `product_variants_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `product_variants_state_id_foreign` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table solar.users: ~0 rows (approximately)
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `is_admin`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'Admin User', 'admin@example.com', '2025-11-11 06:41:42', 1, '$2y$12$ai9CZvzM1hS2fGw54UFQdeufETT1F2mBewtE5k/6RUPv0DQCrMykS', 'kf1qe0X9Mg6JW9Tz7VkM6PYiRGEq8tchehcMqxAhJ2mXa8IxUYsB42UtD0jA', '2025-11-11 02:57:33', '2025-11-11 06:41:42');
+
+
+
+
 
 -- Dumping data for table solar.product_variants: ~0 rows (approximately)
 
 -- Dumping structure for table solar.reviews
 CREATE TABLE IF NOT EXISTS `reviews` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `product_id` bigint(20) unsigned NOT NULL,
+ 
   `state_id` bigint(20) unsigned NOT NULL,
   `title` varchar(255) NOT NULL,
   `content` text NOT NULL,
@@ -582,11 +644,10 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `reviews_product_id_foreign` (`product_id`),
+
   KEY `reviews_state_id_foreign` (`state_id`),
   KEY `reviews_approved_by_foreign` (`approved_by`),
   CONSTRAINT `reviews_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `reviews_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   CONSTRAINT `reviews_state_id_foreign` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -612,83 +673,3 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 	('kQDyNRhpYc2ySzH8PDuLrMjhwPewdrMZ3QR5oXzU', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYnN5NFBsbFNSNkhHZDFKaW5WTkVWOE1OQVNESU1HRllwaDhaeXhBQiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9jb21wYXJlL2ludmVydGVycyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1763101958),
 	('XnnLYtJ8k1CHP0IGiMuxVXGzUhKpncBDf5Y1RaDE', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiVG9BeE92bGliMmtIVXV4aGhRd3hxa2kyU01YVFBZVDEyVUtjUFliNCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', 1763098674);
 
--- Dumping structure for table solar.states
-CREATE TABLE IF NOT EXISTS `states` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `code` varchar(2) NOT NULL COMMENT 'State code like CA, NY, etc.',
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `states_name_unique` (`name`),
-  UNIQUE KEY `states_code_unique` (`code`),
-  UNIQUE KEY `states_slug_unique` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dumping data for table solar.states: ~36 rows (approximately)
-INSERT INTO `states` (`id`, `name`, `slug`, `description`, `code`, `is_active`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'Andhra Pradesh', 'andhra-pradesh', 'Top solar companies in Andhra Pradesh', 'AP', 1, '2025-11-11 02:56:10', '2025-11-11 02:56:10', NULL),
-	(2, 'Arunachal Pradesh', 'arunachal-pradesh', 'Top solar companies in Arunachal Pradesh', 'AR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(3, 'Assam', 'assam', 'Top solar companies in Assam', 'AS', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(4, 'Bihar', 'bihar', 'Top solar companies in Bihar', 'BR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(5, 'Chhattisgarh', 'chhattisgarh', 'Top solar companies in Chhattisgarh', 'CG', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(6, 'Goa', 'goa', 'Top solar companies in Goa', 'GA', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(7, 'Gujarat', 'gujarat', 'Top solar companies in Gujarat', 'GJ', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(8, 'Haryana', 'haryana', 'Top solar companies in Haryana', 'HR', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(9, 'Himachal Pradesh', 'himachal-pradesh', 'Top solar companies in Himachal Pradesh', 'HP', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(10, 'Jharkhand', 'jharkhand', 'Top solar companies in Jharkhand', 'JH', 1, '2025-11-11 02:56:11', '2025-11-11 02:56:11', NULL),
-	(11, 'Karnataka', 'karnataka', 'Top solar companies in Karnataka', 'KA', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(12, 'Kerala', 'kerala', 'Top solar companies in Kerala', 'KL', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(13, 'Madhya Pradesh', 'madhya-pradesh', 'Top solar companies in Madhya Pradesh', 'MP', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(14, 'Maharashtra', 'maharashtra', 'Top solar companies in Maharashtra', 'MH', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(15, 'Manipur', 'manipur', 'Top solar companies in Manipur', 'MN', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(16, 'Meghalaya', 'meghalaya', 'Top solar companies in Meghalaya', 'ML', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(17, 'Mizoram', 'mizoram', 'Top solar companies in Mizoram', 'MZ', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(18, 'Nagaland', 'nagaland', 'Top solar companies in Nagaland', 'NL', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(19, 'Odisha', 'odisha', 'Top solar companies in Odisha', 'OD', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(20, 'Punjab', 'punjab', 'Top solar companies in Punjab', 'PB', 1, '2025-11-11 02:56:12', '2025-11-11 02:56:12', NULL),
-	(21, 'Rajasthan', 'rajasthan', 'Top solar companies in Rajasthan', 'RJ', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(22, 'Sikkim', 'sikkim', 'Top solar companies in Sikkim', 'SK', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(23, 'Tamil Nadu', 'tamil-nadu', 'Top solar companies in Tamil Nadu', 'TN', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(24, 'Telangana', 'telangana', 'Top solar companies in Telangana', 'TG', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(25, 'Tripura', 'tripura', 'Top solar companies in Tripura', 'TR', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(26, 'Uttar Pradesh', 'uttar-pradesh', 'Top solar companies in Uttar Pradesh', 'UP', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(27, 'Uttarakhand', 'uttarakhand', 'Top solar companies in Uttarakhand', 'UK', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(28, 'West Bengal', 'west-bengal', 'Top solar companies in West Bengal', 'WB', 1, '2025-11-11 02:56:13', '2025-11-11 02:56:13', NULL),
-	(29, 'Andaman and Nicobar Islands', 'andaman-and-nicobar-islands', 'Top solar companies in Andaman and Nicobar Islands', 'AN', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(30, 'Chandigarh', 'chandigarh', 'Top solar companies in Chandigarh', 'CH', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(31, 'Dadra and Nagar Haveli and Daman and Diu', 'dadra-and-nagar-haveli-and-daman-and-diu', 'Top solar companies in Dadra and Nagar Haveli and Daman and Diu', 'DN', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(32, 'Delhi', 'delhi', 'Top solar companies in Delhi', 'DL', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(33, 'Jammu and Kashmir', 'jammu-and-kashmir', 'Top solar companies in Jammu and Kashmir', 'JK', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(34, 'Ladakh', 'ladakh', 'Top solar companies in Ladakh', 'LA', 1, '2025-11-11 02:56:14', '2025-11-11 02:56:14', NULL),
-	(35, 'Lakshadweep', 'lakshadweep', 'Top solar companies in Lakshadweep', 'LD', 1, '2025-11-11 02:56:15', '2025-11-11 02:56:15', NULL),
-	(36, 'Puducherry', 'puducherry', 'Top solar companies in Puducherry', 'PY', 1, '2025-11-11 02:56:15', '2025-11-11 02:56:15', NULL);
-
--- Dumping structure for table solar.users
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `email_verified_at` timestamp NULL DEFAULT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT 0,
-  `password` varchar(255) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Dumping data for table solar.users: ~0 rows (approximately)
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `is_admin`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 'Admin User', 'admin@example.com', '2025-11-11 06:41:42', 1, '$2y$12$ai9CZvzM1hS2fGw54UFQdeufETT1F2mBewtE5k/6RUPv0DQCrMykS', 'kf1qe0X9Mg6JW9Tz7VkM6PYiRGEq8tchehcMqxAhJ2mXa8IxUYsB42UtD0jA', '2025-11-11 02:57:33', '2025-11-11 06:41:42');
-
-/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

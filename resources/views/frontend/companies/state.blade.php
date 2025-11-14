@@ -470,7 +470,7 @@
                     @if(!empty($company->logo) && $company->logo !== 'null')
                         <img src="{{ $company->logo }}" class="company-logo" alt="{{ $company->name ?? 'Company Logo' }}">
                     @else
-                        <img src="{{ asset('images/default-logo.png') }}" class="company-logo" alt="Default Logo">
+                        <img src="{{ asset('images/company/cmp.png') }}" class="company-logo" alt="Default Company Logo">
                     @endif
 
                     <div class="company-info">

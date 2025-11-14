@@ -328,10 +328,10 @@
                                 <article class="company-card">
                                     <div class="company-main">
                                         <div class="company-logo">
-                                            @if($company->logo)
+                                            @if(!empty($company->logo))
                                                 <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }} logo">
                                             @else
-                                                <i class="fas fa-building text-gray-400"></i>
+                                                <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo">
                                             @endif
                                         </div>
                                         <div class="company-info">
