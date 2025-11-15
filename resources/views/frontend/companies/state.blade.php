@@ -11,72 +11,90 @@
     <style>
         :root {
             --primary-color: #1e40af;
-            --secondary-color: #1e3a8a;
+            --secondary-color: #0f172a;
             --accent-color: #3b82f6;
             --text-color: #1f2937;
-            --light-bg: #f9fafb;
+            --light-bg: #f5f7fb;
         }
 
         * {
-            margin: 0; padding: 0; box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         body {
             background-color: var(--light-bg);
             color: var(--text-color);
         }
 
         .page-wrapper {
-            display: flex;
-            justify-content: center;
-            padding: 30px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem 0.75rem 2.5rem;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1.25rem;
+            align-items: flex-start;
         }
 
         /* Left Sidebar */
         .sidebar {
-            width: 260px;
             background: #fff;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-right: 25px;
-            height: fit-content;
+            border-radius: 12px;
+            padding: 1.25rem 1.15rem;
+            position: sticky;
+            top: 80px;
         }
 
         .sidebar h3 {
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 12px;
+            color: var(--secondary-color);
+            margin-bottom: 0.85rem;
         }
 
         .sidebar ul {
             list-style: none;
+            margin-bottom: 1.5rem;
         }
 
-        .sidebar ul li {
-            margin-bottom: 8px;
+        .sidebar ul li + li {
+            margin-top: 0.35rem;
         }
 
         .sidebar ul li a {
             text-decoration: none;
             color: #389c48;
-            font-size: 14px;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #2563eb;
         }
 
         .calculator {
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #edf2f7;
+        }
+
+        .calculator h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
         }
 
         .calculator input {
             width: 100%;
-            padding: 10px;
+            padding: 0.65rem 0.85rem;
             border: 1px solid #d1d5db;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 14px;
+            border-radius: 8px;
+            margin-bottom: 0.65rem;
+            font-size: 0.95rem;
         }
 
         .calculator button {
@@ -84,141 +102,334 @@
             background: #389c48;
             color: #fff;
             border: none;
-            padding: 10px 0;
-            border-radius: 5px;
+            padding: 0.75rem 0;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .calculator button:hover {
+            background: #257239;
         }
 
         /* Right Content */
         .content {
-            max-width: 850px;
-            flex: 1;
+            width: 100%;
         }
 
         .header {
-            margin-bottom: 25px;
+            margin-bottom: 1.25rem;
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 8px;
+            color: var(--secondary-color);
         }
 
-        .company-card {
+        .header p {
+            color: #475569;
+            margin-top: 0.4rem;
+        }
+
+        .company-profile-card {
             background: #fff;
+            border: 1px solid #dbe4f3;
+            border-radius: 12px;
+            padding: 1.1rem;
+            margin-bottom: 1.15rem;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+        }
+
+        .company-main {
+            display: flex;
+            gap: 1.1rem;
+        }
+
+        .company-logo-card {
+            width: 80px;
+            min-width: 80px;
+            height: 80px;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            padding: 20px;
+            border-radius: 10px;
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            padding: 0.6rem;
         }
 
-        .company-left {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .company-logo {
-            width: 90px;
-            height: 70px;
+        .company-logo-card img {
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
-            margin-right: 20px;
-            border: 1px solid #eee;
-            padding: 5px;
-            background: #fff;
-            border-radius: 5px;
         }
 
-        .company-info h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
+        .company-info {
+            flex: 1;
         }
 
-        .stars {
-            color: #f5a623;
-            font-size: 15px;
-        }
-
-        .rating-text {
-            font-size: 14px;
-            color: #7f8c8d;
-        }
-
-        .company-desc {
-            font-size: 14px;
-            color: #555;
-            margin-top: 8px;
-            line-height: 1.6;
-        }
-
-        .company-desc a {
-            color: #389c48;
-            text-decoration: none;
-        }
-
-        .rating-bar {
-            margin-top: 12px;
+        .company-title-row {
             display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .company-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            color: var(--secondary-color);
+        }
+
+        .company-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            color: #475569;
+        }
+
+        .company-rating .stars i {
+            color: #f6ad02;
+            font-size: 1rem;
+        }
+
+        .company-rating .rating-number {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .company-rating .review-count {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .btn-quote {
+            background: #1f7ef2;
+            color: #fff;
+            border: none;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-quote:hover {
+            background: #1661c0;
+        }
+
+        .btn-review {
+            background: #389c48;
+            color: #fff;
+            border: none;
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-review:hover {
+            background: #256c36;
+        }
+
+        .company-description-card {
+            margin-top: 0.65rem;
+            background: #f7fbff;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 0.75rem 0.85rem;
+        }
+
+        .company-description-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: #0f172a;
+        }
+
+        .company-description-card p {
+            color: #475569;
+            margin-bottom: 0.2rem;
+            line-height: 1.45;
+        }
+
+        .link-button {
+            background: none;
+            border: none;
+            color: #1f7ef2;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .expert-score-card {
+            margin-top: 0.9rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.6rem 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 0.9rem;
+        }
+
+        .score-dots span {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            background: #dbeafe;
+            display: inline-block;
+        }
+
+        .score-dots span.active {
+            background: #2563eb;
+        }
+
+        .tier-badge {
+            background: #10b981;
+            color: #fff;
+            padding: 0.15rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        details.rating-panel {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
+            margin-top: 0.6rem;
+            overflow: hidden;
+        }
+
+        details.rating-panel summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 0.75rem 0.95rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .blue-bar {
-            background: #389c48;
-            height: 8px;
-            width: 60px;
-            border-radius: 3px;
-            margin-right: 6px;
+        details.rating-panel summary::-webkit-details-marker {
+            display: none;
         }
 
-        .get-quote {
-            background: #389c48;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
+        details.rating-panel summary::after {
+            content: '+';
+            font-size: 1.2rem;
+            color: #94a3b8;
         }
 
-        .get-quote-btn {
-            background: #389c48;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
+        details.rating-panel[open] summary::after {
+            content: '\2212';
         }
 
-        .write-review-btn {
-            background: #389c48;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
+        .panel-body {
+            border-top: 1px solid #e2e8f0;
+            padding: 0.6rem 0.95rem 0.85rem;
         }
 
-        @media(max-width: 992px) {
-            .page-wrapper { flex-direction: column; }
-            .sidebar { width: 100%; margin-right: 0; margin-bottom: 20px; }
-            .content { width: 100%; }
+        .metric-list {
+            list-style: none;
+            margin: 0.4rem 0 0;
+            padding: 0;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+        .metric-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-score {
+            width: 48px;
+            height: 36px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #047857;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .metric-label {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .negatives-row {
+            margin-top: 0.65rem;
+            color: #475569;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .services-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            padding: 0;
+        }
+
+        .services-list li {
+            background: #f1f5f9;
+            border-radius: 999px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        .latest-review-text {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .page-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .company-main {
+                flex-direction: column;
+            }
+
+            .company-logo-card {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .company-title-row {
+                flex-direction: column;
+            }
+
+            .btn-quote {
+                align-self: flex-start;
             }
         }
 
@@ -417,81 +628,173 @@
             <p>Compare verified solar installation companies in {{ $state['name'] }} with customer reviews and ratings.</p>
         </div>
 
-        @forelse($companies as $company)
-            @php
-                $company = (object) $company; // Convert array to object for easier access
-            @endphp
-            <div class="company-card">
-                <div class="company-left">
-                    @if(!empty($company->logo) && $company->logo !== 'null')
-                        <img src="{{ $company->logo }}" class="company-logo" alt="{{ $company->name ?? 'Company Logo' }}">
-                    @else
-                        <img src="{{ asset('images/company/cmp.png') }}" class="company-logo" alt="Default Company Logo">
-                    @endif
+        @php
+            $dummyCompanies = [
+                [
+                    'name' => 'Sunergy Solutions LLC',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.91,
+                    'reviews' => 145,
+                    'description' => 'Thank you for taking the time to learn more about Sunergy Solutions! We are ranked as the #1 installer for all of New England with years of know-how…',
+                    'latest_review' => 'Fantastic crew and clean install. System performing better than projections.'
+                ],
+                [
+                    'name' => 'BrightPath Solar Pros',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.78,
+                    'reviews' => 212,
+                    'description' => 'BrightPath focuses on premium hardware paired with concierge installation support for every homeowner.',
+                    'latest_review' => 'Sales team was transparent and the install was done in only two days.'
+                ],
+                [
+                    'name' => 'EcoBeam Installers',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.65,
+                    'reviews' => 189,
+                    'description' => 'EcoBeam has delivered over 12,000 rooftop systems nationwide and offers lifetime monitoring.',
+                    'latest_review' => 'Monitoring app is excellent and the crew cleaned up perfectly.'
+                ],
+                [
+                    'name' => 'HelioPrime Energy',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.59,
+                    'reviews' => 98,
+                    'description' => 'Specialists in hybrid solar + battery packages for homes that want unstoppable backup.',
+                    'latest_review' => 'Battery backup kicked in during the first storm and worked flawlessly.'
+                ],
+                [
+                    'name' => 'NorthStar Renewables',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.83,
+                    'reviews' => 167,
+                    'description' => 'NorthStar blends premium panels with affordable financing tailored for families.',
+                    'latest_review' => 'Financing was easy and the project manager kept us informed daily.'
+                ],
+                [
+                    'name' => 'Summit Skyline Solar',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.72,
+                    'reviews' => 134,
+                    'description' => 'Summit Skyline provides white-glove solar installs plus optional EV charger upgrades.',
+                    'latest_review' => 'Loved the attention to detail. EV charger add-on is super handy.'
+                ],
+                [
+                    'name' => 'Evergreen Grid Co.',
+                    'logo' => asset('images/company/cmp.png'),
+                    'rating' => 4.58,
+                    'reviews' => 121,
+                    'description' => 'Evergreen Grid brings 15 years of craftsmanship with NABCEP-certified crews.',
+                    'latest_review' => 'Crew was respectful and the workmanship is tidy and professional.'
+                ],
+            ];
+        @endphp
 
+        @foreach($dummyCompanies as $company)
+            @php
+                $rating = $company['rating'];
+                $fullStars = floor($rating);
+                $hasHalfStar = $rating - $fullStars >= 0.5;
+                $reviewCount = $company['reviews'];
+            @endphp
+            <article class="company-profile-card">
+                <div class="company-main">
+                    <div class="company-logo-card">
+                        <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo">
+                    </div>
                     <div class="company-info">
-                        <h2>{{ $company->name ?? 'Company Name' }}</h2>
-                        <div class="stars">
-                            @php
-                                $rating = $company->average_rating ?? 0;
-                                $fullStars = floor($rating);
-                                $hasHalfStar = $rating - $fullStars >= 0.5;
-                            @endphp
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= $fullStars)
-                                    ★
-                                @elseif($i == $fullStars + 1 && $hasHalfStar)
-                                    ☆
-                                @else
-                                    ☆
-                                @endif
-                            @endfor
-                            <span class="rating-text">
-                                {{ number_format($rating, 1) }} 
-                                ({{ $company->total_reviews ?? 0 }} {{ $company->total_reviews == 1 ? 'review' : 'reviews' }})
-                            </span>
+                        <div class="company-title-row">
+                            <div>
+                                <div class="company-name">{{ $company['name'] }}</div>
+                                <div class="company-rating">
+                                    <span class="stars">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="{{ $i <= $fullStars ? 'fas fa-star' : ($i == $fullStars + 1 && $hasHalfStar ? 'fas fa-star-half-alt' : 'far fa-star') }}"></i>
+                                        @endfor
+                                    </span>
+                                    <span class="rating-number">{{ number_format($rating, 2) }}</span>
+                                    <span class="review-count">({{ $reviewCount }} {{ $reviewCount == 1 ? 'review' : 'reviews' }})</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn-quote">Get Quote</button>
+                                <button type="button" class="btn-review">Write a Review</button>
+                            </div>
                         </div>
-                        <div class="company-desc">
-                            {{ Str::limit($company->description ?? 'No description available.', 180) }}
-                            @if(strlen($company->description ?? '') > 180)
-                                @if(!(auth()->check() && auth()->user()->is_admin))
-                                    <button type="button" class="get-quote-btn write-review-btn"
-                                            data-company-id="{{ $company->id }}"
-                                            data-company-name="{{ $company->name }}"
-                                            data-category-ids="{{ implode(',', $company->category_ids ?? []) }}">
-                                        Write a Review
-                                    </button>
-                                @endif
-                            @endif
+
+                        <div class="company-description-card">
+                            <h4>Company Description</h4>
+                            <p>{{ $company['description'] }}</p>
+                            <button class="link-button">Learn more</button>
                         </div>
-                        <div class="rating-bar">
-                            <div class="blue-bar"></div>
-                            <div class="blue-bar"></div>
-                            <div class="blue-bar"></div>
-                            <div class="blue-bar"></div>
-                            <div class="blue-bar"></div>
-                            <span style="color:#777; font-size:13px; margin-left:5px;">Elite</span>
+
+                        <div class="expert-score-card">
+                            <strong>SolarReviews Expert Rating Score:</strong>
+                            <div class="score-dots">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span class="{{ $i <= 4 ? 'active' : '' }}"></span>
+                                @endfor
+                            </div>
+                            <span class="tier-badge">Elite</span>
                         </div>
+
+                        <details class="rating-panel">
+                            <summary>Rating breakdown</summary>
+                            <div class="panel-body">
+                                <strong>Positives:</strong>
+                                <ul class="metric-list">
+                                    @foreach([
+                                        ['score' => '9 / 10', 'label' => 'Time in business'],
+                                        ['score' => '5 / 5', 'label' => 'Employee satisfaction and safety record'],
+                                        ['score' => '7 / 10', 'label' => 'Competitiveness of loan options'],
+                                        ['score' => '10 / 10', 'label' => 'Litigation and background'],
+                                        ['score' => '10 / 10', 'label' => 'Verification of licenses and insurance'],
+                                        ['score' => '10 / 10', 'label' => 'Profitability of installer'],
+                                        ['score' => '4 / 5', 'label' => 'Consumer reviews performance'],
+                                        ['score' => '5 / 5', 'label' => 'Transparency of pricing and sales process'],
+                                        ['score' => '5 / 5', 'label' => 'Company size and location'],
+                                        ['score' => '10 / 10', 'label' => 'Quality of brands sold'],
+                                        ['score' => '4 / 5', 'label' => 'Vertical integration'],
+                                        ['score' => '5 / 5', 'label' => 'Reliability of consumer reviews'],
+                                        ['score' => '4 / 5', 'label' => 'Transparency about reputation'],
+                                        ['score' => '3 / 5', 'label' => 'Sustainable pricing of systems'],
+                                    ] as $metric)
+                                        <li class="metric-item">
+                                            <div class="metric-score">{{ $metric['score'] }}</div>
+                                            <div class="metric-label">{{ $metric['label'] }}</div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <div class="negatives-row">
+                                    <strong>Negatives:</strong>
+                                    <span>Learn more about how we rate solar installers</span>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="rating-panel">
+                            <summary>Services offered</summary>
+                            <div class="panel-body">
+                                <ul class="services-list">
+                                    @foreach($company->services ?? ['Solar installation', 'Battery backup', 'Maintenance'] as $service)
+                                        <li>{{ $service }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </details>
+
+                        <details class="rating-panel">
+                            <summary>Latest Good Review</summary>
+                            <div class="panel-body">
+                                <p class="latest-review-text">
+                                    {{ $company['latest_review'] }}
+                                </p>
+                            </div>
+                        </details>
                     </div>
                 </div>
-
-                <div>
-                    @if(!(auth()->check() && auth()->user()->is_admin))
-                        <button type="button" class="get-quote write-review-btn" 
-                                data-company-id="{{ $company->id }}" 
-                                data-company-name="{{ $company->name }}"
-                                data-category-ids="{{ implode(',', $company->category_ids ?? []) }}">
-                            Write a Review
-                        </button>
-                    @endif
-                </div>
-            </div>
-        @empty
-            <div style="background:#fff; padding:30px; text-align:center; border-radius:8px; border:1px solid #eee;">
-                <h3>No companies found in {{ $state['name'] }}</h3>
-                <p>Check back later or explore other nearby states.</p>
-            </div>
-        @endforelse
+            </article>
+        @endforeach
     </div>
 </div>
 
