@@ -11,7 +11,7 @@
 
     <style>
         :root {
-            --primary-color: #1e40af;
+            --primary-color: #269c3f;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
             --text-color: #1f2937;
@@ -32,7 +32,7 @@
         }
 
         .compare-hero {
-            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, #239b3c 0%, #85c28e 100%);
             color: white;
             padding: 3.5rem 1.5rem 2.5rem;
         }
@@ -183,14 +183,14 @@
             padding: 0.15rem 0.6rem;
             border-radius: 999px;
             background: #eff6ff;
-            color: #1d4ed8;
+            color: #269c3f;
             font-weight: 500;
         }
 
         .btn-outline-primary {
             border-radius: 999px;
-            border: 1px solid #1e40af;
-            color: #1e40af;
+            border: 1px solid #269c3f;
+            color: #269c3f;
             padding: 0.4rem 0.9rem;
             font-size: 0.8rem;
             font-weight: 500;
@@ -201,7 +201,7 @@
         }
 
         .btn-outline-primary:hover {
-            background: #1e40af;
+            background: #269c3f;
             color: white;
         }
 

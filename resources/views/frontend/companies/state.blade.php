@@ -60,7 +60,7 @@
 
         .sidebar ul li a {
             text-decoration: none;
-            color: #3498db;
+            color: #389c48;
             font-size: 14px;
         }
 
@@ -81,7 +81,7 @@
 
         .calculator button {
             width: 100%;
-            background: #3498db;
+            background: #389c48;
             color: #fff;
             border: none;
             padding: 10px 0;
@@ -159,7 +159,7 @@
         }
 
         .company-desc a {
-            color: #3498db;
+            color: #389c48;
             text-decoration: none;
         }
 
@@ -170,7 +170,7 @@
         }
 
         .blue-bar {
-            background: #3498db;
+            background: #389c48;
             height: 8px;
             width: 60px;
             border-radius: 3px;
@@ -178,7 +178,7 @@
         }
 
         .get-quote {
-            background: #3498db;
+            background: #389c48;
             color: #fff;
             border: none;
             padding: 8px 15px;
@@ -189,7 +189,7 @@
         }
 
         .get-quote-btn {
-            background: #3498db;
+            background: #389c48;
             color: #fff;
             border: none;
             padding: 8px 15px;
@@ -200,7 +200,7 @@
         }
 
         .write-review-btn {
-            background: #3498db;
+            background: #389c48;
             color: #fff;
             border: none;
             padding: 8px 15px;
@@ -248,7 +248,7 @@
 
         .custom-modal-header {
             padding: 15px 20px;
-            background: #3498db;
+            background: #389c48;
             color: white;
             display: flex;
             justify-content: space-between;
@@ -346,7 +346,7 @@
         }
 
         .submit-btn {
-            background-color: #3498db;
+            background-color: #389c48;
             color: white;
         }
 
