@@ -14,7 +14,7 @@
 
     <style>
         :root {
-            --primary-color: #1e40af;
+            --primary-color: #3ba14c;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
             --tw-gradient-from-position: ;
@@ -124,7 +124,7 @@
             width: 24px;
             height: 24px;
             margin-right: 1rem;
-            color: #1e40af;
+            color: #3ba14c;
             flex-shrink: 0;
         }
 
@@ -151,7 +151,7 @@
         }
 
         .hero-search-input:focus {
-            border-color: #1e40af;
+            border-color: #3ba14c;
         }
 
         .location-icon {
@@ -164,7 +164,7 @@
         }
 
         .hero-calculate-btn {
-            background: #1e40af;
+            background: #3ba14c;
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -177,7 +177,7 @@
         }
 
         .hero-calculate-btn:hover {
-            background: #1e3a8a;
+            background: #3ba14c;
             transform: translateY(-2px);
         }
 
@@ -394,7 +394,7 @@
         }
 
         .small-heading {
-            color: #4da8ff;
+            color: #3ba14c;
             font-weight: 600;
             margin-bottom: 0.8rem;
             font-size: 1.1rem;
@@ -404,7 +404,7 @@
 
         .hero-btn {
             display: inline-block;
-            background-color: #0056d2;
+            background-color: #3ba14c;
             color: #fff;
             font-weight: 600;
             text-decoration: none;
@@ -414,7 +414,7 @@
         }
 
         .hero-btn:hover {
-            background-color: #003f9e;
+            background-color: #3ba14c;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             color: #fff;
@@ -429,12 +429,12 @@
         }
 
         .solar-text .small-heading {
-            color: #1e73be;
+            color: #3ba14c;
         }
 
         .solar-btn {
             display: inline-block;
-            background-color: #0056d2;
+            background-color: #3ba14c;
             color: #fff;
             font-weight: 600;
             text-decoration: none;
@@ -444,7 +444,7 @@
         }
 
         .solar-btn:hover {
-            background-color: #003f9e;
+            background-color: #3ba14c;
             color: #fff;
         }
 
@@ -537,6 +537,98 @@
             background-color: var(--accent-color);
             color: white;
         }
+
+
+
+
+        .as-seen-in-section {
+    background: #ffffff;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.as-seen-logo {
+    max-height: 45px;
+    object-fit: contain;
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+.as-seen-logo:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+
+
+.experts-section {
+    background: linear-gradient(to bottom, #eef5fc 0%, #ffffff 100%);
+}
+
+.experts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    justify-items: center;
+}
+
+.expert-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: 0.3s ease;
+}
+
+.expert-img:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .experts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .expert-img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+.latest-articles .article-image img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.article-card {
+    text-decoration: none;
+    color: #0f172a; /* dark blue text */
+    display: block;
+    transition: 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-4px);
+}
+
+.article-title {
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .latest-articles .article-image img {
+        height: 180px;
+    }
+
+    .article-title {
+        font-size: 1.05rem;
+    }
+}
+
+
     </style>
 </head>
 <body>
@@ -580,6 +672,53 @@
             </div>
         </div>
     </section>
+
+
+    <!-- As Seen In Section -->
+    <section class="as-seen-in-section section-spacing py-5">
+        <div class="container-custom">
+            <div class="text-center mb-4">
+                <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
+            </div>
+
+            <div class="row justify-content-center align-items-center g-4 text-center">
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
 
     <!-- Products Comparison Section -->
     <section class="py-5 bg-white border-top border-bottom">
@@ -669,7 +808,7 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- CTA Section
     <section class="cta-section py-5 text-center text-white">
         <div class="cta-wrapper">
             <div class="container-custom">
@@ -678,13 +817,13 @@
                 <a href="#" class="btn btn-light px-4 py-2 fw-semibold" style="color: var(--primary-color);">Get Free Quotes</a>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- State Map Section -->
     <section class="py-5">
         <div class="container-custom">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #1e40af;">Find Solar Solutions in Your State</h2>
+                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #3ba14c;">Find Solar Solutions in Your State</h2>
                 <p class="text-muted mx-auto" style="max-width: 600px;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
             </div>
             @include('components.india-map')
@@ -740,6 +879,94 @@
             </div>
         </div>
     </section>
+
+
+    <!-- Experts Section -->
+    <section class="experts-section section-spacing py-5">
+        <div class="container-custom">
+            <div class="row align-items-center">
+
+                <!-- Left Content -->
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+                    <h6 class="fw-semibold mb-3" style="color: #3ba14c;">Our Experts</h6>
+                    <h2 class="fw-bold mb-4" style="font-size: 2.5rem; line-height: 1.3;">
+                        The best solar journalists in the industry
+                    </h2>
+                    <p class="text-muted" style="font-size: 1.1rem;">
+                        Both Andrew Sendy, President of SolarReviews, and Lachlan Fleet, CEO of SolarReviews,
+                        have founded solar companies that are among the largest in their respective markets today.
+                        This expertise continues through the SolarReviews editorial team, which has a combined
+                        total of more than 50 years of solar industry experience.
+                    </p>
+
+                    <a href="#" class="fw-semibold mt-4 d-inline-block" style="font-size: 1.1rem; color: #3ba14c;">
+                        See more of our dedicated team →
+                    </a>
+                </div>
+
+                <!-- Right Side Images -->
+                <div class="col-12 col-lg-6">
+                    <div class="experts-grid">
+                        <img src="/images/expert1.jpg" class="expert-img" alt="">
+                        <img src="/images/expert2.jpg" class="expert-img" alt="">
+                        <img src="/images/expert3.jpg" class="expert-img" alt="">
+                        <img src="/images/expert4.jpg" class="expert-img" alt="">
+                        <img src="/images/expert5.jpg" class="expert-img" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section class="latest-articles section-spacing py-5">
+        <div class="container-custom">
+
+            <h3 class="fw-bold mb-4" style="font-size: 1.75rem;">Latest articles</h3>
+
+            <div class="row g-4">
+
+            <!-- Article 1 -->
+            <div class="col-md-4">
+                <a href="#" class="article-card">
+                    <div class="article-image">
+                        <img src="/images/article1.jpg" alt="" class="img-fluid">
+                    </div>
+                    <h4 class="fw-semibold mt-3 article-title">
+                        Are Solar Panels Worth It in 2026 and Beyond? Rising Electricity Prices Say Yes
+                    </h4>
+                </a>
+            </div>
+
+            <!-- Article 2 -->
+            <div class="col-md-4">
+                <a href="#" class="article-card">
+                    <div class="article-image">
+                        <img src="/images/article2.jpg" alt="" class="img-fluid">
+                    </div>
+                    <h4 class="fw-semibold mt-3 article-title">
+                        Expert review of Voltaic Solar Roof Tiles
+                    </h4>
+                </a>
+            </div>
+
+            <!-- Article 3 -->
+            <div class="col-md-4">
+                <a href="#" class="article-card">
+                    <div class="article-image">
+                        <img src="/images/article3.jpg" alt="" class="img-fluid">
+                    </div>
+                    <h4 class="fw-semibold mt-3 article-title">
+                        The 30% Solar Tax Credit Is Ending in 2025: Are Solar Panels Still Worth It?
+                    </h4>
+                </a>
+            </div>
+
+            </div>
+        </div>
+    </section>
+
 
     <!-- Footer -->
     <footer class="footer py-5">
