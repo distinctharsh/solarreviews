@@ -77,8 +77,8 @@
     }
     
     .navbar .container {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        max-width: 1200px;
         display: flex;
         align-items: center;
         justify-content: space-between;

@@ -124,7 +124,7 @@
             width: 24px;
             height: 24px;
             margin-right: 1rem;
-            color: #3ba14c;
+            color: var(--primary-color);
             flex-shrink: 0;
         }
 
@@ -151,7 +151,7 @@
         }
 
         .hero-search-input:focus {
-            border-color: #3ba14c;
+            border-color: var(--primary-color);
         }
 
         .location-icon {
@@ -164,7 +164,7 @@
         }
 
         .hero-calculate-btn {
-            background: #3ba14c;
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -177,7 +177,7 @@
         }
 
         .hero-calculate-btn:hover {
-            background: #3ba14c;
+            background: var(--primary-color);
             transform: translateY(-2px);
         }
 
@@ -394,7 +394,7 @@
         }
 
         .small-heading {
-            color: #3ba14c;
+            color: var(--primary-color);
             font-weight: 600;
             margin-bottom: 0.8rem;
             font-size: 1.1rem;
@@ -404,7 +404,7 @@
 
         .hero-btn {
             display: inline-block;
-            background-color: #3ba14c;
+            background-color: var(--primary-color);
             color: #fff;
             font-weight: 600;
             text-decoration: none;
@@ -414,7 +414,7 @@
         }
 
         .hero-btn:hover {
-            background-color: #3ba14c;
+            background-color: var(--primary-color);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             color: #fff;
@@ -429,12 +429,12 @@
         }
 
         .solar-text .small-heading {
-            color: #3ba14c;
+            color: var(--primary-color);
         }
 
         .solar-btn {
             display: inline-block;
-            background-color: #3ba14c;
+            background-color: var(--primary-color);
             color: #fff;
             font-weight: 600;
             text-decoration: none;
@@ -444,7 +444,7 @@
         }
 
         .solar-btn:hover {
-            background-color: #3ba14c;
+            background-color: var(--primary-color);
             color: #fff;
         }
 
@@ -486,7 +486,7 @@
 
         /* Footer */
         .footer {
-            background-color: #111827;
+            background-color: #11411a;
             color: #9ca3af;
         }
 
@@ -823,7 +823,7 @@
     <section class="py-5">
         <div class="container-custom">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #3ba14c;">Find Solar Solutions in Your State</h2>
+                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: var(--primary-color);">Find Solar Solutions in Your State</h2>
                 <p class="text-muted mx-auto" style="max-width: 600px;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
             </div>
             @include('components.india-map')
@@ -834,7 +834,7 @@
     <section id="testimonials" class="py-5 bg-white">
         <div class="container-custom">
             <div class="text-center mb-5">
-                <a href="#" class="text-primary fw-medium text-decoration-none mb-2 d-block">See What Others Are Saying About Us</a>
+                <a href="#" class="fw-medium text-decoration-none mb-2 d-block" style="color: var(--primary-color);">See What Others Are Saying About Us</a>
                 <h2 class="fw-bold mb-0" style="font-size: 2rem; color: #000;">See What Others Are Saying About Us</h2>
             </div>
 
@@ -888,7 +888,7 @@
 
                 <!-- Left Content -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0">
-                    <h6 class="fw-semibold mb-3" style="color: #3ba14c;">Our Experts</h6>
+                    <h6 class="fw-semibold mb-3" style="color: var(--primary-color);">Our Experts</h6>
                     <h2 class="fw-bold mb-4" style="font-size: 2.5rem; line-height: 1.3;">
                         The best solar journalists in the industry
                     </h2>
@@ -899,7 +899,7 @@
                         total of more than 50 years of solar industry experience.
                     </p>
 
-                    <a href="#" class="fw-semibold mt-4 d-inline-block" style="font-size: 1.1rem; color: #3ba14c;">
+                    <a href="#" class="fw-semibold mt-4 d-inline-block" style="font-size: 1.1rem; color: var(--primary-color);">
                         See more of our dedicated team →
                     </a>
                 </div>
