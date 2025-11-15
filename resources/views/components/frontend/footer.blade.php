@@ -4,25 +4,61 @@
         color: #f3f4f6;
     }
 
-    .footer-links h3 {
-        position: relative;
-        padding-bottom: 0.75rem;
+    .footer-links {
+        height: 100%;
     }
 
-    .footer-links h3::after {
+    .footer-toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        color: #ffffff;
+        font-size: 1.125rem;
+        font-weight: 600;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        position: relative;
+    }
+
+    .footer-toggle::after {
         content: '';
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: -0.35rem;
         width: 50px;
         height: 2px;
         background-color: #ffffff;
+    }
+
+    .footer-toggle .toggle-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        transition: transform 0.2s ease;
     }
 
     .footer-links ul {
         list-style: none;
         padding: 0;
         margin: 0;
+    }
+
+    .footer-collapse {
+        margin-top: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .footer-collapse:not(.is-open) {
+        display: none;
     }
 
     .footer-links a {
@@ -69,6 +105,46 @@
         width: auto;
         margin: -12px 0;
     }
+
+    @media (max-width: 575px) {
+        .footer {
+            text-align: center;
+        }
+
+        .footer-about .d-flex {
+            justify-content: center;
+        }
+
+        .footer-toggle {
+            text-align: left;
+            padding: 0.75rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-toggle::after {
+            display: none;
+        }
+
+        .footer-toggle .toggle-icon {
+            display: inline-flex;
+        }
+
+        .footer-collapse {
+            text-align: left;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    @media (min-width: 576px) {
+        .footer-toggle {
+            cursor: default;
+        }
+
+        .footer-toggle .toggle-icon {
+            display: none;
+        }
+    }
 </style>
 
 <footer class="footer py-5">
@@ -92,37 +168,52 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-links">
-                    <h3 class="text-white mb-3" style="font-size: 1.125rem;">Quick Links</h3>
-                    <ul>
-                        <li class="mb-2"><a href="#">How It Works</a></li>
-                        <li class="mb-2"><a href="#">Solar Companies</a></li>
-                        <li class="mb-2"><a href="#">Reviews</a></li>
-                        <li class="mb-2"><a href="#">Blog</a></li>
-                        <li class="mb-2"><a href="#">Contact Us</a></li>
-                    </ul>
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Quick Links</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">How It Works</a></li>
+                            <li class="mb-2"><a href="#">Solar Companies</a></li>
+                            <li class="mb-2"><a href="#">Reviews</a></li>
+                            <li class="mb-2"><a href="#">Blog</a></li>
+                            <li class="mb-2"><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-links">
-                    <h3 class="text-white mb-3" style="font-size: 1.125rem;">Solar Resources</h3>
-                    <ul>
-                        <li class="mb-2"><a href="#">Solar Guides</a></li>
-                        <li class="mb-2"><a href="#">Solar Calculator</a></li>
-                        <li class="mb-2"><a href="#">Solar Incentives</a></li>
-                        <li class="mb-2"><a href="#">Financing Options</a></li>
-                        <li class="mb-2"><a href="#">FAQ</a></li>
-                    </ul>
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Solar Resources</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">Solar Guides</a></li>
+                            <li class="mb-2"><a href="#">Solar Calculator</a></li>
+                            <li class="mb-2"><a href="#">Solar Incentives</a></li>
+                            <li class="mb-2"><a href="#">Financing Options</a></li>
+                            <li class="mb-2"><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-links">
-                    <h3 class="text-white mb-3" style="font-size: 1.125rem;">Legal</h3>
-                    <ul>
-                        <li class="mb-2"><a href="#">Privacy Policy</a></li>
-                        <li class="mb-2"><a href="#">Terms of Service</a></li>
-                        <li class="mb-2"><a href="#">Cookie Policy</a></li>
-                        <li class="mb-2"><a href="#">Sitemap</a></li>
-                    </ul>
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Legal</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">Privacy Policy</a></li>
+                            <li class="mb-2"><a href="#">Terms of Service</a></li>
+                            <li class="mb-2"><a href="#">Cookie Policy</a></li>
+                            <li class="mb-2"><a href="#">Sitemap</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,3 +224,75 @@
         </div>
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const footerToggles = document.querySelectorAll('.footer-toggle');
+        if (!footerToggles.length) {
+            return;
+        }
+
+        const mobileQuery = window.matchMedia('(max-width: 575px)');
+
+        const applyFooterState = () => {
+            const isMobile = mobileQuery.matches;
+            footerToggles.forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                if (!content) return;
+
+                if (isMobile) {
+                    if (!content.dataset.userAdjusted) {
+                        content.classList.remove('is-open');
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                } else {
+                    content.classList.add('is-open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    delete content.dataset.userAdjusted;
+                }
+            });
+        };
+
+        const handleToggleClick = (event) => {
+            const toggle = event.currentTarget;
+            if (!mobileQuery.matches) {
+                return;
+            }
+
+            const content = toggle.nextElementSibling;
+            if (!content) {
+                return;
+            }
+
+            const isNowOpen = content.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', isNowOpen ? 'true' : 'false');
+            if (isNowOpen) {
+                content.dataset.userAdjusted = 'true';
+            } else {
+                delete content.dataset.userAdjusted;
+            }
+        };
+
+        footerToggles.forEach(toggle => {
+            toggle.addEventListener('click', handleToggleClick);
+        });
+
+        applyFooterState();
+
+        const handleViewportChange = () => {
+            footerToggles.forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                if (content) {
+                    delete content.dataset.userAdjusted;
+                }
+            });
+            applyFooterState();
+        };
+
+        if (mobileQuery.addEventListener) {
+            mobileQuery.addEventListener('change', handleViewportChange);
+        } else if (mobileQuery.addListener) {
+            mobileQuery.addListener(handleViewportChange);
+        }
+    });
+</script>
