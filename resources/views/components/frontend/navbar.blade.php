@@ -1,9 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100;">
     <div class="container" style="max-width: 1200px;">
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-            <span class="logo-cropper">
-                <img src="{{ asset('images/logo1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
-            </span>
+            <img src="{{ asset('images/1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
         </a>
         
         <!-- Desktop Nav Links -->
@@ -86,21 +84,12 @@
         justify-content: space-between;
     }
     
-    /* Logo size */
-    .logo-cropper {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 44px;
-        width: auto;
-        overflow: hidden;
-    }
-
     .navbar-logo {
         height: 72px;
+        padding: 10px 0px;
         width: auto;
         transition: transform 0.3s ease;
-        margin: -10px 0;
+        margin: -14px 0;
     }
     
     .navbar-logo:hover {

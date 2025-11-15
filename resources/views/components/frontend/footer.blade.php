@@ -4,8 +4,16 @@
         color: #f3f4f6;
     }
 
+    .footer-about,
     .footer-links {
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    .footer-links {
+        gap: 1rem;
     }
 
     .footer-toggle {
@@ -91,19 +99,11 @@
         background-color: #2563eb;
     }
 
-    .footer-logo-cropper {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    .footer-logo {
         height: 60px;
         width: auto;
-        overflow: hidden;
-    }
-
-    .footer-logo {
-        height: 90px;
-        width: auto;
-        margin: -12px 0;
+        margin: 0;
+        display: block;
     }
 
     @media (max-width: 575px) {
@@ -112,6 +112,15 @@
         }
 
         .footer-about .d-flex {
+            justify-content: center;
+        }
+
+        .footer-about {
+            align-items: center;
+        }
+
+        .footer-about a {
+            display: inline-flex;
             justify-content: center;
         }
 
@@ -153,9 +162,7 @@
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-about">
                     <a href="/" class="d-inline-block mb-3">
-                        <span class="footer-logo-cropper">
-                            <img src="{{ asset('images/logo2.png') }}" alt="SolarReviews Logo" class="footer-logo">
-                        </span>
+                        <img src="{{ asset('images/2.png') }}" alt="SolarReviews Logo" class="footer-logo">
                     </a>
                     <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
                     <div class="d-flex gap-2">
