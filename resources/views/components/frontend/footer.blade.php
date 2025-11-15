@@ -54,6 +54,21 @@
     .social-link:hover {
         background-color: #2563eb;
     }
+
+    .footer-logo-cropper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 60px;
+        width: auto;
+        overflow: hidden;
+    }
+
+    .footer-logo {
+        height: 90px;
+        width: auto;
+        margin: -12px 0;
+    }
 </style>
 
 <footer class="footer py-5">
@@ -62,7 +77,9 @@
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-about">
                     <a href="/" class="d-inline-block mb-3">
-                        <img src="{{ asset('images/logo2.png') }}" alt="SolarReviews Logo" style="height: 70px;">
+                        <span class="footer-logo-cropper">
+                            <img src="{{ asset('images/logo2.png') }}" alt="SolarReviews Logo" class="footer-logo">
+                        </span>
                     </a>
                     <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
                     <div class="d-flex gap-2">
