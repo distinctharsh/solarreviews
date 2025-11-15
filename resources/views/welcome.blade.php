@@ -4,8 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Solar Reviews - Compare & Find Best Solar Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -16,6 +20,7 @@
             --text-color: #1f2937;
             --light-bg: #f9fafb;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --layout-gutter: 1.5rem;
         }
         
         body {
@@ -26,55 +31,23 @@
             margin: 0;
             padding: 0;
         }
-        
-        /* Navigation */
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1.5rem 1.5rem 1.5rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            
-        }
-        
-        .nav-container {
+
+        .align-edge {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding-left: var(--layout-gutter);
+            padding-right: var(--layout-gutter);
+            box-sizing: border-box;
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+
+        @media (max-width: 768px) {
+            .align-edge {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
         }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-        
+
         .btn {
             display: inline-block;
             padding: 0.5rem 1.5rem;
@@ -107,11 +80,11 @@
             color: white;
         }
         
-        /* Hero Section */
+        /* Hero Section - Old style, overridden below */
         .hero {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: 5rem 1rem;
+            padding: 5rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -181,10 +154,9 @@
             border-bottom: 1px solid #e2e8f0;
         }
         
+        /* Override Bootstrap container max-width to match navbar */
         .container {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+            max-width: 1200px !important;
         }
         
         .section-header {
@@ -220,12 +192,7 @@
             line-height: 1.7;
         }
         
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-            padding: 0 0.5rem;
-        }
+        /* Products grid now uses Bootstrap row/col */
         
         .product-card {
             background: white;
@@ -340,7 +307,7 @@
         
         /* Categories Section */
         .section {
-            padding: 5rem 1rem;
+            padding: 5rem 0;
         }
         
         .section-title {
@@ -366,6 +333,7 @@
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1.5rem;
         }
         
         .category-card {
@@ -415,6 +383,7 @@
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1.5rem;
         }
         
         .testimonial-card {
@@ -459,7 +428,12 @@
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             text-align: center;
-            padding: 4rem 1rem;
+            padding: 4rem 1.5rem;
+        }
+        
+        .cta .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
         .cta h2 {
@@ -477,17 +451,10 @@
         .footer {
             background-color: #111827;
             color: #9ca3af;
-            padding: 4rem 1rem 2rem;
+            padding: 4rem 0 2rem;
         }
         
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
+        /* Footer content now uses Bootstrap grid */
         
         .footer-logo {
             font-size: 1.5rem;
@@ -562,20 +529,14 @@
         }
         
         .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 2rem;
+            padding: 2rem 0 0;
             border-top: 1px solid #374151;
             text-align: center;
             font-size: 0.875rem;
         }
         
-        /* Responsive */
+        /* Responsive - Bootstrap handles most of this */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
             .hero h1 {
                 font-size: 2.25rem;
             }
@@ -600,7 +561,7 @@
             }
             
             .section {
-                padding: 3rem 1rem;
+                padding: 3rem 0;
             }
         }
         .btn-primary {
@@ -619,6 +580,7 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
+            padding: 0 1.5rem;
         }
         .feature-card {
             background: white;
@@ -699,9 +661,6 @@
             z-index: 2;
             padding: 2.5rem;
             border-radius: 0 15px 15px 0;
-            /* backdrop-filter: blur(5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1); */
             text-align: left;
             margin-left: -5%;
             min-height: 60%;
@@ -772,7 +731,11 @@
         @media (max-width: 768px) {
             .hero {
                 height: auto;
-                padding: 6rem 1rem;
+                padding: 6rem 0;
+            }
+            
+            .hero .hero-wrapper {
+                padding: 0 1.5rem;
             }
             
             .hero h1 {
@@ -799,12 +762,7 @@
 
 
 
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2.5rem;
-        }
+        /* Testimonial grid now uses Bootstrap row/col */
 
         .testimonial-card {
             background-color: rgb(241 248 254);
@@ -862,16 +820,7 @@
             background: #fff;
         }
 
-        .solar-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 3rem;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
+        /* Solar content now uses Bootstrap row/col */
 
         .solar-image img {
             width: 100%;
@@ -922,21 +871,7 @@
             background-color: #003f9e;
         }
 
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .solar-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .solar-image img {
-                max-width: 100%;
-            }
-
-            .solar-text {
-                margin-top: 2rem;
-            }
-        }
+        /* Responsive handled by Bootstrap */
 
         .reviews-hero {
             position: relative;
@@ -964,7 +899,7 @@
             z-index: 2;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0;
             width: 100%;
         }
 
@@ -1008,7 +943,7 @@
             }
 
             .reviews-hero .container {
-                padding: 0 1rem;
+                padding: 0 1.5rem;
                 display: flex;
                 justify-content: center;
             }
@@ -1077,12 +1012,12 @@
     @include('components.frontend.navbar')
 
     <section class="hero">
-        <div class="hero-content">
-            <h1 class="text-white">Find the Best Solar Solutions for Your Dashboard</h1>
-            <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Enter your zip code">
-                <button class="search-btn">Calculate Now</button>
+            <div class="hero-content">
+                <h1 class="text-white">Find the Best Solar Solutions for Your Dashboard</h1>
+                <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Enter your zip code">
+                    <button class="search-btn">Calculate Now</button>
             </div>
         </div>
     </section>
@@ -1095,36 +1030,42 @@
                 <p>Compare and find the best solar equipment based on expert analysis and real user reviews</p>
             </div>
             
-            <div class="products-grid">
+            <div class="row g-4">
                 <!-- Panel Card -->
-                <a href="{{ url('compare/panels') }}" class="product-card" style="text-decoration:none; color:inherit;">
-                    <div class="product-image">
-                        <img src="{{ asset('images/panels.png') }}" alt="Solar Panels">
-                    </div>
-                    <div class="product-content">
-                        <h3>Solar Panels</h3>
-                    </div>
-                </a>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="{{ url('compare/panels') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                        <div class="product-image">
+                            <img src="{{ asset('images/panels.png') }}" alt="Solar Panels" class="img-fluid">
+                        </div>
+                        <div class="product-content">
+                            <h3>Solar Panels</h3>
+                        </div>
+                    </a>
+                </div>
                 
                 <!-- Battery Card -->
-                <a href="{{ url('compare/batteries') }}" class="product-card" style="text-decoration:none; color:inherit;">
-                    <div class="product-image">
-                        <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries">
-                    </div>
-                    <div class="product-content">
-                        <h3>Solar Batteries</h3>
-                    </div>
-                </a>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="{{ url('compare/batteries') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                        <div class="product-image">
+                            <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries" class="img-fluid">
+                        </div>
+                        <div class="product-content">
+                            <h3>Solar Batteries</h3>
+                        </div>
+                    </a>
+                </div>
                 
                 <!-- Inverter Card -->
-                <a href="{{ url('compare/inverters') }}" class="product-card" style="text-decoration:none; color:inherit;">
-                    <div class="product-image">
-                        <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters">
-                    </div>
-                    <div class="product-content">
-                        <h3>Solar Inverters</h3>
-                    </div>
-                </a>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a href="{{ url('compare/inverters') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                        <div class="product-image">
+                            <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters" class="img-fluid">
+                        </div>
+                        <div class="product-content">
+                            <h3>Solar Inverters</h3>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1134,7 +1075,7 @@
     
     <section class="reviews-hero">
         <div class="overlay"></div>
-        <div class="container">
+        <div class="container align-edge">
             <div class="hero-content">
                 <p class="small-heading">Real People, Real Reviews</p>
                 <h1>Unbiased consumer reviews of almost all solar companies in India</h1>
@@ -1148,22 +1089,26 @@
     </section>
     <section id="solar-calculator" class="solar-section">
         <div class="container">
-            <div class="solar-content">
+            <div class="row align-items-center g-4">
                 <!-- Left Side - Image -->
-                <div class="solar-image">
-                    <img src="{{ asset('images/electric-bill-chart.png') }}" alt="Monthly Electric Bill Chart">
+                <div class="col-12 col-lg-6">
+                    <div class="solar-image">
+                        <img src="{{ asset('images/electric-bill-chart.png') }}" alt="Monthly Electric Bill Chart" class="img-fluid">
+                    </div>
                 </div>
 
                 <!-- Right Side - Text -->
-                <div class="solar-text">
-                    <p class="small-heading">Solar Calculator</p>
-                    <h2>The most accurate solar panel cost and savings calculator available</h2>
-                    <p class="description">
-                        Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
-                        Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
-                        the economics of installing solar panels on their homes.
-                    </p>
-                    <a href="#" class="solar-btn">Use Our Solar Calculator</a>
+                <div class="col-12 col-lg-6">
+                    <div class="solar-text">
+                        <p class="small-heading">Solar Calculator</p>
+                        <h2>The most accurate solar panel cost and savings calculator available</h2>
+                        <p class="description">
+                            Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
+                            Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
+                            the economics of installing solar panels on their homes.
+                        </p>
+                        <a href="#" class="solar-btn">Use Our Solar Calculator</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1171,14 +1116,16 @@
 
     <!-- CTA Section -->
     <section class="cta">
-        <h2>Ready to Go Solar?</h2>
-        <p>Join thousands of homeowners who are saving money with solar energy.</p>
-        <a href="#" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
+        <div class="container">
+            <h2>Ready to Go Solar?</h2>
+            <p>Join thousands of homeowners who are saving money with solar energy.</p>
+            <a href="#" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
+        </div>
     </section>
 
     <!-- State Map Section -->
     <section class="section" id="state-map-section" style="padding: 4rem 0; ">
-        <div class="container">
+        <div class="container align-edge">
             <div class="section-title" style="margin-bottom: 2.5rem; text-align: center;">
                 <h2 style="font-size: 2.25rem; color: #1e40af; margin-bottom: 1rem; font-weight: 700;">Find Solar Solutions in Your State</h2>
                 <p style="color: #4b5563; max-width: 600px; margin: 0 auto;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
@@ -1191,7 +1138,7 @@
 
     <!-- Testimonials Section -->
     <section id="testimonials" style="padding: 4rem 0; background-color: white; margin-bottom: 4rem;">
-        <div class="container" style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; text-align: center;">
+        <div class="container" style="text-align: center;">
             <a href="#" style="color: #007bff; font-weight: 500; text-decoration: none;">
                 See What Others Are Saying About Us
             </a>
@@ -1199,40 +1146,46 @@
                 See What Others Are Saying About Us
             </h2>
 
-            <div class="testimonial-grid">
+            <div class="row g-4">
                 <!-- Card 1 -->
-                <div class="testimonial-card">
-                    <h3>Kunal Verma</h3>
-                    <div class="stars">★★★★★</div>
-                    <p>
-                        "Calculator was easy to use and very accurate. I had solar installed a couple of years ago. 
-                        I wanted to check what the calculator would give as a recommendation and forecast compared to my actual experience. 
-                        My actual experience was well within the ranges given. GREAT TOOL."
-                    </p>
-                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="testimonial-card">
+                        <h3>Kunal Verma</h3>
+                        <div class="stars">★★★★★</div>
+                        <p>
+                            "Calculator was easy to use and very accurate. I had solar installed a couple of years ago. 
+                            I wanted to check what the calculator would give as a recommendation and forecast compared to my actual experience. 
+                            My actual experience was well within the ranges given. GREAT TOOL."
+                        </p>
+                        <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                    </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="testimonial-card">
-                    <h3>Dipankar Mishara</h3>
-                    <div class="stars">★★★★★</div>
-                    <p>
-                        “Very responsive and helpful. Got a friendly phone call right away after filling out online 
-                        estimate to gather additional information. Knowledgeable and friendly. Can’t ask for more.”
-                    </p>
-                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="testimonial-card">
+                        <h3>Dipankar Mishara</h3>
+                        <div class="stars">★★★★★</div>
+                        <p>
+                            "Very responsive and helpful. Got a friendly phone call right away after filling out online 
+                            estimate to gather additional information. Knowledgeable and friendly. Can't ask for more."
+                        </p>
+                        <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                    </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="testimonial-card">
-                    <h3>Sunita Verma</h3>
-                    <div class="stars">★★★★★</div>
-                    <p>
-                        "Very helpful with information about cost, effectiveness and options for various solar panel installations. 
-                        Very quick to reach out to me and explain things clearly so I understood exactly what my obligations would be 
-                        and what I should expect from the system."
-                    </p>
-                    <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="testimonial-card">
+                        <h3>Sunita Verma</h3>
+                        <div class="stars">★★★★★</div>
+                        <p>
+                            "Very helpful with information about cost, effectiveness and options for various solar panel installations. 
+                            Very quick to reach out to me and explain things clearly so I understood exactly what my obligations would be 
+                            and what I should expect from the system."
+                        </p>
+                        <img src="{{ asset('images/google.svg') }}" alt="Google" class="google-logo">
+                    </div>
                 </div>
             </div>
         </div>
@@ -1240,66 +1193,81 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-about">
-                <a href="/" class="footer-logo">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 40px;">
-                </a>
-                <p>Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-about">
+                        <a href="/" class="footer-logo">
+                            <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 70px;">
+                        </a>
+                        <p>Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="footer-links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">Solar Companies</a></li>
-                    <li><a href="#">Reviews</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h3>Solar Resources</h3>
-                <ul>
-                    <li><a href="#">Solar Guides</a></li>
-                    <li><a href="#">Solar Calculator</a></li>
-                    <li><a href="#">Solar Incentives</a></li>
-                    <li><a href="#">Financing Options</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                    <li><a href="#">Sitemap</a></li>
-                </ul>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-links">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#">How It Works</a></li>
+                            <li><a href="#">Solar Companies</a></li>
+                            <li><a href="#">Reviews</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-links">
+                        <h3>Solar Resources</h3>
+                        <ul>
+                            <li><a href="#">Solar Guides</a></li>
+                            <li><a href="#">Solar Calculator</a></li>
+                            <li><a href="#">Solar Incentives</a></li>
+                            <li><a href="#">Financing Options</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="footer-links">
+                        <h3>Legal</h3>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Cookie Policy</a></li>
+                            <li><a href="#">Sitemap</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
+            <div class="container">
+                <p>&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Simple smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
-
-        // Mobile menu toggle functionality would go here
     </script>
 </body>
 </html>
