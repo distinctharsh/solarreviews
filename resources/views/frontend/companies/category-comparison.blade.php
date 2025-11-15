@@ -19,6 +19,18 @@
             --bg-opacity: 0.75;
         }
 
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 0 1.25rem;
+            }
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f9fafb;
@@ -244,91 +256,373 @@
 
 
 
-        /* Star Section */
-.solar-hero {
-    position: relative;
-    background: url("{{ asset('images/independent-reviews-bg.jpg') }}") no-repeat center center/cover;
-    background-color: rgba(0, 55, 95, var(--bg-opacity, 0.85));
-    padding: 120px 0 100px;
-    color: white;
-}
+        /* Hero Section */
+        .category-hero {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0, 55, 95, 0.9), rgba(6, 95, 70, 0.9));
+            padding: 4.5rem 0 4rem;
+            color: #fff;
+            overflow: hidden;
+        }
 
-.solar-hero .overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.45);
-}
+        .category-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("{{ asset('images/independent-reviews-bg.jpg') }}") no-repeat center/cover;
+            opacity: 0.25;
+        }
 
-.hero-content {
-    position: relative;
-    text-align: center;
-    z-index: 2;
-}
+        .category-hero .hero-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            align-items: center;
+        }
 
-.solar-hero h1 {
-    font-size: 2.4rem;
+        .hero-eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 0.9rem;
+            color: #bbf7d0;
+            margin-bottom: 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .hero-eyebrow span {
+            width: 28px;
+            height: 2px;
+            background: #bbf7d0;
+            display: inline-block;
+        }
+
+        .category-hero h1 {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            margin-bottom: 1.25rem;
+            line-height: 1.2;
+        }
+
+        .category-hero p {
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-zip {
+            display: flex;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            padding: 0.35rem;
+        }
+
+        .hero-zip input {
+            border: none;
+            background: transparent;
+            color: #fff;
+            padding: 0.65rem 1.2rem;
+            min-width: 160px;
+        }
+
+        .hero-zip input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .hero-zip button {
+            border: none;
+            border-radius: 999px;
+            padding: 0.65rem 1.5rem;
+            background: #f97316;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            background: rgba(255,255,255,0.08);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .metric-card h3 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .metric-card span {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.75);
+        }
+
+        @media (max-width: 640px) {
+            .hero-zip {
+                flex-direction: column;
+                border-radius: 1rem;
+            }
     font-weight: 700;
-    margin-bottom: 30px;
+    color: #1e293b;
 }
 
-.zip-box {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 40px;
+/* Updated */
+.updated-date {
+    color: #64748b;
+    font-size: 0.95rem;
 }
 
-.zip-box input {
-    padding: 14px 20px;
-    font-size: 1.2rem;
-    border: none;
-    outline: none;
-    border-radius: 6px 0 0 6px;
-    width: 260px;
+/* Description */
+.section-desc {
+    max-width: 700px;
+    font-size: 1.1rem;
+    color: #334155;
+    margin: 20px 0 30px;
 }
 
-.zip-box button {
-    padding: 14px 26px;
-    font-size: 1.2rem;
-    background: #ff5a1f;
+.on-page-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+/* Options Grid */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+}
+
+.opt-btn {
+    background: #00b7ff;
     color: white;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-weight: 700;
     border: none;
-    border-radius: 0 6px 6px 0;
+    border-radius: 6px;
     cursor: pointer;
+}
+
+/* Zip Calculator */
+.zip-calculator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.calc-title {
+    color: #ff6700;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.zip-input {
+    padding: 12px 16px;
+    font-size: 1.1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    width: 200px;
+}
+
+.start-btn {
+    padding: 12px 24px;
+    background: #ff5a1f;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+.section-title {
+    font-size: 2.25rem;
+    color: #1e293b;
+}
+
+.brand-card {
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 420px;
+    transition: all 0.3s ease;
+}
+
+.brand-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    color: #1e293b;
+    margin-top: 8px;
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+}
+
+.stars {
+    color: #fbbf24;
+    font-size: 1.3rem;
+}
+
+.rating-number {
+    color: #1e293b;
     font-weight: 600;
 }
 
-.stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    flex-wrap: wrap;
+.review-count {
+    color: #0284c7;
+    font-weight: 500;
 }
 
-.stat-box {
-    text-align: center;
-}
-
-.star {
-    font-size: 46px;
-    color: #ffcc33;
+.latest-review strong,
+.review-header {
+    margin-top: 10px;
     display: block;
+    color: #1e293b;
 }
 
-.stat-box h3 {
-    margin-top: 6px;
-    margin-bottom: 0;
-    font-size: 1.6rem;
-    font-weight: 700;
+.read-more {
+    color: #0284c7;
+    text-decoration: none;
 }
 
-.stat-box p {
-    margin: 0;
-    font-size: 1rem;
-    opacity: 0.9;
+.cost-label,
+.cost-title {
+    display: block;
+    font-size: 0.9rem;
+    color: #475569;
+    margin-top: 15px;
 }
 
+.cost-value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.cost-value span,
+.cost-watt {
+    color: #64748b;
+    font-weight: 400;
+}
+
+.brand-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    background: #f97316;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.brand-btn:hover {
+    background: #ea580c;
+}
+
+.sort-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-label {
+    font-weight: 600;
+}
+
+.sort-select {
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.sidebar-box {
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.sidebar-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.zip-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.start-btn {
+    width: 100%;
+    background: #f97316;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.pagination-box {
+    display: flex;
+    gap: 8px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: none;
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.page-btn.active {
+    background: #2563eb;
+    color: white;
+}
+
+.page-info {
+    color: #475569;
+    font-size: 0.9rem;
+}
 
     </style>
 </head>
@@ -336,54 +630,227 @@
     <div class="page-wrapper">
         @include('components.frontend.navbar')
 
+        <!-- Category Hero -->
+        <section class="category-hero">
+            <div class="container-custom hero-grid">
+                <div>
+                    <div class="hero-eyebrow"><span></span> Trusted {{ strtolower($category->name) }} reviews</div>
+                    <h1>Discover the best {{ strtolower($category->name) }} companies near you.</h1>
+                    <p>
+                        Verified customer feedback, expert analysis, and transparent pricing data gathered from across India help you pick the ideal installer.
+                    </p>
+                    <div class="hero-actions">
+                        <div class="hero-zip">
+                            <input type="text" placeholder="Enter ZIP">
+                            <button type="button">Check availability</button>
+                        </div>
+                        <small>Over 30k+ reviews analyzed</small>
+                    </div>
+                </div>
+                <div class="hero-metrics">
+                    <div class="metric-card">
+                        <h3>33,992</h3>
+                        <span>Company reviews</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>5,322</h3>
+                        <span>Equipment reviews</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>1,362</h3>
+                        <span>Panel prices tracked</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>560</h3>
+                        <span>DIY kit estimates</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
-<!-- Star Section -->
-<!-- <section class="solar-hero">
-    <div class="overlay"></div>
+        <!-- Solar Review Section -->
+        <section class="solar-review-section py-5">
+            <div class="container-custom">
+        
+                <!-- Breadcrumb -->
+                <p class="breadcrumb-custom">Home > Solar panel reviews</p>
 
-    <div class="hero-content container-custom">
-        <h1>Compare prices and reviews of solar providers near you online</h1>
+                <!-- Title -->
+                <h1 class="section-title">Best solar panels 2025</h1>
 
-        <div class="zip-box">
-            <input type="text" placeholder="93305">
-            <button>START</button>
+                <p class="updated-date">Updated: April 11, 2023</p>
+
+                <!-- Description -->
+                <p class="section-desc">
+                    Our expert and consumer reviews of the leading brands of residential solar panels show the 
+                    best solar panels to suit your home in 2025
+                </p>
+
+                <!-- On this page -->
+                <h4 class="on-page-title">On this page:</h4>
+
+                <!-- Buttons Grid -->
+                <div class="options-grid">
+                    <button class="opt-btn">BEST BY EXPERT REVIEW</button>
+                    <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
+                    <button class="opt-btn">MOST EFFICIENT</button>
+                    <button class="opt-btn">BEST VALUE</button>
+                    <button class="opt-btn">US PANEL MANUFACTURERS</button>
+                    <button class="opt-btn">TYPES OF MANUFACTURERS</button>
+                </div>
+
+              
+
+            </div>
+        </section>
+
+
+
+
+<!-- Top Rated Solar Brands Section -->
+<section class="solar-section py-5 bg-light border-bottom">
+    <div class="container-custom">
+
+        <!-- Header Row -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+
+            <h2 class="fw-bold section-title">
+                Best 20 brands of solar panels by consumer reviews
+            </h2>
+
+            <!-- Sort Box -->
+            <div class="sort-box">
+                <label class="sort-label">Sort by:</label>
+                <select class="sort-select">
+                    <option>Default</option>
+                </select>
+            </div>
+
         </div>
 
-        <div class="stats-row">
-            <div class="stat-box">
-                <span class="star">★</span>
-                <h3>33,992</h3>
-                <p>Company reviews</p>
+        <div class="row">
+            
+            <!-- LEFT: Cards -->
+            <div class="col-lg-9">
+                <div class="row g-4">
+
+                    <!-- Card 1 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">Panel</span>
+
+                            <h3 class="brand-title">LG Solar</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-number">4.79</span>
+                                <span class="review-count">930 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">Judith goldsmith , over 1 month</p>
+                            <p class="text-muted">Eliza Garcia was my represent…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <div class="cost-box">
+                                <p class="cost-title">Average cost (5kW system)</p>
+                                <p class="cost-value">$15,683 <span>($3.14 per watt)</span></p>
+                            </div>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">Panel</span>
+
+                            <h3 class="brand-title">Panasonic</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-number">4.83</span>
+                                <span class="review-count">325 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">MTED, over 1 month</p>
+                            <p class="text-muted">I chose Panasonic solar panels…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <div class="cost-box">
+                                <p class="cost-title">Average cost (5kW system)</p>
+                                <p class="cost-value">$15,893 <span>($3.18 per watt)</span></p>
+                            </div>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">Installer</span>
+
+                            <h3 class="brand-title">Complete Solar, DB...</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐✰</span>
+                                <span class="rating-number">4.51</span>
+                                <span class="review-count">1,278 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">Steve, over 1 month</p>
+                            <p class="text-muted">SUN Power set me up with So…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <div class="cost-box">
+                                <p class="cost-title">Average cost (5kW system)</p>
+                                <p class="cost-value">$16,523 <span>($3.30 per watt)</span></p>
+                            </div>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-box mt-4">
+                    <button class="page-btn">&lt;</button>
+                    <button class="page-btn active">&gt;</button>
+                </div>
+
+                <div class="text-center mt-2 page-info">Installer 1 of 20</div>
+
             </div>
 
-            <div class="stat-box">
-                <span class="star">★</span>
-                <h3>5,322</h3>
-                <p>Equipment reviews</p>
+            <!-- RIGHT: Sidebar Box -->
+            <div class="col-lg-3">
+                <div class="sidebar-box">
+
+                    <h4 class="sidebar-title">Cost & savings calculator</h4>
+
+                    <input type="text" class="zip-input" placeholder="Zip Code">
+
+                    <button class="start-btn">GET STARTED</button>
+
+                </div>
             </div>
 
-            <div class="stat-box">
-                <span class="star">★</span>
-                <h3>1,362</h3>
-                <p>Individual panel prices</p>
-            </div>
-
-            <div class="stat-box">
-                <span class="star">★</span>
-                <h3>560</h3>
-                <p>Prices of DIY kits</p>
-            </div>
-
-            <div class="stat-box">
-                <span class="star">★</span>
-                <h3>3,721</h3>
-                <p>Installed system prices</p>
-            </div>
         </div>
+
     </div>
-</section> -->
-
+</section>
 
 
 
