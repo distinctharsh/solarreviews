@@ -18,6 +18,18 @@
             background: #f7f9ff;
             color: var(--primary);
         }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 0 1rem;
+            }
+        }
         .page-wrapper {
             max-width: 1200px;
             margin: 0 auto;
@@ -205,6 +217,8 @@
         </div>
     </div>
 
-    @include('components.frontend.footer')
+
+        @include('components.frontend.footer')
+
 </body>
 </html>

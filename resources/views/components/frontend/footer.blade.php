@@ -62,7 +62,7 @@
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="footer-about">
                     <a href="/" class="d-inline-block mb-3">
-                        <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 70px;">
+                        <img src="{{ asset('images/logo2.png') }}" alt="SolarReviews Logo" style="height: 70px;">
                     </a>
                     <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
                     <div class="d-flex gap-2">

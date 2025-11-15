@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100;">
     <div class="container" style="max-width: 1200px;">
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-            <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" class="navbar-logo">
+            <img src="{{ asset('images/logo1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
         </a>
         
         <!-- Desktop Nav Links -->
