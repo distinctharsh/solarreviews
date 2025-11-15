@@ -194,6 +194,28 @@
         .reviews-hero {
             position: relative;
             min-height: 500px;
+            overflow: hidden;
+        }
+
+        .reviews-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('{{ asset("images/couple-on-computer.jpg") }}') center/cover no-repeat;
+            z-index: 0;
+        }
+
+        .reviews-hero .hero-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0.95;
         }
 
         .reviews-hero .hero-wrapper {
@@ -203,30 +225,9 @@
             margin: 0 auto;
             padding: 6rem 1.5rem;
             min-height: 500px;
+            z-index: 2;
         }
 
-        .reviews-hero .hero-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 1.5rem;
-            right: 1.5rem;
-            bottom: 0;
-            background: url('{{ asset("images/couple-on-computer.jpg") }}') center/cover no-repeat;
-            z-index: 0;
-        }
-
-        .reviews-hero .overlay {
-            position: absolute;
-            top: 0;
-            left: 1.5rem;
-            right: 1.5rem;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(2px);
-            z-index: 1;
-        }
-        
         .reviews-hero .container-custom {
             position: relative;
             z-index: 2;
@@ -363,10 +364,8 @@
         .reviews-hero .hero-content {
             position: relative;
             z-index: 2;
+            flex: 1;
             max-width: 600px;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
         }
 
         /* CTA Section */
@@ -629,8 +628,8 @@
 
     <!-- Reviews Hero Section -->
     <section class="reviews-hero">
+        <div class="hero-gradient bg-gradient-to-r from-slate-900 to-transparent"></div>
         <div class="hero-wrapper">
-            <div class="overlay"></div>
             <div class="container-custom">
                 <div class="hero-content">
                     <p class="small-heading mb-2">Real People, Real Reviews</p>
