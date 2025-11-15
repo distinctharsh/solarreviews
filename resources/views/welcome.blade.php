@@ -63,7 +63,7 @@
             align-items: center;
         }
 
-        .hero .hero-wrapper::after {
+        .hero::after {
             content: '';
             position: absolute;
             top: 0;
@@ -546,8 +546,8 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-gradient bg-gradient-to-r from-white to-transparent"></div>
         <div class="hero-wrapper">
-            <div class="hero-gradient bg-gradient-to-r from-white to-transparent"></div>
             <div class="hero-content">
                 <h1 class="hero-heading">See how much it costs to install solar panels for your home</h1>
                 <p class="hero-subheading">Based on your:</p>
