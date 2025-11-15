@@ -487,7 +487,7 @@
         /* Footer */
         .footer {
             background-color: #11411a;
-            color: #9ca3af;
+            color: #f3f4f6;
         }
 
         .footer-links h3 {
@@ -502,7 +502,7 @@
             bottom: 0;
             width: 50px;
             height: 2px;
-            background-color: var(--accent-color);
+            background-color: #ffffff;
         }
 
         .footer-links ul {
@@ -512,13 +512,17 @@
         }
 
         .footer-links a {
-            color: #9ca3af;
+            color: #ffffff;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: white;
+            color: #dbeafe;
+        }
+
+        .footer .border-top {
+            border-color: #ffffff !important;
         }
 
         .social-link {
@@ -777,7 +781,7 @@
                         SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
                         to help you identify the best solar panel installation companies in your area.
                     </p>
-                    <a href="#" class="hero-btn">See Reviews of Companies Near You</a>
+                    <a href="{{ route('reviews.top') }}" class="hero-btn" target="_blank" rel="noopener">See Reviews of Companies Near You</a>
                 </div>
             </div>
         </div>
@@ -801,7 +805,7 @@
                             Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
                             the economics of installing solar panels on their homes.
                         </p>
-                        <a href="#" class="solar-btn">Use Our Solar Calculator</a>
+                        <!-- <a href="#" class="solar-btn">Use Our Solar Calculator</a> -->
                     </div>
                 </div>
             </div>

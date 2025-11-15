@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/top-reviews', function () {
+    return view('frontend.reviews.top-installers');
+})->name('reviews.top');
+
 // Category-based company comparison
 Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
     ->name('companies.compare');
