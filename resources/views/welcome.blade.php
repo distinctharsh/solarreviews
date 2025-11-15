@@ -42,10 +42,11 @@
         /* Hero Section */
         .hero {
             position: relative;
-            min-height: calc(100vh - 76px);
+            min-height: calc(100vh - 60px);
             display: flex;
             align-items: center;
             overflow: hidden;
+            background: #f8f9fa;
         }
 
         .hero .hero-wrapper {
@@ -53,8 +54,8 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1.5rem;
-            min-height: calc(100vh - 76px);
+            padding: 4rem 1.5rem;
+            min-height: calc(100vh - 60px);
             display: flex;
             align-items: center;
         }
@@ -63,29 +64,118 @@
             content: '';
             position: absolute;
             top: 0;
-            left: 1.5rem;
-            right: 1.5rem;
+            right: 0;
             bottom: 0;
-            background: url("{{ asset('images/solar-panel.jpg') }}") center/cover no-repeat;
+            left: 0;
+            background: url("{{ asset('images/solar-panel.jpg') }}") right center/cover no-repeat;
             z-index: 0;
         }
 
-        .hero .hero-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 1.5rem;
-            right: 1.5rem;
-            bottom: 0;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
-            z-index: 1;
-        }
-
-        .hero .container-custom {
+        .hero-content {
             position: relative;
             z-index: 2;
-            padding-left: 0;
-            padding-right: 0;
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subheading {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2.5rem 0;
+        }
+
+        .hero-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+
+        .checkmark-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 1rem;
+            color: #1e40af;
+            flex-shrink: 0;
+        }
+
+        .hero-search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-search-input-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .hero-search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .hero-search-input:focus {
+            border-color: #1e40af;
+        }
+
+        .location-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 1.2rem;
+        }
+
+        .hero-calculate-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .hero-calculate-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 991px) {
+            .hero .hero-wrapper::after {
+                opacity: 0.3;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+            }
         }
         
         .reviews-hero {
@@ -131,75 +221,35 @@
             padding-right: 0;
         }
 
-        .hero-content {
-            max-width: 600px;
-            padding: 2.5rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 0 15px 15px 0;
-        }
-
-        .search-bar {
-            display: flex;
-            background: white;
-            border-radius: 50px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .search-input {
-            flex: 1;
-            border: none;
-            padding: 1.2rem 2rem;
-            font-size: 1.1rem;
-            outline: none;
-        }
-
-        .search-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 0 2.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: background 0.3s ease;
-        }
-
-        .search-btn:hover {
-            background: #2563eb;
-        }
-
         @media (max-width: 768px) {
             .hero .hero-wrapper {
-                padding: 4rem 1.25rem;
+                padding: 3rem 1.25rem;
                 min-height: auto;
             }
             
-            .hero .hero-wrapper::after,
-            .hero .hero-wrapper::before {
-                left: 1.25rem;
-                right: 1.25rem;
+            .hero-heading {
+                font-size: 1.8rem;
             }
             
-            .hero-content {
-                max-width: 100%;
-                padding: 1.5rem;
-                border-radius: 8px;
+            .hero-subheading {
+                font-size: 1.1rem;
             }
             
-            .search-bar {
+            .hero-features li {
+                font-size: 1rem;
+            }
+            
+            .hero-search-container {
                 flex-direction: column;
-                border-radius: 12px;
+                gap: 1rem;
             }
             
-            .search-input,
-            .search-btn {
+            .hero-search-input-wrapper {
+                max-width: 100%;
+            }
+            
+            .hero-calculate-btn {
                 width: 100%;
-                padding: 1rem;
-                border-radius: 0;
-            }
-            
-            .search-btn {
-                border-radius: 0 0 12px 12px;
             }
             
             .reviews-hero .hero-wrapper {
@@ -484,14 +534,35 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-wrapper">
-            <div class="container-custom">
-                <div class="hero-content">
-                    <h1 class="text-white fw-bold mb-4" style="font-size: 2.2rem; line-height: 1.2; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">Find the Best Solar Solutions for Your Dashboard</h1>
-                    <p class="text-white mb-4" style="font-size: 1.25rem; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);">Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
-                    <div class="search-bar">
-                        <input type="text" class="search-input" placeholder="Enter your zip code">
-                        <button class="search-btn">Calculate Now</button>
+            <div class="hero-content">
+                <h1 class="hero-heading">See how much it costs to install solar panels for your home</h1>
+                <p class="hero-subheading">Based on your:</p>
+                <ul class="hero-features">
+                    <li>
+                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Location
+                    </li>
+                    <li>
+                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Electric bill
+                    </li>
+                    <li>
+                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Prices of the best-rated solar companies near you
+                    </li>
+                </ul>
+                <div class="hero-search-container">
+                    <div class="hero-search-input-wrapper">
+                        <i class="fas fa-map-marker-alt location-icon"></i>
+                        <input type="text" class="hero-search-input" placeholder="93305" value="93305">
                     </div>
+                    <button class="hero-calculate-btn">Calculate Now</button>
                 </div>
             </div>
         </div>
@@ -728,7 +799,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const offsetTop = target.offsetTop - 76; // Account for fixed navbar
+                    const offsetTop = target.offsetTop - 60; // Account for fixed navbar
                     window.scrollTo({
                         top: offsetTop,
                         behavior: 'smooth'
