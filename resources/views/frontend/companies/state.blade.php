@@ -29,10 +29,21 @@
             color: var(--text-color);
         }
 
-        .page-wrapper {
-            max-width: 1100px;
+        .container-custom {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 1.5rem 0.75rem 2.5rem;
+            padding: 0 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 0 1rem;
+            }
+        }
+
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1.5rem 2.5rem;
             display: grid;
             grid-template-columns: 240px 1fr;
             gap: 1.25rem;
@@ -1268,5 +1279,6 @@ function showAlert(title, text, icon) {
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    @include('components.frontend.footer')
 </body>
 </html>

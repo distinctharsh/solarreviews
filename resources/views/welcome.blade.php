@@ -781,7 +781,7 @@
                         SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
                         to help you identify the best solar panel installation companies in your area.
                     </p>
-                    <a href="{{ route('reviews.top') }}" class="hero-btn" target="_blank" rel="noopener">See Reviews of Companies Near You</a>
+                    <a href="{{ route('reviews.top') }}" class="hero-btn" rel="noopener">See Reviews of Companies Near You</a>
                 </div>
             </div>
         </div>
@@ -972,67 +972,7 @@
     </section>
 
 
-    <!-- Footer -->
-    <footer class="footer py-5">
-        <div class="container-custom">
-            <div class="row g-4 mb-4">
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-about">
-                        <a href="/" class="d-inline-block mb-3">
-                            <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 70px;">
-                        </a>
-                        <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
-                        <div class="d-flex gap-2">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-links">
-                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Quick Links</h3>
-                        <ul>
-                            <li class="mb-2"><a href="#">How It Works</a></li>
-                            <li class="mb-2"><a href="#">Solar Companies</a></li>
-                            <li class="mb-2"><a href="#">Reviews</a></li>
-                            <li class="mb-2"><a href="#">Blog</a></li>
-                            <li class="mb-2"><a href="#">Contact Us</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-links">
-                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Solar Resources</h3>
-                        <ul>
-                            <li class="mb-2"><a href="#">Solar Guides</a></li>
-                            <li class="mb-2"><a href="#">Solar Calculator</a></li>
-                            <li class="mb-2"><a href="#">Solar Incentives</a></li>
-                            <li class="mb-2"><a href="#">Financing Options</a></li>
-                            <li class="mb-2"><a href="#">FAQ</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="footer-links">
-                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Legal</h3>
-                        <ul>
-                            <li class="mb-2"><a href="#">Privacy Policy</a></li>
-                            <li class="mb-2"><a href="#">Terms of Service</a></li>
-                            <li class="mb-2"><a href="#">Cookie Policy</a></li>
-                            <li class="mb-2"><a href="#">Sitemap</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="border-top border-secondary pt-4">
-            <div class="container-custom text-center">
-                <p class="mb-0" style="font-size: 0.875rem;">&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    @include('components.frontend.footer')
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

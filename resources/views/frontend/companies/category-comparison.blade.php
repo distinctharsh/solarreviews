@@ -1338,5 +1338,6 @@
             });
         });
     </script>
+    @include('components.frontend.footer')
 </body>
 </html>

@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: #0f172a;
-            --accent: #1d4ed8;
-            --light-blue: #eef4ff;
-            --border: #e0e7ff;
+            --primary: #1f2937;
+            --accent: #3ba14c;
+            --light-blue: #eef8f0;
+            --border: #d9f0e0;
         }
         body {
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -19,9 +19,9 @@
             color: var(--primary);
         }
         .page-wrapper {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2.5rem 1rem 4rem;
+            padding: 2.5rem 1.5rem 4rem;
         }
         .page-title {
             font-size: clamp(2rem, 4vw, 2.6rem);
@@ -100,7 +100,7 @@
             margin-right: 4px;
         }
         .expert-dots span.active {
-            background: #2563eb;
+            background: var(--accent);
         }
         .rating-stars {
             color: #fbbf24;
@@ -109,14 +109,14 @@
         }
         .btn-quote {
             border-radius: 999px;
-            border: 1px solid #2563eb;
-            color: #2563eb;
+            border: 1px solid var(--accent);
+            color: var(--accent);
             padding: 0.35rem 1.1rem;
             font-weight: 600;
             font-size: 0.9rem;
         }
         .btn-quote:hover {
-            background: #2563eb;
+            background: var(--accent);
             color: white;
         }
         @media (max-width: 992px) {
@@ -130,6 +130,9 @@
     @include('components.frontend.navbar')
 
     <div class="page-wrapper">
+        @php
+            $states = \App\Models\State::select('name', 'slug')->orderBy('name')->get();
+        @endphp
         <p class="text-uppercase text-muted fw-semibold mb-2" style="letter-spacing: 1.5px;">Consumer Reviews</p>
         <h1 class="page-title">Top 100 Solar Installers Ranked by Consumer Reviews</h1>
         <p class="lede mt-3">SolarReviews is the leading American website for solar panel reviews and solar panel installation companies. Our independent expert rating keeps things unbiased so you can hire with confidence.</p>
@@ -143,9 +146,13 @@
                 <hr class="my-4">
                 <h5>Solar in your state</h5>
                 <ul class="state-list">
-                    @foreach(['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas'] as $state)
-                        <li><a href="#">{{ $state }}</a></li>
-                    @endforeach
+                    @forelse($states as $state)
+                        <li>
+                            <a href="{{ route('state.companies', $state->slug) }}">{{ $state->name }}</a>
+                        </li>
+                    @empty
+                        <li class="text-muted">States coming soon.</li>
+                    @endforelse
                 </ul>
             </aside>
 
@@ -197,5 +204,7 @@
             </section>
         </div>
     </div>
+
+    @include('components.frontend.footer')
 </body>
 </html>
