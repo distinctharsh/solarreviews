@@ -11,9 +11,9 @@
 
     <style>
         :root {
-            --primary-color: #269c3f;
-            --secondary-color: #1e3a8a;
-            --accent-color: #3b82f6;
+            --primary-color: #3ba14c;
+            --secondary-color: #1f6d30;
+            --accent-color: #3ba14c;
             --text-color: #1f2937;
             --light-bg: #f9fafb;
             --bg-opacity: 0.75;
@@ -171,17 +171,25 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 0.25rem;
+            flex-wrap: wrap;
+            margin-top: 0.35rem;
         }
 
-        .stars {
+        .rating-row .stars {
             color: #f59e0b;
-            font-size: 0.85rem;
+            font-size: 1rem;
+            letter-spacing: 1px;
         }
 
+        .rating-row .rating-number,
+        .rating-row .review-count,
         .rating-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #4b5563;
+        }
+
+        .brand-card .text-muted {
+            font-size: 0.92rem;
         }
 
         .company-actions {
@@ -195,15 +203,15 @@
             font-size: 0.75rem;
             padding: 0.15rem 0.6rem;
             border-radius: 999px;
-            background: #eff6ff;
-            color: #269c3f;
+            background: rgba(59, 161, 76, 0.12);
+            color: var(--primary-color);
             font-weight: 500;
         }
 
         .btn-outline-primary {
             border-radius: 999px;
-            border: 1px solid #269c3f;
-            color: #269c3f;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
             padding: 0.4rem 0.9rem;
             font-size: 0.8rem;
             font-weight: 500;
@@ -214,7 +222,7 @@
         }
 
         .btn-outline-primary:hover {
-            background: #269c3f;
+            background: var(--primary-color);
             color: white;
         }
 
@@ -342,10 +350,15 @@
             border: none;
             border-radius: 999px;
             padding: 0.65rem 1.5rem;
-            background: #f97316;
+            background: var(--primary-color);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
+        }
+
+        .hero-zip button:hover {
+            background: var(--primary-color-hover);
+            color: white;
         }
 
         .hero-metrics {
@@ -377,199 +390,283 @@
     color: #1e293b;
 }
 
-/* Updated */
-.updated-date {
-    color: #64748b;
-    font-size: 0.95rem;
-}
+    /* Updated */
+    .updated-date {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
 
-/* Description */
-.section-desc {
-    max-width: 700px;
-    font-size: 1.1rem;
-    color: #334155;
-    margin: 20px 0 30px;
-}
+    /* Description */
+    .section-desc {
+        max-width: 700px;
+        font-size: 1.1rem;
+        color: #334155;
+        margin: 20px 0 30px;
+    }
 
-.on-page-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 15px;
-}
+    .on-page-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 15px;
+    }
 
-/* Options Grid */
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 15px;
-    max-width: 900px;
-}
+    /* Options Grid */
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        max-width: 900px;
+    }
 
-.opt-btn {
-    background: #00b7ff;
-    color: white;
-    padding: 14px 20px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+    .opt-btn {
+        background: var(--primary-color);
+        color: white;
+        padding: 14px 20px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
 
-/* Zip Calculator */
-.zip-calculator {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    /* Zip Calculator */
+    .zip-calculator {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-.calc-title {
-    color: #ff6700;
-    font-size: 1.3rem;
-    font-weight: 700;
-}
+    .calc-title {
+        color: var(--primary-color);
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
 
-.zip-input {
-    padding: 12px 16px;
-    font-size: 1.1rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    width: 200px;
-}
+    .zip-input {
+        padding: 12px 16px;
+        font-size: 1.1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        width: 200px;
+    }
 
-.start-btn {
-    padding: 12px 24px;
-    background: #ff5a1f;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    font-weight: 700;
-    cursor: pointer;
-}
+    .start-btn {
+        padding: 12px 24px;
+        background: var(--primary-color);
+        border: none;
+        color: white;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+    }
 
 
-.section-title {
-    font-size: 2.25rem;
-    color: #1e293b;
-}
+    .section-title {
+        font-size: 2.25rem;
+        color: #1e293b;
+    }
 
-.brand-card {
-    background: white;
-    border: 1px solid #d1d5db;
-    padding: 20px;
-    border-radius: 10px;
-    min-height: 420px;
-    transition: all 0.3s ease;
-}
+    .brand-card {
+        background: white;
+        border: 1px solid #d1d5db;
+        padding: 20px;
+        border-radius: 10px;
+        min-height: 420px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
 
-.brand-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
+    .brand-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
 
-.tag {
-    display: inline-block;
-    padding: 4px 12px;
-    background: #e2e8f0;
-    color: #475569;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    margin-bottom: 10px;
-}
+    .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #e2e8f0;
+        color: #475569;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        margin-bottom: 10px;
+    }
 
-.brand-title {
-    font-size: 1.25rem;
-    color: #1e293b;
-    margin-top: 8px;
-}
+    .brand-title {
+        font-size: 1.25rem;
+        color: #1e293b;
+        margin-top: 8px;
+    }
 
-.rating-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 8px 0;
-}
+    .rating-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 8px 0;
+    }
 
-.stars {
-    color: #fbbf24;
-    font-size: 1.3rem;
-}
+    .stars {
+        color: #fbbf24;
+        font-size: 1.3rem;
+    }
 
-.rating-number {
-    color: #1e293b;
-    font-weight: 600;
-}
+    .rating-number {
+        color: #1e293b;
+        font-weight: 600;
+    }
 
-.review-count {
-    color: #0284c7;
-    font-weight: 500;
-}
+    .review-count {
+        color: var(--primary-color);
+        font-weight: 500;
+    }
 
-.latest-review strong,
-.review-header {
-    margin-top: 10px;
-    display: block;
-    color: #1e293b;
-}
+    .latest-review strong,
+    .review-header {
+        margin-top: 10px;
+        display: block;
+        color: #1e293b;
+    }
 
-.read-more {
-    color: #0284c7;
-    text-decoration: none;
-}
+    .read-more {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
 
-.cost-label,
-.cost-title {
-    display: block;
-    font-size: 0.9rem;
-    color: #475569;
-    margin-top: 15px;
-}
+    .cost-label,
+    .cost-title {
+        display: block;
+        font-size: 0.9rem;
+        color: #475569;
+        margin-top: 15px;
+    }
 
-.cost-value {
-    font-weight: 600;
-    color: #1e293b;
-}
+    .cost-value {
+        font-weight: 600;
+        color: #1e293b;
+    }
 
-.cost-value span,
-.cost-watt {
-    color: #64748b;
-    font-weight: 400;
-}
+    .cost-value span,
+    .cost-watt {
+        color: #64748b;
+        font-weight: 400;
+    }
 
-.brand-btn {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-    background: #f97316;
-    color: white;
-    padding: 12px;
-    border-radius: 6px;
-    text-align: center;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.3s ease;
-}
+    .brand-btn {
+        display: block;
+        width: 100%;
+        margin-top: auto;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
 
-.brand-btn:hover {
-    background: #ea580c;
-}
+    .brand-btn:hover {
+        background: #2f7f3d;
+    }
 
-.sort-box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .sort-box {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            background: #fff;
+            border: 1px solid #dbe2f1;
+            border-radius: 999px;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+        }
 
-.sort-label {
-    font-weight: 600;
-}
+        .sort-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #475569;
+            margin: 0;
+        }
 
-.sort-select {
-    padding: 6px 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-}
+        .sort-control {
+            position: relative;
+        }
+
+        .sort-button {
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1e293b;
+            padding-right: 1.4rem;
+            cursor: pointer;
+        }
+
+        .sort-button:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.35);
+            border-radius: 0.75rem;
+        }
+
+        .sort-control::after {
+            content: '\25BE';
+            position: absolute;
+            right: 0.65rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: #475569;
+            pointer-events: none;
+        }
+
+        .sort-menu {
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem;
+            background: #fff;
+            border: 1px solid #dbe2f1;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.15);
+            min-width: 220px;
+            padding: 0.35rem;
+            list-style: none;
+            display: none;
+            z-index: 5;
+        }
+
+        .sort-menu li button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: left;
+            padding: 0.55rem 0.75rem;
+            border-radius: 0.55rem;
+            font-size: 0.92rem;
+            color: #1e293b;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .sort-menu li button:hover,
+        .sort-menu li button.active {
+            background: rgba(59, 161, 76, 0.12);
+            color: var(--primary-color);
+        }
+
+        .sort-control.open .sort-menu {
+            display: block;
+        }
+
+        @media (max-width: 576px) {
+            .sort-box {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .sort-select {
+                width: auto;
+            }
+        }
 
 .sidebar-box {
     background: white;
@@ -594,7 +691,7 @@
 
 .start-btn {
     width: 100%;
-    background: #f97316;
+    background: var(--primary-color);
     color: white;
     padding: 10px;
     border: none;
@@ -624,9 +721,49 @@
     font-size: 0.9rem;
 }
 
+
+
+.why-important-section {
+    background: #ffffff;
+    color: #334155; /* Subtle slate */
+}
+
+.important-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b; /* Dark navy like screenshot */
+    margin-bottom: 20px;
+}
+
+.important-text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #475569;
+    max-width: 850px;
+}
+
+.important-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 22px;
+    color: #475569;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 870px;
+}
+
+.important-list li {
+    margin-bottom: 12px;
+}
+
+
     </style>
 </head>
 <body>
+    @php
+        $categoryName = $category->name;
+        $categoryNameLower = strtolower($categoryName);
+    @endphp
     <div class="page-wrapper">
         @include('components.frontend.navbar')
 
@@ -634,8 +771,8 @@
         <section class="category-hero">
             <div class="container-custom hero-grid">
                 <div>
-                    <div class="hero-eyebrow"><span></span> Trusted {{ strtolower($category->name) }} reviews</div>
-                    <h1>Discover the best {{ strtolower($category->name) }} companies near you.</h1>
+                    <div class="hero-eyebrow"><span></span> Trusted {{ $categoryNameLower }} reviews</div>
+                    <h1>Discover the best {{ $categoryNameLower }} companies near you.</h1>
                     <p>
                         Verified customer feedback, expert analysis, and transparent pricing data gathered from across India help you pick the ideal installer.
                     </p>
@@ -658,7 +795,7 @@
                     </div>
                     <div class="metric-card">
                         <h3>1,362</h3>
-                        <span>Panel prices tracked</span>
+                        <span>{{ $categoryName }} prices tracked</span>
                     </div>
                     <div class="metric-card">
                         <h3>560</h3>
@@ -674,17 +811,17 @@
             <div class="container-custom">
         
                 <!-- Breadcrumb -->
-                <p class="breadcrumb-custom">Home > Solar panel reviews</p>
+                <p class="breadcrumb-custom">Home > {{ $categoryName }} reviews</p>
 
                 <!-- Title -->
-                <h1 class="section-title">Best solar panels 2025</h1>
+                <h1 class="section-title">Best {{ $categoryName }} of 2025</h1>
 
-                <p class="updated-date">Updated: April 11, 2023</p>
+                <p class="updated-date">Updated: November 15, 2025</p>
 
                 <!-- Description -->
                 <p class="section-desc">
-                    Our expert and consumer reviews of the leading brands of residential solar panels show the 
-                    best solar panels to suit your home in 2025
+                    Our expert and consumer reviews of the leading brands of residential {{ $categoryNameLower }} highlight the 
+                    best {{ $categoryNameLower }} to suit your home in 2025
                 </p>
 
                 <!-- On this page -->
@@ -696,7 +833,7 @@
                     <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
                     <button class="opt-btn">MOST EFFICIENT</button>
                     <button class="opt-btn">BEST VALUE</button>
-                    <button class="opt-btn">US PANEL MANUFACTURERS</button>
+                    <button class="opt-btn">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
                     <button class="opt-btn">TYPES OF MANUFACTURERS</button>
                 </div>
 
@@ -716,15 +853,30 @@
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
 
             <h2 class="fw-bold section-title">
-                Best 20 brands of solar panels by consumer reviews
+                Best 20 {{ $categoryName }} brands by consumer reviews
             </h2>
 
             <!-- Sort Box -->
             <div class="sort-box">
-                <label class="sort-label">Sort by:</label>
-                <select class="sort-select">
-                    <option>Default</option>
-                </select>
+                <label class="sort-label mb-0">Sort by:</label>
+                <div class="sort-control" data-sort-control>
+                    <button type="button" class="sort-button" data-sort-trigger>Default</button>
+                    <ul class="sort-menu" data-sort-menu>
+                        @foreach([
+                            'Default',
+                            'Best Rated',
+                            'Most Reviewed',
+                            'Most Efficient',
+                            'Most Popular',
+                            'Best By Expert Review',
+                            'Best By Consumer Review'
+                        ] as $option)
+                            <li>
+                                <button type="button" data-sort-value="{{ $option }}" class="{{ $loop->first ? 'active' : '' }}">{{ $option }}</button>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
 
         </div>
@@ -739,7 +891,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="brand-card">
 
-                            <span class="tag">Panel</span>
+                            <span class="tag">{{ $categoryName }}</span>
 
                             <h3 class="brand-title">LG Solar</h3>
 
@@ -751,13 +903,8 @@
 
                             <strong class="review-header">Latest review</strong>
                             <p class="text-muted m-0">Judith goldsmith , over 1 month</p>
-                            <p class="text-muted">Eliza Garcia was my represent…</p>
+                            <p class="text-muted">Eliza Garcia represent…</p>
                             <a href="#" class="read-more">Read more</a>
-
-                            <div class="cost-box">
-                                <p class="cost-title">Average cost (5kW system)</p>
-                                <p class="cost-value">$15,683 <span>($3.14 per watt)</span></p>
-                            </div>
 
                             <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
 
@@ -768,7 +915,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="brand-card">
 
-                            <span class="tag">Panel</span>
+                            <span class="tag">{{ $categoryName }}</span>
 
                             <h3 class="brand-title">Panasonic</h3>
 
@@ -780,13 +927,8 @@
 
                             <strong class="review-header">Latest review</strong>
                             <p class="text-muted m-0">MTED, over 1 month</p>
-                            <p class="text-muted">I chose Panasonic solar panels…</p>
+                            <p class="text-muted">I chose Panasonic {{ $categoryNameLower }}…</p>
                             <a href="#" class="read-more">Read more</a>
-
-                            <div class="cost-box">
-                                <p class="cost-title">Average cost (5kW system)</p>
-                                <p class="cost-value">$15,893 <span>($3.18 per watt)</span></p>
-                            </div>
 
                             <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
 
@@ -812,11 +954,6 @@
                             <p class="text-muted">SUN Power set me up with So…</p>
                             <a href="#" class="read-more">Read more</a>
 
-                            <div class="cost-box">
-                                <p class="cost-title">Average cost (5kW system)</p>
-                                <p class="cost-value">$16,523 <span>($3.30 per watt)</span></p>
-                            </div>
-
                             <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
 
                         </div>
@@ -830,7 +967,6 @@
                     <button class="page-btn active">&gt;</button>
                 </div>
 
-                <div class="text-center mt-2 page-info">Installer 1 of 20</div>
 
             </div>
 
@@ -838,7 +974,7 @@
             <div class="col-lg-3">
                 <div class="sidebar-box">
 
-                    <h4 class="sidebar-title">Cost & savings calculator</h4>
+                    <h4 class="sidebar-title">Calculator</h4>
 
                     <input type="text" class="zip-input" placeholder="Zip Code">
 
@@ -858,19 +994,206 @@
 
 
 
+<section class="why-important-section py-5">
+    <div class="container-custom">
+
+        <h2 class="important-title">
+            Why is it so important to use the best {{ $categoryNameLower }} brands?
+        </h2>
+
+        <p class="important-text">
+            A recurring point we make on SolarReviews is that {{ $categoryNameLower }} last a long, long time; 
+            25-30 years to be exact. This makes it important to buy {{ $categoryNameLower }} with the following qualities:
+        </p>
+
+        <ol class="important-list">
+            <li>They are the least likely to fail.</li>
+            <li>The manufacturer will honor their warranty if there is a fault.</li>
+            <li>
+                Installed by a local solar company who will still be in business if there is a fault — and will 
+                do the testing necessary to lodge a successful warranty claim with the manufacturer.
+            </li>
+        </ol>
+
+        <p class="important-text">
+            This third point is very important in practical terms, and a good reason why it is not always wise 
+            to buy solar from the cheapest company.
+        </p>
+
+    </div>
+</section>
 
 
-        <section class="compare-hero">
-            <div class="compare-container">
-                <div class="breadcrumb">
-                    <a href="{{ url('/') }}">Home</a> &raquo; Best {{ $category->name }} Companies
+
+<!-- Top Rated Solar Brands Section -->
+<section class="solar-section py-5 bg-light border-bottom">
+    <div class="container-custom">
+
+        <!-- Header Row -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+
+            <h2 class="fw-bold section-title">
+                10 best {{ $categoryName }} brands by efficiency
+            </h2>
+
+            <!-- Sort Box -->
+            <div class="sort-box">
+                <label class="sort-label mb-0">Sort by:</label>
+                <div class="sort-control" data-sort-control>
+                    <button type="button" class="sort-button" data-sort-trigger>Default</button>
+                    <ul class="sort-menu" data-sort-menu>
+                        @foreach([
+                            'Default',
+                            'Best Rated',
+                            'Most Reviewed',
+                            'Most Efficient',
+                            'Most Popular',
+                            'Best By Expert Review',
+                            'Best By Consumer Review'
+                        ] as $option)
+                            <li>
+                                <button type="button" data-sort-value="{{ $option }}" class="{{ $loop->first ? 'active' : '' }}">{{ $option }}</button>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
-                <h1 class="compare-hero-title">Best {{ $category->name }} Companies in India</h1>
-                <p class="compare-hero-subtitle">
-                    We’ve ranked these companies based on verified customer reviews and overall ratings to help you choose the best {{ strtolower($category->name) }} brands.
-                </p>
             </div>
-        </section>
+
+        </div>
+
+        <div class="row">
+            
+            <!-- LEFT: Cards -->
+            <div class="col-lg-9">
+                <div class="row g-4">
+
+                    <!-- Card 1 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">{{ $categoryName }}</span>
+
+                            <h3 class="brand-title">REC Group</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-number">4.56</span>
+                                <span class="review-count">930 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">Wayne, over 1 month</p>
+                            <p class="text-muted">REC Group is a company that…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">{{ $categoryName }}</span>
+
+                            <h3 class="brand-title">Panasonic</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                                <span class="rating-number">4.83</span>
+                                <span class="review-count">325 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">MTED, over 1 month</p>
+                            <p class="text-muted">I chose Panasonic {{ $categoryNameLower }}…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="brand-card">
+
+                            <span class="tag">Installer</span>
+
+                            <h3 class="brand-title">Complete Solar, DB...</h3>
+
+                            <div class="rating-row">
+                                <span class="stars">⭐⭐⭐⭐✰</span>
+                                <span class="rating-number">4.51</span>
+                                <span class="review-count">1,278 Reviews</span>
+                            </div>
+
+                            <strong class="review-header">Latest review</strong>
+                            <p class="text-muted m-0">Steve, over 1 month</p>
+                            <p class="text-muted">SUN Power set me up with So…</p>
+                            <a href="#" class="read-more">Read more</a>
+
+                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-box mt-4">
+                    <button class="page-btn">&lt;</button>
+                    <button class="page-btn active">&gt;</button>
+                </div>
+
+
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</section>
+
+
+     
+
+
+<section class="why-important-section py-5">
+    <div class="container-custom">
+
+        <h2 class="important-title">
+            What are Tier 1 {{ $categoryNameLower }} manufacturers?
+        </h2>
+
+        <p class="important-text">
+            The concept of an elite list of Tier 1 {{ $categoryNameLower }} manufacturers was first used by Bloomberg New Energy 
+            in a report on the “bankability” of different {{ $categoryNameLower }} brands.
+        </p>
+
+        <p class="important-text">
+            They chose brands that had been financed on a non-recourse basis by several banks, over several different 
+            projects greater than 1.5 megawatts in size.
+        </p>
+
+        <p class="important-text">
+            While Bloomberg’s definition of Tier 1 is somewhat useful, in our view it’s insufficient as a guide for 
+            consumers. It only judges the {{ $categoryNameLower }} based on past performance, and doesn’t attempt to predict the 
+            future reliability of each manufacturer.
+        </p>
+
+        <p class="important-text">
+            Given that {{ $categoryNameLower }} last 25–30 years, we think much more weight should be given to the future prospects 
+            of the brand, as well as the manufacturer’s future economic viability.
+        </p>
+
+    </div>
+</section>
+
+
+
 
         <main class="compare-main">
             <div class="compare-layout">
@@ -883,14 +1206,13 @@
                 </aside>
 
                 <section>
-                    @if($companies->isEmpty())
-                        <div class="empty-state">
-                            <h2>No companies found for this category yet.</h2>
-                            <p>We’re still collecting reviews for {{ strtolower($category->name) }} providers. Check back soon or explore other categories.</p>
-                        </div>
-                    @else
+                    @if($companies->isNotEmpty())
                         <div class="company-list">
                             @foreach($companies as $index => $company)
+                                @php
+                                    $rating = $company->average_rating ?? 0;
+                                    $full = floor($rating);
+                                @endphp
                                 <article class="company-card">
                                     <div class="company-main">
                                         <div class="company-logo">
@@ -909,10 +1231,6 @@
                                             </div>
                                             <div class="rating-row">
                                                 <div class="stars">
-                                                    @php
-                                                        $rating = $company->average_rating ?? 0;
-                                                        $full = floor($rating);
-                                                    @endphp
                                                     @for($i = 1; $i <= 5; $i++)
                                                         @if($i <= $full)
                                                             <i class="fas fa-star"></i>
@@ -939,11 +1257,86 @@
                                 </article>
                             @endforeach
                         </div>
+                    @else
+                        <div class="company-list">
+                            @foreach([
+                                ['name' => 'SunPeak Energy Co.', 'state' => 'California', 'rating' => 4.8, 'reviews' => 214],
+                                ['name' => 'GreenVolt Solar', 'state' => 'Texas', 'rating' => 4.6, 'reviews' => 189],
+                                ['name' => 'BrightSky Installers', 'state' => 'Florida', 'rating' => 4.9, 'reviews' => 321],
+                                ['name' => 'EcoRay Power', 'state' => 'Arizona', 'rating' => 4.7, 'reviews' => 167],
+                                ['name' => 'HelioSense Renewables', 'state' => 'Colorado', 'rating' => 4.5, 'reviews' => 142],
+                                ['name' => 'PeakGrid Solar Works', 'state' => 'New York', 'rating' => 4.4, 'reviews' => 118],
+                            ] as $index => $demo)
+                                @php
+                                    $rating = $demo['rating'];
+                                    $full = floor($rating);
+                                @endphp
+                                <article class="company-card">
+                                    <div class="company-main">
+                                        <div class="company-logo">
+                                            <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo">
+                                        </div>
+                                        <div class="company-info">
+                                            <div class="company-name">{{ $demo['name'] }}</div>
+                                            <div class="company-meta">{{ $demo['state'] }}</div>
+                                            <div class="rating-row">
+                                                <div class="stars">
+                                                    @for($i = 1; $i <= 5; $i++)
+                                                        @if($i <= $full)
+                                                            <i class="fas fa-star"></i>
+                                                        @else
+                                                            <i class="far fa-star"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <div class="rating-text">
+                                                    {{ number_format($rating, 1) }}
+                                                    <span>&middot;</span>
+                                                    {{ $demo['reviews'] }} {{ $demo['reviews'] == 1 ? 'review' : 'reviews' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="company-actions">
+                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
+                                        <a href="#" class="btn-outline-primary">
+                                            View companies in {{ $demo['state'] }}
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
                     @endif
                 </section>
             </div>
         </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('[data-sort-control]').forEach(control => {
+            const trigger = control.querySelector('[data-sort-trigger]');
+            const menu = control.querySelector('[data-sort-menu]');
+
+            trigger.addEventListener('click', () => {
+                control.classList.toggle('open');
+            });
+
+            menu.querySelectorAll('button[data-sort-value]').forEach(optionBtn => {
+                optionBtn.addEventListener('click', () => {
+                    menu.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                    optionBtn.classList.add('active');
+                    trigger.textContent = optionBtn.dataset.sortValue;
+                    control.classList.remove('open');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!control.contains(e.target)) {
+                    control.classList.remove('open');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

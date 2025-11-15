@@ -6,14 +6,14 @@
         
         <!-- Desktop Nav Links -->
         <div class="desktop-nav d-none d-lg-flex align-items-center gap-3">
-            <a class="nav-link fw-medium" href="#solar-calculator">Solar Calculator</a>
+            <!-- <a class="nav-link fw-medium" href="#solar-calculator">Solar Calculator</a> -->
             @if (Route::has('login'))
                 @auth
                     <a class="nav-link fw-medium" href="{{ url('/dashboard') }}">Dashboard</a>
                 @else
-                    <a class="nav-link fw-medium" href="{{ route('login') }}">Log in</a>
+                    <a class="nav-link fw-medium" href="{{ route('login') }}">Sign in</a>
                     @if (Route::has('register'))
-                        <!-- <a class="nav-link fw-medium" href="{{ route('register') }}">Sign up</a> -->
+                        <a class="nav-link fw-medium" href="{{ route('register') }}">Register</a>
                     @endif
                 @endauth
             @endif
@@ -50,12 +50,12 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3" href="{{ route('login') }}">Log in</a>
+                        <a class="nav-link fw-medium py-3" href="{{ route('login') }}">Sign in</a>
                     </li>
                     @if (Route::has('register'))
-                        <!-- <li class="nav-item">
-                            <a class="nav-link fw-medium py-3" href="{{ route('register') }}">Sign up</a>
-                        </li> -->
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium py-3" href="{{ route('register') }}">Register</a>
+                        </li>
                     @endif
                 @endauth
             @endif
@@ -103,14 +103,14 @@
     /* Nav links color */
     .navbar-nav .nav-link,
     .desktop-nav .nav-link {
-        color: #1e40af !important;
+        color: #294259 !important;
         transition: color 0.3s ease, transform 0.2s ease;
         text-decoration: none;
     }
     
     .navbar-nav .nav-link:hover,
     .desktop-nav .nav-link:hover {
-        color: #1e3a8a !important;
+        color: #294259 !important;
         transform: translateY(-1px);
     }
     
