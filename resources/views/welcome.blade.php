@@ -17,6 +17,9 @@
             --primary-color: #1e40af;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
+            --tw-gradient-from-position: ;
+            --tw-gradient-via-position: ;
+            --tw-gradient-to-position: ;
         }
         
         body {
@@ -69,6 +72,16 @@
             left: 0;
             background: url("{{ asset('images/solar-panel.jpg') }}") right center/cover no-repeat;
             z-index: 0;
+        }
+
+        .hero .hero-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0.92;
         }
 
         .hero-content {
@@ -534,6 +547,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-wrapper">
+            <div class="hero-gradient bg-gradient-to-r from-white to-transparent"></div>
             <div class="hero-content">
                 <h1 class="hero-heading">See how much it costs to install solar panels for your home</h1>
                 <p class="hero-subheading">Based on your:</p>
