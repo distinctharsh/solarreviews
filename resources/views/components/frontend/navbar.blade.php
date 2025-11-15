@@ -64,8 +64,9 @@
 </div>
 
 <style>
+
     body {
-        padding-top: 60px;
+        padding-top: 72px;
     }
     
     /* Navbar height reduction */
