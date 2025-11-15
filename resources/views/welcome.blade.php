@@ -17,702 +17,143 @@
             --primary-color: #1e40af;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
-            --text-color: #1f2937;
-            --light-bg: #f9fafb;
-            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --layout-gutter: 1.5rem;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
+            background-color: #f9fafb;
+            color: #1f2937;
         }
 
-        .align-edge {
-            width: 100%;
+        .container-custom {
             max-width: 1200px;
             margin: 0 auto;
-            padding-left: var(--layout-gutter);
-            padding-right: var(--layout-gutter);
-            box-sizing: border-box;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
 
         @media (max-width: 768px) {
-            .align-edge {
+            .container-custom {
                 padding-left: 1.25rem;
                 padding-right: 1.25rem;
             }
         }
 
-        .btn {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-        
-        .btn-outline {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            background: transparent;
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Hero Section - Old style, overridden below */
+        /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            padding: 5rem 0;
-            text-align: center;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.25rem;
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-            opacity: 0.9;
-        }
-        
-        .search-bar {
-            display: flex;
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 50px;
-            padding: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .search-input {
-            flex: 1;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px 0 0 50px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .search-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-            white-space: nowrap;
-            font-size: 1rem;
-        }
-        
-        .search-btn:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        /* Products Section */
-        .products-section {
-            padding: 4rem 0;
-            background-color: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        /* Override Bootstrap container max-width to match navbar */
-        .container {
-            max-width: 1200px !important;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-        
-        .section-header h2 {
-            font-size: 2.25rem;
-            color: #1e293b;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-header h2:after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 3px;
-            background: var(--primary-color);
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .section-header p {
-            color: #64748b;
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 1rem auto 0;
-            line-height: 1.7;
-        }
-        
-        /* Products grid now uses Bootstrap row/col */
-        
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #cbd5e1;
-        }
-        
-        .product-image {
-            height: 200px;
-            overflow: hidden;
+            min-height: calc(100vh - 76px);
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: #f8fafc;
-            padding: 2rem;
-            position: relative;
-        }
-        
-        .product-image:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-color);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .product-card:hover .product-image:before {
-            opacity: 1;
-        }
-        
-        .product-image img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.5s ease;
-            mix-blend-mode: multiply;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.08);
-        }
-        
-        .product-content {
-            padding: 1.75rem;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            border-top: 1px solid #f1f5f9;
-        }
-        
-        .product-content h3 {
-            font-size: 1.375rem;
-            color: #1e293b;
-            margin: 0 0 1rem 0;
-            font-weight: 600;
-        }
-        
-        .product-content p {
-            color: #64748b;
-            margin-bottom: 1.75rem;
-            line-height: 1.7;
-            flex-grow: 1;
-            font-size: 0.975rem;
-        }
-        
-        .product-btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.7rem 1.75rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-align: center;
-            margin-top: auto;
-            align-self: flex-start;
-            font-size: 0.95rem;
-            border: 1px solid transparent;
-        }
-        
-        .product-btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                max-width: 500px;
-                margin: 0 auto;
-            }
-            
-            .section-header h2 {
-                font-size: 2rem;
-            }
-        }
-        
-        /* Categories Section */
-        .section {
-            padding: 5rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.25rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .section-title p {
-            color: #4b5563;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-        
-        .category-card {
-            background: white;
-            border-radius: 0.5rem;
             overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        .category-img {
+
+        .hero .hero-wrapper {
+            position: relative;
             width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-        
-        .category-content {
-            padding: 1.5rem;
-        }
-        
-        .category-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-        
-        .category-desc {
-            color: #6b7280;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        /* Testimonials */
-        .testimonials {
-            background-color: #f3f4f6;
-        }
-        
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 1.5rem;
-        }
-        
-        .testimonial-card {
-            background: white;
-            border-radius: 0.5rem;
-            padding: 2rem;
-            box-shadow: var(--card-shadow);
-        }
-        
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 1.5rem;
-            color: #4b5563;
-        }
-        
-        .testimonial-author {
+            min-height: calc(100vh - 76px);
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-        
-        .author-img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .author-info h4 {
-            margin: 0;
-            color: var(--text-color);
-        }
-        
-        .author-info p {
-            margin: 0.25rem 0 0;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-        
-        /* CTA Section */
-        .cta {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: white;
-            text-align: center;
-            padding: 4rem 1.5rem;
-        }
-        
-        .cta .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .cta h2 {
-            font-size: 2.25rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .cta p {
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            opacity: 0.9;
-        }
-        
-        /* Footer */
-        .footer {
-            background-color: #111827;
-            color: #9ca3af;
-            padding: 4rem 0 2rem;
-        }
-        
-        /* Footer content now uses Bootstrap grid */
-        
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-        
-        .footer-about p {
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #374151;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        
-        .social-link:hover {
-            background-color: var(--accent-color);
-        }
-        
-        .footer-links h3 {
-            color: white;
-            font-size: 1.125rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-        
-        .footer-links h3::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--accent-color);
-        }
-        
-        .footer-links ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-        
-        .footer-links a {
-            color: #9ca3af;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-links a:hover {
-            color: white;
-        }
-        
-        .footer-bottom {
-            padding: 2rem 0 0;
-            border-top: 1px solid #374151;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-        
-        /* Responsive - Bootstrap handles most of this */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.25rem;
-            }
-            
-            .search-bar {
-                flex-direction: column;
-                background: transparent;
-                gap: 1rem;
-                padding: 0;
-            }
-            
-            .search-input {
-                border-radius: 50px;
-                padding: 0.75rem 1.5rem;
-                width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .search-btn {
-                width: 100%;
-                padding: 0.75rem;
-            }
-            
-            .section {
-                padding: 3rem 0;
-            }
-        }
-        .btn-primary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #2c5282;
-            transform: translateY(-2px);
-        }
-        .features {
-            padding: 4rem 0;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-            padding: 0 1.5rem;
-        }
-        .feature-card {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            padding: 2rem;
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-        }
-        .icon-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(49, 130, 206, 0.1);
-            margin-bottom: 1.5rem;
-        }
-        .icon-circle svg {
-            width: 30px;
-            height: 30px;
-            color: var(--secondary-color);
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        .section-title h2 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        .section-title p {
-            color: #4a5568;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
-
-
-        .hero {
-            position: relative;
-            height: calc(100vh - 80px);
-            min-height: 500px;
-            background: url("{{ asset('images/solar-panel.jpg') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            color: white;
-            padding: 0 5%;
-            margin: 0;
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-        
-        .hero::before {
+        .hero .hero-wrapper::after {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            bottom: 0;
+            background: url("{{ asset('images/solar-panel.jpg') }}") center/cover no-repeat;
+            z-index: 0;
+        }
+
+        .hero .hero-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            right: 1.5rem;
             bottom: 0;
             background: linear-gradient(90deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 100%);
             z-index: 1;
         }
-        
-        .hero-content {
-            max-width: 600px;
-            width: 100%;
+
+        .hero .container-custom {
             position: relative;
             z-index: 2;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .reviews-hero {
+            position: relative;
+            min-height: 500px;
+        }
+
+        .reviews-hero .hero-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem;
+            min-height: 500px;
+        }
+
+        .reviews-hero .hero-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            bottom: 0;
+            background: url('{{ asset("images/couple-on-computer.jpg") }}') center/cover no-repeat;
+            z-index: 0;
+        }
+
+        .reviews-hero .overlay {
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+        
+        .reviews-hero .container-custom {
+            position: relative;
+            z-index: 2;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .hero-content {
+            max-width: 600px;
             padding: 2.5rem;
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 0 15px 15px 0;
-            text-align: left;
-            margin-left: -5%;
-            min-height: 60%;
-            max-height: 80%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            overflow: visible;
-            box-sizing: border-box;
         }
-        
-        .hero h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Ensure no horizontal scroll */
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2.5rem;
-            max-width: 700px;
-            margin: 0 0 2rem 0;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        
+
         .search-bar {
             display: flex;
-            max-width: 700px;
-            margin: 0 auto;
             background: white;
             border-radius: 50px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
+
         .search-input {
             flex: 1;
-            padding: 1.2rem 2rem;
             border: none;
+            padding: 1.2rem 2rem;
             font-size: 1.1rem;
             outline: none;
-            background: rgba(255, 255, 255, 0.95);
         }
-        
+
         .search-btn {
             background: #3b82f6;
             color: white;
@@ -720,26 +161,29 @@
             padding: 0 2.5rem;
             font-weight: 600;
             font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
         }
-        
+
         .search-btn:hover {
             background: #2563eb;
         }
-        
+
         @media (max-width: 768px) {
-            .hero {
-                height: auto;
-                padding: 6rem 0;
-            }
-            
             .hero .hero-wrapper {
-                padding: 0 1.5rem;
+                padding: 4rem 1.25rem;
+                min-height: auto;
             }
             
-            .hero h1 {
-                font-size: 2.2rem;
+            .hero .hero-wrapper::after,
+            .hero .hero-wrapper::before {
+                left: 1.25rem;
+                right: 1.25rem;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                padding: 1.5rem;
+                border-radius: 8px;
             }
             
             .search-bar {
@@ -757,13 +201,192 @@
             .search-btn {
                 border-radius: 0 0 12px 12px;
             }
+            
+            .reviews-hero .hero-wrapper {
+                padding: 4rem 1.25rem;
+            }
+            
+            .reviews-hero .hero-wrapper::after,
+            .reviews-hero .overlay {
+                left: 1.25rem;
+                right: 1.25rem;
+            }
         }
 
+        /* Product Cards */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
 
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
+            text-decoration: none;
+            color: inherit;
+        }
 
+        .product-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            padding: 2rem;
+            position: relative;
+        }
 
-        /* Testimonial grid now uses Bootstrap row/col */
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
+        .product-card:hover .product-image::before {
+            opacity: 1;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+            mix-blend-mode: multiply;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.08);
+        }
+
+        .product-content {
+            padding: 1.75rem;
+            flex-grow: 1;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        /* Section Header */
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .reviews-hero .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            position: relative;
+        }
+
+        .cta-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .cta-section .container-custom {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cta-wrapper {
+                padding: 4rem 1.25rem;
+            }
+        }
+
+        .small-heading {
+            color: #4da8ff;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background-color: #0056d2;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            background-color: #003f9e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: #fff;
+        }
+
+        /* Solar Section */
+        .solar-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .solar-text .small-heading {
+            color: #1e73be;
+        }
+
+        .solar-btn {
+            display: inline-block;
+            background-color: #0056d2;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .solar-btn:hover {
+            background-color: #003f9e;
+            color: #fff;
+        }
+
+        /* Testimonial Cards */
         .testimonial-card {
             background-color: rgb(241 248 254);
             border-radius: 12px;
@@ -783,25 +406,10 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
 
-        .testimonial-card h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #000;
-        }
-
         .testimonial-card .stars {
             color: #ffb400;
             font-size: 1.2rem;
             margin-bottom: 1rem;
-        }
-
-        .testimonial-card p {
-            font-size: 0.95rem;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
         }
 
         .google-logo {
@@ -814,196 +422,58 @@
             transform: translateX(-50%);
         }
 
-
-        .solar-section {
-            padding: 5rem 0;
-            background: #fff;
+        /* Footer */
+        .footer {
+            background-color: #111827;
+            color: #9ca3af;
         }
 
-        /* Solar content now uses Bootstrap row/col */
-
-        .solar-image img {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        }
-
-        .solar-text {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .solar-text .small-heading {
-            color: #1e73be;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .solar-text h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #000;
-            line-height: 1.3;
-        }
-
-        .solar-text .description {
-            font-size: 1rem;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .solar-btn {
-            display: inline-block;
-            background-color: #0056d2;
-            color: #fff;
-            font-weight: 600;
-            text-decoration: none;
-            padding: 0.9rem 1.8rem;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .solar-btn:hover {
-            background-color: #003f9e;
-        }
-
-        /* Responsive handled by Bootstrap */
-
-        .reviews-hero {
+        .footer-links h3 {
             position: relative;
-            background: url('{{ asset("images/couple-on-computer.jpg") }}') no-repeat center center/cover;
-            color: #000;
-            padding: 6rem 0;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-links h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-link {
             display: flex;
             align-items: center;
-            min-height: 500px;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #374151;
+            color: white;
+            transition: background-color 0.3s ease;
         }
 
-        .reviews-hero .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(2px);
-            z-index: 1;
-        }
-
-        .reviews-hero .container {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
-            width: 100%;
-        }
-
-        .hero-content {
-            max-width: 600px;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-        }
-
-        .hero-content .small-heading {
-            color: #4da8ff;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .hero-content h1 {
-            font-size: 2.3rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            line-height: 1.3;
-            color: #fff;
-        }
-
-        .hero-content .description {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-        }
-
-        /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
-            .reviews-hero {
-                padding: 4rem 0;
-                min-height: 400px;
-                text-align: center;
-            }
-
-            .reviews-hero .container {
-                padding: 0 1.5rem;
-                display: flex;
-                justify-content: center;
-            }
-
-            .hero-content {
-                max-width: 100%;
-                padding: 1.5rem;
-                margin: 0 1rem;
-            }
-
-            .hero-content h1 {
-                font-size: 1.8rem;
-                margin-bottom: 1rem;
-            }
-
-            .hero-content .small-heading {
-                font-size: 0.9rem;
-            }
-
-            .hero-content .description {
-                font-size: 0.95rem;
-                margin-bottom: 1.5rem;
-            }
-        }
-
-        .hero-btn {
-            display: inline-block;
-            background-color: #0056d2;
-            color: #fff;
-            font-weight: 600;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            width: auto;
-        }
-
-        .hero-btn:hover {
-            background-color: #003f9e;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .reviews-hero {
-                text-align: left;
-                justify-content: flex-start;
-                padding: 3rem 1.5rem;
-                min-height: auto;
-            }
-
-            .hero-content {
-                max-width: 100%;
-            }
-
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
+        .social-link:hover {
+            background-color: var(--accent-color);
+            color: white;
         }
     </style>
 </head>
@@ -1011,58 +481,60 @@
     <!-- Navigation -->
     @include('components.frontend.navbar')
 
+    <!-- Hero Section -->
     <section class="hero">
-            <div class="hero-content">
-                <h1 class="text-white">Find the Best Solar Solutions for Your Dashboard</h1>
-                <p>Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Enter your zip code">
-                    <button class="search-btn">Calculate Now</button>
+        <div class="hero-wrapper">
+            <div class="container-custom">
+                <div class="hero-content">
+                    <h1 class="text-white fw-bold mb-4" style="font-size: 2.2rem; line-height: 1.2; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);">Find the Best Solar Solutions for Your Dashboard</h1>
+                    <p class="text-white mb-4" style="font-size: 1.25rem; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);">Compare prices, read reviews, and connect with top-rated solar installers in your area. Save up to 30% on your energy bills with our trusted partners.</p>
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Enter your zip code">
+                        <button class="search-btn">Calculate Now</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Products Comparison Section -->
-    <section class="products-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Unbiased & Unfiltered Reviews</h2>
-                <p>Compare and find the best solar equipment based on expert analysis and real user reviews</p>
+    <section class="py-5 bg-white border-top border-bottom">
+        <div class="container-custom">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #1e293b;">Unbiased & Unfiltered Reviews</h2>
+                <p class="text-muted mx-auto" style="max-width: 700px; font-size: 1.1rem;">Compare and find the best solar equipment based on expert analysis and real user reviews</p>
             </div>
             
             <div class="row g-4">
-                <!-- Panel Card -->
                 <div class="col-12 col-md-6 col-lg-4">
-                    <a href="{{ url('compare/panels') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                    <a href="{{ url('compare/panels') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/panels.png') }}" alt="Solar Panels" class="img-fluid">
                         </div>
                         <div class="product-content">
-                            <h3>Solar Panels</h3>
+                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Panels</h3>
                         </div>
                     </a>
                 </div>
                 
-                <!-- Battery Card -->
                 <div class="col-12 col-md-6 col-lg-4">
-                    <a href="{{ url('compare/batteries') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                    <a href="{{ url('compare/batteries') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries" class="img-fluid">
                         </div>
                         <div class="product-content">
-                            <h3>Solar Batteries</h3>
+                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Batteries</h3>
                         </div>
                     </a>
                 </div>
                 
-                <!-- Inverter Card -->
                 <div class="col-12 col-md-6 col-lg-4">
-                    <a href="{{ url('compare/inverters') }}" class="product-card" style="text-decoration:none; color:inherit;">
+                    <a href="{{ url('compare/inverters') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters" class="img-fluid">
                         </div>
                         <div class="product-content">
-                            <h3>Solar Inverters</h3>
+                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Inverters</h3>
                         </div>
                     </a>
                 </div>
@@ -1070,39 +542,38 @@
         </div>
     </section>
 
-
-
-    
+    <!-- Reviews Hero Section -->
     <section class="reviews-hero">
-        <div class="overlay"></div>
-        <div class="container align-edge">
-            <div class="hero-content">
-                <p class="small-heading">Real People, Real Reviews</p>
-                <h1>Unbiased consumer reviews of almost all solar companies in India</h1>
-                <p class="description">
-                    SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
-                    to help you identify the best solar panel installation companies in your area.
-                </p>
-                <a href="#" class="hero-btn">See Reviews of Companies Near You</a>
+        <div class="hero-wrapper">
+            <div class="overlay"></div>
+            <div class="container-custom">
+                <div class="hero-content">
+                    <p class="small-heading mb-2">Real People, Real Reviews</p>
+                    <h1 class="text-white fw-bold mb-4" style="font-size: 2.3rem; line-height: 1.3;">Unbiased consumer reviews of almost all solar companies in India</h1>
+                    <p class="text-white mb-4" style="font-size: 1rem; line-height: 1.6; opacity: 0.9;">
+                        SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
+                        to help you identify the best solar panel installation companies in your area.
+                    </p>
+                    <a href="#" class="hero-btn">See Reviews of Companies Near You</a>
+                </div>
             </div>
         </div>
     </section>
-    <section id="solar-calculator" class="solar-section">
-        <div class="container">
+
+    <!-- Solar Calculator Section -->
+    <section id="solar-calculator" class="py-5 bg-white">
+        <div class="container-custom">
             <div class="row align-items-center g-4">
-                <!-- Left Side - Image -->
                 <div class="col-12 col-lg-6">
                     <div class="solar-image">
                         <img src="{{ asset('images/electric-bill-chart.png') }}" alt="Monthly Electric Bill Chart" class="img-fluid">
                     </div>
                 </div>
-
-                <!-- Right Side - Text -->
                 <div class="col-12 col-lg-6">
                     <div class="solar-text">
-                        <p class="small-heading">Solar Calculator</p>
-                        <h2>The most accurate solar panel cost and savings calculator available</h2>
-                        <p class="description">
+                        <p class="small-heading mb-2">Solar Calculator</p>
+                        <h2 class="fw-bold mb-3" style="font-size: 2rem; line-height: 1.3; color: #000;">The most accurate solar panel cost and savings calculator available</h2>
+                        <p class="text-muted mb-4" style="font-size: 1rem; line-height: 1.6;">
                             Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
                             Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
                             the economics of installing solar panels on their homes.
@@ -1115,44 +586,41 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Ready to Go Solar?</h2>
-            <p>Join thousands of homeowners who are saving money with solar energy.</p>
-            <a href="#" class="btn btn-primary" style="background-color: white; color: var(--primary-color);">Get Free Quotes</a>
+    <section class="cta-section py-5 text-center text-white">
+        <div class="cta-wrapper">
+            <div class="container-custom">
+                <h2 class="fw-bold mb-3" style="font-size: 2.25rem;">Ready to Go Solar?</h2>
+                <p class="mb-4 mx-auto" style="max-width: 600px; opacity: 0.9;">Join thousands of homeowners who are saving money with solar energy.</p>
+                <a href="#" class="btn btn-light px-4 py-2 fw-semibold" style="color: var(--primary-color);">Get Free Quotes</a>
+            </div>
         </div>
     </section>
 
     <!-- State Map Section -->
-    <section class="section" id="state-map-section" style="padding: 4rem 0; ">
-        <div class="container align-edge">
-            <div class="section-title" style="margin-bottom: 2.5rem; text-align: center;">
-                <h2 style="font-size: 2.25rem; color: #1e40af; margin-bottom: 1rem; font-weight: 700;">Find Solar Solutions in Your State</h2>
-                <p style="color: #4b5563; max-width: 600px; margin: 0 auto;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
+    <section class="py-5">
+        <div class="container-custom">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #1e40af;">Find Solar Solutions in Your State</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
             </div>
-            
-            <!-- India Map Component -->
             @include('components.india-map')
         </div>
     </section>
 
     <!-- Testimonials Section -->
-    <section id="testimonials" style="padding: 4rem 0; background-color: white; margin-bottom: 4rem;">
-        <div class="container" style="text-align: center;">
-            <a href="#" style="color: #007bff; font-weight: 500; text-decoration: none;">
-                See What Others Are Saying About Us
-            </a>
-            <h2 style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem; color: #000;">
-                See What Others Are Saying About Us
-            </h2>
+    <section id="testimonials" class="py-5 bg-white">
+        <div class="container-custom">
+            <div class="text-center mb-5">
+                <a href="#" class="text-primary fw-medium text-decoration-none mb-2 d-block">See What Others Are Saying About Us</a>
+                <h2 class="fw-bold mb-0" style="font-size: 2rem; color: #000;">See What Others Are Saying About Us</h2>
+            </div>
 
             <div class="row g-4">
-                <!-- Card 1 -->
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="testimonial-card">
-                        <h3>Kunal Verma</h3>
+                        <h3 class="fw-semibold mb-2" style="font-size: 1.2rem;">Kunal Verma</h3>
                         <div class="stars">★★★★★</div>
-                        <p>
+                        <p class="mb-4" style="font-size: 0.95rem; color: #333; line-height: 1.6; flex-grow: 1;">
                             "Calculator was easy to use and very accurate. I had solar installed a couple of years ago. 
                             I wanted to check what the calculator would give as a recommendation and forecast compared to my actual experience. 
                             My actual experience was well within the ranges given. GREAT TOOL."
@@ -1161,12 +629,11 @@
                     </div>
                 </div>
 
-                <!-- Card 2 -->
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="testimonial-card">
-                        <h3>Dipankar Mishara</h3>
+                        <h3 class="fw-semibold mb-2" style="font-size: 1.2rem;">Dipankar Mishara</h3>
                         <div class="stars">★★★★★</div>
-                        <p>
+                        <p class="mb-4" style="font-size: 0.95rem; color: #333; line-height: 1.6; flex-grow: 1;">
                             "Very responsive and helpful. Got a friendly phone call right away after filling out online 
                             estimate to gather additional information. Knowledgeable and friendly. Can't ask for more."
                         </p>
@@ -1174,12 +641,11 @@
                     </div>
                 </div>
 
-                <!-- Card 3 -->
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="testimonial-card">
-                        <h3>Sunita Verma</h3>
+                        <h3 class="fw-semibold mb-2" style="font-size: 1.2rem;">Sunita Verma</h3>
                         <div class="stars">★★★★★</div>
-                        <p>
+                        <p class="mb-4" style="font-size: 0.95rem; color: #333; line-height: 1.6; flex-grow: 1;">
                             "Very helpful with information about cost, effectiveness and options for various solar panel installations. 
                             Very quick to reach out to me and explain things clearly so I understood exactly what my obligations would be 
                             and what I should expect from the system."
@@ -1192,16 +658,16 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
+    <footer class="footer py-5">
+        <div class="container-custom">
             <div class="row g-4 mb-4">
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-about">
-                        <a href="/" class="footer-logo">
+                        <a href="/" class="d-inline-block mb-3">
                             <img src="{{ asset('images/logo.jpg') }}" alt="SolarReviews Logo" style="height: 70px;">
                         </a>
-                        <p>Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
-                        <div class="social-links">
+                        <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
+                        <div class="d-flex gap-2">
                             <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
@@ -1211,44 +677,44 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-links">
-                        <h3>Quick Links</h3>
+                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Quick Links</h3>
                         <ul>
-                            <li><a href="#">How It Works</a></li>
-                            <li><a href="#">Solar Companies</a></li>
-                            <li><a href="#">Reviews</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li class="mb-2"><a href="#">How It Works</a></li>
+                            <li class="mb-2"><a href="#">Solar Companies</a></li>
+                            <li class="mb-2"><a href="#">Reviews</a></li>
+                            <li class="mb-2"><a href="#">Blog</a></li>
+                            <li class="mb-2"><a href="#">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-links">
-                        <h3>Solar Resources</h3>
+                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Solar Resources</h3>
                         <ul>
-                            <li><a href="#">Solar Guides</a></li>
-                            <li><a href="#">Solar Calculator</a></li>
-                            <li><a href="#">Solar Incentives</a></li>
-                            <li><a href="#">Financing Options</a></li>
-                            <li><a href="#">FAQ</a></li>
+                            <li class="mb-2"><a href="#">Solar Guides</a></li>
+                            <li class="mb-2"><a href="#">Solar Calculator</a></li>
+                            <li class="mb-2"><a href="#">Solar Incentives</a></li>
+                            <li class="mb-2"><a href="#">Financing Options</a></li>
+                            <li class="mb-2"><a href="#">FAQ</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-links">
-                        <h3>Legal</h3>
+                        <h3 class="text-white mb-3" style="font-size: 1.125rem;">Legal</h3>
                         <ul>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Service</a></li>
-                            <li><a href="#">Cookie Policy</a></li>
-                            <li><a href="#">Sitemap</a></li>
+                            <li class="mb-2"><a href="#">Privacy Policy</a></li>
+                            <li class="mb-2"><a href="#">Terms of Service</a></li>
+                            <li class="mb-2"><a href="#">Cookie Policy</a></li>
+                            <li class="mb-2"><a href="#">Sitemap</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <p>&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
+        <div class="border-top border-secondary pt-4">
+            <div class="container-custom text-center">
+                <p class="mb-0" style="font-size: 0.875rem;">&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1256,13 +722,15 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Simple smooth scroll for anchor links
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
+                    const offsetTop = target.offsetTop - 76; // Account for fixed navbar
+                    window.scrollTo({
+                        top: offsetTop,
                         behavior: 'smooth'
                     });
                 }

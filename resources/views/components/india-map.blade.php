@@ -228,9 +228,9 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff0e1" stroke="#f5c9b4" id="Karnat
 
 <style>
 .state-map-container {
-    max-width: 1000px;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 0;
 }
 
 .state-selector {
@@ -386,7 +386,7 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff0e1" stroke="#f5c9b4" id="Karnat
     }
     
     .state-map-container {
-        padding: 1rem;
+        padding: 0;
     }
     
     .map-container {
