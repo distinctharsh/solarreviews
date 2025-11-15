@@ -16,6 +16,7 @@
             --accent-color: #3b82f6;
             --text-color: #1f2937;
             --light-bg: #f9fafb;
+            --bg-opacity: 0.75;
         }
 
         body {
@@ -239,11 +240,158 @@
             }
         }
 
+
+
+
+
+        /* Star Section */
+.solar-hero {
+    position: relative;
+    background: url("{{ asset('images/independent-reviews-bg.jpg') }}") no-repeat center center/cover;
+    background-color: rgba(0, 55, 95, var(--bg-opacity, 0.85));
+    padding: 120px 0 100px;
+    color: white;
+}
+
+.solar-hero .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.45);
+}
+
+.hero-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+.solar-hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.zip-box {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+}
+
+.zip-box input {
+    padding: 14px 20px;
+    font-size: 1.2rem;
+    border: none;
+    outline: none;
+    border-radius: 6px 0 0 6px;
+    width: 260px;
+}
+
+.zip-box button {
+    padding: 14px 26px;
+    font-size: 1.2rem;
+    background: #ff5a1f;
+    color: white;
+    border: none;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    text-align: center;
+}
+
+.star {
+    font-size: 46px;
+    color: #ffcc33;
+    display: block;
+}
+
+.stat-box h3 {
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.stat-box p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+
     </style>
 </head>
 <body>
     <div class="page-wrapper">
         @include('components.frontend.navbar')
+
+
+
+<!-- Star Section -->
+<!-- <section class="solar-hero">
+    <div class="overlay"></div>
+
+    <div class="hero-content container-custom">
+        <h1>Compare prices and reviews of solar providers near you online</h1>
+
+        <div class="zip-box">
+            <input type="text" placeholder="93305">
+            <button>START</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <span class="star">★</span>
+                <h3>33,992</h3>
+                <p>Company reviews</p>
+            </div>
+
+            <div class="stat-box">
+                <span class="star">★</span>
+                <h3>5,322</h3>
+                <p>Equipment reviews</p>
+            </div>
+
+            <div class="stat-box">
+                <span class="star">★</span>
+                <h3>1,362</h3>
+                <p>Individual panel prices</p>
+            </div>
+
+            <div class="stat-box">
+                <span class="star">★</span>
+                <h3>560</h3>
+                <p>Prices of DIY kits</p>
+            </div>
+
+            <div class="stat-box">
+                <span class="star">★</span>
+                <h3>3,721</h3>
+                <p>Installed system prices</p>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+
+
+
+
+
+
+
+
 
         <section class="compare-hero">
             <div class="compare-container">
