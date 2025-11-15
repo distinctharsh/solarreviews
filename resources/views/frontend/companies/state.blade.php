@@ -626,9 +626,9 @@
         </ul>
 
         <div class="calculator">
-            <h3>Try our solar cost calculator</h3>
-            <input type="text" placeholder="Enter your PIN code">
-            <button>Calculate Now</button>
+            <h3>Try our Solar Calculator in your state</h3>
+            <input type="text" class="state-calculator-input" placeholder="Enter your PIN code" maxlength="6" inputmode="numeric">
+            <button class="state-calculator-btn" type="button">Calculate Now</button>
         </div>
     </div>
 
@@ -898,9 +898,65 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Existing JavaScript
-    
+
+    const slugifyState = (text) => text
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    function setupPincodeRedirect(inputSelector, buttonSelector) {
+        const input = document.querySelector(inputSelector);
+        const button = document.querySelector(buttonSelector);
+
+        if (!input || !button) return;
+
+        const originalText = button.textContent;
+
+        button.addEventListener('click', async () => {
+            const pincode = input.value.trim();
+
+            if (!/^\d{6}$/.test(pincode)) {
+                alert('Please enter a valid 6-digit pincode.');
+                input.focus();
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = 'Checking...';
+
+            try {
+                const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch state details');
+                }
+
+                const data = await response.json();
+                const apiResult = Array.isArray(data) ? data[0] : null;
+                const postOffice = apiResult?.PostOffice?.[0];
+
+                if (apiResult?.Status === 'Success' && postOffice?.State) {
+                    const stateSlug = slugifyState(postOffice.State);
+                    window.location.href = `/state/${stateSlug}`;
+                    return;
+                }
+
+                alert('Could not find the state for this pincode. Please try another one.');
+            } catch (error) {
+                console.error('Failed to fetch state for pincode:', error);
+                alert('Something went wrong while fetching the state. Please try again later.');
+            } finally {
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        });
+    }
+
     // Review Modal Functionality
     document.addEventListener('DOMContentLoaded', function() {
+        setupPincodeRedirect('.state-calculator-input', '.state-calculator-btn');
+
         // Initialize all DOM elements
         const reviewModal = document.getElementById('reviewModal');
         const writeReviewBtns = document.querySelectorAll('.write-review-btn');

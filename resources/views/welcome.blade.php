@@ -669,9 +669,9 @@
                 <div class="hero-search-container">
                     <div class="hero-search-input-wrapper">
                         <i class="fas fa-map-marker-alt location-icon"></i>
-                        <input type="text" class="hero-search-input" placeholder="93305" value="93305">
+                        <input type="text" class="hero-search-input" placeholder="110001" value="110001" maxlength="6" inputmode="numeric">
                     </div>
-                    <button class="hero-calculate-btn">Calculate Now</button>
+                    <button class="hero-calculate-btn" type="button">Calculate Now</button>
                 </div>
             </div>
         </div>
@@ -991,6 +991,58 @@
                 }
             });
         });
+
+        const heroPincodeInput = document.querySelector('.hero-search-input');
+        const heroCalculateBtn = document.querySelector('.hero-calculate-btn');
+
+        const slugify = (text) => text
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        if (heroPincodeInput && heroCalculateBtn) {
+            const originalBtnText = heroCalculateBtn.textContent;
+
+            heroCalculateBtn.addEventListener('click', async () => {
+                const pincode = heroPincodeInput.value.trim();
+
+                if (!/^\d{6}$/.test(pincode)) {
+                    alert('Please enter a valid 6-digit pincode.');
+                    heroPincodeInput.focus();
+                    return;
+                }
+
+                heroCalculateBtn.disabled = true;
+                heroCalculateBtn.textContent = 'Checking...';
+
+                try {
+                    const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch state details');
+                    }
+
+                    const data = await response.json();
+                    const apiResult = Array.isArray(data) ? data[0] : null;
+                    const postOffice = apiResult?.PostOffice?.[0];
+
+                    if (apiResult?.Status === 'Success' && postOffice?.State) {
+                        const stateSlug = slugify(postOffice.State);
+                        window.location.href = `/state/${stateSlug}`;
+                        return;
+                    }
+
+                    alert('Could not find the state for this pincode. Please try another one.');
+                } catch (error) {
+                    console.error('Failed to fetch state for pincode:', error);
+                    alert('Something went wrong while fetching the state. Please try again later.');
+                } finally {
+                    heroCalculateBtn.disabled = false;
+                    heroCalculateBtn.textContent = originalBtnText;
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -42,9 +42,9 @@
     </div>
     <div class="offcanvas-body">
         <ul class="navbar-nav">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link fw-medium py-3" href="#solar-calculator" data-bs-dismiss="offcanvas">Solar Calculator</a>
-            </li>
+            </li> -->
             @if (Route::has('login'))
                 @auth
                     <li class="nav-item">
