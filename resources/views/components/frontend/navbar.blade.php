@@ -9,11 +9,11 @@
             <!-- <a class="nav-link fw-medium" href="#solar-calculator">Solar Calculator</a> -->
             @if (Route::has('login'))
                 @auth
-                    <a class="nav-link fw-medium" href="{{ url('/dashboard') }}">Dashboard</a>
+                    <a class="nav-link fw-medium nav-btn-primary" href="{{ url('/dashboard') }}">Dashboard</a>
                 @else
-                    <a class="nav-link fw-medium" href="{{ route('login') }}">Sign in</a>
+                    <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Sign in</a>
                     @if (Route::has('register'))
-                        <a class="nav-link fw-medium" href="{{ route('register') }}">Register</a>
+                        <a class="nav-link fw-medium nav-btn-outline" href="{{ route('register') }}">Register</a>
                     @endif
                 @endauth
             @endif
@@ -46,15 +46,15 @@
             @if (Route::has('login'))
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3" href="{{ url('/dashboard') }}">Dashboard</a>
+                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ url('/dashboard') }}">Dashboard</a>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3" href="{{ route('login') }}">Sign in</a>
+                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('login') }}">Sign in</a>
                     </li>
                     @if (Route::has('register'))
                         <li class="nav-item">
-                            <a class="nav-link fw-medium py-3" href="{{ route('register') }}">Register</a>
+                            <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('register') }}">Register</a>
                         </li>
                     @endif
                 @endauth
@@ -104,9 +104,65 @@
     /* Nav links color */
     .navbar-nav .nav-link,
     .desktop-nav .nav-link {
-        color: #294259 !important;
         transition: color 0.3s ease, transform 0.2s ease;
         text-decoration: none;
+    }
+
+    .desktop-nav .nav-link:not(.nav-btn-primary),
+    .navbar-nav .nav-link.nav-link-secondary,
+    .nav-btn-outline,
+    .nav-link-secondary {
+        color: #1e293b !important;
+    }
+
+    .nav-btn-primary {
+        background: var(--primary-color, #3ba14c);
+        color: #ffffff !important;
+        border: none;
+        padding: 0.65rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        box-shadow: 0 10px 20px rgba(59, 161, 76, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
+    .nav-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px rgba(59, 161, 76, 0.3);
+    }
+
+    .nav-btn-outline {
+        border: 1px solid rgba(41, 66, 89, 0.3);
+        border-radius: 10px;
+        padding: 0.65rem 1.5rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-btn-outline::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(120deg, rgba(41,66,89,0.15), transparent, rgba(255,255,255,0.2));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .nav-btn-outline:hover::after {
+        opacity: 1;
+    }
+
+    .nav-btn-outline:hover {
+        transform: translateY(-1px);
+        border-color: rgba(41, 66, 89, 0.5);
     }
     
     .navbar-nav .nav-link:hover,

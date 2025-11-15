@@ -733,7 +733,7 @@
             </div>
             
             <div class="row g-4">
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ url('compare/panels') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/panels.png') }}" alt="Solar Panels" class="img-fluid">
@@ -744,7 +744,7 @@
                     </a>
                 </div>
                 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ url('compare/batteries') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries" class="img-fluid">
@@ -755,13 +755,24 @@
                     </a>
                 </div>
                 
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-3">
                     <a href="{{ url('compare/inverters') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters" class="img-fluid">
                         </div>
                         <div class="product-content">
                             <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Inverters</h3>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-12 col-md-6 col-lg-3">
+                    <a href="{{ url('compare/inverters') }}" class="product-card">
+                        <div class="product-image">
+                            <img src="{{ asset('images/epc.jpg') }}" alt="Solar Inverters" class="img-fluid">
+                        </div>
+                        <div class="product-content">
+                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar EPC</h3>
                         </div>
                     </a>
                 </div>
