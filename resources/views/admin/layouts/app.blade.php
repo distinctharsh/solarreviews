@@ -15,44 +15,87 @@
     @stack('styles')
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <a href="{{ route('admin.dashboard') }}" style="color: white; text-decoration: none; font-size: 1.25rem; font-weight: bold;">
-                    {{ config('app.name') }} Admin
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-solar-panel"></i>
+                <span>Admin</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-chart-pie"></i>
+                    Dashboard
                 </a>
-            </div>
-            <div class="nav-links">
-                <a href="{{ route('admin.companies.index') }}" class="{{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">Companies</a>
-                <a href="{{ route('admin.reviews.index') }}" class="{{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">Reviews</a>
-            </div>
-            <div class="user-menu">
+                <a href="{{ route('admin.companies.index') }}" class="sidebar-link {{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">
+                    <i class="fas fa-building"></i>
+                    Companies
+                </a>
+                <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                    <i class="fas fa-star"></i>
+                    Reviews
+                </a>
+                <!-- <a href="{{ route('admin.states.index') }}" class="sidebar-link {{ request()->routeIs('admin.states.*') ? 'active' : '' }}">
+                    <i class="fas fa-map"></i>
+                    States
+                </a>
+                <a href="{{ route('admin.cities.index') }}" class="sidebar-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
+                    <i class="fas fa-city"></i>
+                    Cities
+                </a>
+                <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                    <i class="fas fa-user"></i>
+                    Users
+                </a> -->
+            </nav>
+            <div class="sidebar-footer">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <button type="submit">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
                     </button>
                 </form>
             </div>
+        </aside>
+
+        <div class="admin-content-area">
+            <header class="admin-topbar">
+                <div class="topbar-title">
+                    @yield('page_title', 'Dashboard')
+                </div>
+                <div class="topbar-actions">
+                    <div class="topbar-search">
+                        <input type="text" placeholder="Search...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="admin-user">
+                        <div class="admin-user-avatar">
+                            {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                        </div>
+                        <div class="admin-user-info">
+                            <p>{{ auth()->user()->name ?? 'Admin' }}</p>
+                            <small>{{ auth()->user()->email ?? '' }}</small>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="admin-page-content">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @yield('content')
+            </main>
         </div>
-    </nav>
-
-    <!-- Page Content -->
-    <div class="container" style="padding: 20px 0;">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        @yield('content')
     </div>
 
     @stack('scripts')
