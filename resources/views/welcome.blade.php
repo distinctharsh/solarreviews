@@ -508,169 +508,232 @@
 
 
 
+/* ===========================================
+   HERO SECTION – FINAL EXACT MATCH
+   =========================================== */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Main Section */
 .reviews-hero-clean {
-    padding: 0.5rem 1.5rem;
+    padding: 3rem 1.5rem 2rem;
     text-align: center;
-    min-height: 40vh;
-    max-height: 40vh;
+    min-height: 55vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    background: #fff;
 }
 
-/* Title */
+
+/* Hero Inner Wrapper */
+.reviews-hero-inner {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+/* Hero Title */
 .reviews-title {
-    font-size: 2rem;
+    font-size: 2.8rem;
     font-weight: 800;
     color: #111827;
     line-height: 1.2;
     margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-    .reviews-title {
-        font-size: 2rem;
-    }
-}
-
 .reviews-title span {
-    color: #2E8B46;  /* Green Color (same as screenshot) */
+    color: #2E8B46;  /* Brand green color */
 }
 
-/* Subtitle */
+/* Hero Subtitle */
 .reviews-subtitle {
     font-size: 1.1rem;
     color: #4B5563;
-    margin: 0.75rem auto 2rem;
-    max-width: 600px;
+    margin-top: 0.5rem;
+    margin-bottom: 2.5rem;
     line-height: 1.6;
 }
 
-/* Search Box */
 .reviews-search-box {
-    max-width: 550px;
-    margin: 0.5rem auto 0;
+    max-width: 750px;
+    margin: 0 auto;
     background: #ffffff;
     display: flex;
     align-items: center;
-    padding: 0.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 0.9rem;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    border: 1px solid #eee;
 }
 
-/* Icon Box */
+/* Search Icon */
 .search-icon {
     padding: 0 1rem;
     font-size: 1.2rem;
     color: #111;
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #e2e8f0;
 }
 
-/* Search Input */
+/* Search Input Field */
+
 .search-input {
     flex: 1;
     border: none;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.95rem;
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
     outline: none;
-    height: 40px;
+    background: transparent;
 }
 
-/* Search Button */
 .search-btn {
     background: #2E8B46;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    height: 40px;
-    border-radius: 6px;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: 0.3s ease;
-    white-space: nowrap;
 }
 
 .search-btn:hover {
     background: #36a353;
+    transform: translateY(-1px);
 }
 
-/* Mobile Responsive */
-@media (max-width: 650px) {
+/* ===========================================
+   POPULAR CATEGORIES SECTION (Screenshot Match)
+   =========================================== */
+
+.popular-categories {
+    padding: 2rem 0 3rem;
+    background: #fff;
+}
+
+.popular-categories h2 {
+    font-size: 1.75rem;
+    color: #111;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-decoration: underline;
+}
+
+.product-card {
+    display: block;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    height: 150px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-content {
+    padding: 1rem;
+    text-align: center;
+}
+
+.product-content h3 {
+    font-size: 1.1rem;
+    color: #111827;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ==============================================
+   RESPONSIVE STYLES
+   ============================================== */
+
+/* Tablets and below */
+@media (max-width: 991.98px) {
+    .reviews-title {
+        font-size: 1.75rem;
+    }
+    
+    .reviews-subtitle {
+        font-size: 1rem;
+        margin: 0.5rem auto 1.5rem;
+    }
+    
+    .product-image {
+        height: 150px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 767.98px) {
+    .reviews-hero-clean {
+        min-height: 50vh;
+        max-height: none;
+        padding: 1rem;
+    }
+    
+    .products-comparison {
+        min-height: auto;
+        max-height: none;
+        padding: 2rem 0;
+    }
+    
+    .reviews-search-box {
+        flex-direction: column;
+        padding: 0.75rem;
+        gap: 0.75rem;
+    }
+    
+    .search-icon {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        width: 100%;
+        padding: 0.5rem 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .search-input,
+    .search-btn {
+        width: 100%;
+        height: 44px;
+    }
+    
+    .search-btn {
+        margin-top: 0.25rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 760px) {
+
     .reviews-title {
         font-size: 2rem;
     }
@@ -683,14 +746,20 @@
 
     .search-icon {
         border-right: none;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #ddd;
         width: 100%;
+        padding-bottom: 0.6rem;
         text-align: center;
-        padding-bottom: 0.7rem;
+    }
+
+    .search-input {
+        width: 100%;
+        height: 45px;
     }
 
     .search-btn {
         width: 100%;
+        height: 45px;
     }
 }
 
@@ -729,7 +798,7 @@
     </section>
 
     <!-- Products Comparison Section -->
-    <section class="py-1 bg-white border-top border-bottom" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
+    <section class="py-4 bg-white border-top border-bottom" style=" overflow-y: auto;">
         <div class="container-custom">
             <div class="text-center pt-2 mb-2">
                 <h2 class="fw-bold mb-2" style="font-size: 1.75rem; color: #1e293b;">Popular Categories</h2>
@@ -792,35 +861,35 @@
             </div>
 
             <div class="row justify-content-center align-items-center g-4 text-center">
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-2">
+                <div class="col-6 col-md-3 col-lg-3">
                     <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
                 </div>
             </div>
