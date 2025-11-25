@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\CompanyReview;
+use App\Models\Category;
 use App\Models\Company;
+use App\Models\CompanyReview;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -13,6 +15,82 @@ use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
+    /**
+     * Display the multi-category review submission page.
+     */
+    public function create()
+    {
+        $categoryTemplates = [
+            'solar-installers' => [
+                'label' => 'Solar Installer',
+                'description' => 'Review the installers who put panels on your roof and help other homeowners pick the right partner.',
+                'cta' => 'Share installer experience',
+                'icon' => 'bi-building-gear'
+            ],
+            'solar-panels' => [
+                'label' => 'Solar Panels',
+                'description' => 'Tell us how your panels have performed, their durability, and real-world production.',
+                'cta' => 'Talk about panel performance',
+                'icon' => 'bi-sun'
+            ],
+            'solar-inverters' => [
+                'label' => 'Solar Inverter',
+                'description' => 'Share how reliable your inverter has been and how easy it is to monitor.',
+                'cta' => 'Review inverter reliability',
+                'icon' => 'bi-lightning-charge'
+            ],
+            'battery-storage' => [
+                'label' => 'Battery Storage',
+                'description' => 'Let others know how your storage system performs during outages and daily cycling.',
+                'cta' => 'Rate your battery backup',
+                'icon' => 'bi-battery-charging'
+            ],
+        ];
+
+        $requestedSlugs = array_keys($categoryTemplates);
+        $categories = Category::whereIn('slug', $requestedSlugs)->get()->keyBy('slug');
+
+        $categoryTiles = collect($categoryTemplates)->map(function ($template, $slug) use (&$categories) {
+            $category = $categories->get($slug);
+
+            if (!$category) {
+                $category = Category::create([
+                    'name' => $template['label'],
+                    'slug' => $slug,
+                    'description' => $template['description'],
+                    'is_active' => true,
+                ]);
+
+                $categories[$slug] = $category;
+            }
+
+            return [
+                'id' => $category->id ?? null,
+                'slug' => $slug,
+                'label' => $template['label'],
+                'description' => $template['description'],
+                'cta' => $template['cta'],
+                'icon' => $template['icon'],
+            ];
+        })->values();
+
+        $activeCategory = $categoryTiles->firstWhere('id') ?? $categoryTiles->first();
+        $activeCategoryId = $activeCategory['id'] ?? null;
+
+        $states = State::with(['cities' => function ($query) {
+            $query->orderBy('name');
+        }])->orderBy('name')->get();
+
+        $companies = Company::orderBy('name')->get(['id', 'name', 'state_id']);
+
+        return view('frontend.reviews.create', [
+            'categoryTiles' => $categoryTiles,
+            'states' => $states,
+            'companies' => $companies,
+            'activeCategoryId' => $activeCategoryId,
+        ]);
+    }
+
     /**
      * Store a newly created review in storage.
      */

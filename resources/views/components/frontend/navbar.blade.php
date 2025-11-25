@@ -8,7 +8,7 @@
         <div class="desktop-nav d-none d-lg-flex align-items-center gap-3">
             <a class="nav-link fw-medium">Learn About Solar</a>
             <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
-            <a class="nav-link fw-medium nav-btn-submit" style="color: white !important;">Submit Review</a>
+            <a class="nav-link fw-medium nav-btn-submit" href="{{ route('reviews.create') }}" style="color: white !important;">Submit Review</a>
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -42,17 +42,12 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('login') }}">Sign in</a>
+                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('login') }}">Login / Register</a>
                     </li>
-                    @if (Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('register') }}">Register</a>
-                        </li>
-                    @endif
                 @endauth
             @endif
             <li class="nav-item">
-                <a class="nav-link fw-medium py-3 nav-btn-submit" style="color: white !important;">Submit Review</a>
+                <a class="nav-link fw-medium py-3" href="{{ route('reviews.create') }}">Submit Review</a>
             </li>
         </ul>
     </div>

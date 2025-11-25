@@ -27,6 +27,7 @@ Route::get('/state/{stateSlug}', [\App\Http\Controllers\Frontend\CompanyControll
 
 // Review Routes
 Route::prefix('reviews')->group(function () {
+    Route::get('/create', [\App\Http\Controllers\Frontend\ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/', [\App\Http\Controllers\Frontend\ReviewController::class, 'store'])->name('reviews.store');
     Route::post('/send-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'sendOtp'])->name('reviews.send-otp');
     Route::post('/verify-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'verifyOtp'])->name('reviews.verify-otp');
