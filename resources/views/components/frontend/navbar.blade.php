@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100;">
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100; border-bottom: 4px solid #e6b800; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
     <div class="container" style="max-width: 1200px;">
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
             <img src="{{ asset('images/1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
@@ -6,17 +6,11 @@
         
         <!-- Desktop Nav Links -->
         <div class="desktop-nav d-none d-lg-flex align-items-center gap-3">
-            <!-- <a class="nav-link fw-medium" href="#solar-calculator">Solar Calculator</a> -->
-            @if (Route::has('login'))
-                @auth
-                    <a class="nav-link fw-medium nav-btn-primary" href="{{ url('/dashboard') }}">Dashboard</a>
-                @else
-                    <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Sign in</a>
-                    @if (Route::has('register'))
-                        <a class="nav-link fw-medium nav-btn-outline" href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
-            @endif
+
+        <a class="nav-link fw-medium">Learn About Solar</a>
+        <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
+        <a class="nav-link fw-medium nav-btn-submit" style="background-color: #3ba14c; color: white !important; padding: 0.65rem 1.5rem; border-radius: 10px; font-weight: 600; letter-spacing: 0.01em; box-shadow: 0 4px 15px rgba(59, 161, 76, 0.3); transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;">Submit Review</a>
+           
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -106,6 +100,7 @@
     .desktop-nav .nav-link {
         transition: color 0.3s ease, transform 0.2s ease;
         text-decoration: none;
+        cursor: pointer;
     }
 
     .desktop-nav .nav-link:not(.nav-btn-primary),
@@ -114,17 +109,24 @@
     .nav-link-secondary {
         color: #1e293b !important;
     }
+    
+    .desktop-nav .nav-link:not(.nav-btn-primary):hover,
+    .navbar-nav .nav-link.nav-link-secondary:hover,
+    .nav-btn-outline:hover,
+    .nav-link-secondary:hover {
+        color: #fecf39 !important;
+    }
 
     .nav-btn-primary {
-        background: var(--primary-color, #3ba14c);
-        color: #ffffff !important;
+        background: #fecf39;
+        color: #1e293b !important;
         border: none;
         padding: 0.65rem 1.5rem;
         border-radius: 10px;
         font-weight: 600;
         letter-spacing: 0.01em;
-        box-shadow: 0 10px 20px rgba(59, 161, 76, 0.25);
-        transition: transform 0.2s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 15px rgba(254, 207, 57, 0.3);
+        transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -133,7 +135,8 @@
 
     .nav-btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(59, 161, 76, 0.3);
+        box-shadow: 0 8px 20px rgba(254, 207, 57, 0.4);
+        background: #ffdb4d;
     }
 
     .nav-btn-outline {
