@@ -30,6 +30,10 @@
                     <i class="fas fa-building"></i>
                     Companies
                 </a>
+                <a href="{{ route('admin.company-profiles.index') }}" class="sidebar-link {{ request()->routeIs('admin.company-profiles.*') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-list"></i>
+                    Company Profiles
+                </a>
                 <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <i class="fas fa-star"></i>
                     Reviews

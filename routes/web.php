@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\CompanyProfileController;
+use App\Http\Controllers\Admin\ProductLineTypeController;
+use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\CityController;
@@ -45,6 +48,15 @@ Route::prefix('admin')
     // Companies
     Route::resource('companies', CompanyController::class);
     
+    // Company Profiles
+    Route::resource('company-profiles', CompanyProfileController::class)->only(['index', 'show']);
+
+    // Catalog Lookups
+    Route::prefix('catalog')->name('catalog.')->group(function () {
+        Route::resource('product-line-types', ProductLineTypeController::class)->except(['show']);
+        Route::resource('service-types', ServiceTypeController::class)->except(['show']);
+    });
+
     // Products
     Route::resource('products', ProductController::class);
     
