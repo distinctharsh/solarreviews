@@ -111,16 +111,17 @@
         background: #fecf39;
         color: #1e293b !important;
         border: none;
-        padding: 0.65rem 1.5rem;
-        border-radius: 10px;
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
         font-weight: 600;
         letter-spacing: 0.01em;
-        box-shadow: 0 4px 15px rgba(254, 207, 57, 0.3);
+        box-shadow: 0 3px 12px rgba(254, 207, 57, 0.25);
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.35rem;
+        gap: 0.3rem;
     }
 
     .nav-btn-primary:hover {
@@ -132,16 +133,17 @@
     .nav-btn-submit {
         background-color: #3ba14c;
         color: white !important;
-        padding: 0.65rem 1.5rem;
-        border-radius: 10px;
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
         font-weight: 600;
         letter-spacing: 0.01em;
-        box-shadow: 0 4px 15px rgba(59, 161, 76, 0.3);
+        box-shadow: 0 3px 12px rgba(59, 161, 76, 0.25);
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.35rem;
+        gap: 0.3rem;
     }
 
     .nav-btn-submit:hover {
