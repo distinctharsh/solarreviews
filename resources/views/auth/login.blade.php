@@ -369,9 +369,9 @@
                 display: block;
             }
             
-            .overlay-container {
+            /* .overlay-container {
                 display: none !important;
-            }
+            } */
             
             .form-container {
                 display: block !important;
@@ -1320,9 +1320,7 @@
                 // Reset for desktop view
                 mobileBackBtn.style.display = 'none';
                 const overlayContainer = document.querySelector('.overlay-container');
-                if (overlayContainer) {
-                    overlayContainer.style.display = 'flex';
-                }
+                
             }
         }
         let iti; // Store the intlTelInput instance
