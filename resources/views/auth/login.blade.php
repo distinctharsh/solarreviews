@@ -1354,12 +1354,19 @@
                 <label class="form-label small">Product lines you manufacture</label>
                 <div class="tag-grid">
                     @php
-                        $productLines = ['Solar panels','Inverters','Battery storage','Hybrid kits','Mounting structures','Components / parts'];
+                        $productLines = [
+                            'solar-panels' => 'Solar panels',
+                            'inverters' => 'Inverters',
+                            'battery-storage' => 'Battery storage',
+                            'hybrid-kits' => 'Hybrid kits',
+                            'mounting-structures' => 'Mounting structures',
+                            'components-parts' => 'Components / parts',
+                        ];
                     @endphp
-                    @foreach($productLines as $line)
+                    @foreach($productLines as $slug => $label)
                         <label class="tag-option">
-                            <input type="checkbox" name="product_lines[]" value="{{ $line }}" {{ collect(old('product_lines', []))->contains($line) ? 'checked' : '' }}>
-                            <span>{{ $line }}</span>
+                            <input type="checkbox" name="product_lines[]" value="{{ $slug }}" {{ collect(old('product_lines', []))->contains($slug) ? 'checked' : '' }}>
+                            <span>{{ $label }}</span>
                         </label>
                     @endforeach
                 </div>
@@ -1385,12 +1392,21 @@
                 <label class="form-label small">Services you provide</label>
                 <div class="tag-grid">
                     @php
-                        $serviceTypes = ['EPC turnkey','Residential installs','Commercial / industrial','O&M / AMC','Inverter service','Battery retrofits','Component distribution'];
+                        $serviceTypes = [
+                            'epc-turnkey' => 'EPC turnkey',
+                            'residential-installs' => 'Residential installs',
+                            'commercial-industrial' => 'Commercial / industrial',
+                            'om-amc' => 'O&M / AMC',
+                            'inverter-service' => 'Inverter service',
+                            'battery-retrofits' => 'Battery retrofits',
+                            'component-distribution' => 'Component distribution',
+                            'hybrid-service' => 'Hybrid / microgrid service',
+                        ];
                     @endphp
-                    @foreach($serviceTypes as $service)
+                    @foreach($serviceTypes as $slug => $label)
                         <label class="tag-option">
-                            <input type="checkbox" name="service_categories[]" value="{{ $service }}" {{ collect(old('service_categories', []))->contains($service) ? 'checked' : '' }}>
-                            <span>{{ $service }}</span>
+                            <input type="checkbox" name="service_categories[]" value="{{ $slug }}" {{ collect(old('service_categories', []))->contains($slug) ? 'checked' : '' }}>
+                            <span>{{ $label }}</span>
                         </label>
                     @endforeach
                 </div>
