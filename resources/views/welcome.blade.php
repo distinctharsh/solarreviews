@@ -767,7 +767,7 @@
                 </div>
                 
                 <div class="col-12 col-md-6 col-lg-3">
-                    <a href="{{ url('compare/inverters') }}" class="product-card">
+                    <a href="#" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/epc.jpg') }}" alt="Solar Inverters" class="img-fluid">
                         </div>

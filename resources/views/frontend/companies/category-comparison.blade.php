@@ -805,7 +805,7 @@
 
 
         <!-- Solar Review Section -->
-        <section class="solar-review-section py-5" id="section-expert">
+        <section class="solar-review-section py-5">
             <div class="container-custom">
         
                 <!-- Breadcrumb -->
@@ -827,12 +827,12 @@
 
                 <!-- Buttons Grid -->
                 <div class="options-grid">
-                    <button class="opt-btn" type="button" data-target="#section-expert">BEST BY EXPERT REVIEW</button>
-                    <button class="opt-btn" type="button" data-target="#section-consumer">BEST BY CONSUMER REVIEW</button>
-                    <button class="opt-btn" type="button" data-target="#section-efficient">MOST EFFICIENT</button>
-                    <button class="opt-btn" type="button" data-target="#section-value">BEST VALUE</button>
-                    <button class="opt-btn" type="button" data-target="#section-us-manufacturers">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
-                    <button class="opt-btn" type="button" data-target="#section-types">TYPES OF MANUFACTURERS</button>
+                    <button class="opt-btn">BEST BY EXPERT REVIEW</button>
+                    <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
+                    <button class="opt-btn">MOST EFFICIENT</button>
+                    <button class="opt-btn">BEST VALUE</button>
+                    <button class="opt-btn">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
+                    <button class="opt-btn">TYPES OF MANUFACTURERS</button>
                 </div>
 
               
@@ -844,7 +844,7 @@
 
 
 <!-- Top Rated Solar Brands Section -->
-<section class="solar-section py-5 bg-light border-bottom" id="section-consumer">
+<section class="solar-section py-5 bg-light border-bottom">
     <div class="container-custom">
 
         <!-- Header Row -->
@@ -992,7 +992,7 @@
 
 
 
-<section class="why-important-section py-5" id="section-value">
+<section class="why-important-section py-5">
     <div class="container-custom">
 
         <h2 class="important-title">
@@ -1192,34 +1192,6 @@
 
 
 
-<section class="why-important-section py-5" id="section-types">
-    <div class="container-custom">
-
-        <h2 class="important-title">
-            Types of {{ $categoryNameLower }} manufacturers
-        </h2>
-
-        <p class="important-text">
-            The {{ $categoryNameLower }} supply chain usually includes cell manufacturers, module assemblers, and vertically integrated brands
-            that control everything from wafers to finished products. Understanding their focus helps you compare factory quality,
-            long-term warranty support, and pricing tiers.
-        </p>
-
-        <ul class="important-list">
-            <li><strong>Tiered specialists:</strong> Focus on ultra-efficient cells and sell to other brands for assembly.</li>
-            <li><strong>Vertically integrated leaders:</strong> Handle wafers, cells, and modules under one roof for tighter quality control.</li>
-            <li><strong>Value assemblers:</strong> Source cells from multiple partners to deliver more affordable finished modules.</li>
-        </ul>
-
-        <p class="important-text">
-            Each manufacturer type brings trade-offs between price, availability, and long-term reliability, so align your choice with the performance goals for your project.
-        </p>
-
-    </div>
-</section>
-
-
-
 
         <main class="compare-main">
             <div class="compare-layout">
@@ -1363,28 +1335,6 @@
                 }
             });
         });
-
-        const optionButtons = document.querySelectorAll('.opt-btn[data-target]');
-        const scrollOffset = 80;
-
-        optionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetSelector = button.dataset.target;
-                const target = document.querySelector(targetSelector);
-
-                if (!target) {
-                    return;
-                }
-
-                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - scrollOffset;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            });
-        });
-    });
     </script>
     @include('components.frontend.footer')
 </body>
