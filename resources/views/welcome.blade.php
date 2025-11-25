@@ -43,82 +43,7 @@
         }
 
         /* Hero Section */
-        .hero {
-            position: relative;
-            min-height: calc(100vh - 60px);
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            background: #f8f9fa;
-        }
-
-        .hero .hero-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 1.5rem;
-            min-height: calc(100vh - 60px);
-            display: flex;
-            align-items: center;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: url("{{ asset('images/solar-panel.jpg') }}") right center/cover no-repeat;
-            z-index: 0;
-        }
-
-        .hero .hero-gradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1;
-            opacity: 0.92;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            flex: 1;
-            max-width: 600px;
-        }
-
-        .hero-heading {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-subheading {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-features {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 2.5rem 0;
-        }
-
-        .hero-features li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            color: #374151;
-        }
+       
 
         .checkmark-icon {
             width: 24px;
@@ -128,68 +53,7 @@
             flex-shrink: 0;
         }
 
-        .hero-search-container {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .hero-search-input-wrapper {
-            position: relative;
-            flex: 1;
-            max-width: 300px;
-        }
-
-        .hero-search-input {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .hero-search-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        .location-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6b7280;
-            font-size: 1.2rem;
-        }
-
-        .hero-calculate-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .hero-calculate-btn:hover {
-            background: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 991px) {
-            .hero .hero-wrapper::after {
-                opacity: 0.3;
-            }
-            
-            .hero-content {
-                max-width: 100%;
-            }
-        }
+       
         
         .reviews-hero {
             position: relative;
@@ -279,17 +143,18 @@
 
         /* Product Cards */
         .product-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
             height: 100%;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 180px; /* Fixed height for all cards */
             border: 1px solid #e2e8f0;
             text-decoration: none;
             color: inherit;
-            display: flex;
-            flex-direction: column;
         }
 
         .product-card:hover {
@@ -301,13 +166,14 @@
         }
 
         .product-image {
-            height: 200px;
+            flex: 1;
+            min-height: 100px;
+            max-height: 120px;
+            background: #f8f9fa;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f8fafc;
-            padding: 2rem;
-            position: relative;
+            padding: 0.75rem;
         }
 
         .product-image::before {
@@ -342,6 +208,14 @@
             padding: 1.75rem;
             flex-grow: 1;
             border-top: 1px solid #f1f5f9;
+        }
+
+        .product-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         /* Section Header */
@@ -633,6 +507,193 @@
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main Section */
+.reviews-hero-clean {
+    padding: 0.5rem 1.5rem;
+    text-align: center;
+    min-height: 40vh;
+    max-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Title */
+.reviews-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .reviews-title {
+        font-size: 2rem;
+    }
+}
+
+.reviews-title span {
+    color: #2E8B46;  /* Green Color (same as screenshot) */
+}
+
+/* Subtitle */
+.reviews-subtitle {
+    font-size: 1.1rem;
+    color: #4B5563;
+    margin: 0.75rem auto 2rem;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+/* Search Box */
+.reviews-search-box {
+    max-width: 550px;
+    margin: 0.5rem auto 0;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Icon Box */
+.search-icon {
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #111;
+    border-right: 1px solid #ccc;
+}
+
+/* Search Input */
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    outline: none;
+    height: 40px;
+}
+
+/* Search Button */
+.search-btn {
+    background: #2E8B46;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    height: 40px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: #36a353;
+}
+
+/* Mobile Responsive */
+@media (max-width: 650px) {
+    .reviews-title {
+        font-size: 2rem;
+    }
+
+    .reviews-search-box {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .search-icon {
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        width: 100%;
+        text-align: center;
+        padding-bottom: 0.7rem;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -640,96 +701,38 @@
     @include('components.frontend.navbar')
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-gradient bg-gradient-to-r from-white to-transparent"></div>
-        <div class="hero-wrapper">
-            <div class="hero-content">
-                <h1 class="hero-heading">See how much it costs to install solar panels for your home</h1>
-                <p class="hero-subheading">Based on your:</p>
-                <ul class="hero-features">
-                    <li>
-                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Location
-                    </li>
-                    <li>
-                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Electric bill
-                    </li>
-                    <li>
-                        <svg class="checkmark-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        Prices of the best-rated solar companies near you
-                    </li>
-                </ul>
-                <div class="hero-search-container">
-                    <div class="hero-search-input-wrapper">
-                        <i class="fas fa-map-marker-alt location-icon"></i>
-                        <input type="text" class="hero-search-input" placeholder="110001" value="110001" maxlength="6" inputmode="numeric">
-                    </div>
-                    <button class="hero-calculate-btn" type="button">Calculate Now</button>
+    <section class="reviews-hero-clean">
+
+        <div class="reviews-hero-inner">
+
+            <h1 class="reviews-title">
+                Unbiased & Unfiltered <br>
+                <span>Reviews</span>
+            </h1>
+
+            <p class="reviews-subtitle">
+                Find expert reviews of the solar equipment & service you need
+            </p>
+
+            <div class="reviews-search-box">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
                 </div>
+
+                <input type="text" class="search-input" placeholder="Search for Reviews of Product, Service, Company">
+
+                <button class="search-btn">Search</button>
             </div>
+
         </div>
+
     </section>
-
-
-    <!-- As Seen In Section -->
-    <section class="as-seen-in-section section-spacing py-5">
-        <div class="container-custom">
-            <div class="text-center mb-4">
-                <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
-            </div>
-
-            <div class="row justify-content-center align-items-center g-4 text-center">
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
 
     <!-- Products Comparison Section -->
-    <section class="py-5 bg-white border-top border-bottom">
+    <section class="py-1 bg-white border-top border-bottom" style="min-height: 60vh; max-height: 60vh; overflow-y: auto;">
         <div class="container-custom">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: #1e293b;">Unbiased & Unfiltered Reviews</h2>
-                <p class="text-muted mx-auto" style="max-width: 700px; font-size: 1.1rem;">Compare and find the best solar equipment based on expert analysis and real user reviews</p>
+            <div class="text-center pt-2 mb-2">
+                <h2 class="fw-bold mb-2" style="font-size: 1.75rem; color: #1e293b;">Popular Categories</h2>
             </div>
             
             <div class="row g-4">
@@ -780,6 +783,51 @@
         </div>
     </section>
 
+
+        <!-- As Seen In Section -->
+    <section class="as-seen-in-section section-spacing py-5">
+        <div class="container-custom">
+            <div class="text-center mb-4">
+                <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
+            </div>
+
+            <div class="row justify-content-center align-items-center g-4 text-center">
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
+                </div>
+
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     <!-- Reviews Hero Section -->
     <section class="reviews-hero">
         <div class="hero-gradient bg-gradient-to-r from-slate-900 to-transparent"></div>
@@ -793,31 +841,6 @@
                         to help you identify the best solar panel installation companies in your area.
                     </p>
                     <a href="{{ route('reviews.top') }}" class="hero-btn" rel="noopener">See Reviews of Companies Near You</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Solar Calculator Section -->
-    <section id="solar-calculator" class="py-5 bg-white">
-        <div class="container-custom">
-            <div class="row align-items-center g-4">
-                <div class="col-12 col-lg-6">
-                    <div class="solar-image">
-                        <img src="{{ asset('images/electric-bill-chart.png') }}" alt="Monthly Electric Bill Chart" class="img-fluid">
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <div class="solar-text">
-                        <p class="small-heading mb-2">Solar Calculator</p>
-                        <h2 class="fw-bold mb-3" style="font-size: 2rem; line-height: 1.3; color: #000;">The most accurate solar panel cost and savings calculator available</h2>
-                        <p class="text-muted mb-4" style="font-size: 1rem; line-height: 1.6;">
-                            Since 2013, our in-house solar experts and engineers have built one of the most accurate solar calculators available. 
-                            Dashboardowners can use our solar calculator tool without inputting any personal information, so they can evaluate 
-                            the economics of installing solar panels on their homes.
-                        </p>
-                        <!-- <a href="#" class="solar-btn">Use Our Solar Calculator</a> -->
-                    </div>
                 </div>
             </div>
         </div>
