@@ -296,11 +296,163 @@
             }
         }
 
+        /* Desktop styles (keep as before) */
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            position: relative;
+            overflow: hidden;
+            width: 768px;
+            max-width: 100%;
+            min-height: 550px;
+        }
+
         @media (max-width: 992px) {
-            /* Show mobile back button in registration form */
-            .mobile-back-container {
+            /* Mobile styles */
+            body, html {
+                margin: 0;
+                padding: 20px;
+                width: 100%;
+                height: 100%;
+                overflow-x: hidden;
+                background: #f5f5f5;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+            }
+            
+            .container {
+                width: 100%;
+                max-width: 100%;
+                min-height: auto;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                overflow: visible;
                 display: block;
             }
+            
+            .form-container {
+                width: 100% !important;
+                padding: 20px;
+                box-sizing: border-box;
+                position: relative;
+                left: 0 !important;
+                right: 0 !important;
+                transform: none !important;
+                transition: none;
+                height: auto;
+            }
+            
+            .sign-up-container {
+                display: none;
+                width: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                border-radius: 10px;
+                transform: translateX(100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .container.right-panel-active .sign-in-container {
+                transform: translateX(-100%);
+            }
+            
+            .container.right-panel-active .sign-up-container {
+                transform: translateX(0);
+                display: block;
+            }
+            
+            .overlay-container {
+                display: none !important;
+            }
+            
+            .form-container {
+                display: block !important;
+                width: 50%;
+                padding: 40px;
+                box-sizing: border-box;
+                margin: 0;
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transition: transform 0.6s ease-in-out;
+            }
+            
+            .form-container h1 {
+                font-size: 1.8rem;
+                margin: 0 0 25px 0;
+                text-align: center;
+                color: #333;
+            }
+            
+            .sign-up-container {
+                display: block;
+                width: 50%;
+                padding: 40px;
+                box-sizing: border-box;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                height: 100%;
+                transform: translateX(100%);
+                transition: transform 0.6s ease-in-out;
+            }
+
+            .overlay {
+                position: relative !important;
+                transform: none !important;
+                width: 100% !important;
+                height: auto !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            .overlay-panel {
+                position: relative !important;
+                transform: none !important;
+                width: 100% !important;
+                padding: 25px !important;
+                margin: 0 !important;
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                border-radius: 10px;
+                color: white;
+                text-align: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .overlay-left, 
+            .overlay-right {
+                position: relative !important;
+                transform: none !important;
+                width: 100% !important;
+                padding: 25px !important;
+            }
+
+            .ghost {
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid white;
+                color: white;
+                padding: 10px 25px;
+                border-radius: 20px;
+                margin-top: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .ghost:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
             .container {
                 flex-direction: column;
                 min-height: 100vh;
@@ -698,6 +850,58 @@
             margin: 20px 0;
         }
 
+        /* Styles for Need a solar text */
+        .auth-actions {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 15px 0;
+            align-items: center;
+        }
+        
+        .mobile-register-btn {
+            background: transparent;
+            border: 1px solid #FFD700;
+            color: #000000;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-register-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .need-solar-text {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #000000;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+        
+        .solar-link {
+            color: #0000EE;
+            text-decoration: underline;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+        
+        .solar-link:hover {
+            color: #0000CC;
+        }
+        
+        /* Ensure overlay panels have proper positioning for the text */
+        .overlay-panel {
+            padding-bottom: 60px; /* Add space for the absolute positioned text */
+        }
+
         .social-container a:hover {
             background-color: #FFD700;
             color: #000000;
@@ -862,11 +1066,7 @@
 <div class="form-container sign-up-container">
     <form id="registrationForm" method="POST" action="{{ route('register') }}" class="multi-step-form" novalidate>
         @csrf
-        <div class="mobile-back-container">
-            <button type="button" class="mobile-back-btn" id="mobileBackToLogin">
-                <i class="fas fa-arrow-left"></i> Back to Login
-            </button>
-        </div>
+      
         <h1>Solar Panel Registration</h1>
         <div class="social-container">
             <a href="#" class="social"><i class="fas fa-solar-panel"></i></a>
@@ -1017,27 +1217,35 @@
                     </label>
                 </div>
 
-                @if (Route::has('password.request'))
-                    <a class="forgot-password" href="{{ route('password.request') }}">
-                        {{ __('Forgot Your Password?') }}
-                    </a>
-                @endif
+                <div class="auth-actions">
+                    @if (Route::has('password.request'))
+                        <a class="forgot-password" href="{{ route('password.request') }}">
+                            {{ __('Forgot Your Password?') }}
+                        </a>
+                    @endif
+                    <button type="button" class="mobile-register-btn" id="mobileRegisterBtn">
+                        {{ __('Register') }}
+                    </button>
+                </div>
 
                 <button type="submit">Login to Dashboard</button>
             </form>
         </div>
+        <!-- Overlay container is hidden on mobile -->
         <div class="overlay-container">
             <div class="overlay">
-            <div class="overlay-panel overlay-left">
-                <h1>Welcome Back!</h1>
-                <p>Monitor your solar panel performance and track your energy savings</p>
-                <button class="ghost" id="signIn">Login to Dashboard</button>
-            </div>
-            <div class="overlay-panel overlay-right">
-                <h1>New to Solar?</h1>
-                <p>Join us to monitor your solar energy production and savings</p>
-                <button class="ghost" id="signUp">Create Account</button>
-            </div>
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Monitor your solar panel performance and track your energy savings</p>
+                    <button class="ghost" id="signIn">Login to Dashboard</button>
+                    <p class="need-solar-text">Need a solar panel system? <a href="#contact" class="solar-link">Contact us</a></p>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>New to Solar?</h1>
+                    <p>Join us to monitor your solar energy production and savings</p>
+                    <button class="ghost" id="signUp">Create Account</button>
+                    <p class="need-solar-text">Need a solar panel system? <a href="#contact" class="solar-link">Contact us</a></p>
+                </div>
             </div>
         </div>
         </div>
@@ -1050,6 +1258,73 @@
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
         const container = document.getElementById('container');
+        const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
+        const mobileBackBtn = document.createElement('button');
+        
+        // Create back to login button for mobile
+        mobileBackBtn.innerHTML = '← Back to Login';
+        mobileBackBtn.className = 'mobile-back-btn';
+        mobileBackBtn.type = 'button';
+        mobileBackBtn.style.display = 'none';
+        mobileBackBtn.style.margin = '15px 0';
+        mobileBackBtn.style.background = 'transparent';
+        mobileBackBtn.style.border = 'none';
+        mobileBackBtn.style.color = '#3B82F6';
+        mobileBackBtn.style.cursor = 'pointer';
+        mobileBackBtn.style.fontSize = '14px';
+        mobileBackBtn.style.padding = '8px 0';
+        mobileBackBtn.style.textAlign = 'left';
+        mobileBackBtn.style.width = '100%';
+        
+        // Insert back button before the registration form
+        const signUpForm = document.querySelector('.sign-up-container form');
+        if (signUpForm) {
+            signUpForm.insertBefore(mobileBackBtn, signUpForm.firstChild);
+        }
+        
+        // Handle mobile register button click
+        if (mobileRegisterBtn) {
+            mobileRegisterBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                container.classList.add('right-panel-active');
+                mobileBackBtn.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        
+        // Handle back to login button
+        mobileBackBtn.addEventListener('click', function() {
+            container.classList.remove('right-panel-active');
+            this.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
+        // Update mobile view on resize
+        function handleMobileView() {
+            const isMobile = window.innerWidth <= 992;
+            
+            if (isMobile) {
+                // Hide overlay container on mobile
+                const overlayContainer = document.querySelector('.overlay-container');
+                if (overlayContainer) {
+                    overlayContainer.style.display = 'none';
+                }
+                
+                // Show/hide back button based on active panel
+                if (container.classList.contains('right-panel-active')) {
+                    mobileBackBtn.style.display = 'block';
+                } else {
+                    mobileBackBtn.style.display = 'none';
+                }
+            } else {
+                // Reset for desktop view
+                mobileBackBtn.style.display = 'none';
+                const overlayContainer = document.querySelector('.overlay-container');
+                if (overlayContainer) {
+                    overlayContainer.style.display = 'flex';
+                }
+            }
+        }
         let iti; // Store the intlTelInput instance
         let currentStep = 1;
         const totalSteps = 3;
@@ -1088,17 +1363,30 @@
 
         function showSignUp() {
             container.classList.add('right-panel-active');
-            // Reset form when showing registration
-            currentStep = 1;
-            showStep(currentStep);
-            // Scroll to top on mobile
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Handle mobile view
+            if (window.innerWidth <= 992) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Ensure overlay panels are properly displayed on mobile
+                const overlayContainer = document.querySelector('.overlay-container');
+                if (overlayContainer) {
+                    overlayContainer.style.display = 'flex';
+                }
+            }
         }
 
         function showSignIn() {
             container.classList.remove('right-panel-active');
-            // Scroll to top on mobile
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Handle mobile view
+            if (window.innerWidth <= 992) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Ensure overlay panels are properly displayed on mobile
+                const overlayContainer = document.querySelector('.overlay-container');
+                if (overlayContainer) {
+                    overlayContainer.style.display = 'flex';
+                }
+            }
         }
 
         // Desktop buttons
@@ -1112,10 +1400,24 @@
         // Mobile back to login button
         const mobileBackToLogin = document.getElementById('mobileBackToLogin');
         if (mobileBackToLogin) {
-            mobileBackToLogin.addEventListener('click', showSignIn);
+            mobileBackToLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSignIn();
+                // Ensure overlay container is visible on mobile
+                if (window.innerWidth <= 992) {
+                    const overlayContainer = document.querySelector('.overlay-container');
+                    if (overlayContainer) {
+                        overlayContainer.style.display = 'flex';
+                    }
+                }
+            });
         }
 
         // Multi-step form functionality
+        // Call handleMobileView on load and resize
+        window.addEventListener('load', handleMobileView);
+        window.addEventListener('resize', handleMobileView);
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize phone number input
             const phoneInput = document.querySelector("#phone");
