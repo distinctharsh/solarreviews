@@ -860,18 +860,28 @@
         }
         
         .mobile-register-btn {
+            display: none; /* Hide by default */
             background: transparent;
             border: 1px solid #FFD700;
             color: #000000;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
             transition: all 0.3s ease;
+            margin-left: 10px;
         }
         
         .mobile-register-btn:hover {
             background: rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Show only on mobile */
+        @media (max-width: 992px) {
+            .mobile-register-btn {
+                display: inline-block;
+            }
         }
         
         .need-solar-text {
@@ -1067,7 +1077,7 @@
     <form id="registrationForm" method="POST" action="{{ route('register') }}" class="multi-step-form" novalidate>
         @csrf
       
-        <h1>Solar Panel Registration</h1>
+        <h1>Registration</h1>
         <div class="social-container">
             <a href="#" class="social"><i class="fas fa-solar-panel"></i></a>
             <a href="#" class="social"><i class="fas fa-sun"></i></a>
@@ -1178,7 +1188,7 @@
         <div class="form-container sign-in-container">
             <form method="POST" action="{{ route('login') }}">
                 @csrf
-                <h1>Solar Panel Login</h1>
+                <h1> Login</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fas fa-solar-panel"></i></a>
                     <a href="#" class="social"><i class="fas fa-user-shield"></i></a>
@@ -1209,7 +1219,7 @@
                        autocomplete="current-password"
                        placeholder="Your Password" />
                 
-                <div style="margin: 10px 0; width: 100%; text-align: left;">
+                <div style="margin: 10px 0 0 0; width: 100%; text-align: left;">
                     <label style="display: flex; align-items: center; cursor: pointer;">
                         <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} 
                                style="margin-right: 8px; width: auto;">
@@ -1238,13 +1248,11 @@
                     <h1>Welcome Back!</h1>
                     <p>Monitor your solar panel performance and track your energy savings</p>
                     <button class="ghost" id="signIn">Login to Dashboard</button>
-                    <p class="need-solar-text">Need a solar panel system? <a href="#contact" class="solar-link">Contact us</a></p>
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>New to Solar?</h1>
                     <p>Join us to monitor your solar energy production and savings</p>
                     <button class="ghost" id="signUp">Create Account</button>
-                    <p class="need-solar-text">Need a solar panel system? <a href="#contact" class="solar-link">Contact us</a></p>
                 </div>
             </div>
         </div>
@@ -1288,6 +1296,13 @@
                 e.preventDefault();
                 container.classList.add('right-panel-active');
                 mobileBackBtn.style.display = 'block';
+                
+                // Hide overlay container on mobile when register is clicked
+                const overlayContainer = document.querySelector('.overlay-container');
+                if (window.innerWidth <= 992 && overlayContainer) {
+                    overlayContainer.style.display = 'none';
+                }
+                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
