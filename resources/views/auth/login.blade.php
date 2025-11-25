@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SolarReviews - Sign In</title>
+    <title>Solar Panel Management System - Login & Registration</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('images/solar-icon.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <style>
         :root {
             --primary: #3B82F6;
@@ -71,10 +73,12 @@
         }
 
         button {
-            border-radius: 20px;
-            border: 1px solid #FF4B2B;
-            background-color: #FF4B2B;
-            color: #FFFFFF;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #FFD700;
+            background-color: #FFD700;
+            color: #000000;
             font-size: 12px;
             font-weight: bold;
             padding: 12px 45px;
@@ -91,26 +95,440 @@
         button.ghost {
             background-color: transparent;
             border-color: #FFFFFF;
+            color: #000000;
+        }
+        
+        button.ghost:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        form {
-            background-color: #FFFFFF;
+        /* Multi-step form styles */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 30px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .progress-steps .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            padding: 0 50px;
-            height: 100%;
-            text-align: center;
+            color: #666;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            margin: 0 15px;
+            transition: all 0.3s ease;
         }
 
-        input {
-            background-color: #eee;
-            border: none;
+        .progress-steps .step.active {
+            background: #FFD700;
+            color: #000;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .form-navigation button {
+            margin: 0;
+            padding: 10px 20px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .form-checkbox {
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .form-checkbox label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+            outline: none;
+        }
+
+        .error-msg {
+            color: #EF4444;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+            min-height: 18px;
+        }
+
+        .error-message {
+            background-color: #FEE2E2;
+            color: #B91C1C;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .error-message p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        input.error,
+        select.error {
+            border-color: #EF4444 !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-navigation button {
+                width: 100%;
+            }
+            
+            .progress-steps .step {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            /* Show mobile back button in registration form */
+            .mobile-back-container {
+                display: block;
+            }
+            .container {
+                flex-direction: column;
+                min-height: 100vh;
+                padding: 10px;
+                overflow-x: hidden;
+            }
+            
+            .form-container {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                min-height: auto;
+                margin: 10px 0;
+                padding: 15px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                border-radius: 8px;
+            }
+            
+            .form-container form {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-row .input-group {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .progress-steps {
+                margin: 15px 0 20px;
+            }
+            
+            .progress-steps .step {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+                margin: 0 8px;
+            }
+            
+            input[type="email"],
+            input[type="password"],
+            input[type="text"],
+            input[type="tel"],
+            select {
+                padding: 14px 12px;
+                font-size: 16px;
+                min-height: 48px;
+            }
+            
+            button {
+                padding: 14px 20px;
+                font-size: 16px;
+                width: 100%;
+                margin: 8px 0;
+                min-height: 48px;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+                gap: 10px;
+                margin: 20px 0 10px;
+                padding: 15px 0 5px;
+                border-top: 1px solid #eee;
+            }
+            
+            .form-navigation button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            /* Adjust the overlay for mobile */
+            .overlay-container {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+                transform: none;
+                left: 0;
+                margin: 10px 0;
+                order: -1;
+            }
+            
+            .overlay {
+                background: linear-gradient(to right, #FFD700, #FFA500) !important;
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+                border-radius: 8px;
+                height: auto;
+                left: 0;
+                width: 100%;
+                transform: none !important;
+            }
+            
+            .overlay-panel {
+                position: relative;
+                padding: 20px;
+                width: 100%;
+                transform: none !important;
+                height: auto;
+            }
+            
+            /* Make sure form is visible on mobile */
+            .sign-up-container,
+            .sign-in-container {
+                position: relative;
+                width: 100%;
+                transform: none;
+                opacity: 1;
+                z-index: 10;
+                display: none;
+            }
+            
+            .container.right-panel-active .sign-in-container {
+                display: none;
+            }
+            
+            .container.right-panel-active .sign-up-container {
+                display: block;
+            }
+            
+            .sign-in-container {
+                display: block;
+            }
+            
+            /* Mobile toggle buttons */
+            .mobile-toggle {
+                display: block;
+                margin: 15px auto;
+                max-width: 250px;
+            }
+            
+            .desktop-toggle {
+                display: none;
+            }
+            
+            /* Adjust form steps */
+            .form-step {
+                padding: 10px 0;
+            }
+            
+            /* Social icons */
+            .social-container {
+                margin: 10px 0 20px;
+            }
+            
+            .social {
+                margin: 0 8px;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+            }
+        }
+        
+        /* For very small devices */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 10px;
+            }
+            
+            .form-container form {
+                padding: 10px 5px;
+            }
+            
+            h1 {
+                font-size: 22px;
+                margin-bottom: 12px;
+            }
+            
+            .progress-steps {
+                margin: 10px 0 15px;
+            }
+            
+            .progress-steps .step {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+                margin: 0 5px;
+            }
+        }
+
+        form {
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: column;
+            padding: 20px 50px;
+            min-height: 100%;
+            text-align: center;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="tel"] {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 12px 15px;
             margin: 8px 0;
             outline: none;
             width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        input[type="tel"]:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+        
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
         }
 
         .container {
@@ -123,6 +541,31 @@
             width: 768px;
             max-width: 100%;
             min-height: 480px;
+        }
+
+        .form-container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow-y: auto;
+            width: 768px;
+            max-width: 100%;
+            max-height: 90vh;
+            padding: 20px;
+        }
+
+        .form-container form {
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: column;
+            padding: 20px 50px;
+            min-height: 100%;
+            text-align: center;
+            width: 100%;
+            border-radius: 10px;
         }
 
         .form-container {
@@ -147,6 +590,7 @@
             width: 50%;
             opacity: 0;
             z-index: 1;
+            overflow-y: auto;
         }
 
         .container.right-panel-active .sign-up-container {
@@ -169,11 +613,13 @@
         }
 
         .forgot-password {
-            transition: letter-spacing .3s ease-in-out;
+            transition: all 0.3s ease;
+            color: #666;
         }
 
         .forgot-password:hover {
-            letter-spacing: 1px;
+            color: #FFA500;
+            text-decoration: none;
         }
 
         .overlay-container {
@@ -192,9 +638,12 @@
         }
 
         .overlay {
-            background: #FF416C;
-            background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-            background: linear-gradient(to right, #FF4B2B, #FF416C);
+            background: #fff9e6;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+            background: -webkit-linear-gradient(to right, #FFD700, #FFA500);
+            background: linear-gradient(to right, #FFD700, #FFA500);
+            color: #000000;
             background-repeat: no-repeat;
             background-size: cover;
             background-position: 0 0;
@@ -227,6 +676,7 @@
         }
 
         .overlay-left {
+            color: #000000;
             transform: translateX(-20%);
         }
 
@@ -235,6 +685,7 @@
         }
 
         .overlay-right {
+            color: #000000;
             right: 0;
             transform: translateX(0);
         }
@@ -247,8 +698,15 @@
             margin: 20px 0;
         }
 
+        .social-container a:hover {
+            background-color: #FFD700;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
         .social-container a {
-            border: 1px solid #DDDDDD;
+            transition: all 0.3s ease;
             border-radius: 50%;
             display: inline-flex;
             justify-content: center;
@@ -256,54 +714,329 @@
             margin: 0 5px;
             height: 40px;
             width: 40px;
+            color: #000000;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
+
+
+
+
+/* Add these styles to your existing style section */
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 30px;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.progress-steps .step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+    margin: 0 15px;
+    transition: all 0.3s ease;
+}
+
+.progress-steps .step.active {
+    background: #FFD700;
+    color: #000;
+}
+
+.form-step {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.form-row input,
+.form-row select {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.form-navigation button {
+    margin: 0;
+    padding: 10px 20px;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    text-align: left;
+    width: 100%;
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+.form-checkbox label {
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .form-navigation button {
+        width: 100%;
+    }
+    
+    .progress-steps .step {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+        margin: 0 10px;
+    }
+}
+
+
+
+
+
+
+
+
             </style>
         </head>
         <body>
 
 
         <div class="container" id="container">
-        <div class="form-container sign-up-container">
-            <form action="#">
-            <h1>Create Account</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>or use your email for registration</span>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up</button>
-            </form>
+<!-- Update the registration form section -->
+<div class="form-container sign-up-container">
+    <form id="registrationForm" method="POST" action="{{ route('register') }}" class="multi-step-form" novalidate>
+        @csrf
+        <div class="mobile-back-container">
+            <button type="button" class="mobile-back-btn" id="mobileBackToLogin">
+                <i class="fas fa-arrow-left"></i> Back to Login
+            </button>
         </div>
-        <div class="form-container sign-in-container">
-            <form action="#">
-            <h1>Sign in</h1>
-            <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+        <h1>Solar Panel Registration</h1>
+        <div class="social-container">
+            <a href="#" class="social"><i class="fas fa-solar-panel"></i></a>
+            <a href="#" class="social"><i class="fas fa-sun"></i></a>
+            <a href="#" class="social"><i class="fas fa-leaf"></i></a>
+        </div>
+        <span>Start your solar journey with us</span>
+        
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step active" data-step="1">1</div>
+            <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
+        </div>
+
+        @if($errors->any())
+            <div class="error-message">
+                @foreach($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
             </div>
-            <span>or use your account</span>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <a href="#" class="forgot-password">Forgot your password?</a>
-            <button>Sign In</button>
+        @endif
+
+        <!-- Step 1: Personal Information -->
+        <div class="form-step active" id="step1">
+            <h3>Personal Information</h3>
+            <div class="input-group">
+                <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Email Address" value="{{ old('email') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="form-navigation">
+                <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 2: Address Information -->
+        <div class="form-step" id="step2">
+            <h3>Address Information</h3>
+            <div class="input-group">
+                <input type="text" name="address" placeholder="Street Address" value="{{ old('address') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <input type="text" name="city" placeholder="City" value="{{ old('city') }}" required>
+                    <span class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" name="state" placeholder="State" value="{{ old('state') }}" required>
+                    <span class="error-msg"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <input type="text" name="postal_code" placeholder="Postal Code" value="{{ old('postal_code') }}" required>
+                    <span class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <select name="country" required>
+                        <option value="">Select Country</option>
+                        <option value="IN" {{ old('country') == 'IN' ? 'selected' : '' }}>India</option>
+                        <option value="US" {{ old('country') == 'US' ? 'selected' : '' }}>United States</option>
+                        <option value="GB" {{ old('country') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
+                    </select>
+                    <span class="error-msg"></span>
+                </div>
+            </div>
+            <div class="form-navigation">
+                <button type="button" class="prev-step"><i class="fas fa-arrow-left"></i> Previous</button>
+                <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 3: Account Setup -->
+        <div class="form-step" id="step3">
+            <h3>Account Setup</h3>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Create Password (min 8 characters)" minlength="8" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" minlength="8" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="form-checkbox">
+                <input type="checkbox" id="terms" name="terms" {{ old('terms') ? 'checked' : '' }} required>
+                <label for="terms">I agree to the <a href="#" target="_blank">Terms & Conditions</a></label>
+                <span class="error-msg"></span>
+            </div>
+            <div class="form-navigation">
+                <button type="button" class="prev-step"><i class="fas fa-arrow-left"></i> Previous</button>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </div>
+        </div>
+    </form>
+</div>
+        <div class="form-container sign-in-container">
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <h1>Solar Panel Login</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fas fa-solar-panel"></i></a>
+                    <a href="#" class="social"><i class="fas fa-user-shield"></i></a>
+                    <a href="#" class="social"><i class="fas fa-key"></i></a>
+                </div>
+                <span>Access your solar dashboard</span>
+                
+                @if($errors->any())
+                    <div style="color: #EF4444; margin-bottom: 15px; font-size: 14px;">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <input id="email" type="email" 
+                       class="@error('email') is-invalid @enderror" 
+                       name="email" 
+                       value="{{ old('email') }}" 
+                       required 
+                       autocomplete="email" 
+                       autofocus
+                       placeholder="Email Address" />
+                
+                <input id="password" 
+                       type="password" 
+                       class="@error('password') is-invalid @enderror" 
+                       name="password" 
+                       required 
+                       autocomplete="current-password"
+                       placeholder="Your Password" />
+                
+                <div style="margin: 10px 0; width: 100%; text-align: left;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} 
+                               style="margin-right: 8px; width: auto;">
+                        <span style="font-size: 14px; color: #666;">{{ __('Remember Me') }}</span>
+                    </label>
+                </div>
+
+                @if (Route::has('password.request'))
+                    <a class="forgot-password" href="{{ route('password.request') }}">
+                        {{ __('Forgot Your Password?') }}
+                    </a>
+                @endif
+
+                <button type="submit">Login to Dashboard</button>
             </form>
         </div>
         <div class="overlay-container">
             <div class="overlay">
             <div class="overlay-panel overlay-left">
                 <h1>Welcome Back!</h1>
-                <p>To keep connected with us please login with your personal info</p>
-                <button class="ghost" id="signIn">Sign In</button>
+                <p>Monitor your solar panel performance and track your energy savings</p>
+                <button class="ghost" id="signIn">Login to Dashboard</button>
             </div>
             <div class="overlay-panel overlay-right">
-                <h1>Hello, Friend!</h1>
-                <p>Enter your personal details and start journey with us</p>
-                <button class="ghost" id="signUp">Sign Up</button>
+                <h1>New to Solar?</h1>
+                <p>Join us to monitor your solar energy production and savings</p>
+                <button class="ghost" id="signUp">Create Account</button>
             </div>
             </div>
         </div>
@@ -311,15 +1044,337 @@
 
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <script>
+        // Toggle between login and signup panels
         const signUpButton = document.getElementById('signUp');
         const signInButton = document.getElementById('signIn');
         const container = document.getElementById('container');
+        let iti; // Store the intlTelInput instance
+        let currentStep = 1;
+        const totalSteps = 3;
 
-        signUpButton.addEventListener('click', () => container.classList.add('right-panel-active'));
+        function showStep(step) {
+            // Hide all steps first
+            document.querySelectorAll('.form-step').forEach(stepEl => {
+                stepEl.classList.remove('active');
+            });
+            
+            // Show current step
+            const currentStepElement = document.getElementById(`step${step}`);
+            if (currentStepElement) {
+                currentStepElement.classList.add('active');
+                // Scroll to top of the form
+                currentStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            // Update progress indicators
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                if (index + 1 <= currentStep) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
+        }
 
-        signInButton.addEventListener('click', () => container.classList.remove('right-panel-active'));
+        // Handle both desktop and mobile toggle buttons
+        const mobileSignUpButton = document.getElementById('mobileSignUp');
+        const mobileSignInButton = document.getElementById('mobileSignIn');
+
+        function showSignUp() {
+            container.classList.add('right-panel-active');
+            // Reset form when showing registration
+            currentStep = 1;
+            showStep(currentStep);
+            // Scroll to top on mobile
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSignIn() {
+            container.classList.remove('right-panel-active');
+            // Scroll to top on mobile
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Desktop buttons
+        if (signUpButton) signUpButton.addEventListener('click', showSignUp);
+        if (signInButton) signInButton.addEventListener('click', showSignIn);
+        
+        // Mobile buttons
+        if (mobileSignUpButton) mobileSignUpButton.addEventListener('click', showSignUp);
+        if (mobileSignInButton) mobileSignInButton.addEventListener('click', showSignIn);
+        
+        // Mobile back to login button
+        const mobileBackToLogin = document.getElementById('mobileBackToLogin');
+        if (mobileBackToLogin) {
+            mobileBackToLogin.addEventListener('click', showSignIn);
+        }
+
+        // Multi-step form functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize phone number input
+            const phoneInput = document.querySelector("#phone");
+            if (phoneInput) {
+                iti = window.intlTelInput(phoneInput, {
+                    preferredCountries: ["in"],
+                    separateDialCode: true,
+                    autoPlaceholder: 'aggressive',
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                });
+                
+                // Format phone number on blur
+                phoneInput.addEventListener('blur', function() {
+                    if (phoneInput.value.trim()) {
+                        if (iti.isValidNumber()) {
+                            phoneInput.value = iti.getNumber();
+                        }
+                    }
+                });
+            }
+
+            // Show first step by default
+            showStep(currentStep);
+            
+            // Handle next/previous button clicks
+            document.addEventListener('click', function(e) {
+                // Next button click
+                if (e.target.classList.contains('next-step') || 
+                    (e.target.closest && e.target.closest('.next-step'))) {
+                    e.preventDefault();
+                    const currentStepElement = document.querySelector(`.form-step.active`);
+                    const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
+                    let isValid = true;
+                    
+                    // Validate current step
+                    inputs.forEach(input => {
+                        if (!input.value.trim() || 
+                            (input.type === 'checkbox' && !input.checked)) {
+                            input.classList.add('error');
+                            const errorMsg = input.nextElementSibling;
+                            if (errorMsg && errorMsg.classList.contains('error-msg')) {
+                                errorMsg.textContent = 'This field is required';
+                            }
+                            isValid = false;
+                            
+                            // Scroll to first error
+                            if (isValid) {
+                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    });
+                    
+                    if (isValid && currentStep < totalSteps) {
+                        currentStep++;
+                        showStep(currentStep);
+                    }
+                }
+                
+                // Previous button click
+                if (e.target.classList.contains('prev-step') || 
+                    (e.target.closest && e.target.closest('.prev-step'))) {
+                    e.preventDefault();
+                    if (currentStep > 1) {
+                        currentStep--;
+                        showStep(currentStep);
+                    }
+                }
+            });
+            
+            // Add error class on invalid
+            document.querySelectorAll('input, select').forEach(input => {
+                input.addEventListener('invalid', function(e) {
+                    e.preventDefault();
+                    this.classList.add('error');
+                    const errorMsg = this.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('error-msg')) {
+                        errorMsg.textContent = this.validationMessage;
+                    }
+                });
+                
+                // Clear error on input
+                input.addEventListener('input', function() {
+                    this.classList.remove('error');
+                    const errorMsg = this.nextElementSibling;
+                    if (errorMsg && errorMsg.classList.contains('error-msg')) {
+                        errorMsg.textContent = '';
+                    }
+                });
+            });
+            
+            // Handle form submission
+            const registrationForm = document.getElementById('registrationForm');
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    // Validate all steps before submission
+                    let isValid = true;
+                    const allInputs = this.querySelectorAll('input[required], select[required]');
+                    
+                    allInputs.forEach(input => {
+                        if (!input.value.trim() || (input.type === 'checkbox' && !input.checked)) {
+                            input.classList.add('error');
+                            const errorMsg = input.nextElementSibling;
+                            if (errorMsg && errorMsg.classList.contains('error-msg')) {
+                                errorMsg.textContent = 'This field is required';
+                            }
+                            isValid = false;
+                            
+                            // Scroll to first error
+                            if (isValid) {
+                                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    });
+                    
+                    // Validate password match
+                    const password = this.querySelector('input[name="password"]');
+                    const confirmPassword = this.querySelector('input[name="password_confirmation"]');
+                    
+                    if (password && confirmPassword && password.value !== confirmPassword.value) {
+                        confirmPassword.classList.add('error');
+                        const errorMsg = confirmPassword.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-msg')) {
+                            errorMsg.textContent = 'Passwords do not match';
+                        }
+                        isValid = false;
+                    }
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        // Go to first step with error
+                        currentStep = 1;
+                        showStep(currentStep);
+                        updateProgress();
+                    }
+                });
+            }
+            
+            // Function to reset registration form
+            function resetRegistrationForm() {
+                const form = document.getElementById('registrationForm');
+                if (form) {
+                    form.reset();
+                    currentStep = 1;
+                    showStep(currentStep);
+                    updateProgress();
+                    
+                    // Clear all error messages
+                    document.querySelectorAll('.error-msg').forEach(el => {
+                        el.textContent = '';
+                    });
+                    
+                    // Clear error classes
+                    document.querySelectorAll('.error').forEach(el => {
+                        el.classList.remove('error');
+                    });
+                    
+                    // Reset phone input
+                    if (iti) {
+                        iti.setNumber('');
+                    }
+                }
+            }
+        });
     </script>
 
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize phone number input
+        const phoneInput = document.querySelector("#phone");
+        if (phoneInput) {
+            window.intlTelInput(phoneInput, {
+                preferredCountries: ["in"],
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            });
+        }
+
+        // Form steps functionality
+        let currentStep = 1;
+        const totalSteps = 3;
+        
+        // Show first step by default
+        showStep(currentStep);
+        
+        // Next button click
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('next-step') || 
+                (e.target.closest('.next-step'))) {
+                e.preventDefault();
+                const currentStepElement = document.getElementById(`step${currentStep}`);
+                const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
+                let isValid = true;
+                
+                // Validate current step
+                inputs.forEach(input => {
+                    if (!input.value.trim() || 
+                        (input.type === 'checkbox' && !input.checked)) {
+                        input.classList.add('error');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+                
+                if (isValid) {
+                    if (currentStep < totalSteps) {
+                        currentStep++;
+                        showStep(currentStep);
+                        updateProgress();
+                    }
+                }
+            }
+            
+            // Previous button click
+            if (e.target.classList.contains('prev-step') || 
+                (e.target.closest('.prev-step'))) {
+                e.preventDefault();
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                    updateProgress();
+                }
+            }
+        });
+        
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.style.display = 'none';
+            });
+            
+            // Show current step
+            const currentStepElement = document.getElementById(`step${step}`);
+            if (currentStepElement) {
+                currentStepElement.style.display = 'block';
+            }
+        }
+        
+        function updateProgress() {
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index + 1 <= currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+        
+        // Add error class on invalid
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('invalid', function() {
+                this.classList.add('error');
+            });
+        });
+    });
+</script>
 </body>
 </html>
