@@ -26,30 +26,32 @@
                     <i class="fas fa-chart-pie"></i>
                     Dashboard
                 </a>
+                
+                <div class="sidebar-section-title">Master Data</div>
+                
+                <a href="{{ route('admin.categories.index') }}" class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                    <i class="fas fa-layer-group"></i>
+                    Categories
+                </a>
+                <a href="{{ route('admin.brands.index') }}" class="sidebar-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                    <i class="fas fa-tags"></i>
+                    Brands
+                </a>
                 <a href="{{ route('admin.companies.index') }}" class="sidebar-link {{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">
                     <i class="fas fa-building"></i>
                     Companies
                 </a>
-                <a href="{{ route('admin.company-profiles.index') }}" class="sidebar-link {{ request()->routeIs('admin.company-profiles.*') ? 'active' : '' }}">
-                    <i class="fas fa-clipboard-list"></i>
-                    Company Profiles
+                <a href="{{ route('admin.products.index') }}" class="sidebar-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                    <i class="fas fa-box"></i>
+                    Products
                 </a>
+                
+                <div class="sidebar-section-title">Reviews</div>
+                
                 <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                     <i class="fas fa-star"></i>
-                    Reviews
+                    All Reviews
                 </a>
-                <!-- <a href="{{ route('admin.states.index') }}" class="sidebar-link {{ request()->routeIs('admin.states.*') ? 'active' : '' }}">
-                    <i class="fas fa-map"></i>
-                    States
-                </a>
-                <a href="{{ route('admin.cities.index') }}" class="sidebar-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
-                    <i class="fas fa-city"></i>
-                    Cities
-                </a>
-                <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="fas fa-user"></i>
-                    Users
-                </a> -->
             </nav>
             <div class="sidebar-footer">
                 <form method="POST" action="{{ route('logout') }}">

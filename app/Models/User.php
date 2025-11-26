@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,39 +9,48 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
+     * User Types
+     */
+    const TYPE_REGULAR = 'regular';
+    const TYPE_DISTRIBUTOR = 'distributor';
+    const TYPE_MANUFACTURER = 'manufacturer';
+
+    /**
      * The attributes that are mass assignable.
-     *
-     * @var list<string>
      */
     protected $fillable = [
         'name',
-        'first_name',
-        'last_name',
         'email',
         'password',
         'phone',
-        'company_type',
+        'user_type',
         'is_admin',
+        'is_active',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
      */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'is_active' => 'boolean',
+        ];
+    }
 
     /**
      * Check if the user is an admin
@@ -53,20 +61,37 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Check if the user is a distributor
      */
-    protected function casts(): array
+    public function isDistributor(): bool
+    {
+        return $this->user_type === self::TYPE_DISTRIBUTOR;
+    }
+
+    /**
+     * Check if the user is a manufacturer
+     */
+    public function isManufacturer(): bool
+    {
+        return $this->user_type === self::TYPE_MANUFACTURER;
+    }
+
+    /**
+     * Get user type options for forms
+     */
+    public static function getUserTypeOptions(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            self::TYPE_DISTRIBUTOR => 'Distributor',
+            self::TYPE_MANUFACTURER => 'Manufacturer',
         ];
     }
 
-    public function companyProfile(): HasOne
+    /**
+     * Relationship: User owns a company
+     */
+    public function company(): HasOne
     {
-        return $this->hasOne(CompanyProfile::class);
+        return $this->hasOne(Company::class, 'owner_id');
     }
 }

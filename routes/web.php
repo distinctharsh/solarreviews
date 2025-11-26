@@ -1,13 +1,11 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\Admin\CompanyProfileController;
-use App\Http\Controllers\Admin\ProductLineTypeController;
-use App\Http\Controllers\Admin\ServiceTypeController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
-use App\Http\Controllers\Admin\StateController;
-use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,58 +18,78 @@ Route::get('/top-reviews', function () {
     return view('frontend.reviews.top-installers');
 })->name('reviews.top');
 
-// Category-based company comparison
-Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
-    ->name('companies.compare');
+// Category-based company comparison (temporarily disabled until frontend is ready)
+// Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
+//     ->name('companies.compare');
 
-// State Companies
-Route::get('/state/{stateSlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'stateCompanies'])
-    ->name('state.companies');
+// State Companies (temporarily using dummy data)
+Route::get('/state/{stateSlug}', function ($stateSlug) {
+    $states = [
+        ['id' => 1, 'name' => 'Maharashtra', 'slug' => 'maharashtra'],
+        ['id' => 2, 'name' => 'Gujarat', 'slug' => 'gujarat'],
+        ['id' => 3, 'name' => 'Rajasthan', 'slug' => 'rajasthan'],
+        ['id' => 4, 'name' => 'Karnataka', 'slug' => 'karnataka'],
+        ['id' => 5, 'name' => 'Tamil Nadu', 'slug' => 'tamil-nadu'],
+        ['id' => 6, 'name' => 'Uttar Pradesh', 'slug' => 'uttar-pradesh'],
+        ['id' => 7, 'name' => 'Delhi', 'slug' => 'delhi'],
+    ];
+    
+    $state = collect($states)->firstWhere('slug', $stateSlug);
+    if (!$state) {
+        abort(404);
+    }
+    
+    return view('frontend.companies.state', [
+        'state' => $state,
+        'states' => $states,
+        'categories' => [],
+    ]);
+})->name('state.companies');
 
-// Review Routes
+// Review Routes (temporarily disabled)
 Route::prefix('reviews')->group(function () {
-    Route::get('/create', [\App\Http\Controllers\Frontend\ReviewController::class, 'create'])->name('reviews.create');
-    Route::post('/', [\App\Http\Controllers\Frontend\ReviewController::class, 'store'])->name('reviews.store');
-    Route::post('/send-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'sendOtp'])->name('reviews.send-otp');
-    Route::post('/verify-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'verifyOtp'])->name('reviews.verify-otp');
+    Route::get('/create', function () {
+        return redirect('/');
+    })->name('reviews.create');
+    
+    Route::post('/', function () {
+        return response()->json(['success' => false, 'message' => 'Reviews temporarily disabled']);
+    })->name('reviews.store');
+    
+    Route::post('/send-otp', function () {
+        return response()->json(['success' => true, 'otp' => '123456']);
+    })->name('reviews.send-otp');
+    
+    Route::post('/verify-otp', function () {
+        return response()->json(['success' => true]);
+    })->name('reviews.verify-otp');
 });
 
 // Admin Routes
 Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'App\Http\Middleware\Admin'])
-    ->namespace('App\Http\Controllers\Admin')
     ->group(function () {
+    
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Categories
+    Route::resource('categories', CategoryController::class);
+    Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
+    
+    // Brands
+    Route::resource('brands', BrandController::class);
+    Route::patch('brands/{brand}/toggle-status', [BrandController::class, 'toggleStatus'])->name('brands.toggle-status');
     
     // Companies
     Route::resource('companies', CompanyController::class);
     
-    // Company Profiles
-    Route::resource('company-profiles', CompanyProfileController::class)->only(['index', 'show']);
-
-    // Catalog Lookups
-    Route::prefix('catalog')->name('catalog.')->group(function () {
-        Route::resource('product-line-types', ProductLineTypeController::class)->except(['show']);
-        Route::resource('service-types', ServiceTypeController::class)->except(['show']);
-    });
-
     // Products
     Route::resource('products', ProductController::class);
     
     // Reviews
     Route::resource('reviews', ReviewController::class);
-    Route::post('reviews/{review}/toggle-featured', [ReviewController::class, 'toggleFeatured'])->name('reviews.toggle-featured');
-    
-    // States
-    Route::resource('states', StateController::class)->except(['show']);
-    
-    // Cities
-    Route::resource('cities', CityController::class)->except(['show']);
-    
-    // Users
-    Route::resource('users', 'App\Http\Controllers\Admin\UserController');
 });
 
 // User Dashboard

@@ -84,6 +84,16 @@ body {
     color: var(--admin-sidebar-active-text);
 }
 
+.sidebar-section-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748b;
+    padding: 1rem 1rem 0.5rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
+}
+
 .sidebar-footer {
     margin-top: 2rem;
 }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_admin')->default(false)->after('email_verified_at');
+            $table->enum('user_type', ['regular', 'distributor', 'manufacturer'])->default('regular')->after('is_admin');
+            $table->string('phone', 20)->nullable()->after('user_type');
+            $table->boolean('is_active')->default(true)->after('phone');
         });
     }
 
@@ -22,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_admin');
+            $table->dropColumn(['is_admin', 'user_type', 'phone', 'is_active']);
         });
     }
 };
