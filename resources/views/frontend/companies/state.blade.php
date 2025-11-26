@@ -5,447 +5,847 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Top Solar Companies in {{ $state['name'] }} - Solar Reviews</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap & Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1e40af;
-            --secondary-color: #0f172a;
-            --accent-color: #3b82f6;
-            --text-color: #1f2937;
-            --light-bg: #f5f7fb;
+            --primary: #3ba14c;
+            --primary-dark: #2d7a3a;
+            --primary-light: #6dc47d;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            --accent-light: #fcd34d;
+            --surface: #ffffff;
+            --surface-elevated: #f8fafc;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --success: #3ba14c;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient-start: #3ba14c;
+            --gradient-end: #2d8f3e;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--light-bg);
-            color: var(--text-color);
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(180deg, #f0fdf4 0%, #f8fafc 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 1.25rem;
+            }
         }
 
         .container-custom {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
+
         @media (max-width: 768px) {
             .container-custom {
-                padding: 0 1rem;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
             }
         }
 
-        .page-wrapper {
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero-badge i {
+            color: var(--accent-light);
+        }
+
+        .hero-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: left;
+        }
+
+        .hero-stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.75);
+        }
+
+        /* Main Layout */
+        .main-wrapper {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1.5rem 1.5rem 2.5rem;
+            padding: 2rem 1.5rem 4rem;
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 1.25rem;
-            align-items: flex-start;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            align-items: start;
         }
 
-        /* Left Sidebar */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+        }
+
+        /* Sidebar */
         .sidebar {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.25rem 1.15rem;
             position: sticky;
-            top: 80px;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
-        .sidebar h3 {
+        .sidebar-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .sidebar-title {
+            font-family: 'Outfit', sans-serif;
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--secondary-color);
-            margin-bottom: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .sidebar ul {
+        .sidebar-title i {
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .state-list {
             list-style: none;
-            margin-bottom: 1.5rem;
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
         }
 
-        .sidebar ul li + li {
-            margin-top: 0.35rem;
+        .state-list::-webkit-scrollbar {
+            width: 4px;
         }
 
-        .sidebar ul li a {
+        .state-list::-webkit-scrollbar-track {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        .state-list::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        .state-list li {
+            margin-bottom: 0.25rem;
+        }
+
+        .state-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
             text-decoration: none;
-            color: #389c48;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .state-list a::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .state-list a:hover {
+            background: linear-gradient(135deg, rgba(59, 161, 76, 0.08) 0%, rgba(45, 143, 62, 0.08) 100%);
+            color: var(--primary-dark);
+        }
+
+        .state-list a:hover::before {
+            background: var(--primary);
+            transform: scale(1.5);
+        }
+
+        /* Calculator Card */
+        .calculator-card {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculator-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .calculator-card .sidebar-title {
+            color: white;
+        }
+
+        .calculator-card .sidebar-title i {
+            color: var(--accent-light);
+        }
+
+        .calculator-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
             font-size: 0.95rem;
-            transition: color 0.2s ease;
-        }
-
-        .sidebar ul li a:hover {
-            color: #2563eb;
-        }
-
-        .calculator {
-            margin-top: 1.5rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid #edf2f7;
-        }
-
-        .calculator h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
             margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
         }
 
-        .calculator input {
-            width: 100%;
-            padding: 0.65rem 0.85rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            margin-bottom: 0.65rem;
-            font-size: 0.95rem;
+        .calculator-input::placeholder {
+            color: rgba(255,255,255,0.6);
         }
 
-        .calculator button {
+        .calculator-input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .calculator-btn {
             width: 100%;
-            background: #389c48;
-            color: #fff;
+            padding: 0.875rem;
+            background: white;
+            color: var(--primary-dark);
             border: none;
-            padding: 0.75rem 0;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .calculator button:hover {
-            background: #257239;
-        }
-
-        /* Right Content */
-        .content {
-            width: 100%;
-        }
-
-        .header {
-            margin-bottom: 1.25rem;
-        }
-
-        .header h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-        }
-
-        .header p {
-            color: #475569;
-            margin-top: 0.4rem;
-        }
-
-        .company-profile-card {
-            background: #fff;
-            border: 1px solid #dbe4f3;
-            border-radius: 12px;
-            padding: 1.1rem;
-            margin-bottom: 1.15rem;
-            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
-        }
-
-        .company-main {
-            display: flex;
-            gap: 1.1rem;
-        }
-
-        .company-logo-card {
-            width: 80px;
-            min-width: 80px;
-            height: 80px;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f8fafc;
-            padding: 0.6rem;
+            gap: 0.5rem;
         }
 
-        .company-logo-card img {
+        .calculator-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* Company Card */
+        .company-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .company-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .company-card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-4px);
+        }
+
+        .company-card:hover::before {
+            opacity: 1;
+        }
+
+        .company-header {
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .company-logo {
+            width: 88px;
+            height: 88px;
+            min-width: 88px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .company-card:hover .company-logo {
+            border-color: var(--primary-light);
+        }
+
+        .company-logo img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
 
-        .company-info {
+        .company-details {
             flex: 1;
+            min-width: 0;
         }
 
-        .company-title-row {
+        .company-top-row {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 1rem;
             flex-wrap: wrap;
         }
 
         .company-name {
-            font-size: 1.25rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.375rem;
             font-weight: 700;
-            margin-bottom: 0.35rem;
-            color: var(--secondary-color);
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            transition: color 0.2s ease;
         }
 
-        .company-rating {
+        .company-card:hover .company-name {
+            color: var(--primary-dark);
+        }
+
+        .company-rating-row {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
-            color: #475569;
         }
 
-        .company-rating .stars i {
-            color: #f6ad02;
+        .stars-container {
+            display: flex;
+            gap: 2px;
+        }
+
+        .stars-container i {
+            color: var(--accent);
             font-size: 1rem;
         }
 
-        .company-rating .rating-number {
-            font-weight: 600;
-            color: #0f172a;
+        .rating-score {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
-        .company-rating .review-count {
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-
-        .btn-quote {
-            background: #1f7ef2;
-            color: #fff;
-            border: none;
-            padding: 0.45rem 1rem;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-quote:hover {
-            background: #1661c0;
-        }
-
-        .btn-review {
-            background: #389c48;
-            color: #fff;
-            border: none;
-            padding: 0.45rem 1rem;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn-review:hover {
-            background: #256c36;
-        }
-
-        .company-description-card {
-            margin-top: 0.65rem;
-            background: #f7fbff;
-            border: 1px solid #dbeafe;
-            border-radius: 10px;
-            padding: 0.75rem 0.85rem;
-        }
-
-        .company-description-card h4 {
-            font-size: 0.95rem;
-            margin-bottom: 0.35rem;
-            color: #0f172a;
-        }
-
-        .company-description-card p {
-            color: #475569;
-            margin-bottom: 0.2rem;
-            line-height: 1.45;
-        }
-
-        .link-button {
-            background: none;
-            border: none;
-            color: #1f7ef2;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .expert-score-card {
-            margin-top: 0.9rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 0.6rem 0.85rem;
+        .review-count {
+            font-size: 0.875rem;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.35rem;
+        }
+
+        .review-count i {
+            font-size: 0.75rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-action {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            border: none;
+            padding: 0.625rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 161, 76, 0.35);
+        }
+
+        .btn-secondary-action {
+            background: var(--surface);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1.125rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary-action:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Description Box */
+        .description-box {
+            background: linear-gradient(135deg, rgba(59, 161, 76, 0.04) 0%, rgba(45, 143, 62, 0.04) 100%);
+            border: 1px solid rgba(59, 161, 76, 0.15);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .description-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .description-text {
+            color: var(--text-secondary);
             font-size: 0.9rem;
+            line-height: 1.6;
         }
 
-        .score-dots span {
-            width: 16px;
-            height: 16px;
+        .learn-more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            margin-top: 0.5rem;
+            transition: gap 0.2s ease;
+        }
+
+        .learn-more-link:hover {
+            gap: 0.5rem;
+        }
+
+        /* Expert Score */
+        .expert-score {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.875rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .score-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .score-dot {
+            width: 24px;
+            height: 8px;
             border-radius: 4px;
-            background: #dbeafe;
-            display: inline-block;
+            background: var(--border);
+            transition: all 0.3s ease;
         }
 
-        .score-dots span.active {
-            background: #2563eb;
+        .score-dot.active {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
         }
 
         .tier-badge {
-            background: #10b981;
-            color: #fff;
-            padding: 0.15rem 0.65rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            background: linear-gradient(135deg, var(--success) 0%, #2d7a3a 100%);
+            color: white;
+            padding: 0.35rem 0.875rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
         }
 
-        details.rating-panel {
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            background: #fff;
-            margin-top: 0.6rem;
+        /* Accordion Panels */
+        .accordion-panel {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
             overflow: hidden;
+            background: var(--surface);
+            transition: all 0.3s ease;
         }
 
-        details.rating-panel summary {
-            list-style: none;
-            cursor: pointer;
-            padding: 0.75rem 0.95rem;
-            font-weight: 600;
+        .accordion-panel:hover {
+            border-color: var(--primary-light);
+        }
+
+        .accordion-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            background: var(--surface);
+            transition: background 0.2s ease;
+            list-style: none;
         }
 
-        details.rating-panel summary::-webkit-details-marker {
+        .accordion-header:hover {
+            background: var(--surface-elevated);
+        }
+
+        .accordion-header::-webkit-details-marker {
             display: none;
         }
 
-        details.rating-panel summary::after {
-            content: '+';
-            font-size: 1.2rem;
-            color: #94a3b8;
+        .accordion-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        details.rating-panel[open] summary::after {
-            content: '\2212';
+        .accordion-title i {
+            color: var(--primary);
+            font-size: 0.875rem;
         }
 
-        .panel-body {
-            border-top: 1px solid #e2e8f0;
-            padding: 0.6rem 0.95rem 0.85rem;
+        .accordion-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--surface-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
         }
 
-        .metric-list {
-            list-style: none;
-            margin: 0.4rem 0 0;
-            padding: 0;
+        details[open] .accordion-icon {
+            background: var(--primary);
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            padding: 0 1.25rem 1.25rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Metrics List */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }
 
         .metric-item {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.25rem 0;
-            border-bottom: 1px solid #f1f5f9;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
-        .metric-item:last-child {
-            border-bottom: none;
+        .metric-item:hover {
+            background: linear-gradient(135deg, rgba(59, 161, 76, 0.06) 0%, rgba(45, 143, 62, 0.06) 100%);
         }
 
         .metric-score {
-            width: 48px;
-            height: 36px;
-            border-radius: 8px;
-            background: #ecfdf5;
-            color: #047857;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            min-width: 52px;
+            padding: 0.35rem 0.5rem;
+            background: linear-gradient(135deg, rgba(59, 161, 76, 0.12) 0%, rgba(59, 161, 76, 0.08) 100%);
+            color: #2d7a3a;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: 700;
+            text-align: center;
         }
 
         .metric-label {
-            color: #1e293b;
+            font-size: 0.825rem;
+            color: var(--text-secondary);
             font-weight: 500;
         }
 
-        .negatives-row {
-            margin-top: 0.65rem;
-            color: #475569;
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .services-list {
-            list-style: none;
+        /* Services Tags */
+        .services-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem;
-            padding: 0;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }
 
-        .services-list li {
-            background: #f1f5f9;
-            border-radius: 999px;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.8rem;
-            color: #475569;
+        .service-tag {
+            background: linear-gradient(135deg, rgba(59, 161, 76, 0.08) 0%, rgba(45, 143, 62, 0.08) 100%);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.825rem;
+            font-weight: 500;
+            border: 1px solid rgba(59, 161, 76, 0.15);
+            transition: all 0.2s ease;
         }
 
-        .latest-review-text {
-            color: #475569;
-            line-height: 1.6;
+        .service-tag:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Review Quote */
+        .review-quote {
+            background: linear-gradient(135deg, var(--surface-elevated) 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 0.75rem;
+            position: relative;
+        }
+
+        .review-quote::before {
+            content: '"';
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 3rem;
+            color: var(--primary-light);
+            font-family: Georgia, serif;
+            line-height: 1;
+            opacity: 0.5;
+        }
+
+        .review-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            font-style: italic;
+            padding-left: 1.5rem;
         }
 
         /* Responsive */
-        @media (max-width: 992px) {
-            .page-wrapper {
+        @media (max-width: 1024px) {
+            .main-wrapper {
                 grid-template-columns: 1fr;
             }
 
             .sidebar {
                 position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
 
-            .company-main {
-                flex-direction: column;
+            .sidebar-card {
+                flex: 1;
+                min-width: 280px;
             }
 
-            .company-logo-card {
-                width: 90px;
-                height: 90px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .company-title-row {
-                flex-direction: column;
+            .hero-title {
+                font-size: 2rem;
             }
 
-            .btn-quote {
-                align-self: flex-start;
+            .hero-stats {
+                gap: 1.5rem;
             }
         }
 
-        /* Custom Modal Styles */
-        .custom-modal {
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .company-header {
+                flex-direction: column;
+            }
+
+            .company-logo {
+                width: 72px;
+                height: 72px;
+                min-width: 72px;
+            }
+
+            .company-top-row {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .action-buttons button {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                flex-direction: column;
+            }
+
+            .sidebar-card {
+                min-width: 100%;
+            }
+        }
+
+        /* Review Modal Styles */
+        .modal-overlay {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -453,161 +853,260 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
-        .custom-modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        .modal-container {
+            background: var(--surface);
+            width: 100%;
+            max-width: 560px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
         }
 
-        .custom-modal-header {
-            padding: 15px 20px;
-            background: #389c48;
-            color: white;
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            padding: 1.25rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .custom-modal-header h3 {
-            margin: 0;
-            font-size: 18px;
-        }
-
-        .close-btn {
-            font-size: 24px;
-            cursor: pointer;
+        .modal-header h3 {
+            font-family: 'Outfit', sans-serif;
             color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
         }
 
-        .custom-modal-body {
-            padding: 20px;
-            max-height: 70vh;
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            max-height: 65vh;
             overflow-y: auto;
         }
 
-        .custom-modal-footer {
-            padding: 15px 20px;
-            background: #f8f9fa;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: var(--border-light);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.25rem;
         }
 
-        .form-group label {
+        .form-label {
             display: block;
-            margin-bottom: 8px;
+            font-size: 0.875rem;
             font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group select,
-        .form-group textarea {
+        .form-input,
+        .form-select,
+        .form-textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: var(--surface);
         }
 
-        .form-group textarea {
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.1);
+        }
+
+        .form-textarea {
             min-height: 100px;
             resize: vertical;
         }
 
         .input-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 5px;
+            gap: 0.75rem;
         }
 
-        .input-group input {
+        .input-group .form-input {
             flex: 1;
         }
 
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
+        .btn-outline {
+            background: var(--surface);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.3s;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
-        #sendOtpBtn,
-        #verifyOtpBtn {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        #sendOtpBtn:hover,
-        #verifyOtpBtn:hover {
-            background-color: #e0e0e0;
-        }
-
-        .cancel-btn {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .cancel-btn:hover {
-            background-color: #e0e0e0;
-        }
-
-        .submit-btn {
-            background-color: #389c48;
+        .btn-outline:hover {
+            background: var(--primary);
             color: white;
         }
 
-        .submit-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .submit-btn:disabled {
-            background-color: #bdc3c7;
+        .btn-outline:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
-        /* Rating Stars */
-        .rating-stars {
-            font-size: 24px;
-            color: #ddd;
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        /* Rating Stars in Modal */
+        .modal-rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-rating-stars i {
+            font-size: 1.75rem;
+            color: var(--border);
             cursor: pointer;
-            margin: 10px 0;
+            transition: all 0.2s ease;
         }
 
-        .rating-stars i {
-            margin-right: 5px;
-        }
-
-        .rating-stars .fas {
-            color: #f1c40f;
+        .modal-rating-stars i:hover,
+        .modal-rating-stars i.active {
+            color: var(--accent);
+            transform: scale(1.1);
         }
 
         .otp-status {
-            margin-top: 5px;
-            font-size: 13px;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .otp-status.success {
-            color: #27ae60;
+            color: var(--success);
         }
 
         .otp-status.error {
-            color: #e74c3c;
+            color: var(--error);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--surface-elevated);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .btn-cancel {
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--surface-elevated);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 161, 76, 0.35);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -615,30 +1114,63 @@
 
 @include('components.frontend.navbar')
 
-<div class="page-wrapper">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3>Solar in your state </h3>
-        <ul>
-            @foreach($states as $s)
-                <li><a href="{{ url('state/'.$s['slug']) }}">{{ $s['name'] }}</a></li>
-            @endforeach
-        </ul>
-
-        <div class="calculator">
-            <h3>Try our Solar Calculator in your state</h3>
-            <input type="text" class="state-calculator-input" placeholder="Enter your PIN code" maxlength="6" inputmode="numeric">
-            <button class="state-calculator-btn" type="button">Calculate Now</button>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-solar-panel"></i>
+            <span>Verified Solar Installers</span>
+        </div>
+        <h1 class="hero-title">Top Solar Companies in {{ $state['name'] }}</h1>
+        <p class="hero-subtitle">Compare verified solar installation companies with real customer reviews and expert ratings to find your perfect match.</p>
+        
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">7+</div>
+                <div class="hero-stat-label">Verified Companies</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">1,066+</div>
+                <div class="hero-stat-label">Customer Reviews</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">4.7</div>
+                <div class="hero-stat-label">Average Rating</div>
+            </div>
         </div>
     </div>
+</section>
 
-    <!-- Content -->
-    <div class="content">
-        <div class="header">
-            <h1>Top Solar Companies in {{ $state['name'] }}</h1>
-            <p>Compare verified solar installation companies in {{ $state['name'] }} with customer reviews and ratings.</p>
+<div class="main-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-card">
+            <h3 class="sidebar-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Solar in Your State
+            </h3>
+            <ul class="state-list">
+                @foreach($states as $s)
+                    <li><a href="{{ url('state/'.$s['slug']) }}">{{ $s['name'] }}</a></li>
+                @endforeach
+            </ul>
         </div>
 
+        <div class="calculator-card">
+            <h3 class="sidebar-title">
+                <i class="fas fa-calculator"></i>
+                Solar Calculator
+            </h3>
+            <input type="text" class="calculator-input state-calculator-input" placeholder="Enter your PIN code" maxlength="6" inputmode="numeric">
+            <button class="calculator-btn state-calculator-btn" type="button">
+                <i class="fas fa-bolt"></i>
+                Calculate Now
+            </button>
+        </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content-area">
         @php
             $dummyCompanies = [
                 [
@@ -707,133 +1239,150 @@
                 $hasHalfStar = $rating - $fullStars >= 0.5;
                 $reviewCount = $company['reviews'];
             @endphp
-            <article class="company-profile-card">
-                <div class="company-main">
-                    <div class="company-logo-card">
+            <article class="company-card">
+                <div class="company-header">
+                    <div class="company-logo">
                         <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo">
                     </div>
-                    <div class="company-info">
-                        <div class="company-title-row">
+                    <div class="company-details">
+                        <div class="company-top-row">
                             <div>
-                                <div class="company-name">{{ $company['name'] }}</div>
-                                <div class="company-rating">
-                                    <span class="stars">
+                                <h2 class="company-name">{{ $company['name'] }}</h2>
+                                <div class="company-rating-row">
+                                    <div class="stars-container">
                                         @for($i = 1; $i <= 5; $i++)
                                             <i class="{{ $i <= $fullStars ? 'fas fa-star' : ($i == $fullStars + 1 && $hasHalfStar ? 'fas fa-star-half-alt' : 'far fa-star') }}"></i>
                                         @endfor
+                                    </div>
+                                    <span class="rating-score">{{ number_format($rating, 2) }}</span>
+                                    <span class="review-count">
+                                        <i class="fas fa-comment-alt"></i>
+                                        {{ $reviewCount }} {{ $reviewCount == 1 ? 'review' : 'reviews' }}
                                     </span>
-                                    <span class="rating-number">{{ number_format($rating, 2) }}</span>
-                                    <span class="review-count">({{ $reviewCount }} {{ $reviewCount == 1 ? 'review' : 'reviews' }})</span>
                                 </div>
                             </div>
-                            <div class="d-flex gap-2">
-                                <button class="btn-quote">Get Quote</button>
-                                <button type="button" class="btn-review">Write a Review</button>
+                            <div class="action-buttons">
+                                {{-- <button class="btn-primary-action">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Get Quote
+                                </button> --}}
+                                <button type="button" class="btn-secondary-action btn-review">
+                                    <i class="fas fa-pen"></i>
+                                    Write Review
+                                </button>
                             </div>
                         </div>
-
-                        <div class="company-description-card">
-                            <h4>Company Description</h4>
-                            <p>{{ $company['description'] }}</p>
-                            <button class="link-button">Learn more</button>
-                        </div>
-
-                        <div class="expert-score-card">
-                            <strong>SolarReviews Expert Rating Score:</strong>
-                            <div class="score-dots">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <span class="{{ $i <= 4 ? 'active' : '' }}"></span>
-                                @endfor
-                            </div>
-                            <span class="tier-badge">Elite</span>
-                        </div>
-
-                        <details class="rating-panel">
-                            <summary>Rating breakdown</summary>
-                            <div class="panel-body">
-                                <strong>Positives:</strong>
-                                <ul class="metric-list">
-                                    @foreach([
-                                        ['score' => '9 / 10', 'label' => 'Time in business'],
-                                        ['score' => '5 / 5', 'label' => 'Employee satisfaction and safety record'],
-                                        ['score' => '7 / 10', 'label' => 'Competitiveness of loan options'],
-                                        ['score' => '10 / 10', 'label' => 'Litigation and background'],
-                                        ['score' => '10 / 10', 'label' => 'Verification of licenses and insurance'],
-                                        ['score' => '10 / 10', 'label' => 'Profitability of installer'],
-                                        ['score' => '4 / 5', 'label' => 'Consumer reviews performance'],
-                                        ['score' => '5 / 5', 'label' => 'Transparency of pricing and sales process'],
-                                        ['score' => '5 / 5', 'label' => 'Company size and location'],
-                                        ['score' => '10 / 10', 'label' => 'Quality of brands sold'],
-                                        ['score' => '4 / 5', 'label' => 'Vertical integration'],
-                                        ['score' => '5 / 5', 'label' => 'Reliability of consumer reviews'],
-                                        ['score' => '4 / 5', 'label' => 'Transparency about reputation'],
-                                        ['score' => '3 / 5', 'label' => 'Sustainable pricing of systems'],
-                                    ] as $metric)
-                                        <li class="metric-item">
-                                            <div class="metric-score">{{ $metric['score'] }}</div>
-                                            <div class="metric-label">{{ $metric['label'] }}</div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-
-                                <div class="negatives-row">
-                                    <strong>Negatives:</strong>
-                                    <span>Learn more about how we rate solar installers</span>
-                                </div>
-                            </div>
-                        </details>
-
-                        <details class="rating-panel">
-                            <summary>Services offered</summary>
-                            <div class="panel-body">
-                                <ul class="services-list">
-                                    @foreach($company->services ?? ['Solar installation', 'Battery backup', 'Maintenance'] as $service)
-                                        <li>{{ $service }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </details>
-
-                        <details class="rating-panel">
-                            <summary>Latest Good Review</summary>
-                            <div class="panel-body">
-                                <p class="latest-review-text">
-                                    {{ $company['latest_review'] }}
-                                </p>
-                            </div>
-                        </details>
                     </div>
                 </div>
+
+                <div class="description-box">
+                    <div class="description-label">About Company</div>
+                    <p class="description-text">{{ $company['description'] }}</p>
+                    <a href="#" class="learn-more-link">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="expert-score">
+                    <span class="score-label">Expert Rating Score:</span>
+                    <div class="score-dots">
+                        @for($i = 1; $i <= 5; $i++)
+                            <div class="score-dot {{ $i <= 4 ? 'active' : '' }}"></div>
+                        @endfor
+                    </div>
+                    <span class="tier-badge">Elite</span>
+                </div>
+
+                <details class="accordion-panel">
+                    <summary class="accordion-header">
+                        <span class="accordion-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Rating Breakdown
+                        </span>
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="accordion-content">
+                        <strong style="color: var(--text-primary); font-size: 0.875rem;">Positives:</strong>
+                        <div class="metrics-grid">
+                            @foreach([
+                                ['score' => '9/10', 'label' => 'Time in business'],
+                                ['score' => '5/5', 'label' => 'Employee satisfaction'],
+                                ['score' => '7/10', 'label' => 'Loan competitiveness'],
+                                ['score' => '10/10', 'label' => 'Background check'],
+                                ['score' => '10/10', 'label' => 'License verification'],
+                                ['score' => '10/10', 'label' => 'Installer profitability'],
+                                ['score' => '4/5', 'label' => 'Reviews performance'],
+                                ['score' => '5/5', 'label' => 'Pricing transparency'],
+                                ['score' => '5/5', 'label' => 'Company location'],
+                                ['score' => '10/10', 'label' => 'Brand quality'],
+                            ] as $metric)
+                                <div class="metric-item">
+                                    <div class="metric-score">{{ $metric['score'] }}</div>
+                                    <div class="metric-label">{{ $metric['label'] }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </details>
+
+                <details class="accordion-panel">
+                    <summary class="accordion-header">
+                        <span class="accordion-title">
+                            <i class="fas fa-tools"></i>
+                            Services Offered
+                        </span>
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="accordion-content">
+                        <div class="services-tags">
+                            @foreach($company->services ?? ['Solar Installation', 'Battery Backup', 'System Maintenance', 'Energy Monitoring', 'Panel Cleaning'] as $service)
+                                <span class="service-tag">{{ $service }}</span>
+                            @endforeach
+                        </div>
+                    </div>
+                </details>
+
+                <details class="accordion-panel">
+                    <summary class="accordion-header">
+                        <span class="accordion-title">
+                            <i class="fas fa-star"></i>
+                            Latest Review
+                        </span>
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="accordion-content">
+                        <div class="review-quote">
+                            <p class="review-text">{{ $company['latest_review'] }}</p>
+                        </div>
+                    </div>
+                </details>
             </article>
         @endforeach
-    </div>
+    </main>
 </div>
 
 <!-- Review Modal -->
-<div id="reviewModal" class="custom-modal">
-    <div class="custom-modal-content">
-        <div class="custom-modal-header">
+<div id="reviewModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
             <h3>Write a Review</h3>
-            <span class="close-btn">&times;</span>
+            <button class="modal-close close-btn">&times;</button>
         </div>
         <form id="reviewForm" method="POST" action="{{ route('reviews.store') }}">
             @csrf
             <input type="hidden" name="company_id" id="companyId">
-            <div class="custom-modal-body">
+            <div class="modal-body">
                 <div class="form-group">
-                    <label for="state">State *</label>
-                    {{-- Fix state to current page state --}}
+                    <label class="form-label">State</label>
                     <input type="hidden" name="state_id" value="{{ $state['id'] ?? ($state->id ?? '') }}">
-                    <select id="state" disabled>
-                        <option value="">
-                            {{ $state['name'] ?? ($state->name ?? 'State') }}
-                        </option>
+                    <select class="form-select" disabled>
+                        <option>{{ $state['name'] ?? ($state->name ?? 'State') }}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">Select Category *</label>
-                    <select id="category" name="category_id" required>
+                    <label class="form-label" for="category">Select Category *</label>
+                    <select id="category" name="category_id" class="form-select" required>
                         <option value="">Select Category</option>
                         @if(isset($categories))
                             @foreach($categories as $category)
@@ -844,8 +1393,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Rate your experience with <span id="companyNameInModal"></span> *</label>
-                    <div class="rating-stars">
+                    <label class="form-label">Rate your experience with <span id="companyNameInModal"></span> *</label>
+                    <div class="modal-rating-stars">
                         @for($i = 1; $i <= 5; $i++)
                             <i class="far fa-star" data-rating="{{ $i }}"></i>
                         @endfor
@@ -854,41 +1403,41 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="reviewTitle">Review Title (Optional)</label>
-                    <input type="text" id="reviewTitle" name="review_title" placeholder="Summarize your experience">
+                    <label class="form-label" for="reviewTitle">Review Title (Optional)</label>
+                    <input type="text" id="reviewTitle" name="review_title" class="form-input" placeholder="Summarize your experience">
                 </div>
                 
                 <div class="form-group">
-                    <label for="reviewText">Your Review *</label>
-                    <textarea id="reviewText" name="review_text" rows="3" required></textarea>
+                    <label class="form-label" for="reviewText">Your Review *</label>
+                    <textarea id="reviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="reviewerName">Your Name *</label>
-                    <input type="text" id="reviewerName" name="reviewer_name" required>
+                    <label class="form-label" for="reviewerName">Your Name *</label>
+                    <input type="text" id="reviewerName" name="reviewer_name" class="form-input" required placeholder="Enter your name">
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">Email Address *</label>
+                    <label class="form-label" for="email">Email Address *</label>
                     <div class="input-group">
-                        <input type="email" id="email" name="email" required>
-                        <button type="button" id="sendOtpBtn">Send OTP</button>
+                        <input type="email" id="email" name="email" class="form-input" required placeholder="your@email.com">
+                        <button type="button" id="sendOtpBtn" class="btn-outline">Send OTP</button>
                     </div>
-                    <small>We'll send a verification code to this email</small>
+                    <p class="form-hint">We'll send a verification code to this email</p>
                 </div>
                 
                 <div class="form-group" id="otpField" style="display: none;">
-                    <label for="otp">Enter OTP *</label>
+                    <label class="form-label" for="otp">Enter OTP *</label>
                     <div class="input-group">
-                        <input type="text" id="otp" name="otp" maxlength="6" placeholder="Enter 6-digit OTP">
-                        <button type="button" id="verifyOtpBtn">Verify</button>
+                        <input type="text" id="otp" name="otp" class="form-input" maxlength="6" placeholder="Enter 6-digit OTP">
+                        <button type="button" id="verifyOtpBtn" class="btn-outline">Verify</button>
                     </div>
                     <div class="otp-status" id="otpStatus"></div>
                 </div>
             </div>
-            <div class="custom-modal-footer">
-                <button type="button" class="cancel-btn">Close</button>
-                <button type="submit" class="submit-btn" id="submitReviewBtn" disabled>Submit Review</button>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel cancel-btn">Cancel</button>
+                <button type="submit" class="btn-submit" id="submitReviewBtn" disabled>Submit Review</button>
             </div>
         </form>
     </div>
@@ -897,8 +1446,6 @@
 <!-- SweetAlert2 for alerts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Existing JavaScript
-
     const slugifyState = (text) => text
         .toLowerCase()
         .trim()
@@ -911,19 +1458,19 @@
 
         if (!input || !button) return;
 
-        const originalText = button.textContent;
+        const originalText = button.innerHTML;
 
         button.addEventListener('click', async () => {
             const pincode = input.value.trim();
 
             if (!/^\d{6}$/.test(pincode)) {
-                alert('Please enter a valid 6-digit pincode.');
+                Swal.fire('Invalid PIN', 'Please enter a valid 6-digit pincode.', 'warning');
                 input.focus();
                 return;
             }
 
             button.disabled = true;
-            button.textContent = 'Checking...';
+            button.innerHTML = '<span class="spinner"></span> Checking...';
 
             try {
                 const response = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
@@ -942,13 +1489,13 @@
                     return;
                 }
 
-                alert('Could not find the state for this pincode. Please try another one.');
+                Swal.fire('Not Found', 'Could not find the state for this pincode. Please try another one.', 'info');
             } catch (error) {
                 console.error('Failed to fetch state for pincode:', error);
-                alert('Something went wrong while fetching the state. Please try again later.');
+                Swal.fire('Error', 'Something went wrong while fetching the state. Please try again later.', 'error');
             } finally {
                 button.disabled = false;
-                button.textContent = originalText;
+                button.innerHTML = originalText;
             }
         });
     }
@@ -959,12 +1506,12 @@
 
         // Initialize all DOM elements
         const reviewModal = document.getElementById('reviewModal');
-        const writeReviewBtns = document.querySelectorAll('.write-review-btn');
+        const writeReviewBtns = document.querySelectorAll('.btn-review');
         const closeBtn = document.querySelector('.close-btn');
         const cancelBtn = document.querySelector('.cancel-btn');
         const companyNameInModal = document.getElementById('companyNameInModal');
         const companyIdInput = document.getElementById('companyId');
-        const ratingStars = document.querySelectorAll('.rating-stars i');
+        const ratingStars = document.querySelectorAll('.modal-rating-stars i');
         const ratingInput = document.getElementById('rating');
         const emailInput = document.getElementById('email');
         const categorySelect = document.getElementById('category');
@@ -978,11 +1525,6 @@
         // Initialize state variables
         let otpSent = false;
         let otpVerified = false;
-        
-        // Make sure ratingInput is properly initialized
-        if (!ratingInput) {
-            console.error('Rating input not found!');
-        }
         
         // Cache original category options for filtering
         let originalCategoryOptions = [];
@@ -1002,10 +1544,8 @@
                 .map(id => id.trim())
                 .filter(id => id !== '');
 
-            // Clear current options
             categorySelect.innerHTML = '';
 
-            // Add placeholder
             const placeholder = document.createElement('option');
             placeholder.value = '';
             placeholder.textContent = 'Select Category';
@@ -1013,16 +1553,12 @@
 
             let optionsToShow = [];
 
-            // If company has specific categories, filter; otherwise show none
             if (categoryIds.length) {
                 optionsToShow = originalCategoryOptions.filter(opt =>
                     opt.categoryId && categoryIds.includes(String(opt.categoryId))
                 );
-            } else {
-                optionsToShow = [];
             }
 
-            // Enable/disable select based on availability
             categorySelect.disabled = optionsToShow.length === 0;
 
             optionsToShow.forEach(opt => {
@@ -1039,20 +1575,17 @@
         // Open review modal with company data
         writeReviewBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                const companyId = this.getAttribute('data-company-id');
-                const companyName = this.getAttribute('data-company-name');
-                const companyCategoryIds = this.getAttribute('data-category-ids');
+                const card = this.closest('.company-card');
+                const companyName = card.querySelector('.company-name').textContent;
+                const companyId = this.getAttribute('data-company-id') || '';
+                const companyCategoryIds = this.getAttribute('data-category-ids') || '';
                 
                 companyIdInput.value = companyId;
                 companyNameInModal.textContent = companyName;
 
-                // Filter categories for this company
                 filterCategoriesForCompany(companyCategoryIds);
-                
-                // Reset form
                 resetReviewForm();
                 
-                // Show modal
                 reviewModal.style.display = 'flex';
             });
         });
@@ -1063,7 +1596,6 @@
                 const rating = parseInt(this.getAttribute('data-rating'));
                 ratingInput.value = rating;
                 
-                // Update star display
                 ratingStars.forEach((s, index) => {
                     if (index < rating) {
                         s.classList.add('active');
@@ -1083,16 +1615,14 @@
             const email = emailInput.value.trim();
             
             if (!email) {
-                showAlert('Error', 'Please enter your email address', 'error');
+                Swal.fire('Error', 'Please enter your email address', 'error');
                 return;
             }
             
-            // Show loading state
             const originalText = sendOtpBtn.innerHTML;
             sendOtpBtn.disabled = true;
-            sendOtpBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            sendOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
             
-            // Make AJAX call to send OTP
             fetch('{{ route("reviews.send-otp") }}', {
                 method: 'POST',
                 headers: {
@@ -1104,22 +1634,16 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('OTP Response:', data);
-                
                 if (data.success) {
-                    // In development, show OTP in console
                     if (data.otp) {
                         console.log('Your OTP for testing:', data.otp);
-                        showAlert('OTP Sent', `OTP sent to ${email}. Check console for OTP (for testing).`, 'success');
+                        Swal.fire('OTP Sent', `OTP sent to ${email}. Check console for OTP (testing).`, 'success');
                     } else {
-                        showAlert('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
+                        Swal.fire('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
                     }
                     
-                    // Show OTP field
                     otpField.style.display = 'block';
                     otpSent = true;
-                    
-                    // Focus OTP input
                     otpInput.focus();
                 } else {
                     throw new Error(data.message || 'Failed to send OTP');
@@ -1127,10 +1651,9 @@
             })
             .catch(error => {
                 console.error('Error sending OTP:', error);
-                showAlert('Error', error.message || 'Failed to send OTP. Please try again.', 'error');
+                Swal.fire('Error', error.message || 'Failed to send OTP. Please try again.', 'error');
             })
             .finally(() => {
-                // Reset button state
                 sendOtpBtn.disabled = false;
                 sendOtpBtn.innerHTML = 'Resend OTP';
             });
@@ -1143,16 +1666,14 @@
                 const email = emailInput ? emailInput.value.trim() : '';
                 
                 if (!otp || otp.length !== 6) {
-                    showAlert('Error', 'Please enter a valid 6-digit OTP', 'error');
+                    Swal.fire('Error', 'Please enter a valid 6-digit OTP', 'error');
                     return;
                 }
 
-                // Show loading state
                 const originalText = verifyOtpBtn.innerHTML;
                 verifyOtpBtn.disabled = true;
-                verifyOtpBtn.innerHTML = 'Verifying...';
+                verifyOtpBtn.innerHTML = '<span class="spinner"></span>';
 
-                // Make API call to verify OTP
                 fetch('{{ route("reviews.verify-otp") }}', {
                     method: 'POST',
                     headers: {
@@ -1167,18 +1688,18 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('OTP Verification Response:', data);
-                    
                     if (data.success) {
                         otpVerified = true;
                         if (submitReviewBtn) submitReviewBtn.disabled = false;
                         otpStatus.textContent = 'OTP verified successfully!';
                         otpStatus.className = 'otp-status success';
-                        verifyOtpBtn.innerHTML = 'Verified';
+                        verifyOtpBtn.innerHTML = '<i class="fas fa-check"></i> Verified';
                         verifyOtpBtn.disabled = true;
+                        verifyOtpBtn.style.background = 'var(--success)';
+                        verifyOtpBtn.style.color = 'white';
+                        verifyOtpBtn.style.borderColor = 'var(--success)';
                         
-                        // Show success message
-                        showAlert('Success', 'OTP verified successfully!', 'success');
+                        Swal.fire('Success', 'OTP verified successfully!', 'success');
                     } else {
                         throw new Error(data.message || 'Failed to verify OTP');
                     }
@@ -1190,8 +1711,7 @@
                     verifyOtpBtn.disabled = false;
                     verifyOtpBtn.innerHTML = originalText;
                     
-                    // Show error message
-                    showAlert('Error', error.message || 'Failed to verify OTP. Please try again.', 'error');
+                    Swal.fire('Error', error.message || 'Failed to verify OTP. Please try again.', 'error');
                 });
             });
         }
@@ -1203,32 +1723,23 @@
                 e.preventDefault();
                 
                 if (!otpVerified) {
-                    showAlert('Error', 'Please verify your email with OTP first', 'error');
+                    Swal.fire('Error', 'Please verify your email with OTP first', 'error');
                     return;
                 }
                 
-                // Show loading state
                 submitReviewBtn.disabled = true;
-                submitReviewBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+                submitReviewBtn.innerHTML = '<span class="spinner"></span> Submitting...';
                 
-                // Get form data
                 const formData = new FormData(this);
-                
-                // Convert FormData to JSON
                 const formObject = {};
                 formData.forEach((value, key) => {
                     formObject[key] = value;
                 });
                 
-                // Add email if not already in form
                 if (emailInput && emailInput.value) {
                     formObject['email'] = emailInput.value;
                 }
                 
-                // Debug: Log the data being sent
-                console.log('Submitting form data:', formObject);
-                
-                // Submit form via AJAX
                 fetch(this.action, {
                     method: 'POST',
                     body: JSON.stringify(formObject),
@@ -1241,9 +1752,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showAlert('Success', 'Thank you for your review! It will be visible after approval.', 'success');
+                        Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
                         reviewModal.style.display = 'none';
-                        // Reload the page to see the updated reviews
                         setTimeout(() => {
                             window.location.reload();
                         }, 1500);
@@ -1253,88 +1763,67 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    showAlert('Error', error.message || 'Failed to submit review. Please try again.', 'error');
+                    Swal.fire('Error', error.message || 'Failed to submit review. Please try again.', 'error');
                     submitReviewBtn.disabled = false;
                     submitReviewBtn.innerHTML = 'Submit Review';
                 });
             });
         }
 
-        // Close modal when clicking the close button
+        // Close modal handlers
         closeBtn.addEventListener('click', function() {
             reviewModal.style.display = 'none';
             resetReviewForm();
         });
 
-        // Close modal when clicking the cancel button
         cancelBtn.addEventListener('click', function() {
             reviewModal.style.display = 'none';
             resetReviewForm();
         });
 
-        // Close modal when clicking outside the modal content
         window.addEventListener('click', function(event) {
             if (event.target === reviewModal) {
                 reviewModal.style.display = 'none';
                 resetReviewForm();
             }
         });
-    });
 
-    // Handle OTP verification - Moved inside DOMContentLoaded to ensure proper scoping
-
-        // Helper function to reset the review form
+        // Reset form helper
         function resetReviewForm() {
             const form = document.getElementById('reviewForm');
-            const ratingInput = document.getElementById('rating');
             
             if (form) form.reset();
             if (ratingInput) ratingInput.value = '';
             
-            // Reset OTP state
             otpSent = false;
             otpVerified = false;
             
-            // Reset OTP UI
             if (otpField) otpField.style.display = 'none';
             if (otpStatus) {
                 otpStatus.textContent = '';
                 otpStatus.className = 'otp-status';
             }
             
-            // Reset buttons
             if (submitReviewBtn) submitReviewBtn.disabled = true;
             if (verifyOtpBtn) {
                 verifyOtpBtn.disabled = false;
                 verifyOtpBtn.innerHTML = 'Verify';
-                verifyOtpBtn.className = '';
+                verifyOtpBtn.style.background = '';
+                verifyOtpBtn.style.color = '';
+                verifyOtpBtn.style.borderColor = '';
             }
             if (sendOtpBtn) sendOtpBtn.innerHTML = 'Send OTP';
 
-            // Reset stars
-            const stars = document.querySelectorAll('.rating-stars i');
-            if (stars && stars.length > 0) {
-                stars.forEach(star => {
-                    if (star) {
-                        star.classList.remove('fas');
-                        star.classList.add('far');
-                    }
-                });
-            }
-}
-
-// Helper function to show alerts
-function showAlert(title, text, icon) {
-    Swal.fire({
-        title: title,
-        text: text,
-        icon: icon,
-        confirmButtonText: 'OK'
+            const stars = document.querySelectorAll('.modal-rating-stars i');
+            stars.forEach(star => {
+                star.classList.remove('fas', 'active');
+                star.classList.add('far');
+            });
+        }
     });
-}
 </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    @include('components.frontend.footer')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+@include('components.frontend.footer')
 </body>
 </html>
