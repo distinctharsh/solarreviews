@@ -8,10 +8,12 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
-                    @csrf
-                    <x-form.product-form :categories="$categories" :states="$states" />
-                </form>
+                @include('admin.products.form', [
+                    'product' => $product ?? null,
+                    'companies' => $companies,
+                    'brands' => $brands,
+                    'categories' => $categories,
+                ])
             </div>
         </div>
     </div>

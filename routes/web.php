@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\StateController;
+use App\Http\Controllers\Admin\CityController;
 use Illuminate\Support\Facades\Route;
 
 // Frontend Routes
@@ -73,7 +75,13 @@ Route::prefix('admin')
     
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
+    // States
+    Route::resource('states', StateController::class);
+
+    // Cities
+    Route::resource('cities', CityController::class);
+
     // Categories
     Route::resource('categories', CategoryController::class);
     Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggle-status');
@@ -84,9 +92,11 @@ Route::prefix('admin')
     
     // Companies
     Route::resource('companies', CompanyController::class);
+    Route::patch('companies/{company}/toggle-status', [CompanyController::class, 'toggleStatus'])->name('companies.toggle-status');
     
     // Products
     Route::resource('products', ProductController::class);
+    Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     
     // Reviews
     Route::resource('reviews', ReviewController::class);

@@ -12,11 +12,16 @@ class CitySeeder extends Seeder
     public function run()
     {
         $cities = [
-            'California' => ['Los Angeles', 'San Diego', 'San Jose', 'San Francisco', 'Fresno'],
-            'Texas' => ['Houston', 'San Antonio', 'Dallas', 'Austin', 'Fort Worth'],
-            'Florida' => ['Jacksonville', 'Miami', 'Tampa', 'Orlando', 'St. Petersburg'],
-            'New York' => ['New York City', 'Buffalo', 'Rochester', 'Yonkers', 'Syracuse'],
-            'Arizona' => ['Phoenix', 'Tucson', 'Mesa', 'Chandler', 'Glendale'],
+            'Maharashtra' => ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad'],
+            'Gujarat' => ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar'],
+            'Rajasthan' => ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota', 'Bikaner'],
+            'Karnataka' => ['Bengaluru', 'Mysuru', 'Mangaluru', 'Hubballi', 'Belagavi'],
+            'Tamil Nadu' => ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem'],
+            'Uttar Pradesh' => ['Lucknow', 'Kanpur', 'Varanasi', 'Noida', 'Agra'],
+            'Delhi' => ['New Delhi', 'Dwarka', 'Rohini', 'Saket', 'Karol Bagh'],
+            'Telangana' => ['Hyderabad', 'Warangal', 'Nizamabad', 'Karimnagar', 'Khammam'],
+            'West Bengal' => ['Kolkata', 'Howrah', 'Durgapur', 'Siliguri', 'Asansol'],
+            'Madhya Pradesh' => ['Bhopal', 'Indore', 'Gwalior', 'Jabalpur', 'Ujjain'],
         ];
 
         foreach ($cities as $stateName => $cityNames) {

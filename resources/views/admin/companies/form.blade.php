@@ -137,6 +137,17 @@
         </a>
     </div>
 
+    @if($errors->any())
+        <div class="alert alert-danger" style="margin-bottom:20px; border-radius:6px; padding:12px 16px; background:#FEF2F2; color:#991B1B;">
+            <strong>There were some problems with your input:</strong>
+            <ul style="margin:8px 0 0 18px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if(isset($company) && $company->exists)
     <div style="margin-bottom: 20px; color: #4a5568; font-size: 14px;">
         <div>Created: {{ $company->created_at->format('M d, Y') }}</div>
@@ -167,6 +178,22 @@
                         @enderror
                     </div>
 
+                    <!-- Company Type -->
+                    <div class="form-group">
+                        <label for="company_type" class="form-label">Company Type *</label>
+                        <select id="company_type" name="company_type" required class="form-input @error('company_type') border-red-500 @enderror">
+                            <option value="">Select Type</option>
+                            @foreach($companyTypes as $value => $label)
+                                <option value="{{ $value }}" {{ old('company_type', $company->company_type) === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('company_type')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- State -->
                     <div class="form-group">
                         <label for="state_id" class="form-label">
@@ -184,6 +211,33 @@
                         @error('state_id')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
+                    </div>
+
+                    <!-- City -->
+                    <div class="form-group">
+                        <label for="city_id" class="form-label">City</label>
+                        <select id="city_id" name="city_id" class="form-input @error('city_id') border-red-500 @enderror">
+                            <option value="">Select City</option>
+                            @foreach($cities as $city)
+                                <option value="{{ $city->id }}" {{ old('city_id', $company->city_id) == $city->id ? 'selected' : '' }}>
+                                    {{ $city->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('city_id')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="address_line1" placeholder="Address line 1" class="form-input @error('address_line1') border-red-500 @enderror" value="{{ old('address_line1', $company->address_line1) }}" style="margin-bottom:10px;">
+                        <input type="text" name="address_line2" placeholder="Address line 2" class="form-input @error('address_line2') border-red-500 @enderror" value="{{ old('address_line2', $company->address_line2) }}" style="margin-bottom:10px;">
+                        <div class="form-row" style="gap:10px;">
+                            <input type="text" name="postal_code" placeholder="Postal code" class="form-input @error('postal_code') border-red-500 @enderror" value="{{ old('postal_code', $company->postal_code) }}">
+                            <input type="text" name="service_area" placeholder="Service area" class="form-input @error('service_area') border-red-500 @enderror" value="{{ old('service_area', $company->service_area) }}">
+                        </div>
+                        @error('address_line1')<p class="error-message">{{ $message }}</p>@enderror
                     </div>
 
                     <!-- Categories -->
@@ -226,6 +280,31 @@
                         @enderror
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Contact Details</label>
+                        <input type="url" name="website" placeholder="Website" class="form-input @error('website') border-red-500 @enderror" value="{{ old('website', $company->website) }}" style="margin-bottom:10px;">
+                        <input type="email" name="email" placeholder="Email" class="form-input @error('email') border-red-500 @enderror" value="{{ old('email', $company->email) }}" style="margin-bottom:10px;">
+                        <input type="text" name="phone" placeholder="Phone" class="form-input @error('phone') border-red-500 @enderror" value="{{ old('phone', $company->phone) }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Business Details</label>
+                        <div class="form-row" style="gap:10px;">
+                            <input type="number" name="years_in_business" placeholder="Years in business" class="form-input @error('years_in_business') border-red-500 @enderror" value="{{ old('years_in_business', $company->years_in_business) }}">
+                            <input type="text" name="gst_number" placeholder="GST / Registration" class="form-input @error('gst_number') border-red-500 @enderror" value="{{ old('gst_number', $company->gst_number) }}">
+                        </div>
+                        <textarea name="certifications" rows="2" placeholder="Certifications" class="form-input form-textarea @error('certifications') border-red-500 @enderror" style="margin-top:10px;">{{ old('certifications', $company->certifications) }}</textarea>
+                        <textarea name="licenses" rows="2" placeholder="Licenses" class="form-input form-textarea @error('licenses') border-red-500 @enderror" style="margin-top:10px;">{{ old('licenses', $company->licenses) }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Distributor / Manufacturer info</label>
+                        <textarea name="coverage_states" rows="2" placeholder="Coverage states (for distributors)" class="form-input form-textarea @error('coverage_states') border-red-500 @enderror" style="margin-bottom:10px;">{{ old('coverage_states', $company->coverage_states) }}</textarea>
+                        <textarea name="distribution_regions" rows="2" placeholder="Distribution regions (for manufacturers)" class="form-input form-textarea @error('distribution_regions') border-red-500 @enderror" style="margin-bottom:10px;">{{ old('distribution_regions', $company->distribution_regions) }}</textarea>
+                        <input type="number" name="installations_per_year" placeholder="Installations per year" class="form-input @error('installations_per_year') border-red-500 @enderror" value="{{ old('installations_per_year', $company->installations_per_year) }}" style="margin-bottom:10px;">
+                        <input type="text" name="production_capacity" placeholder="Production capacity" class="form-input @error('production_capacity') border-red-500 @enderror" value="{{ old('production_capacity', $company->production_capacity) }}">
+                    </div>
+
                     <!-- Logo Upload -->
                     <div class="form-group">
                         <label class="form-label">Company Logo</label>
@@ -263,14 +342,17 @@
                         @enderror
                     </div>
 
-                    <!-- Active Status -->
-                    <div class="form-group" style="display: flex; align-items: center;">
-                        <input type="hidden" name="is_active" value="0">
-                        <input type="checkbox" id="is_active" name="is_active" value="1" 
-                               style="margin-right: 8px;"
-                               {{ old('is_active', $company->is_active ?? 1) ? 'checked' : '' }}>
-                        <label for="is_active" class="form-label" style="margin: 0;">
-                            Active Company
+                    <!-- Active / Featured -->
+                    <div class="form-group" style="display: flex; gap:20px; align-items:center;">
+                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <input type="hidden" name="is_active" value="0">
+                            <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $company->is_active ?? 1) ? 'checked' : '' }}>
+                            Active
+                        </label>
+                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <input type="hidden" name="is_featured" value="0">
+                            <input type="checkbox" id="is_featured" name="is_featured" value="1" {{ old('is_featured', $company->is_featured ?? 0) ? 'checked' : '' }}>
+                            Featured
                         </label>
                     </div>
                 </div>

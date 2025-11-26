@@ -3,36 +3,139 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Company;
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of products.
+     */
+    public function index(): View
     {
-        return view('admin.products.index', ['products' => collect()]);
+        $products = Product::with(['company', 'brand', 'category'])
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.products.index', compact('products'));
     }
 
-    public function create()
+    /**
+     * Show the form for creating a new product.
+     */
+    public function create(): View
     {
-        return redirect()->route('admin.products.index')->with('info', 'Product CRUD coming soon!');
+        return view('admin.products.create', $this->formDependencies(new Product()));
     }
 
-    public function store()
+    /**
+     * Store a newly created product.
+     */
+    public function store(Request $request): RedirectResponse
     {
-        return redirect()->route('admin.products.index');
+        $validated = $this->validatedData($request);
+
+        Product::create($validated);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product created successfully.');
     }
 
-    public function edit($id)
+    /**
+     * Show the form for editing the specified product.
+     */
+    public function edit(Product $product): View
     {
-        return redirect()->route('admin.products.index');
+        return view('admin.products.edit', $this->formDependencies($product));
     }
 
-    public function update($id)
+    /**
+     * Update the specified product.
+     */
+    public function update(Request $request, Product $product): RedirectResponse
     {
-        return redirect()->route('admin.products.index');
+        $validated = $this->validatedData($request, $product);
+
+        $product->update($validated);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
-    public function destroy($id)
+    /**
+     * Remove the specified product.
+     */
+    public function destroy(Product $product): RedirectResponse
     {
-        return redirect()->route('admin.products.index');
+        $product->delete();
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Toggle product active status.
+     */
+    public function toggleStatus(Product $product): RedirectResponse
+    {
+        $product->update(['is_active' => ! $product->is_active]);
+
+        return back()->with('success', 'Product status updated.');
+    }
+
+    /**
+     * Shared data for forms.
+     */
+    private function formDependencies(Product $product): array
+    {
+        return [
+            'product' => $product,
+            'companies' => Company::orderBy('name')->get(),
+            'brands' => Brand::active()->ordered()->get(),
+            'categories' => Category::active()->ordered()->get(),
+        ];
+    }
+
+    /**
+     * Validate request input.
+     */
+    private function validatedData(Request $request, ?Product $product = null): array
+    {
+        $validated = $request->validate([
+            'company_id' => ['required', 'exists:companies,id'],
+            'brand_id' => ['nullable', 'exists:brands,id'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'model_number' => ['nullable', 'string', 'max:255'],
+            'variant' => ['nullable', 'string', 'max:255'],
+            'wattage_or_capacity' => ['nullable', 'string', 'max:255'],
+            'technology' => ['nullable', 'string', 'max:255'],
+            'efficiency' => ['nullable', 'numeric', 'between:0,100'],
+            'warranty_years' => ['nullable', 'integer', 'between:0,50'],
+            'datasheet_url' => ['nullable', 'url', 'max:255'],
+            'msrp' => ['nullable', 'numeric', 'min:0'],
+            'specs' => ['nullable', 'string'],
+            'is_active' => ['sometimes', 'boolean'],
+        ]);
+
+        $validated['slug'] = Str::slug($validated['name']);
+        $validated['efficiency'] = $validated['efficiency'] ?? null;
+        $validated['msrp'] = $validated['msrp'] ?? null;
+        $validated['is_active'] = $request->boolean('is_active', true);
+
+        if (! empty($validated['specs'])) {
+            $validated['specs'] = array_filter(array_map('trim', explode("\n", $validated['specs'])));
+        } else {
+            $validated['specs'] = null;
+        }
+
+        return $validated;
     }
 }
