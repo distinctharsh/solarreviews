@@ -582,7 +582,7 @@
         <div class="help-banner mt-4">
             <div>
                 <h5 class="fw-semibold mb-2">Need help with your review?</h5>
-                <p class="mb-0">Email us at <a href="mailto:reviews@solarreviews.com" class="text-white fw-semibold">reviews@solarreviews.com</a> and we’ll guide you through.</p>
+                <p class="mb-0">Email us at <a href="mailto:reviews@solarreviews.in" class="text-white fw-semibold">reviews@solarreviews.in</a> and we’ll guide you through.</p>
             </div>
             <div>
                 <p class="mb-0">Review team availability: Mon–Fri, 9 AM – 6 PM IST</p>
