@@ -8,10 +8,10 @@ use App\Models\Company;
 use App\Models\CompanyReview;
 use App\Models\State;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\OtpMailer;
 
 class ReviewController extends Controller
 {
@@ -204,18 +204,20 @@ class ReviewController extends Controller
         // Log to Laravel log
         \Log::info("OTP for $email: $otp");
         
-        // For local development, we'll just log the email
+        // For local development, also log the OTP for easier testing
         if (app()->environment('local')) {
-            return response()->json([
-                'success' => true,
-                'message' => 'OTP logged to storage/logs/otp.log',
-                'otp' => $otp // Only for development
-            ]);
+            Log::info("OTP for {$email}: {$otp}");
         }
-        
-        // In production, send the email
-        Mail::to($email)->send(new OtpMail($otp));
-        
+
+        $sent = app(OtpMailer::class)->send($email, $otp);
+
+        if (!$sent) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send OTP email. Please try again later.'
+            ], 500);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'OTP sent successfully.'
