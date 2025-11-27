@@ -15,6 +15,9 @@
             --secondary-color: #1f6d30;
             --accent-color: #3ba14c;
             --text-color: #1f2937;
+            --heading-color: #0f172a;
+            --body-color: #475569;
+            --muted-color: #94a3b8;
             --light-bg: #f9fafb;
             --bg-opacity: 0.75;
         }
@@ -34,7 +37,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f9fafb;
-            color: #1f2937;
+            color: var(--body-color);
             margin: 0;
         }
 
@@ -465,107 +468,147 @@
         color: #1e293b;
     }
 
-    .brand-card {
-        background: white;
-        border: 1px solid #d1d5db;
-        padding: 20px;
-        border-radius: 10px;
-        min-height: 420px;
-        transition: all 0.3s ease;
+    .brand-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.75rem;
+    }
+
+    .brand-card-modern {
+        background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,250,252,0.95));
+        border-radius: 18px;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        padding: 1.75rem;
         display: flex;
         flex-direction: column;
+        gap: 1.25rem;
+        position: relative;
+        overflow: hidden;
     }
 
-    .brand-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    .brand-card-modern::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(59,161,76,0.25), rgba(59,161,76,0.05));
+        mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
     }
 
-    .tag {
-        display: inline-block;
-        padding: 4px 12px;
-        background: #e2e8f0;
-        color: #475569;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        margin-bottom: 10px;
+    .brand-card-modern:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
     }
 
-    .brand-title {
-        font-size: 1.25rem;
-        color: #1e293b;
-        margin-top: 8px;
-    }
-
-    .rating-row {
+    .brand-head {
         display: flex;
         align-items: center;
-        gap: 6px;
-        margin: 8px 0;
+        gap: 1rem;
     }
 
-    .stars {
-        color: #fbbf24;
-        font-size: 1.3rem;
+    .brand-logo {
+        width: 68px;
+        height: 68px;
+        border-radius: 16px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.4rem;
     }
 
-    .rating-number {
-        color: #1e293b;
+    .brand-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .brand-meta h3 {
+        font-size: 1.2rem;
+        margin: 0;
+        color: var(--heading-color);
+    }
+
+    .brand-meta span {
+        font-size: 0.85rem;
+        color: var(--muted-color);
+    }
+
+    .brand-rank-pill {
+        margin-left: auto;
+        background: rgba(59, 161, 76, 0.15);
+        color: var(--primary-color);
         font-weight: 600;
-    }
-
-    .review-count {
-        color: var(--primary-color);
-        font-weight: 500;
-    }
-
-    .latest-review strong,
-    .review-header {
-        margin-top: 10px;
-        display: block;
-        color: #1e293b;
-    }
-
-    .read-more {
-        color: var(--primary-color);
-        text-decoration: none;
-    }
-
-    .cost-label,
-    .cost-title {
-        display: block;
+        padding: 0.35rem 1rem;
+        border-radius: 999px;
         font-size: 0.9rem;
-        color: #475569;
-        margin-top: 15px;
     }
 
-    .cost-value {
+    .brand-metrics {
+        display: flex;
+        gap: 1.25rem;
+    }
+
+    .metric-box {
+        flex: 1;
+        background: #fff;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        border-radius: 14px;
+        padding: 0.85rem 1rem;
+    }
+
+    .metric-label {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        color: var(--muted-color);
+        letter-spacing: 0.08em;
+        margin-bottom: 0.35rem;
+    }
+
+    .metric-value {
+        font-size: 1.8rem;
         font-weight: 600;
-        color: #1e293b;
+        color: var(--heading-color);
     }
 
-    .cost-value span,
-    .cost-watt {
-        color: #64748b;
-        font-weight: 400;
+    .metric-subtext {
+        font-size: 0.88rem;
+        color: var(--body-color);
     }
 
-    .brand-btn {
-        display: block;
-        width: 100%;
-        margin-top: auto;
-        background: var(--primary-color);
-        color: white;
-        padding: 12px;
-        border-radius: 6px;
-        text-align: center;
+    .brand-stars {
+        color: #fbbf24;
+        font-size: 0.95rem;
+    }
+
+    .brand-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .brand-actions a {
         font-weight: 600;
+        color: var(--primary-color);
         text-decoration: none;
-        transition: background 0.3s ease;
+        font-size: 0.95rem;
     }
 
-    .brand-btn:hover {
-        background: #2f7f3d;
+    .brand-actions a:hover {
+        text-decoration: underline;
+    }
+
+    .brand-tagline {
+        font-size: 0.88rem;
+        color: var(--muted-color);
     }
 
         .sort-box {
@@ -721,38 +764,53 @@
 
 
 
-.why-important-section {
-    background: #ffffff;
-    color: #334155; /* Subtle slate */
-}
+        .content-section {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-.important-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #1e293b; /* Dark navy like screenshot */
-    margin-bottom: 20px;
-}
+        .content-section > *:not(:last-child) {
+            margin-bottom: 1rem;
+        }
 
-.important-text {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #475569;
-    max-width: 850px;
-}
+        .why-important-section {
+            background: #ffffff;
+            color: var(--body-color);
+            padding: 3rem 0;
+        }
 
-.important-list {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-left: 22px;
-    color: #475569;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    max-width: 870px;
-}
+        .why-important-section + .why-important-section {
+            border-top: 1px solid #e2e8f0;
+        }
 
-.important-list li {
-    margin-bottom: 12px;
-}
+        .important-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            color: var(--heading-color);
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+        }
+
+        .important-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--body-color);
+        }
+
+        .important-list {
+            margin: 0 0 1rem 1.5rem;
+            color: var(--body-color);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .important-list li + li {
+            margin-top: 0.35rem;
+        }
+
+        .important-list strong {
+            color: var(--heading-color);
+        }
 
 
     </style>
@@ -997,35 +1055,48 @@
         <div class="row">
             <div class="col-lg-9">
                 @if($brandsByReviews->isNotEmpty())
-                    <div class="row g-4">
+                    <div class="brand-grid">
                         @foreach($brandsByReviews as $index => $brand)
                             @php
                                 $rating = (float) $brand->avg_rating;
-                                $fullStars = floor($rating);
                                 $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
                             @endphp
-                            <div class="col-md-6 col-lg-4">
-                                <div class="brand-card h-100">
-                                    <span class="tag">{{ $categoryName }}</span>
-                                    <h3 class="brand-title">{{ $brand->name }}</h3>
-                                    <div class="rating-row">
-                                        <span class="stars">
+                            <article class="brand-card-modern">
+                                <div class="brand-head">
+                                    <div class="brand-logo">
+                                        <img src="{{ $logo }}" alt="{{ $brand->name }} logo">
+                                    </div>
+                                    <div class="brand-meta">
+                                        <h3>{{ $brand->name }}</h3>
+                                        <span>{{ ucfirst($categoryNameLower) }} brand</span>
+                                    </div>
+                                    <span class="brand-rank-pill">Rank #{{ $index + 1 }}</span>
+                                </div>
+
+                                <div class="brand-metrics">
+                                    <div>
+                                        <div class="metric-label">Avg rating</div>
+                                        <div class="metric-value">{{ number_format($rating, 2) }}</div>
+                                        <div class="brand-stars">
                                             @for($i = 1; $i <= 5; $i++)
-                                                <i class="{{ $i <= $fullStars ? 'fas' : 'far' }} fa-star"></i>
+                                                <i class="{{ $i <= round($rating) ? 'fas' : 'far' }} fa-star"></i>
                                             @endfor
-                                        </span>
-                                        <span class="rating-number">{{ number_format($rating, 2) }}</span>
-                                        <span class="review-count">{{ $brand->total_reviews }} {{ Str::plural('review', $brand->total_reviews) }}</span>
+                                        </div>
                                     </div>
-                                    <div class="mt-3">
-                                        <img src="{{ $logo }}" alt="{{ $brand->name }}" style="max-width:100%; height:56px; object-fit:contain;">
-                                    </div>
-                                    <div class="mt-4 d-flex justify-content-between align-items-center">
-                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
-                                        <a href="{{ route('companies.compare', $brand->slug) }}" class="read-more">View brand</a>
+                                    <div>
+                                        <div class="metric-label">Reviews</div>
+                                        <div class="metric-value">{{ $brand->total_reviews }}</div>
+                                        <div class="metric-subtext">{{ Str::plural('review', $brand->total_reviews) }}</div>
                                     </div>
                                 </div>
-                            </div>
+
+                                <div class="brand-actions">
+                                    <p class="brand-tagline">Based on verified consumer feedback</p>
+                                    <a href="{{ route('companies.compare', $brand->slug) }}">
+                                        View details <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </article>
                         @endforeach
                     </div>
                 @else
@@ -1137,27 +1208,43 @@
         <div class="row">
             <div class="col-lg-9">
                 @if($topEfficiencyBrands->isNotEmpty())
-                    <div class="row g-4">
+                    <div class="brand-grid">
                         @foreach($topEfficiencyBrands as $index => $brand)
                             @php
                                 $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
                             @endphp
-                            <div class="col-md-6 col-lg-4">
-                                <div class="brand-card h-100">
-                                    <span class="tag">{{ $categoryName }}</span>
-                                    <h3 class="brand-title">{{ $brand->brand_name }}</h3>
-                                    <p class="mb-2 text-muted">Avg efficiency: <strong>{{ number_format($brand->avg_efficiency, 2) }}%</strong></p>
-                                    <p class="mb-1 text-muted">Peak module: <strong>{{ number_format($brand->max_efficiency, 2) }}%</strong></p>
-                                    <p class="text-muted">{{ $brand->product_count }} product {{ Str::plural('entry', $brand->product_count) }}</p>
-                                    <div class="mt-3">
-                                        <img src="{{ $logo }}" alt="{{ $brand->brand_name }}" style="max-width:100%; height:56px; object-fit:contain;">
+                            <article class="brand-card-modern">
+                                <div class="brand-head">
+                                    <div class="brand-logo">
+                                        <img src="{{ $logo }}" alt="{{ $brand->brand_name }} logo">
                                     </div>
-                                    <div class="mt-4 d-flex justify-content-between align-items-center">
-                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
-                                        <a href="{{ route('companies.compare', $brand->brand_id) }}" class="read-more">Explore</a>
+                                    <div class="brand-meta">
+                                        <h3>{{ $brand->brand_name }}</h3>
+                                        <span>{{ ucfirst($categoryNameLower) }} efficiency leader</span>
+                                    </div>
+                                    <span class="brand-rank-pill">Rank #{{ $index + 1 }}</span>
+                                </div>
+
+                                <div class="brand-metrics">
+                                    <div>
+                                        <div class="metric-label">Avg efficiency</div>
+                                        <div class="metric-value">{{ number_format($brand->avg_efficiency, 2) }}%</div>
+                                        <div class="metric-subtext">Across {{ $brand->product_count }} models</div>
+                                    </div>
+                                    <div>
+                                        <div class="metric-label">Peak module</div>
+                                        <div class="metric-value">{{ number_format($brand->max_efficiency, 2) }}%</div>
+                                        <div class="metric-subtext">Best performing SKU</div>
                                     </div>
                                 </div>
-                            </div>
+
+                                <div class="brand-actions">
+                                    <p class="brand-tagline">Efficiency data reported by manufacturers</p>
+                                    <a href="{{ route('companies.compare', $brand->brand_id) }}">
+                                        Explore <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </article>
                         @endforeach
                     </div>
                 @else
