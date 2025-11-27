@@ -470,58 +470,43 @@
 
     .brand-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.75rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
     }
 
     .brand-card-modern {
-        background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,250,252,0.95));
-        border-radius: 18px;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-        padding: 1.75rem;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+        padding: 1.25rem;
         display: flex;
         flex-direction: column;
-        gap: 1.25rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .brand-card-modern::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        padding: 1px;
-        background: linear-gradient(135deg, rgba(59,161,76,0.25), rgba(59,161,76,0.05));
-        mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-        pointer-events: none;
+        gap: 0.75rem;
+        min-height: unset;
     }
 
     .brand-card-modern:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 30px rgba(15, 23, 42, 0.08);
     }
 
     .brand-head {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
     }
 
     .brand-logo {
-        width: 68px;
-        height: 68px;
-        border-radius: 16px;
-        background: #fff;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: #f8fafc;
         border: 1px solid #e2e8f0;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0.4rem;
+        padding: 0.35rem;
     }
 
     .brand-logo img {
@@ -531,13 +516,13 @@
     }
 
     .brand-meta h3 {
-        font-size: 1.2rem;
+        font-size: 1rem;
         margin: 0;
         color: var(--heading-color);
     }
 
     .brand-meta span {
-        font-size: 0.85rem;
+        font-size: 0.78rem;
         color: var(--muted-color);
     }
 
@@ -546,60 +531,61 @@
         background: rgba(59, 161, 76, 0.15);
         color: var(--primary-color);
         font-weight: 600;
-        padding: 0.35rem 1rem;
+        padding: 0.25rem 0.85rem;
         border-radius: 999px;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
-    .brand-metrics {
+    .brand-stat-row {
         display: flex;
-        gap: 1.25rem;
+        justify-content: space-between;
+        gap: 0.75rem;
     }
 
-    .metric-box {
+    .brand-stat {
         flex: 1;
-        background: #fff;
-        border: 1px solid rgba(15, 23, 42, 0.06);
-        border-radius: 14px;
-        padding: 0.85rem 1rem;
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 0.75rem;
     }
 
-    .metric-label {
-        font-size: 0.78rem;
+    .stat-label {
+        font-size: 0.72rem;
         text-transform: uppercase;
         color: var(--muted-color);
         letter-spacing: 0.08em;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.25rem;
+        display: block;
     }
 
-    .metric-value {
-        font-size: 1.8rem;
+    .stat-value {
+        font-size: 1.25rem;
         font-weight: 600;
         color: var(--heading-color);
     }
 
-    .metric-subtext {
-        font-size: 0.88rem;
+    .stat-subtext {
+        font-size: 0.85rem;
         color: var(--body-color);
     }
 
     .brand-stars {
         color: #fbbf24;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
     }
 
     .brand-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
 
     .brand-actions a {
         font-weight: 600;
         color: var(--primary-color);
         text-decoration: none;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .brand-actions a:hover {
@@ -607,7 +593,7 @@
     }
 
     .brand-tagline {
-        font-size: 0.88rem;
+        font-size: 0.8rem;
         color: var(--muted-color);
     }
 
