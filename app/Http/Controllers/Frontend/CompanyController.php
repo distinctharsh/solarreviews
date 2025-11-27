@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\Company;
 use App\Models\CompanyReview;
+use App\Models\Product;
 use App\Models\State;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -85,21 +88,70 @@ class CompanyController extends Controller
     public function categoryComparison($categorySlug)
     {
         $category = Category::where('slug', $categorySlug)
-            ->where('is_active', true)
+            ->where('status', 'active')
             ->firstOrFail();
 
-        $companies = Company::whereHas('categories', function ($q) use ($category) {
+        $companies = Company::query()
+            ->select('companies.*',
+                DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
+                DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews'))
+            ->leftJoin('rating_summaries as rs', function ($join) {
+                $join->on('rs.reviewable_id', '=', 'companies.id')
+                    ->where('rs.reviewable_type', '=', Company::class);
+            })
+            ->whereHas('categories', function ($q) use ($category) {
                 $q->where('categories.id', $category->id);
             })
             ->where('is_active', true)
-            ->orderByDesc('average_rating')
+            ->orderByDesc('avg_rating')
             ->orderByDesc('total_reviews')
             ->limit(20)
+            ->with(['state'])
+            ->get();
+
+        $brandsByReviews = Brand::query()
+            ->select(
+                'brands.id',
+                'brands.name',
+                'brands.slug',
+                'brands.logo_url',
+                DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
+                DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews')
+            )
+            ->leftJoin('rating_summaries as rs', function ($join) {
+                $join->on('rs.reviewable_id', '=', 'brands.id')
+                    ->where('rs.reviewable_type', '=', Brand::class);
+            })
+            ->whereHas('categories', function ($q) use ($category) {
+                $q->where('categories.id', $category->id);
+            })
+            ->orderByDesc('avg_rating')
+            ->orderByDesc('total_reviews')
+            ->limit(20)
+            ->get();
+
+        $topEfficiencyBrands = Product::query()
+            ->select(
+                'brands.id as brand_id',
+                'brands.name as brand_name',
+                'brands.logo_url',
+                DB::raw('AVG(products.efficiency) as avg_efficiency'),
+                DB::raw('MAX(products.efficiency) as max_efficiency'),
+                DB::raw('COUNT(products.id) as product_count')
+            )
+            ->join('brands', 'brands.id', '=', 'products.brand_id')
+            ->where('products.category_id', $category->id)
+            ->whereNotNull('products.efficiency')
+            ->groupBy('brands.id', 'brands.name', 'brands.logo_url')
+            ->orderByDesc('avg_efficiency')
+            ->limit(10)
             ->get();
 
         return view('frontend.companies.category-comparison', [
             'category' => $category,
             'companies' => $companies,
+            'brandsByReviews' => $brandsByReviews,
+            'topEfficiencyBrands' => $topEfficiencyBrands,
         ]);
     }
 

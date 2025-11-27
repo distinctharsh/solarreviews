@@ -53,6 +53,12 @@ class Company extends Model
                     ->withTimestamps();
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'company_category')
+                    ->withTimestamps();
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);

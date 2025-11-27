@@ -22,8 +22,8 @@ Route::get('/top-reviews', function () {
 })->name('reviews.top');
 
 // Category-based company comparison (temporarily disabled until frontend is ready)
-// Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
-//     ->name('companies.compare');
+Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
+    ->name('companies.compare');
 
 // State Companies (temporarily using dummy data)
 Route::get('/state/{stateSlug}', function ($stateSlug) {

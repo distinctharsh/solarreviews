@@ -880,107 +880,54 @@
         </div>
 
         <div class="row">
-            
-            <!-- LEFT: Cards -->
             <div class="col-lg-9">
-                <div class="row g-4">
-
-                    <!-- Card 1 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">{{ $categoryName }}</span>
-
-                            <h3 class="brand-title">LG Solar</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐⭐</span>
-                                <span class="rating-number">4.79</span>
-                                <span class="review-count">930 Reviews</span>
+                @if($brandsByReviews->isNotEmpty())
+                    <div class="row g-4">
+                        @foreach($brandsByReviews as $index => $brand)
+                            @php
+                                $rating = (float) $brand->avg_rating;
+                                $fullStars = floor($rating);
+                                $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
+                            @endphp
+                            <div class="col-md-6 col-lg-4">
+                                <div class="brand-card h-100">
+                                    <span class="tag">{{ $categoryName }}</span>
+                                    <h3 class="brand-title">{{ $brand->name }}</h3>
+                                    <div class="rating-row">
+                                        <span class="stars">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="{{ $i <= $fullStars ? 'fas' : 'far' }} fa-star"></i>
+                                            @endfor
+                                        </span>
+                                        <span class="rating-number">{{ number_format($rating, 2) }}</span>
+                                        <span class="review-count">{{ $brand->total_reviews }} {{ Str::plural('review', $brand->total_reviews) }}</span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <img src="{{ $logo }}" alt="{{ $brand->name }}" style="max-width:100%; height:56px; object-fit:contain;">
+                                    </div>
+                                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
+                                        <a href="{{ route('companies.compare', $brand->slug) }}" class="read-more">View brand</a>
+                                    </div>
+                                </div>
                             </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">Judith goldsmith , over 1 month</p>
-                            <p class="text-muted">Eliza Garcia represent…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
+                        @endforeach
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">{{ $categoryName }}</span>
-
-                            <h3 class="brand-title">Panasonic</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐⭐</span>
-                                <span class="rating-number">4.83</span>
-                                <span class="review-count">325 Reviews</span>
-                            </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">MTED, over 1 month</p>
-                            <p class="text-muted">I chose Panasonic {{ $categoryNameLower }}…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
+                @else
+                    <div class="empty-state">
+                        <h2>No brands found for this category yet</h2>
+                        <p>Add a few brands to the category and they will start appearing here automatically.</p>
                     </div>
-
-                    <!-- Card 3 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">Installer</span>
-
-                            <h3 class="brand-title">Complete Solar, DB...</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐✰</span>
-                                <span class="rating-number">4.51</span>
-                                <span class="review-count">1,278 Reviews</span>
-                            </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">Steve, over 1 month</p>
-                            <p class="text-muted">SUN Power set me up with So…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination-box mt-4">
-                    <button class="page-btn">&lt;</button>
-                    <button class="page-btn active">&gt;</button>
-                </div>
-
-
+                @endif
             </div>
 
-            <!-- RIGHT: Sidebar Box -->
             <div class="col-lg-3">
                 <div class="sidebar-box">
-
                     <h4 class="sidebar-title">Calculator</h4>
-
                     <input type="text" class="zip-input" placeholder="Zip Code">
-
                     <button class="start-btn">GET STARTED</button>
-
                 </div>
             </div>
-
         </div>
 
     </div>
@@ -1060,96 +1007,38 @@
         </div>
 
         <div class="row">
-            
-            <!-- LEFT: Cards -->
             <div class="col-lg-9">
-                <div class="row g-4">
-
-                    <!-- Card 1 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">{{ $categoryName }}</span>
-
-                            <h3 class="brand-title">REC Group</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐⭐</span>
-                                <span class="rating-number">4.56</span>
-                                <span class="review-count">930 Reviews</span>
+                @if($topEfficiencyBrands->isNotEmpty())
+                    <div class="row g-4">
+                        @foreach($topEfficiencyBrands as $index => $brand)
+                            @php
+                                $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
+                            @endphp
+                            <div class="col-md-6 col-lg-4">
+                                <div class="brand-card h-100">
+                                    <span class="tag">{{ $categoryName }}</span>
+                                    <h3 class="brand-title">{{ $brand->brand_name }}</h3>
+                                    <p class="mb-2 text-muted">Avg efficiency: <strong>{{ number_format($brand->avg_efficiency, 2) }}%</strong></p>
+                                    <p class="mb-1 text-muted">Peak module: <strong>{{ number_format($brand->max_efficiency, 2) }}%</strong></p>
+                                    <p class="text-muted">{{ $brand->product_count }} product {{ Str::plural('entry', $brand->product_count) }}</p>
+                                    <div class="mt-3">
+                                        <img src="{{ $logo }}" alt="{{ $brand->brand_name }}" style="max-width:100%; height:56px; object-fit:contain;">
+                                    </div>
+                                    <div class="mt-4 d-flex justify-content-between align-items-center">
+                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
+                                        <a href="{{ route('companies.compare', $brand->brand_id) }}" class="read-more">Explore</a>
+                                    </div>
+                                </div>
                             </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">Wayne, over 1 month</p>
-                            <p class="text-muted">REC Group is a company that…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
+                        @endforeach
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">{{ $categoryName }}</span>
-
-                            <h3 class="brand-title">Panasonic</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐⭐</span>
-                                <span class="rating-number">4.83</span>
-                                <span class="review-count">325 Reviews</span>
-                            </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">MTED, over 1 month</p>
-                            <p class="text-muted">I chose Panasonic {{ $categoryNameLower }}…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
+                @else
+                    <div class="empty-state">
+                        <h2>No efficiency data found</h2>
+                        <p>Add efficiency values to products in this category to surface rankings here.</p>
                     </div>
-
-                    <!-- Card 3 -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="brand-card">
-
-                            <span class="tag">Installer</span>
-
-                            <h3 class="brand-title">Complete Solar, DB...</h3>
-
-                            <div class="rating-row">
-                                <span class="stars">⭐⭐⭐⭐✰</span>
-                                <span class="rating-number">4.51</span>
-                                <span class="review-count">1,278 Reviews</span>
-                            </div>
-
-                            <strong class="review-header">Latest review</strong>
-                            <p class="text-muted m-0">Steve, over 1 month</p>
-                            <p class="text-muted">SUN Power set me up with So…</p>
-                            <a href="#" class="read-more">Read more</a>
-
-                            <a href="#" class="brand-btn">COST FOR YOUR HOME</a>
-
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination-box mt-4">
-                    <button class="page-btn">&lt;</button>
-                    <button class="page-btn active">&gt;</button>
-                </div>
-
-
+                @endif
             </div>
-
-           
-
         </div>
 
     </div>
