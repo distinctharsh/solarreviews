@@ -3,36 +3,111 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the reviews for all reviewable entities.
+     */
+    public function index(Request $request): View
     {
-        return view('admin.reviews.index', ['reviews' => collect()]);
+        $reviewableTypes = [
+            'company' => [
+                'class' => Company::class,
+                'label' => __('Company'),
+                'label_plural' => __('Companies'),
+            ],
+            'brand' => [
+                'class' => Brand::class,
+                'label' => __('Brand'),
+                'label_plural' => __('Brands'),
+            ],
+            'product' => [
+                'class' => Product::class,
+                'label' => __('Product'),
+                'label_plural' => __('Products'),
+            ],
+        ];
+
+        $validatedFilters = $request->validate([
+            'type' => ['nullable', Rule::in(array_keys($reviewableTypes))],
+            'rating' => ['nullable', 'integer', 'between:1,5'],
+            'search' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $filters = array_merge([
+            'type' => null,
+            'rating' => null,
+            'search' => null,
+        ], $validatedFilters);
+
+        $reviewsQuery = Review::query()
+            ->with(['user', 'reviewable'])
+            ->latest();
+
+        if ($filters['type']) {
+            $reviewsQuery->where('reviewable_type', $reviewableTypes[$filters['type']]['class']);
+        }
+
+        if ($filters['rating']) {
+            $reviewsQuery->where('rating', (int) $filters['rating']);
+        }
+
+        if ($filters['search']) {
+            $searchTerm = '%' . $filters['search'] . '%';
+            $reviewsQuery->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', $searchTerm)
+                    ->orWhere('comment', 'like', $searchTerm);
+            });
+        }
+
+        /** @var LengthAwarePaginator $reviews */
+        $reviews = $reviewsQuery->paginate(20)->withQueryString();
+
+        $typeCounts = Review::selectRaw('reviewable_type, COUNT(*) as total')
+            ->groupBy('reviewable_type')
+            ->pluck('total', 'reviewable_type');
+
+        $stats = [
+            'total' => Review::count(),
+            'by_type' => collect($reviewableTypes)->mapWithKeys(function ($meta, $key) use ($typeCounts) {
+                return [$key => $typeCounts[$meta['class']] ?? 0];
+            })->all(),
+        ];
+
+        $reviewableTypeMetaByClass = collect($reviewableTypes)
+            ->mapWithKeys(function ($meta, $key) {
+                return [$meta['class'] => array_merge($meta, ['key' => $key])];
+            })
+            ->all();
+
+        return view('admin.reviews.index', [
+            'reviews' => $reviews,
+            'reviewableTypes' => $reviewableTypes,
+            'reviewableTypeMetaByClass' => $reviewableTypeMetaByClass,
+            'filters' => $filters,
+            'stats' => $stats,
+        ]);
     }
 
-    public function create()
+    /**
+     * Remove the specified review from storage.
+     */
+    public function destroy(Review $review): RedirectResponse
     {
-        return redirect()->route('admin.reviews.index')->with('info', 'Review CRUD coming soon!');
-    }
+        $review->delete();
 
-    public function store()
-    {
-        return redirect()->route('admin.reviews.index');
-    }
-
-    public function edit($id)
-    {
-        return redirect()->route('admin.reviews.index');
-    }
-
-    public function update($id)
-    {
-        return redirect()->route('admin.reviews.index');
-    }
-
-    public function destroy($id)
-    {
-        return redirect()->route('admin.reviews.index');
+        return redirect()
+            ->route('admin.reviews.index')
+            ->with('success', __('Review deleted successfully.'));
     }
 }
