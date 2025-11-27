@@ -155,9 +155,9 @@
 
         .form-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 0px !important;
         }
 
         .form-row input,
@@ -167,16 +167,15 @@
         }
 
         .input-group {
-            margin-bottom: 20px;
-            width: 100%;
+            margin-bottom: 0px !important;
         }
 
         .form-navigation {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            margin: 30px 0 20px;
-            padding: 10px 0;
+            margin: 18px 0 12px;
+            padding: 6px 0;
             border-top: 1px solid #eee;
         }
 
@@ -214,30 +213,31 @@
 
         .role-selection {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             text-align: left;
         }
 
         .role-selection h4 {
-            margin-bottom: 8px;
-            font-size: 1rem;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
             color: #111827;
         }
 
         .role-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             width: 100%;
         }
 
         .role-card {
+            flex: 1 1 180px;
             border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 10px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             cursor: pointer;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             background: #fff;
@@ -250,29 +250,30 @@
         }
 
         .role-card .role-icon {
-            width: 48px;
-            height: 48px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .role-card .role-text {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .role-card .role-title {
             font-weight: 600;
+            font-size: 0.85rem;
             color: #1f2937;
         }
 
         .role-card .role-subtitle {
-            font-size: 0.85rem;
+            font-size: 0.72rem;
             color: #6b7280;
         }
 
@@ -857,7 +858,7 @@
             align-items: center;
             justify-content: flex-start;
             flex-direction: column;
-            padding: 20px 50px;
+            padding: 20px 15px;
             min-height: 100%;
             text-align: center;
             width: 100%;
@@ -1244,11 +1245,11 @@
             </div>
         @endif
 
-        <!-- Step 1: Personal Information -->
+        <!-- Step 1: Account basics -->
         <div class="form-step active" id="step1">
-            <h3>Tell us about your role</h3>
-
-            <div class="role-selection">
+            
+            
+            <div class="role-selection" style="width:100%; text-align:left; margin-top:5px;">
                 <h4>Are you registering as</h4>
                 <div class="role-grid">
                     <label class="role-card {{ old('company_type') == 'manufacturer' ? 'active' : '' }}" data-role-option>
@@ -1256,7 +1257,6 @@
                         <div class="role-icon" style="background:#eef2ff; color:#4338ca;">M</div>
                         <div class="role-text">
                             <span class="role-title">Manufacturer</span>
-                            <span class="role-subtitle">You make solar products or components.</span>
                         </div>
                     </label>
                     <label class="role-card {{ old('company_type') == 'distributor' ? 'active' : '' }}" data-role-option>
@@ -1264,16 +1264,13 @@
                         <div class="role-icon" style="background:#fff7ed; color:#c2410c;">D</div>
                         <div class="role-text">
                             <span class="role-title">Distributor / Service Provider</span>
-                            <span class="role-subtitle">You buy, resell, or install solar systems.</span>
                         </div>
                     </label>
                 </div>
-                @error('company_type')
-                    <span class="error-msg" style="display:block;">{{ $message }}</span>
-                @enderror
+                <span class="error-msg"></span>
             </div>
-
-            <div class="role-dependent-fields {{ old('company_type') ? '' : 'disabled' }}" data-role-fields>
+            <h3>Basic details</h3>
+            <div class="form-row">
                 <div class="input-group">
                     <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}" required>
                     <span class="error-msg"></span>
@@ -1282,184 +1279,45 @@
                     <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}" required>
                     <span class="error-msg"></span>
                 </div>
-                <div class="input-group">
-                    <input type="email" name="email" placeholder="Email Address" value="{{ old('email') }}" required>
-                    <span class="error-msg"></span>
-                </div>
-                <div class="input-group">
-                    <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
-                    <span class="error-msg"></span>
-                </div>
             </div>
-
+            <div class="input-group">
+                <input type="email" name="email" placeholder="Work Email" value="{{ old('email') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            <div class="input-group">
+                <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
+                <span class="error-msg"></span>
+            </div>
+            
             <div class="form-navigation">
                 <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- Step 2: Company Information -->
+        <!-- Step 2: Company snapshot -->
         <div class="form-step" id="step2">
-            <h3>Company & Address Information</h3>
-
-            <div class="company-section">
-                <div class="section-title">Company basics</div>
-                <div class="section-description">Tell us who were working with so we can verify and highlight your business.</div>
-                <div class="input-group">
-                    <input type="text" name="company_name" placeholder="Legal company name" value="{{ old('company_name') }}" required>
-                    <span class="error-msg"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" name="brand_name" placeholder="Brand / trade name (optional)" value="{{ old('brand_name') }}">
-                    <span class="error-msg"></span>
-                </div>
-                <div class="form-row">
-                    <div class="input-group">
-                        <input type="url" name="website" placeholder="Website URL (optional)" value="{{ old('website') }}">
-                        <span class="error-msg"></span>
-                    </div>
-                    <div class="input-group">
-                        <input type="number" name="year_founded" placeholder="Year founded" value="{{ old('year_founded') }}" min="1900" max="{{ date('Y') }}">
-                        <span class="error-msg"></span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <select name="employee_count" required>
-                        <option value="">Team size</option>
-                        @foreach(['1-10','11-50','51-200','201-500','500+'] as $size)
-                            <option value="{{ $size }}" {{ old('employee_count') == $size ? 'selected' : '' }}>{{ $size }} employees</option>
-                        @endforeach
-                    </select>
-                    <span class="error-msg"></span>
-                </div>
+            <h3>Company info</h3>
+            <div class="input-group">
+                <input type="text" name="company_name" placeholder="Company / Brand Name" value="{{ old('company_name') }}" required>
+                <span class="error-msg"></span>
             </div>
-
-            <div class="company-section compact">
-                <div class="section-title">What do you want to achieve?</div>
-                <div class="section-description">Well tailor the dashboard and marketplace recommendations.</div>
-                <div class="input-group">
-                    <select name="primary_goal" required>
-                        <option value="">Select your primary goal</option>
-                        <option value="showcase_products" {{ old('primary_goal') == 'showcase_products' ? 'selected' : '' }}>Showcase products to buyers</option>
-                        <option value="list_services" {{ old('primary_goal') == 'list_services' ? 'selected' : '' }}>List EPC / service capabilities</option>
-                        <option value="find_partners" {{ old('primary_goal') == 'find_partners' ? 'selected' : '' }}>Find manufacturing / distribution partners</option>
-                        <option value="track_portfolio" {{ old('primary_goal') == 'track_portfolio' ? 'selected' : '' }}>Track portfolio performance</option>
-                    </select>
-                    <span class="error-msg"></span>
-                </div>
+            <div class="input-group">
+                <input type="text" name="state" placeholder="Headquarter State" value="{{ old('state') }}" required>
+                <span class="error-msg"></span>
             </div>
-
-            <div class="company-section role-specific-block" data-role-block="manufacturer">
-                <div class="section-title">Manufacturer specifics</div>
-                <div class="section-description">Help installers know what you build and how to engage you.</div>
-                <label class="form-label small">Product lines you manufacture</label>
-                <div class="tag-grid">
-                    @php
-                        $productLines = [
-                            'solar-panels' => 'Solar panels',
-                            'inverters' => 'Inverters',
-                            'battery-storage' => 'Battery storage',
-                            'hybrid-kits' => 'Hybrid kits',
-                            'mounting-structures' => 'Mounting structures',
-                            'components-parts' => 'Components / parts',
-                        ];
-                    @endphp
-                    @foreach($productLines as $slug => $label)
-                        <label class="tag-option">
-                            <input type="checkbox" name="product_lines[]" value="{{ $slug }}" {{ collect(old('product_lines', []))->contains($slug) ? 'checked' : '' }}>
-                            <span>{{ $label }}</span>
-                        </label>
-                    @endforeach
-                </div>
-                <div class="form-row" style="margin-top:15px;">
-                    <div class="input-group">
-                        <input type="text" name="production_capacity" placeholder="Annual production capacity (e.g., 250 MW)" value="{{ old('production_capacity') }}">
-                        <span class="error-msg"></span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" name="distribution_regions" placeholder="Regions served or export markets" value="{{ old('distribution_regions') }}">
-                        <span class="error-msg"></span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <textarea name="certifications" rows="3" placeholder="Key certifications or standards (BIS, IEC, UL, ISO, etc.)">{{ old('certifications') }}</textarea>
-                    <span class="error-msg"></span>
-                </div>
+            <div class="input-group">
+                <select name="primary_goal">
+                    <option value="">What brings you here?</option>
+                    <option value="showcase_products" {{ old('primary_goal') == 'showcase_products' ? 'selected' : '' }}>Showcase products / services</option>
+                    <option value="find_leads" {{ old('primary_goal') == 'find_leads' ? 'selected' : '' }}>Generate verified leads</option>
+                    <option value="listings" {{ old('primary_goal') == 'listings' ? 'selected' : '' }}>Get listed in comparisons</option>
+                </select>
+                <span class="error-msg"></span>
             </div>
-
-            <div class="company-section role-specific-block" data-role-block="distributor">
-                <div class="section-title">Distributor / service capabilities</div>
-                <div class="section-description">Let homeowners and OEMs know what services you excel at.</div>
-                <label class="form-label small">Services you provide</label>
-                <div class="tag-grid">
-                    @php
-                        $serviceTypes = [
-                            'epc-turnkey' => 'EPC turnkey',
-                            'residential-installs' => 'Residential installs',
-                            'commercial-industrial' => 'Commercial / industrial',
-                            'om-amc' => 'O&M / AMC',
-                            'inverter-service' => 'Inverter service',
-                            'battery-retrofits' => 'Battery retrofits',
-                            'component-distribution' => 'Component distribution',
-                            'hybrid-service' => 'Hybrid / microgrid service',
-                        ];
-                    @endphp
-                    @foreach($serviceTypes as $slug => $label)
-                        <label class="tag-option">
-                            <input type="checkbox" name="service_categories[]" value="{{ $slug }}" {{ collect(old('service_categories', []))->contains($slug) ? 'checked' : '' }}>
-                            <span>{{ $label }}</span>
-                        </label>
-                    @endforeach
-                </div>
-                <div class="form-row" style="margin-top:15px;">
-                    <div class="input-group">
-                        <input type="text" name="coverage_states" placeholder="States / regions you cover" value="{{ old('coverage_states') }}">
-                        <span class="error-msg"></span>
-                    </div>
-                    <div class="input-group">
-                        <input type="number" name="installations_per_year" placeholder="Avg. installations per year" value="{{ old('installations_per_year') }}" min="0">
-                        <span class="error-msg"></span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <textarea name="licenses" rows="3" placeholder="Key licenses or OEM authorisations">{{ old('licenses') }}</textarea>
-                    <span class="error-msg"></span>
-                </div>
+            <div class="input-group">
+                <textarea name="notes" rows="3" placeholder="Anything else we should know? (optional)">{{ old('notes') }}</textarea>
+                <span class="error-msg"></span>
             </div>
-
-            <div class="company-section">
-                <div class="section-title">Business address</div>
-                <div class="section-description">Used for verification and to show regional availability.</div>
-                <div class="input-group">
-                    <input type="text" name="address" placeholder="Street Address" value="{{ old('address') }}" required>
-                    <span class="error-msg"></span>
-                </div>
-                <div class="form-row">
-                    <div class="input-group">
-                        <input type="text" name="city" placeholder="City" value="{{ old('city') }}" required>
-                        <span class="error-msg"></span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" name="state" placeholder="State" value="{{ old('state') }}" required>
-                        <span class="error-msg"></span>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="input-group">
-                        <input type="text" name="postal_code" placeholder="Postal Code" value="{{ old('postal_code') }}" required>
-                        <span class="error-msg"></span>
-                    </div>
-                    <div class="input-group">
-                        <select name="country" required>
-                            <option value="">Select Country</option>
-                            <option value="IN" {{ old('country') == 'IN' ? 'selected' : '' }}>India</option>
-                            <option value="US" {{ old('country') == 'US' ? 'selected' : '' }}>United States</option>
-                            <option value="GB" {{ old('country') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
-                        </select>
-                        <span class="error-msg"></span>
-                    </div>
-                </div>
-            </div>
-
             <div class="form-navigation">
                 <button type="button" class="prev-step"><i class="fas fa-arrow-left"></i> Previous</button>
                 <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
