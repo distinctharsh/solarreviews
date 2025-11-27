@@ -1234,7 +1234,6 @@
         <div class="progress-steps">
             <div class="step active" data-step="1">1</div>
             <div class="step" data-step="2">2</div>
-            <div class="step" data-step="3">3</div>
         </div>
 
         @if($errors->any())
@@ -1245,22 +1244,20 @@
             </div>
         @endif
 
-        <!-- Step 1: Account basics -->
+        <!-- Step 1: Basic info -->
         <div class="form-step active" id="step1">
-            
-            
             <div class="role-selection" style="width:100%; text-align:left; margin-top:5px;">
                 <h4>Are you registering as</h4>
                 <div class="role-grid">
-                    <label class="role-card {{ old('company_type') == 'manufacturer' ? 'active' : '' }}" data-role-option>
-                        <input type="radio" name="company_type" value="manufacturer" {{ old('company_type') == 'manufacturer' ? 'checked' : '' }} required>
+                    <label class="role-card {{ old('user_type') == 'manufacturer' ? 'active' : '' }}" data-role-option>
+                        <input type="radio" name="user_type" value="manufacturer" {{ old('user_type') == 'manufacturer' ? 'checked' : '' }} required>
                         <div class="role-icon" style="background:#eef2ff; color:#4338ca;">M</div>
                         <div class="role-text">
                             <span class="role-title">Manufacturer</span>
                         </div>
                     </label>
-                    <label class="role-card {{ old('company_type') == 'distributor' ? 'active' : '' }}" data-role-option>
-                        <input type="radio" name="company_type" value="distributor" {{ old('company_type') == 'distributor' ? 'checked' : '' }} required>
+                    <label class="role-card {{ old('user_type') == 'distributor' ? 'active' : '' }}" data-role-option>
+                        <input type="radio" name="user_type" value="distributor" {{ old('user_type') == 'distributor' ? 'checked' : '' }} required>
                         <div class="role-icon" style="background:#fff7ed; color:#c2410c;">D</div>
                         <div class="role-text">
                             <span class="role-title">Distributor / Service Provider</span>
@@ -1270,15 +1267,9 @@
                 <span class="error-msg"></span>
             </div>
             <h3>Basic details</h3>
-            <div class="form-row">
-                <div class="input-group">
-                    <input type="text" name="first_name" placeholder="First Name" value="{{ old('first_name') }}" required>
-                    <span class="error-msg"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" name="last_name" placeholder="Last Name" value="{{ old('last_name') }}" required>
-                    <span class="error-msg"></span>
-                </div>
+            <div class="input-group">
+                <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required>
+                <span class="error-msg"></span>
             </div>
             <div class="input-group">
                 <input type="email" name="email" placeholder="Work Email" value="{{ old('email') }}" required>
@@ -1288,44 +1279,14 @@
                 <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
                 <span class="error-msg"></span>
             </div>
-            
+
             <div class="form-navigation">
                 <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- Step 2: Company snapshot -->
+        <!-- Step 2: Account Setup -->
         <div class="form-step" id="step2">
-            <h3>Company info</h3>
-            <div class="input-group">
-                <input type="text" name="company_name" placeholder="Company / Brand Name" value="{{ old('company_name') }}" required>
-                <span class="error-msg"></span>
-            </div>
-            <div class="input-group">
-                <input type="text" name="state" placeholder="Headquarter State" value="{{ old('state') }}" required>
-                <span class="error-msg"></span>
-            </div>
-            <div class="input-group">
-                <select name="primary_goal">
-                    <option value="">What brings you here?</option>
-                    <option value="showcase_products" {{ old('primary_goal') == 'showcase_products' ? 'selected' : '' }}>Showcase products / services</option>
-                    <option value="find_leads" {{ old('primary_goal') == 'find_leads' ? 'selected' : '' }}>Generate verified leads</option>
-                    <option value="listings" {{ old('primary_goal') == 'listings' ? 'selected' : '' }}>Get listed in comparisons</option>
-                </select>
-                <span class="error-msg"></span>
-            </div>
-            <div class="input-group">
-                <textarea name="notes" rows="3" placeholder="Anything else we should know? (optional)">{{ old('notes') }}</textarea>
-                <span class="error-msg"></span>
-            </div>
-            <div class="form-navigation">
-                <button type="button" class="prev-step"><i class="fas fa-arrow-left"></i> Previous</button>
-                <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
-            </div>
-        </div>
-
-        <!-- Step 3: Account Setup -->
-        <div class="form-step" id="step3">
             <h3>Account Setup</h3>
             <div class="input-group">
                 <input type="password" name="password" placeholder="Create Password (min 8 characters)" minlength="8" required>
