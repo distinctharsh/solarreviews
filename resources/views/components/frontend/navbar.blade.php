@@ -6,7 +6,30 @@
         
         <!-- Desktop Nav Links -->
         <div class="desktop-nav d-none d-lg-flex align-items-center gap-3">
-            <a class="nav-link fw-medium">Learn About Solar</a>
+            <div class="mega-nav-item position-relative">
+                <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1" data-mega-trigger>
+                    Learn About Solar
+                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <div class="mega-dropdown shadow">
+                    <div class="mega-column">
+                        <p class="mega-heading">Reviews</p>
+                        <a href="{{ url('compare/companies') }}" class="mega-link">Solar Companies</a>
+                        <a href="{{ url('compare/panels') }}" class="mega-link">Solar Panels</a>
+                        <a href="{{ url('compare/inverters') }}" class="mega-link">Solar Inverters</a>
+                        <a href="{{ url('compare/batteries') }}" class="mega-link">Solar Batteries</a>
+                    </div>
+                    <div class="mega-column">
+                        <p class="mega-heading">Guides</p>
+                        <a href="#" class="mega-link">Buying Guide</a>
+                        <a href="#" class="mega-link">Installation Checklist</a>
+                        <a href="#" class="mega-link">Financing & Incentives</a>
+                        <a href="#" class="mega-link">Maintenance Tips</a>
+                    </div>
+                </div>
+            </div>
             <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
             <a class="nav-link fw-medium nav-btn-submit" href="{{ route('reviews.create') }}" style="color: white !important;">Submit Review</a>
         </div>
@@ -100,6 +123,80 @@
 
     .desktop-nav .nav-link:not(.nav-btn-primary):hover {
         color: #fecf39 !important;
+    }
+
+    .mega-nav-item {
+        position: relative;
+    }
+
+    .mega-trigger {
+        background: transparent;
+        border: none;
+        padding: 0;
+        color: #1e293b;
+    }
+
+    .mega-trigger svg {
+        transition: transform 0.2s ease;
+    }
+
+    .mega-trigger[aria-expanded="true"] svg {
+        transform: rotate(180deg);
+    }
+
+    .mega-dropdown {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 32px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        gap: 32px;
+        min-width: 520px;
+        border: 1px solid rgba(30,41,59,0.08);
+        box-shadow: 0 25px 60px rgba(15,23,42,0.12);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        transform-origin: top center;
+        z-index: 1200;
+    }
+
+    .mega-nav-item.show .mega-dropdown {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mega-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .mega-heading {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+    }
+
+    .mega-link {
+        color: #0f172a;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 6px 0;
+        border-bottom: 1px solid transparent;
+        transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .mega-link:hover {
+        color: #eab308;
+        border-color: rgba(234, 179, 8, 0.4);
     }
 
     .nav-btn-primary {
@@ -255,3 +352,42 @@
         background-color: #1e3a8a;
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const megaItem = document.querySelector('.mega-nav-item');
+        const trigger = megaItem?.querySelector('[data-mega-trigger]');
+        const dropdown = megaItem?.querySelector('.mega-dropdown');
+
+        if (!megaItem || !trigger || !dropdown) return;
+
+        let hideTimeout = null;
+
+        const openDropdown = () => {
+            clearTimeout(hideTimeout);
+            megaItem.classList.add('show');
+            trigger.setAttribute('aria-expanded', 'true');
+        };
+
+        const scheduleClose = () => {
+            hideTimeout = setTimeout(() => {
+                megaItem.classList.remove('show');
+                trigger.setAttribute('aria-expanded', 'false');
+            }, 120);
+        };
+
+        trigger.addEventListener('mouseenter', openDropdown);
+        trigger.addEventListener('focus', openDropdown);
+        dropdown.addEventListener('mouseenter', openDropdown);
+
+        trigger.addEventListener('mouseleave', scheduleClose);
+        dropdown.addEventListener('mouseleave', scheduleClose);
+
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearTimeout(hideTimeout);
+            const isOpen = megaItem.classList.toggle('show');
+            trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+    });
+</script>
