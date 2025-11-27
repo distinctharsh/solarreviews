@@ -851,7 +851,48 @@
             </div>
         </section>
 
-        @if($isBatteries)
+       
+
+
+        <!-- Solar Review Section -->
+        <section class="solar-review-section py-5">
+            <div class="container-custom">
+        
+                <!-- Breadcrumb -->
+                <p class="breadcrumb-custom">Home > {{ $categoryName }} reviews</p>
+
+                <!-- Title -->
+                <h1 class="section-title">Best {{ $categoryName }} of 2025</h1>
+
+                <p class="updated-date">Updated: November 15, 2025</p>
+
+                <!-- Description -->
+                <p class="section-desc">
+                    Our expert and consumer reviews of the leading brands of residential {{ $categoryNameLower }} highlight the 
+                    best {{ $categoryNameLower }} to suit your home in 2025
+                </p>
+
+                <!-- On this page -->
+                <h4 class="on-page-title">On this page:</h4>
+
+                <!-- Buttons Grid -->
+                <div class="options-grid">
+                    <button class="opt-btn">BEST BY EXPERT REVIEW</button>
+                    <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
+                    <button class="opt-btn">MOST EFFICIENT</button>
+                    <button class="opt-btn">BEST VALUE</button>
+                    <button class="opt-btn">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
+                    <button class="opt-btn">TYPES OF MANUFACTURERS</button>
+                </div>
+
+              
+
+            </div>
+        </section>
+
+
+
+         @if($isBatteries)
             <section class="why-important-section py-5">
                 <div class="container-custom">
                     <h2 class="important-title">What is a solar battery?</h2>
@@ -961,44 +1002,6 @@
                 </div>
             </section>
         @endif
-
-
-        <!-- Solar Review Section -->
-        <section class="solar-review-section py-5">
-            <div class="container-custom">
-        
-                <!-- Breadcrumb -->
-                <p class="breadcrumb-custom">Home > {{ $categoryName }} reviews</p>
-
-                <!-- Title -->
-                <h1 class="section-title">Best {{ $categoryName }} of 2025</h1>
-
-                <p class="updated-date">Updated: November 15, 2025</p>
-
-                <!-- Description -->
-                <p class="section-desc">
-                    Our expert and consumer reviews of the leading brands of residential {{ $categoryNameLower }} highlight the 
-                    best {{ $categoryNameLower }} to suit your home in 2025
-                </p>
-
-                <!-- On this page -->
-                <h4 class="on-page-title">On this page:</h4>
-
-                <!-- Buttons Grid -->
-                <div class="options-grid">
-                    <button class="opt-btn">BEST BY EXPERT REVIEW</button>
-                    <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
-                    <button class="opt-btn">MOST EFFICIENT</button>
-                    <button class="opt-btn">BEST VALUE</button>
-                    <button class="opt-btn">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
-                    <button class="opt-btn">TYPES OF MANUFACTURERS</button>
-                </div>
-
-              
-
-            </div>
-        </section>
-
 
 
 
@@ -1318,7 +1321,8 @@
                         <div class="company-list">
                             @foreach($companies as $index => $company)
                                 @php
-                                    $rating = $company->average_rating ?? 0;
+                                    $rating = (float) ($company->avg_rating ?? $company->average_rating ?? 0);
+                                    $reviewsCount = (int) ($company->total_reviews ?? 0);
                                     $full = floor($rating);
                                 @endphp
                                 <article class="company-card">
@@ -1340,17 +1344,13 @@
                                             <div class="rating-row">
                                                 <div class="stars">
                                                     @for($i = 1; $i <= 5; $i++)
-                                                        @if($i <= $full)
-                                                            <i class="fas fa-star"></i>
-                                                        @else
-                                                            <i class="far fa-star"></i>
-                                                        @endif
+                                                        <i class="{{ $i <= $full ? 'fas' : 'far' }} fa-star"></i>
                                                     @endfor
                                                 </div>
                                                 <div class="rating-text">
                                                     {{ number_format($rating, 1) }}
                                                     <span>&middot;</span>
-                                                    {{ $company->total_reviews }} {{ $company->total_reviews == 1 ? 'review' : 'reviews' }}
+                                                    {{ $reviewsCount }} {{ \Illuminate\Support\Str::plural('review', $reviewsCount) }}
                                                 </div>
                                             </div>
                                         </div>
