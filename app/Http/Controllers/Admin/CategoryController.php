@@ -34,22 +34,10 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:1000',
-            'icon' => 'nullable|string|max:100',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
-            $validated['image'] = 'uploads/categories/' . $imageName;
-        }
-
         $validated['slug'] = Str::slug($validated['name']);
-        $validated['is_active'] = $request->has('is_active');
 
         Category::create($validated);
 
@@ -81,23 +69,12 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:1000',
-            'icon' => 'nullable|string|max:100',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
+            'status' => 'required|in:active,inactive',
         ]);
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($category->image && file_exists(public_path($category->image))) {
-                unlink(public_path($category->image));
-            }
-            
-            $image = $request->file('image');
-            $imageName = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/categories'), $imageName);
-            $validated['image'] = 'uploads/categories/' . $imageName;
+        
+        // Update slug if name was changed
+        if ($request->has('name') && $request->name !== $category->name) {
+            $validated['slug'] = Str::slug($request->name);
         }
 
         $validated['slug'] = Str::slug($validated['name']);

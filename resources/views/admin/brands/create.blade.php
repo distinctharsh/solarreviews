@@ -9,7 +9,7 @@
         <p class="text-muted">Create a new product brand</p>
     </div>
     <div class="content-header-right">
-        <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.brands.index') }}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left"></i> Back to Brands
         </a>
     </div>
@@ -17,241 +17,119 @@
 
 <div class="card">
     <div class="card-body">
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="name" class="form-label">Brand Name <span class="required">*</span></label>
-                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" 
-                           value="{{ old('name') }}" placeholder="e.g., Tata Solar, Luminous, Havells" required>
-                    @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Brand Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <label for="name" class="form-label">Brand Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" 
+                                       value="{{ old('name') }}" placeholder="e.g., Tata Solar, Luminous, Havells" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="country" class="form-label">Country of Origin</label>
+                                <input type="text" name="country" id="country" class="form-control @error('country') is-invalid @enderror" 
+                                       value="{{ old('country') }}" placeholder="e.g., India, China, USA">
+                                @error('country')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" 
+                                          rows="4" placeholder="Brief description about this brand">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="country" class="form-label">Country of Origin</label>
-                    <input type="text" name="country" id="country" class="form-control @error('country') is-invalid @enderror" 
-                           value="{{ old('country') }}" placeholder="e.g., India, China, USA">
-                    @error('country')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Brand Logo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group mb-3">
+                                <label for="logo_url" class="form-label">Brand Logo</label>
+                                <input type="file" name="logo_url" id="logo_url" class="form-control-file @error('logo_url') is-invalid @enderror" 
+                                       accept="image/*">
+                                @error('logo_url')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="form-text text-muted">Recommended size: 200x100px</small>
+                                
+                                <div class="mt-2" id="logo-preview" style="display: none;">
+                                    <img src="#" alt="Logo Preview" class="img-thumbnail" style="max-width: 200px; max-height: 100px;">
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Brand
+                                </button>
+                                <a href="{{ route('admin.brands.index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="description" class="form-label">Description</label>
-                <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" 
-                          rows="3" placeholder="Brief description about this brand">{{ old('description') }}</textarea>
-                @error('description')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="website" class="form-label">Website URL</label>
-                    <input type="url" name="website" id="website" class="form-control @error('website') is-invalid @enderror" 
-                           value="{{ old('website') }}" placeholder="https://www.example.com">
-                    @error('website')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="established_year" class="form-label">Established Year</label>
-                    <input type="number" name="established_year" id="established_year" class="form-control @error('established_year') is-invalid @enderror" 
-                           value="{{ old('established_year') }}" min="1800" max="{{ date('Y') }}" placeholder="e.g., 1995">
-                    @error('established_year')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="logo" class="form-label">Brand Logo</label>
-                    <input type="file" name="logo" id="logo" class="form-control @error('logo') is-invalid @enderror" 
-                           accept="image/*">
-                    @error('logo')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <small class="form-text text-muted">Recommended: 200x200px, Max 2MB, PNG with transparent background preferred</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="sort_order" class="form-label">Sort Order</label>
-                    <input type="number" name="sort_order" id="sort_order" class="form-control @error('sort_order') is-invalid @enderror" 
-                           value="{{ old('sort_order', 0) }}" min="0" placeholder="0">
-                    @error('sort_order')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <small class="form-text text-muted">Lower numbers appear first</small>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Categories</label>
-                <p class="form-text text-muted mb-2">Select categories where this brand has products</p>
-                <div class="checkbox-grid">
-                    @foreach($categories as $category)
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="categories[]" value="{{ $category->id }}" 
-                                   {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}>
-                            <span class="checkbox-label">
-                                @if($category->icon)
-                                    <i class="{{ $category->icon }}"></i>
-                                @endif
-                                {{ $category->name }}
-                            </span>
-                        </label>
-                    @endforeach
-                </div>
-                @error('categories')
-                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox-row">
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
-                        <span class="checkbox-label">Active</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}>
-                        <span class="checkbox-label">Featured Brand</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Create Brand
-                </button>
-                <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
-<style>
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-}
-
-@media (max-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #374151;
-}
-
-.required {
-    color: #ef4444;
-}
-
-.form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #3ba14c;
-    box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.1);
-}
-
-.form-control.is-invalid {
-    border-color: #ef4444;
-}
-
-.invalid-feedback {
-    color: #ef4444;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
-
-.form-text {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-top: 0.25rem;
-}
-
-.checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0.75rem;
-}
-
-.checkbox-row {
-    display: flex;
-    gap: 2rem;
-}
-
-.checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.checkbox-item:hover {
-    background: #f9fafb;
-    border-color: #3ba14c;
-}
-
-.checkbox-item input {
-    width: 1.1rem;
-    height: 1.1rem;
-    cursor: pointer;
-}
-
-.checkbox-item input:checked + .checkbox-label {
-    color: #3ba14c;
-    font-weight: 600;
-}
-
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-}
-
-.checkbox-label i {
-    font-size: 0.85rem;
-    color: #6b7280;
-}
-
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
-    margin-top: 1rem;
-}
-</style>
+@section('scripts')
+<script>
+    // Show image preview when a file is selected
+    document.getElementById('logo_url').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            const preview = document.getElementById('logo-preview');
+            const img = preview.querySelector('img');
+            
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Auto-slug generation
+    document.getElementById('name').addEventListener('input', function(e) {
+        const name = e.target.value;
+        const slug = name.toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special chars
+            .replace(/\s+/g, '-')      // Replace spaces with -
+            .replace(/--+/g, '-');     // Replace multiple - with single -
+    });
+</script>
 @endsection
-
+@endsection

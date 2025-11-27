@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\Company;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use App\Models\ProductSpec;
 
 class ProductController extends Controller
 {
@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::with(['company', 'brand', 'category'])
+        $products = Product::with(['brand', 'category'])
             ->latest()
             ->paginate(15);
 
@@ -38,11 +38,15 @@ class ProductController extends Controller
     /**
      * Store a newly created product.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $this->validatedData($request);
+        $validated['slug'] = Str::slug($validated['product_name']);
 
-        Product::create($validated);
+        $product = Product::create($validated);
+        
+        // Save specs
+        $this->saveProductSpecs($product, $request->input('specs', []));
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully.');
@@ -59,15 +63,45 @@ class ProductController extends Controller
     /**
      * Update the specified product.
      */
-    public function update(Request $request, Product $product): RedirectResponse
+    public function update(Request $request, Product $product)
     {
         $validated = $this->validatedData($request, $product);
+        
+        if ($request->has('product_name') && $product->product_name !== $request->product_name) {
+            $validated['slug'] = Str::slug($validated['product_name']);
+        }
 
         $product->update($validated);
+        
+        // Delete existing specs and save new ones
+        $product->specs()->delete();
+        $this->saveProductSpecs($product, $request->input('specs', []));
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully.');
     }
+
+
+    private function saveProductSpecs(Product $product, array $specs)
+    {
+        $specsData = [];
+        $specNames = $request->input('spec_name', []);
+        $specValues = $request->input('spec_value', []);
+        
+        foreach ($specNames as $index => $name) {
+            if (!empty($name) && isset($specValues[$index])) {
+                $specsData[] = [
+                    'spec_name' => $name,
+                    'spec_value' => $specValues[$index],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+        
+        $product->specs()->createMany($specsData);
+    }
+
 
     /**
      * Remove the specified product.
@@ -81,25 +115,23 @@ class ProductController extends Controller
     }
 
     /**
-     * Toggle product active status.
-     */
-    public function toggleStatus(Product $product): RedirectResponse
-    {
-        $product->update(['is_active' => ! $product->is_active]);
-
-        return back()->with('success', 'Product status updated.');
-    }
-
-    /**
      * Shared data for forms.
      */
     private function formDependencies(Product $product): array
     {
         return [
             'product' => $product,
-            'companies' => Company::orderBy('name')->get(),
-            'brands' => Brand::active()->ordered()->get(),
-            'categories' => Category::active()->ordered()->get(),
+            'brands' => Brand::orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'types' => [
+                'Solar Panel',
+                'Inverter',
+                'Battery',
+                'Mounting System',
+                'Charge Controller',
+                'Monitoring System',
+                'Other'
+            ]
         ];
     }
 
@@ -108,34 +140,26 @@ class ProductController extends Controller
      */
     private function validatedData(Request $request, ?Product $product = null): array
     {
-        $validated = $request->validate([
-            'company_id' => ['required', 'exists:companies,id'],
-            'brand_id' => ['nullable', 'exists:brands,id'],
+        $rules = [
+            'brand_id' => ['required', 'exists:brands,id'],
             'category_id' => ['required', 'exists:categories,id'],
-            'name' => ['required', 'string', 'max:255'],
-            'model_number' => ['nullable', 'string', 'max:255'],
-            'variant' => ['nullable', 'string', 'max:255'],
-            'wattage_or_capacity' => ['nullable', 'string', 'max:255'],
-            'technology' => ['nullable', 'string', 'max:255'],
-            'efficiency' => ['nullable', 'numeric', 'between:0,100'],
-            'warranty_years' => ['nullable', 'integer', 'between:0,50'],
-            'datasheet_url' => ['nullable', 'url', 'max:255'],
-            'msrp' => ['nullable', 'numeric', 'min:0'],
-            'specs' => ['nullable', 'string'],
-            'is_active' => ['sometimes', 'boolean'],
-        ]);
+            'product_name' => ['required', 'string', 'max:255'],
+            'model_name' => ['required', 'string', 'max:255'],
+            'type' => ['nullable', 'string', 'max:255'],
+            'capacity_kw' => ['nullable', 'numeric', 'min:0'],
+            'size' => ['nullable', 'string', 'max:255'],
+            'warranty' => ['nullable', 'string', 'max:255'],
+            'specs' => ['nullable', 'array'],
+            'specs.*.name' => ['required_with:specs', 'string', 'max:255'],
+            'specs.*.value' => ['required_with:specs.*.name', 'string'],
+        ];
 
-        $validated['slug'] = Str::slug($validated['name']);
-        $validated['efficiency'] = $validated['efficiency'] ?? null;
-        $validated['msrp'] = $validated['msrp'] ?? null;
-        $validated['is_active'] = $request->boolean('is_active', true);
-
-        if (! empty($validated['specs'])) {
-            $validated['specs'] = array_filter(array_map('trim', explode("\n", $validated['specs'])));
+        if ($request->isMethod('post')) {
+            $rules['product_name'][] = Rule::unique('products', 'product_name');
         } else {
-            $validated['specs'] = null;
+            $rules['product_name'][] = Rule::unique('products', 'product_name')->ignore($product->id);
         }
 
-        return $validated;
+        return $request->validate($rules);
     }
 }

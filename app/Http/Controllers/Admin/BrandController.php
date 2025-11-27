@@ -15,10 +15,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::with('categories')
-                       ->ordered()
-                       ->paginate(15);
-                       
+        $brands = Brand::ordered()->paginate(15);
         return view('admin.brands.index', compact('brands'));
     }
 
@@ -27,8 +24,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        $categories = Category::active()->ordered()->get();
-        return view('admin.brands.create', compact('categories'));
+        return view('admin.brands.create');
     }
 
     /**
@@ -39,35 +35,21 @@ class BrandController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands,name',
             'description' => 'nullable|string|max:2000',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'website' => 'nullable|url|max:255',
+            'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'country' => 'nullable|string|max:100',
-            'established_year' => 'nullable|integer|min:1800|max:' . date('Y'),
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'categories' => 'nullable|array',
-            'categories.*' => 'exists:categories,id',
         ]);
 
         // Handle logo upload
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
+        if ($request->hasFile('logo_url')) {
+            $logo = $request->file('logo_url');
             $logoName = Str::slug($validated['name']) . '-' . time() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('uploads/brands'), $logoName);
-            $validated['logo'] = 'uploads/brands/' . $logoName;
+            $validated['logo_url'] = 'uploads/brands/' . $logoName;
         }
 
         $validated['slug'] = Str::slug($validated['name']);
-        $validated['is_active'] = $request->has('is_active');
-        $validated['is_featured'] = $request->has('is_featured');
-
-        $brand = Brand::create($validated);
-
-        // Sync categories
-        if ($request->has('categories')) {
-            $brand->categories()->sync($request->categories);
-        }
+        
+        Brand::create($validated);
 
         return redirect()->route('admin.brands.index')
             ->with('success', 'Brand created successfully.');
@@ -78,7 +60,6 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        $brand->load('categories');
         return view('admin.brands.show', compact('brand'));
     }
 
@@ -87,9 +68,7 @@ class BrandController extends Controller
      */
     public function edit(Brand $brand)
     {
-        $categories = Category::active()->ordered()->get();
-        $brand->load('categories');
-        return view('admin.brands.edit', compact('brand', 'categories'));
+        return view('admin.brands.edit', compact('brand'));
     }
 
     /**
@@ -100,38 +79,29 @@ class BrandController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands,name,' . $brand->id,
             'description' => 'nullable|string|max:2000',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'website' => 'nullable|url|max:255',
+            'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'country' => 'nullable|string|max:100',
-            'established_year' => 'nullable|integer|min:1800|max:' . date('Y'),
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'categories' => 'nullable|array',
-            'categories.*' => 'exists:categories,id',
         ]);
 
         // Handle logo upload
-        if ($request->hasFile('logo')) {
-            // Delete old logo
-            if ($brand->logo && file_exists(public_path($brand->logo))) {
-                unlink(public_path($brand->logo));
+        if ($request->hasFile('logo_url')) {
+            // Delete old logo if exists
+            if ($brand->logo_url && file_exists(public_path($brand->logo_url))) {
+                unlink(public_path($brand->logo_url));
             }
             
-            $logo = $request->file('logo');
+            $logo = $request->file('logo_url');
             $logoName = Str::slug($validated['name']) . '-' . time() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('uploads/brands'), $logoName);
-            $validated['logo'] = 'uploads/brands/' . $logoName;
+            $validated['logo_url'] = 'uploads/brands/' . $logoName;
         }
 
-        $validated['slug'] = Str::slug($validated['name']);
-        $validated['is_active'] = $request->has('is_active');
-        $validated['is_featured'] = $request->has('is_featured');
+        // Update slug if name was changed
+        if ($request->has('name') && $request->name !== $brand->name) {
+            $validated['slug'] = Str::slug($request->name);
+        }
 
         $brand->update($validated);
-
-        // Sync categories
-        $brand->categories()->sync($request->categories ?? []);
 
         return redirect()->route('admin.brands.index')
             ->with('success', 'Brand updated successfully.');
@@ -143,8 +113,8 @@ class BrandController extends Controller
     public function destroy(Brand $brand)
     {
         // Delete logo if exists
-        if ($brand->logo && file_exists(public_path($brand->logo))) {
-            unlink(public_path($brand->logo));
+        if ($brand->logo_url && file_exists(public_path($brand->logo_url))) {
+            unlink(public_path($brand->logo_url));
         }
 
         $brand->delete();

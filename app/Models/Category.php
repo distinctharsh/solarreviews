@@ -15,15 +15,11 @@ class Category extends Model
         'name',
         'slug',
         'description',
-        'icon',
-        'image',
-        'sort_order',
-        'is_active',
+        'status',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'sort_order' => 'integer',
+        'status' => 'string',
     ];
 
     /**
@@ -38,10 +34,13 @@ class Category extends Model
             if (empty($category->slug)) {
                 $category->slug = Str::slug($category->name);
             }
+            if (empty($category->status)) {
+                $category->status = 'active';
+            }
         });
 
         static::updating(function ($category) {
-            if ($category->isDirty('name') && empty($category->slug)) {
+            if ($category->isDirty('name')) {
                 $category->slug = Str::slug($category->name);
             }
         });
@@ -52,15 +51,15 @@ class Category extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('status', 'active');
     }
 
     /**
-     * Scope: Ordered by sort_order
+     * Scope: Order by name
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('sort_order')->orderBy('name');
+        return $query->orderBy('name');
     }
 
     /**
@@ -72,11 +71,11 @@ class Category extends Model
     }
 
     /**
-     * Relationship: Category has many brands (through products)
+     * The brands that belong to the category.
      */
     public function brands()
     {
-        return $this->hasManyThrough(Brand::class, Product::class);
+        return $this->belongsToMany(Brand::class, 'brand_category');
     }
 }
 

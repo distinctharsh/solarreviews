@@ -1,162 +1,179 @@
-<x-admin-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Product') }}
-        </h2>
-    </x-slot>
+<!-- resources/views/admin/companies/create.blade.php -->
+@extends('admin.layouts.app')
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                @include('admin.products.form', [
-                    'product' => $product ?? null,
-                    'companies' => $companies,
-                    'brands' => $brands,
-                    'categories' => $categories,
-                ])
+@section('page_title', 'Add New Company')
+
+@section('content')
+<div class="content-header">
+    <div class="content-header-left">
+        <h1>Add New Company</h1>
+    </div>
+    <div class="content-header-right">
+        <a href="{{ route('admin.companies.index') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<form action="{{ route('admin.companies.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="owner_name">Owner Name *</label>
+                        <input type="text" name="owner_name" id="owner_name" class="form-control @error('owner_name') is-invalid @enderror" value="{{ old('owner_name') }}" required>
+                        @error('owner_name')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_type">Company Type *</label>
+                        <select name="company_type" id="company_type" class="form-control @error('company_type') is-invalid @enderror" required>
+                            <option value="">Select Type</option>
+                            @foreach($companyTypes as $value => $label)
+                                <option value="{{ $value }}" {{ old('company_type') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('company_type')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- Add other form fields similarly -->
+                    <div class="form-group">
+                        <label for="gst_number">GST Number</label>
+                        <input type="text" name="gst_number" id="gst_number" class="form-control @error('gst_number') is-invalid @enderror" value="{{ old('gst_number') }}">
+                        @error('gst_number')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address *</label>
+                        <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" rows="3" required>{{ old('address') }}</textarea>
+                        @error('address')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" name="city" id="city" class="form-control @error('city') is-invalid @enderror" value="{{ old('city') }}" required>
+                                @error('city')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="state">State *</label>
+                                <input type="text" name="state" id="state" class="form-control @error('state') is-invalid @enderror" value="{{ old('state') }}" required>
+                                @error('state')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="pincode">Pincode *</label>
+                                <input type="text" name="pincode" id="pincode" class="form-control @error('pincode') is-invalid @enderror" value="{{ old('pincode') }}" required>
+                                @error('pincode')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                                @error('email')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phone">Phone *</label>
+                                <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" required>
+                                @error('phone')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website_url">Website URL</label>
+                        <input type="url" name="website_url" id="website_url" class="form-control @error('website_url') is-invalid @enderror" value="{{ old('website_url') }}">
+                        @error('website_url')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="4">{{ old('description') }}</textarea>
+                        @error('description')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
+                            <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        @error('status')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logo">Company Logo</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input @error('logo') is-invalid @enderror" id="logo" name="logo">
+                            <label class="custom-file-label" for="logo">Choose file</label>
+                        </div>
+                        @error('logo')
+                            <span class="text-danger" style="font-size: 0.875em;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Company
+                </button>
+                <a href="{{ route('admin.companies.index') }}" class="btn btn-secondary">Cancel</a>
             </div>
         </div>
     </div>
-</x-admin-layout>
+</form>
+@endsection
 
-@push('styles')
-<style>
-    /* Add any custom styles here */
-    .variant-item {
-        background-color: #f9fafb;
-        border-left: 3px solid #4f46e5;
-    }
-    
-    .variant-item h4 {
-        color: #374151;
-    }
-    
-    /* Style for required fields */
-    .required:after {
-        content: ' *';
-        color: #ef4444;
-    }
-    
-    /* Style for form sections */
-    .form-section {
-        margin-bottom: 2rem;
-    }
-    
-    .form-section-title {
-        font-size: 1.125rem;
-        font-weight: 500;
-        color: #111827;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    
-    /* Style for form groups */
-    .form-group {
-        margin-bottom: 1.25rem;
-    }
-    
-    /* Style for form labels */
-    .form-label {
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
-    
-    /* Style for form inputs */
-    .form-input {
-        width: 100%;
-        border-radius: 0.375rem;
-        border: 1px solid #d1d5db;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        color: #111827;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-    
-    .form-input:focus {
-        border-color: #818cf8;
-        outline: 0;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
-    }
-    
-    /* Style for error messages */
-    .error-message {
-        margin-top: 0.25rem;
-        font-size: 0.75rem;
-        color: #ef4444;
-    }
-    
-    /* Style for buttons */
-    .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-weight: 500;
-        font-size: 0.875rem;
-        line-height: 1.5;
-        transition: all 0.15s ease-in-out;
-        cursor: pointer;
-    }
-    
-    .btn-primary {
-        background-color: #4f46e5;
-        color: white;
-        border: 1px solid transparent;
-    }
-    
-    .btn-primary:hover {
-        background-color: #4338ca;
-    }
-    
-    .btn-secondary {
-        background-color: #e5e7eb;
-        color: #374151;
-        border: 1px solid #d1d5db;
-    }
-    
-    .btn-secondary:hover {
-        background-color: #d1d5db;
-    }
-    
-    /* Style for file input */
-    .file-input {
-        width: 0.1px;
-        height: 0.1px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        z-index: -1;
-    }
-    
-    .file-input-label {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        background-color: #f3f4f6;
-        color: #374151;
-        border-radius: 0.375rem;
-        border: 1px dashed #d1d5db;
-        cursor: pointer;
-        transition: all 0.15s ease-in-out;
-    }
-    
-    .file-input-label:hover {
-        background-color: #e5e7eb;
-        border-color: #9ca3af;
-    }
-    
-    /* Style for preview image */
-    .image-preview {
-        margin-top: 0.5rem;
-        max-width: 200px;
-        max-height: 200px;
-        border-radius: 0.375rem;
-        border: 1px solid #e5e7eb;
-    }
-</style>
+@push('scripts')
+<script>
+    // Update the file input label with the selected file name
+    document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file';
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+</script>
 @endpush

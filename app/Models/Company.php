@@ -4,148 +4,79 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Company extends Model
 {
     use HasFactory;
 
-    public const TYPE_DISTRIBUTOR = 'distributor';
-    public const TYPE_MANUFACTURER = 'manufacturer';
-
+    // app/Models/Company.php
     protected $fillable = [
         'owner_id',
-        'name',
         'slug',
         'company_type',
-        'about',
-        'logo',
-        'website',
-        'phone',
-        'email',
-        'years_in_business',
+        'owner_name',
         'gst_number',
-        'state_id',
-        'city_id',
-        'address_line1',
-        'address_line2',
-        'postal_code',
-        'service_area',
-        'certifications',
-        'licenses',
-        'meta',
-        'coverage_states',
-        'installations_per_year',
-        'production_capacity',
-        'distribution_regions',
-        'average_rating',
-        'total_reviews',
-        'is_featured',
-        'is_active',
+        'address',
+        'city',
+        'state',
+        'pincode',
+        'email',
+        'phone',
+        'website_url',
+        'logo_url',
+        'description',
+        'status'
     ];
 
     protected $casts = [
-        'meta' => 'array',
-        'is_featured' => 'boolean',
-        'is_active' => 'boolean',
-        'average_rating' => 'float',
-        'years_in_business' => 'integer',
-        'installations_per_year' => 'integer',
-        'total_reviews' => 'integer',
+        'status' => 'string',
     ];
 
-    protected static function boot()
+    public function getRouteKeyName()
     {
-        parent::boot();
-
-        static::creating(function (Company $company) {
-            if (empty($company->slug)) {
-                $company->slug = Str::slug($company->name);
-            }
-        });
-
-        static::updating(function (Company $company) {
-            if ($company->isDirty('name') && empty($company->slug)) {
-                $company->slug = Str::slug($company->name);
-            }
-        });
+        return 'slug';
     }
 
-    /**
-     * Relationship: Company owner.
-     */
-    public function owner(): BelongsTo
+    // app/Models/Company.php
+    public function brands()
     {
-        return $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsToMany(Brand::class, 'company_brand')
+                    ->withPivot('type')
+                    ->withTimestamps();
     }
 
-    /**
-     * Relationship: Company belongs to a state.
-     */
-    public function state(): BelongsTo
+    // app/Models/Company.php
+    public function products()
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsToMany(Product::class, 'company_product')
+                    ->withPivot(['is_manufacturer', 'stock_status', 'price', 'min_order_qty'])
+                    ->withTimestamps();
     }
 
-    /**
-     * Relationship: Company belongs to a city.
-     */
-    public function city(): BelongsTo
+    public function users()
     {
-        return $this->belongsTo(City::class);
+        return $this->hasMany(User::class);
     }
 
-    /**
-     * Relationship: Company has many products.
-     */
-    public function products(): HasMany
+    public function reviews()
     {
-        return $this->hasMany(Product::class);
+        return $this->morphMany(Review::class, 'reviewable');
     }
 
-    /**
-     * Relationship: Company has many reviews.
-     */
-    public function reviews(): HasMany
+    // Add this to calculate average rating
+    public function averageRating(): float
     {
-        return $this->hasMany(CompanyReview::class);
+        return $this->ratingSummary ? $this->ratingSummary->avg_rating : 0;
     }
 
-    /**
-     * Relationship: Company categories.
-     */
-    public function categories(): BelongsToMany
+    // Add this to get review count
+    public function reviewCount(): int
     {
-        return $this->belongsToMany(Category::class, 'company_category')->withTimestamps();
+        return $this->ratingSummary ? $this->ratingSummary->total_reviews : 0;
     }
 
-    /**
-     * Relationship: Company brands.
-     */
-    public function brands(): BelongsToMany
+    public function ratingSummary()
     {
-        return $this->belongsToMany(Brand::class, 'company_brand')->withTimestamps();
-    }
-
-    /**
-     * Helper: available company types for forms.
-     */
-    public static function getTypeOptions(): array
-    {
-        return [
-            self::TYPE_DISTRIBUTOR => 'Distributor / Service Provider',
-            self::TYPE_MANUFACTURER => 'Manufacturer / OEM',
-        ];
-    }
-
-    /**
-     * Accessor for logo URL.
-     */
-    public function getLogoUrlAttribute(): ?string
-    {
-        return $this->logo ? asset($this->logo) : null;
+        return $this->morphOne(\App\Models\RatingSummary::class, 'reviewable');
     }
 }

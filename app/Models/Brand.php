@@ -15,21 +15,13 @@ class Brand extends Model
     protected $fillable = [
         'name',
         'slug',
-        'description',
-        'logo',
-        'website',
+        'logo_url',
         'country',
-        'established_year',
-        'sort_order',
-        'is_active',
-        'is_featured',
+        'description',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
-        'is_featured' => 'boolean',
-        'sort_order' => 'integer',
-        'established_year' => 'integer',
+        // No special casts needed for the current fields
     ];
 
     /**
@@ -46,34 +38,18 @@ class Brand extends Model
         });
 
         static::updating(function ($brand) {
-            if ($brand->isDirty('name') && empty($brand->slug)) {
+            if ($brand->isDirty('name')) {
                 $brand->slug = Str::slug($brand->name);
             }
         });
     }
 
     /**
-     * Scope: Only active brands
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Scope: Only featured brands
-     */
-    public function scopeFeatured($query)
-    {
-        return $query->where('is_featured', true);
-    }
-
-    /**
-     * Scope: Ordered by sort_order
+     * Scope: Order by name
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('sort_order')->orderBy('name');
+        return $query->orderBy('name');
     }
 
     /**
@@ -99,6 +75,36 @@ class Brand extends Model
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? asset($this->logo) : null;
+    }
+
+    // app/Models/Brand.php
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'company_brand')
+                    ->withPivot('type')
+                    ->withTimestamps();
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    // Add this to calculate average rating
+    public function averageRating(): float
+    {
+        return $this->ratingSummary ? $this->ratingSummary->avg_rating : 0;
+    }
+
+    // Add this to get review count
+    public function reviewCount(): int
+    {
+        return $this->ratingSummary ? $this->ratingSummary->total_reviews : 0;
+    }
+
+    public function ratingSummary()
+    {
+        return $this->morphOne(\App\Models\RatingSummary::class, 'reviewable');
     }
 }
 
