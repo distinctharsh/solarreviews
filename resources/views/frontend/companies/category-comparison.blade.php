@@ -761,6 +761,10 @@
     @php
         $categoryName = $category->name;
         $categoryNameLower = strtolower($categoryName);
+        $categorySlug = $category->slug;
+        $isPanels = $categorySlug === 'panels';
+        $isBatteries = $categorySlug === 'batteries';
+        $isInverters = $categorySlug === 'inverters';
     @endphp
     <div class="page-wrapper">
         @include('components.frontend.navbar')
@@ -802,6 +806,117 @@
                 </div>
             </div>
         </section>
+
+        @if($isBatteries)
+            <section class="why-important-section py-5">
+                <div class="container-custom">
+                    <h2 class="important-title">What is a solar battery?</h2>
+                    <p class="important-text">
+                        A solar battery bank stores the excess solar electricity your home doesn't need the moment it is generated.
+                        Because panels only work when the sun shines, batteries are what turn solar into a dependable 24×7 power source and are key to a 100% renewable future.
+                    </p>
+                    <p class="important-text">
+                        Energy storage systems today are sold as complete home storage solutions—think Tesla Powerwall or sonnen eco.
+                        They bundle the battery bank with management software, battery inverters, chargers, and controls, all tuned for modern lithium-ion chemistry.
+                    </p>
+                    <h3 class="important-title" style="font-size:1.4rem;">Why is lithium-ion battery technology now so popular?</h3>
+                    <ul class="important-list">
+                        <li><strong>Higher energy density:</strong> Stores more power per cubic inch than legacy deep-cycle lead acid batteries, making installs easier in tight garages and homes.</li>
+                        <li><strong>No vented gases:</strong> Safer indoor installation without separate enclosures, opening the mass-market opportunity.</li>
+                        <li><strong>Electronics built for Li-ion:</strong> Modern energy management software and hardware are engineered specifically for lithium chemistry.</li>
+                    </ul>
+                    <h3 class="important-title" style="font-size:1.4rem;">Are solar batteries worth it?</h3>
+                    <p class="important-text">It depends on four questions:</p>
+                    <ol class="important-list">
+                        <li><strong>Do you have access to 1:1 net metering?</strong> If yes, the grid already acts as your battery unless evening TOU rates are much higher.</li>
+                        <li><strong>Do you generate enough excess solar energy?</strong> Batteries only help if your system produces surplus kWh to store.</li>
+                        <li><strong>Does your utility use time-of-use pricing?</strong> Charging midday and discharging during expensive evening peaks can double the value of each stored kWh.</li>
+                        <li><strong>Are there rebates or tax credits?</strong> 30% federal ITC plus local incentives dramatically improve payback for home storage.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section class="why-important-section py-5">
+                <div class="container-custom">
+                    <h2 class="important-title">Energy storage systems</h2>
+                    <p class="important-text">
+                        Homeowners are now offered full storage systems rather than bare batteries. These all-in-one setups include
+                        battery management, inverters, chargers, and smart software so you can control how and when to charge or discharge.
+                        They all use lithium-ion cells—flooded lead-acid packs are effectively obsolete for modern home installs.
+                    </p>
+                    <h3 class="important-title" style="font-size:1.4rem;">AC-coupled vs DC-coupled solar batteries</h3>
+                    <p class="important-text">
+                        Solar panels make DC power and home appliances consume AC. Hybrid/off-grid systems handle that difference in two ways:
+                    </p>
+                    <h4 class="on-page-title" style="font-size:1.1rem;">AC-coupled batteries</h4>
+                    <p class="important-text">
+                        Panels feed DC into a grid-tie inverter first, converting it to AC. The AC can power the home, be exported to the grid,
+                        or get routed into an AC battery that internally converts it back to DC for storage. These batteries include electronics to manage all conversions seamlessly.
+                    </p>
+                    <h4 class="on-page-title" style="font-size:1.1rem;">DC-coupled batteries</h4>
+                    <p class="important-text">
+                        (For completeness) DC-coupled systems charge batteries directly with DC before a single inverter handles conversion for home loads.
+                        They can be more efficient but require specialized hybrid equipment.
+                    </p>
+                </div>
+            </section>
+
+            <!-- <section class="why-important-section py-5">
+                <div class="container-custom">
+                    <h2 class="important-title">Top battery brands in India 2025</h2>
+                    <p class="important-text">
+                        Scroll below to the "Best 20" list to see which storage brands consumers trust most this year.
+                        Every card summarizes review volume, satisfaction scores, and links into detailed pages so you can read reviews for every battery model we track.
+                    </p>
+                    <h3 class="important-title" style="font-size:1.4rem;">Reviews on all models of solar batteries</h3>
+                    <p class="important-text">
+                        Our reviewer community contributes detailed feedback on cycle life, warranty claims, and installer experiences for each product line.
+                        Use the filters and rankings to jump into the exact chemistry, capacity, or price band that fits your project.
+                    </p>
+                </div>
+            </section> -->
+        @endif
+
+        @if($isInverters)
+            <section class="why-important-section py-5">
+                <div class="container-custom">
+                    <h2 class="important-title">What does an inverter do?</h2>
+                    <p class="important-text">
+                        Solar inverters are the brains of every PV system. They convert the DC electricity that panels produce into the AC power your home uses,
+                        and they constantly track the Maximum Power Point (MPP) so panels operate at the most productive voltage/current pair as conditions change throughout the day.
+                    </p>
+                    <h3 class="important-title" style="font-size:1.4rem;">Solar inverter technology</h3>
+                    <ul class="important-list">
+                        <li><strong>String inverter:</strong> Cost-effective and simple for full strings, but least efficient under shading.</li>
+                        <li><strong>String inverter + optimizers:</strong> Module-level MPP tracking handles shade better while still feeding a single inverter.</li>
+                        <li><strong>Microinverter:</strong> Full AC conversion and MPP tracking per panel. Highest flexibility and monitoring granularity, at a higher cost.</li>
+                    </ul>
+                    <h3 class="important-title" style="font-size:1.4rem;">System compatibility</h3>
+                    <ul class="important-list">
+                        <li><strong>Grid-tied:</strong> Standard for most homes, enabling net metering.</li>
+                        <li><strong>Hybrid:</strong> Works with batteries by charging/discharging plus grid interaction.</li>
+                        <li><strong>Off-grid:</strong> Fully independent setups that require battery backup.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="why-important-section py-5">
+                <div class="container-custom">
+                    <h2 class="important-title">Types of solar inverter (at a glance)</h2>
+                    <p class="important-text">
+                        Deciding between technologies? Use this cheat sheet to match inverter styles with project goals:
+                    </p>
+                    <ul class="important-list">
+                        <li><strong>String inverter:</strong> Best for wide-open roofs with identical panel orientations.</li>
+                        <li><strong>Optimized string:</strong> Choose when partial shading or mixed module strings are unavoidable.</li>
+                        <li><strong>Microinverter:</strong> Ideal for modular growth, complex roofs, or premium monitoring requirements.</li>
+                    </ul>
+                    <p class="important-text">
+                        Below you'll also find rankings for Top 4 inverter brands, top-rated grid-tied models, plus the best hybrid/off-grid inverters based on consumer satisfaction.
+                    </p>
+                </div>
+            </section>
+        @endif
 
 
         <!-- Solar Review Section -->
@@ -851,7 +966,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
 
             <h2 class="fw-bold section-title">
-                Best 20 {{ $categoryName }} brands by consumer reviews
+                {{ $isPanels ? 'Best 20 brands of solar panels by consumer reviews' : 'Best 20 ' . $categoryName . ' brands by consumer reviews' }}
             </h2>
 
             <!-- Sort Box -->
@@ -942,28 +1057,41 @@
 <section class="why-important-section py-5">
     <div class="container-custom">
 
-        <h2 class="important-title">
-            Why is it so important to use the best {{ $categoryNameLower }} brands?
-        </h2>
-
-        <p class="important-text">
-            A recurring point we make on SolarReviews is that {{ $categoryNameLower }} last a long, long time; 
-            25-30 years to be exact. This makes it important to buy {{ $categoryNameLower }} with the following qualities:
-        </p>
-
-        <ol class="important-list">
-            <li>They are the least likely to fail.</li>
-            <li>The manufacturer will honor their warranty if there is a fault.</li>
-            <li>
-                Installed by a local solar company who will still be in business if there is a fault — and will 
-                do the testing necessary to lodge a successful warranty claim with the manufacturer.
-            </li>
-        </ol>
-
-        <p class="important-text">
-            This third point is very important in practical terms, and a good reason why it is not always wise 
-            to buy solar from the cheapest company.
-        </p>
+        @if($isPanels)
+            <h2 class="important-title">Why is it so important to use the best solar panel brands?</h2>
+            <p class="important-text">
+                A recurring point we make on SolarReviews is that solar panels last a long, long time; 25–30 years to be exact.
+                This makes it critical to buy panels with the following qualities:
+            </p>
+            <ol class="important-list">
+                <li>They are the least likely to fail.</li>
+                <li>The manufacturer will honor their warranty if there is a fault.</li>
+                <li>They’re installed by a local solar company that will still be around to diagnose issues and file warranty claims.</li>
+            </ol>
+            <p class="important-text">
+                That third point is huge in practical terms—and a big reason why chasing the cheapest quote can backfire.
+            </p>
+        @else
+            <h2 class="important-title">
+                Why is it so important to use the best {{ $categoryNameLower }} brands?
+            </h2>
+            <p class="important-text">
+                A recurring point we make on SolarReviews is that {{ $categoryNameLower }} last a long, long time;
+                25-30 years to be exact. This makes it important to buy {{ $categoryNameLower }} with the following qualities:
+            </p>
+            <ol class="important-list">
+                <li>They are the least likely to fail.</li>
+                <li>The manufacturer will honor their warranty if there is a fault.</li>
+                <li>
+                    Installed by a local solar company who will still be in business if there is a fault — and will
+                    do the testing necessary to lodge a successful warranty claim with the manufacturer.
+                </li>
+            </ol>
+            <p class="important-text">
+                This third point is very important in practical terms, and a good reason why it is not always wise
+                to buy solar from the cheapest company.
+            </p>
+        @endif
 
     </div>
 </section>
@@ -978,7 +1106,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
 
             <h2 class="fw-bold section-title">
-                10 best {{ $categoryName }} brands by efficiency
+                {{ $isPanels ? '10 best solar panel brands by panel efficiency' : '10 best ' . $categoryName . ' brands by efficiency' }}
             </h2>
 
             <!-- Sort Box -->
@@ -1051,30 +1179,50 @@
 <section class="why-important-section py-5">
     <div class="container-custom">
 
-        <h2 class="important-title">
-            What are Tier 1 {{ $categoryNameLower }} manufacturers?
-        </h2>
-
-        <p class="important-text">
-            The concept of an elite list of Tier 1 {{ $categoryNameLower }} manufacturers was first used by Bloomberg New Energy 
-            in a report on the “bankability” of different {{ $categoryNameLower }} brands.
-        </p>
-
-        <p class="important-text">
-            They chose brands that had been financed on a non-recourse basis by several banks, over several different 
-            projects greater than 1.5 megawatts in size.
-        </p>
-
-        <p class="important-text">
-            While Bloomberg’s definition of Tier 1 is somewhat useful, in our view it’s insufficient as a guide for 
-            consumers. It only judges the {{ $categoryNameLower }} based on past performance, and doesn’t attempt to predict the 
-            future reliability of each manufacturer.
-        </p>
-
-        <p class="important-text">
-            Given that {{ $categoryNameLower }} last 25–30 years, we think much more weight should be given to the future prospects 
-            of the brand, as well as the manufacturer’s future economic viability.
-        </p>
+        @if($isPanels)
+            <h2 class="important-title">What are Tier 1 solar panel manufacturers?</h2>
+            <p class="important-text">
+                The concept of an elite list of Tier 1 solar panel manufacturers was first used by Bloomberg New Energy in a report on the “bankability” of different brands.
+                They chose companies that had been financed on a non-recourse basis by several banks across multiple projects greater than 1.5 MW.
+            </p>
+            <p class="important-text">
+                While Bloomberg’s definition is somewhat useful, it only judges panels based on past performance and doesn’t attempt to predict future reliability.
+                Given that solar panels last 25–30 years, we believe more weight should be given to future prospects and financial health.
+            </p>
+            <h3 class="important-title" style="font-size:1.4rem;">How we define Tier 1 solar panel manufacturers</h3>
+            <p class="important-text">
+                Our editorial committee uses six criteria—we encourage you to apply them when evaluating any panel brand:
+            </p>
+            <ol class="important-list">
+                <li><strong>Manufacturing quality & integration:</strong> Fewer defects mean fewer warranty claims and stronger long-term viability.</li>
+                <li><strong>Scale & marginal cost:</strong> Low-cost producers are more likely to survive market swings and honor warranties.</li>
+                <li><strong>Profitability & balance sheet transparency:</strong> We can’t recommend a 25-year warranty if a company’s finances are opaque.</li>
+                <li><strong>Cell efficiency roadmap:</strong> Brands that keep pace with efficiency leaders maintain pricing power.</li>
+                <li><strong>Value positioning:</strong> Panels are a financial investment, so price versus competitors matters.</li>
+                <li><strong>Dealer network strength:</strong> Consumers need proof that the manufacturer supports local installers in the U.S.</li>
+            </ol>
+        @else
+            <h2 class="important-title">
+                What are Tier 1 {{ $categoryNameLower }} manufacturers?
+            </h2>
+            <p class="important-text">
+                The concept of an elite list of Tier 1 {{ $categoryNameLower }} manufacturers was first used by Bloomberg New Energy
+                in a report on the “bankability” of different {{ $categoryNameLower }} brands.
+            </p>
+            <p class="important-text">
+                They chose brands that had been financed on a non-recourse basis by several banks, over several different
+                projects greater than 1.5 megawatts in size.
+            </p>
+            <p class="important-text">
+                While Bloomberg’s definition of Tier 1 is somewhat useful, in our view it’s insufficient as a guide for
+                consumers. It only judges the {{ $categoryNameLower }} based on past performance, and doesn’t attempt to predict the
+                future reliability of each manufacturer.
+            </p>
+            <p class="important-text">
+                Given that {{ $categoryNameLower }} last 25–30 years, we think much more weight should be given to the future prospects
+                of the brand, as well as the manufacturer’s future economic viability.
+            </p>
+        @endif
 
     </div>
 </section>
