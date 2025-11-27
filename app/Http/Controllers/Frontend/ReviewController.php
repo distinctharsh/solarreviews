@@ -81,7 +81,10 @@ class ReviewController extends Controller
             $query->orderBy('name');
         }])->orderBy('name')->get();
 
-        $companies = Company::orderBy('name')->get(['id', 'name', 'state_id']);
+        $companies = Company::select('id', 'state_id')
+            ->selectRaw('COALESCE(owner_name, slug) as name')
+            ->orderBy('owner_name')
+            ->get();
 
         return view('frontend.reviews.create', [
             'categoryTiles' => $categoryTiles,
@@ -115,6 +118,13 @@ class ReviewController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Please verify your email with OTP first.'
+            ], 422);
+        }
+
+        if (!session('email_verified') || session('email_verified_email') !== $validated['email']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please verify your email with the OTP sent to you.'
             ], 422);
         }
 
@@ -168,6 +178,8 @@ class ReviewController extends Controller
                 'message' => 'Failed to submit review. Please try again.'
             ], 500);
         }
+
+        session()->forget(['email_verified', 'email_verified_email']);
     }
 
     /**
@@ -276,7 +288,10 @@ class ReviewController extends Controller
         session()->forget(['otp', 'otp_email', 'otp_expires_at']);
 
         // Mark email as verified in session
-        session(['email_verified' => true]);
+        session([
+            'email_verified' => true,
+            'email_verified_email' => $request->email,
+        ]);
 
         \Log::info('OTP verified successfully');
         return response()->json([

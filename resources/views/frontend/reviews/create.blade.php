@@ -179,6 +179,26 @@
             transition: color 0.2s ease;
         }
 
+        .rating-field {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .rating-field label {
+            margin-bottom: 0;
+            flex: 1 1 220px;
+        }
+
+        .rating-field .rating-stars {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
         .rating-stars input:checked ~ label,
         .rating-stars label:hover,
         .rating-stars label:hover ~ label {
@@ -192,6 +212,23 @@
 
         .rating-stars.rating-sm label {
             font-size: 1.2rem;
+        }
+
+        .rating-field-sm label {
+            flex-basis: 160px;
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        @media (max-width: 576px) {
+            .rating-field {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rating-field .rating-stars {
+                width: 100%;
+            }
         }
 
         .upload-box {
@@ -353,12 +390,14 @@
                                 </div>
 
                                 <div class="col-12 col-lg-6">
-                                    <label class="form-label">Rate your experience with this company *</label>
-                                    <div class="rating-stars d-flex flex-row-reverse justify-content-start gap-1">
-                                        @for($star = 5; $star >= 1; $star--)
-                                            <input type="radio" id="{{ $tile['slug'] }}-rating-{{ $star }}" name="rating" value="{{ $star }}" {{ $star === 5 ? 'required' : '' }}>
-                                            <label for="{{ $tile['slug'] }}-rating-{{ $star }}"><i class="fas fa-star"></i></label>
-                                        @endfor
+                                    <div class="rating-field">
+                                        <label class="form-label mb-0">Rate your experience with this company *</label>
+                                        <div class="rating-stars d-flex flex-row-reverse justify-content-start gap-1">
+                                            @for($star = 5; $star >= 1; $star--)
+                                                <input type="radio" id="{{ $tile['slug'] }}-rating-{{ $star }}" name="rating" value="{{ $star }}" {{ $star === 5 ? 'required' : '' }}>
+                                                <label for="{{ $tile['slug'] }}-rating-{{ $star }}"><i class="fas fa-star"></i></label>
+                                            @endfor
+                                        </div>
                                     </div>
                                 </div>
 
@@ -386,16 +425,18 @@
                                         @endphp
                                         @foreach($experienceMetrics as $metric)
                                             <div class="col">
-                                                <label class="form-label small d-block mb-2">{{ $metric }}</label>
-                                                <div class="rating-stars rating-sm d-flex flex-row-reverse justify-content-start gap-1">
-                                                    @for($i = 5; $i >= 1; $i--)
-                                                        @php
-                                                            $metricSlug = Str::slug($metric, '_');
-                                                            $inputId = $tile['slug'].'-'.$metricSlug.'-rating-'.$i;
-                                                        @endphp
-                                                        <input type="radio" id="{{ $inputId }}" name="metrics[{{ $metricSlug }}]" value="{{ $i }}">
-                                                        <label for="{{ $inputId }}" title="{{ $i }} stars"><i class="fas fa-star"></i></label>
-                                                    @endfor
+                                                <div class="rating-field rating-field-sm">
+                                                    <label class="form-label small mb-0">{{ $metric }}</label>
+                                                    <div class="rating-stars rating-sm d-flex flex-row-reverse justify-content-start gap-1">
+                                                        @for($i = 5; $i >= 1; $i--)
+                                                            @php
+                                                                $metricSlug = Str::slug($metric, '_');
+                                                                $inputId = $tile['slug'].'-'.$metricSlug.'-rating-'.$i;
+                                                            @endphp
+                                                            <input type="radio" id="{{ $inputId }}" name="metrics[{{ $metricSlug }}]" value="{{ $i }}">
+                                                            <label for="{{ $inputId }}" title="{{ $i }} stars"><i class="fas fa-star"></i></label>
+                                                        @endfor
+                                                    </div>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -480,7 +521,8 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Add email address *</label>
-                                                <input type="email" class="form-control" name="email" placeholder="name@email.com" required>
+                                                <input type="email" class="form-control" name="email" placeholder="name@email.com" required data-email-input>
+                                                <small class="text-muted">We send the verification code automatically once this field is filled.</small>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Your state *</label>
@@ -498,13 +540,13 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">OTP *</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit code" required>
-                                                    <button type="button" class="btn btn-outline-secondary btn-send-otp">Send OTP</button>
+                                                    <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit code" required data-otp-input>
+                                                    <button type="button" class="btn btn-outline-secondary btn-send-otp" data-send-otp-btn>Resend OTP</button>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 d-flex align-items-end gap-2 otp-actions">
-                                                <button type="button" class="btn btn-outline-primary btn-verify-otp flex-grow-1">Verify OTP</button>
-                                                <div class="small text-success d-none" data-otp-status>Verified!</div>
+                                                <button type="button" class="btn btn-outline-primary btn-verify-otp flex-grow-1" data-verify-otp-btn>Verify OTP</button>
+                                                <div class="small text-success d-none" data-otp-status aria-live="polite">Verified!</div>
                                             </div>
                                         </div>
                                         <p class="info-note mt-3 mb-0">
@@ -526,7 +568,7 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-success px-4 py-2">
+                                    <button type="submit" class="btn btn-success px-4 py-2" data-submit-btn disabled>
                                         <i class="fas fa-paper-plane me-2"></i>Submit review
                                     </button>
                                 </div>
@@ -590,70 +632,201 @@
             });
         });
 
-        const otpMessage = (element, message, type = 'success') => {
-            if (!element) return;
-            element.classList.remove('text-success', 'text-danger');
-            element.classList.add(type === 'success' ? 'text-success' : 'text-danger');
-            element.textContent = message;
-            element.classList.remove('d-none');
-        };
+        const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
         document.querySelectorAll('.review-submit-form').forEach(form => {
-            const sendBtn = form.querySelector('.btn-send-otp');
-            const verifyBtn = form.querySelector('.btn-verify-otp');
-            const emailInput = form.querySelector('input[name="email"]');
-            const otpInput = form.querySelector('input[name="otp"]');
+            const sendBtn = form.querySelector('[data-send-otp-btn]');
+            const verifyBtn = form.querySelector('[data-verify-otp-btn]');
+            const emailInput = form.querySelector('[data-email-input]');
+            const otpInput = form.querySelector('[data-otp-input]');
             const statusText = form.querySelector('[data-otp-status]');
+            const submitBtn = form.querySelector('[data-submit-btn]');
 
-            if (sendBtn) {
-                sendBtn.addEventListener('click', async () => {
-                    if (!emailInput.value) {
-                        otpMessage(statusText, 'Enter email before requesting OTP', 'danger');
-                        return;
-                    }
+            let emailVerified = false;
+            let isSendingOtp = false;
+            let autoSendTimer = null;
+            let lastOtpEmail = '';
+
+            const setStatus = (message, intent = 'success') => {
+                if (!statusText) return;
+                statusText.classList.remove('text-success', 'text-danger', 'text-muted');
+                statusText.textContent = message;
+                statusText.classList.remove('d-none');
+                const map = {
+                    success: 'text-success',
+                    danger: 'text-danger',
+                    info: 'text-muted'
+                };
+                statusText.classList.add(map[intent] || 'text-success');
+            };
+
+            const hideStatus = () => {
+                if (!statusText) return;
+                statusText.classList.add('d-none');
+                statusText.textContent = '';
+                statusText.classList.remove('text-success', 'text-danger', 'text-muted');
+            };
+
+            const updateSubmitState = () => {
+                if (submitBtn) {
+                    submitBtn.disabled = !emailVerified;
+                }
+            };
+
+            const resetOtpFlow = (resetOtpValue = false, clearEmailRef = false) => {
+                emailVerified = false;
+                if (resetOtpValue && otpInput) {
+                    otpInput.value = '';
+                }
+                if (clearEmailRef) {
+                    lastOtpEmail = '';
+                }
+                hideStatus();
+                updateSubmitState();
+            };
+
+            const sendOtp = async (mode = 'manual') => {
+                if (!emailInput) return;
+                const emailValue = emailInput.value.trim();
+
+                if (!isValidEmail(emailValue)) {
+                    setStatus('Enter a valid email before requesting OTP', 'danger');
+                    return;
+                }
+
+                if (mode === 'auto' && emailValue === lastOtpEmail) {
+                    return;
+                }
+
+                if (isSendingOtp) {
+                    return;
+                }
+
+                isSendingOtp = true;
+
+                if (mode === 'manual' && sendBtn) {
                     sendBtn.disabled = true;
                     sendBtn.textContent = 'Sending…';
+                } else if (mode === 'auto') {
+                    setStatus('Sending verification code…', 'info');
+                }
 
+                try {
                     const response = await fetch(`{{ route('reviews.send-otp') }}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': csrfToken,
                         },
-                        body: JSON.stringify({ email: emailInput.value })
+                        body: JSON.stringify({ email: emailValue })
                     });
 
                     const data = await response.json();
-                    otpMessage(statusText, data.message || 'OTP sent', data.success ? 'success' : 'danger');
-                    sendBtn.disabled = false;
-                    sendBtn.textContent = 'Send OTP';
-                });
-            }
 
-            if (verifyBtn) {
-                verifyBtn.addEventListener('click', async () => {
-                    if (!otpInput.value || !emailInput.value) {
-                        otpMessage(statusText, 'Enter email and OTP before verifying', 'danger');
-                        return;
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.message || 'Failed to send OTP');
                     }
-                    verifyBtn.disabled = true;
-                    verifyBtn.textContent = 'Verifying…';
 
+                    lastOtpEmail = emailValue;
+                    setStatus(data.message || 'OTP sent successfully', 'success');
+                } catch (error) {
+                    setStatus(error.message || 'Unable to send OTP. Please try again.', 'danger');
+                } finally {
+                    isSendingOtp = false;
+                    if (sendBtn) {
+                        sendBtn.disabled = false;
+                        sendBtn.textContent = 'Resend OTP';
+                    }
+                }
+            };
+
+            const verifyOtp = async () => {
+                if (!emailInput || !otpInput) return;
+
+                const emailValue = emailInput.value.trim();
+                const otpValue = otpInput.value.trim();
+
+                if (!isValidEmail(emailValue) || !otpValue) {
+                    setStatus('Enter both email and OTP before verifying', 'danger');
+                    return;
+                }
+
+                verifyBtn.disabled = true;
+                verifyBtn.textContent = 'Verifying…';
+
+                try {
                     const response = await fetch(`{{ route('reviews.verify-otp') }}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': csrfToken,
                         },
-                        body: JSON.stringify({ email: emailInput.value, otp: otpInput.value })
+                        body: JSON.stringify({ email: emailValue, otp: otpValue })
                     });
 
                     const data = await response.json();
-                    otpMessage(statusText, data.message || 'OTP verified', data.success ? 'success' : 'danger');
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.message || 'OTP verification failed');
+                    }
+
+                    emailVerified = true;
+                    setStatus(data.message || 'OTP verified successfully.', 'success');
+                    updateSubmitState();
+                } catch (error) {
+                    setStatus(error.message || 'Unable to verify OTP. Please try again.', 'danger');
+                } finally {
                     verifyBtn.disabled = false;
                     verifyBtn.textContent = 'Verify OTP';
+                }
+            };
+
+            if (sendBtn) {
+                sendBtn.addEventListener('click', () => sendOtp('manual'));
+            }
+
+            if (verifyBtn) {
+                verifyBtn.addEventListener('click', verifyOtp);
+            }
+
+            if (emailInput) {
+                const attemptAutoSend = () => {
+                    if (autoSendTimer) {
+                        clearTimeout(autoSendTimer);
+                        autoSendTimer = null;
+                    }
+                    sendOtp('auto');
+                };
+
+                emailInput.addEventListener('input', () => {
+                    resetOtpFlow(true, true);
+                    if (autoSendTimer) {
+                        clearTimeout(autoSendTimer);
+                    }
+
+                    if (!isValidEmail(emailInput.value.trim())) {
+                        return;
+                    }
+
+                    autoSendTimer = setTimeout(attemptAutoSend, 800);
+                });
+
+                emailInput.addEventListener('blur', () => {
+                    if (!isValidEmail(emailInput.value.trim())) {
+                        return;
+                    }
+                    attemptAutoSend();
                 });
             }
+
+            if (otpInput) {
+                otpInput.addEventListener('input', () => {
+                    emailVerified = false;
+                    updateSubmitState();
+                });
+            }
+
+            updateSubmitState();
         });
 
         document.querySelectorAll('.company-state-select').forEach(select => {

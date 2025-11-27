@@ -5,10 +5,11 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use Illuminate\Support\Facades\Route;
 
 // Frontend Routes
@@ -48,23 +49,12 @@ Route::get('/state/{stateSlug}', function ($stateSlug) {
     ]);
 })->name('state.companies');
 
-// Review Routes (temporarily disabled)
-Route::prefix('reviews')->group(function () {
-    Route::get('/create', function () {
-        return redirect('/');
-    })->name('reviews.create');
-    
-    Route::post('/', function () {
-        return response()->json(['success' => false, 'message' => 'Reviews temporarily disabled']);
-    })->name('reviews.store');
-    
-    Route::post('/send-otp', function () {
-        return response()->json(['success' => true, 'otp' => '123456']);
-    })->name('reviews.send-otp');
-    
-    Route::post('/verify-otp', function () {
-        return response()->json(['success' => true]);
-    })->name('reviews.verify-otp');
+// Review Routes
+Route::prefix('reviews')->name('reviews.')->group(function () {
+    Route::get('/create', [FrontendReviewController::class, 'create'])->name('create');
+    Route::post('/', [FrontendReviewController::class, 'store'])->name('store');
+    Route::post('/send-otp', [FrontendReviewController::class, 'sendOtp'])->name('send-otp');
+    Route::post('/verify-otp', [FrontendReviewController::class, 'verifyOtp'])->name('verify-otp');
 });
 
 // Admin Routes
@@ -99,7 +89,7 @@ Route::prefix('admin')
     Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     
     // Reviews
-    Route::resource('reviews', ReviewController::class);
+    Route::resource('reviews', AdminReviewController::class);
 });
 
 // User Dashboard
