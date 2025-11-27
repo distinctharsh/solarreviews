@@ -25,23 +25,19 @@ Route::get('/top-reviews', function () {
 Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
     ->name('companies.compare');
 
-// State Companies (temporarily using dummy data)
+// State Companies
 Route::get('/state/{stateSlug}', function ($stateSlug) {
-    $states = [
-        ['id' => 1, 'name' => 'Maharashtra', 'slug' => 'maharashtra'],
-        ['id' => 2, 'name' => 'Gujarat', 'slug' => 'gujarat'],
-        ['id' => 3, 'name' => 'Rajasthan', 'slug' => 'rajasthan'],
-        ['id' => 4, 'name' => 'Karnataka', 'slug' => 'karnataka'],
-        ['id' => 5, 'name' => 'Tamil Nadu', 'slug' => 'tamil-nadu'],
-        ['id' => 6, 'name' => 'Uttar Pradesh', 'slug' => 'uttar-pradesh'],
-        ['id' => 7, 'name' => 'Delhi', 'slug' => 'delhi'],
-    ];
-    
-    $state = collect($states)->firstWhere('slug', $stateSlug);
+    $states = \App\Models\State::query()
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get(['id', 'name', 'slug']);
+
+    $state = $states->firstWhere('slug', $stateSlug);
+
     if (!$state) {
         abort(404);
     }
-    
+
     return view('frontend.companies.state', [
         'state' => $state,
         'states' => $states,
