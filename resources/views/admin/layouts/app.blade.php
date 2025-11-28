@@ -53,6 +53,17 @@
                     <i class="fas fa-star"></i>
                     All Reviews
                 </a>
+
+                <div class="sidebar-section-title">Chatbot</div>
+
+                <a href="{{ route('admin.chatbot.questions.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.questions.*') ? 'active' : '' }}">
+                    <i class="fas fa-robot"></i>
+                    Questions & Flows
+                </a>
+                <a href="{{ route('admin.chatbot.reports.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.reports.*') ? 'active' : '' }}">
+                    <i class="fas fa-comments"></i>
+                    Conversation Logs
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <form method="POST" action="{{ route('logout') }}">

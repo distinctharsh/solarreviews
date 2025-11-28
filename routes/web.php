@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\ChatbotOptionController;
+use App\Http\Controllers\Admin\ChatbotQuestionController;
+use App\Http\Controllers\Admin\ChatbotReportController;
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -86,6 +89,24 @@ Route::prefix('admin')
     
     // Reviews
     Route::resource('reviews', AdminReviewController::class);
+
+    // Chatbot (Questions + Options)
+    Route::prefix('chatbot')->name('chatbot.')->group(function () {
+        Route::resource('questions', ChatbotQuestionController::class);
+
+        Route::get('questions/{question}/options/create', [ChatbotOptionController::class, 'create'])
+            ->name('questions.options.create');
+        Route::post('questions/{question}/options', [ChatbotOptionController::class, 'store'])
+            ->name('questions.options.store');
+        Route::get('questions/{question}/options/{option}/edit', [ChatbotOptionController::class, 'edit'])
+            ->name('questions.options.edit');
+        Route::put('questions/{question}/options/{option}', [ChatbotOptionController::class, 'update'])
+            ->name('questions.options.update');
+        Route::delete('questions/{question}/options/{option}', [ChatbotOptionController::class, 'destroy'])
+            ->name('questions.options.destroy');
+
+        Route::resource('reports', ChatbotReportController::class)->only(['index', 'show']);
+    });
 });
 
 // User Dashboard

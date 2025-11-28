@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\ChatbotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('companies')->group(function () {
     Route::get('/city/{citySlug}', [CompanyController::class, 'getByCity']);
     Route::get('/{slug}', [CompanyController::class, 'show']);
+});
+
+Route::prefix('chatbot')->group(function () {
+    Route::get('/bootstrap', [ChatbotController::class, 'bootstrap']);
+    Route::post('/answer', [ChatbotController::class, 'answer']);
 });

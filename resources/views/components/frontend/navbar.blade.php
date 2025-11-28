@@ -391,3 +391,5 @@
         });
     });
 </script>
+
+@include('components.frontend.chatbot-widget')
