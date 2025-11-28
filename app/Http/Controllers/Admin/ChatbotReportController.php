@@ -37,9 +37,9 @@ class ChatbotReportController extends Controller
         return view('admin.chatbot.reports.index', compact('sessions', 'statusOptions'));
     }
 
-    public function show(ChatbotUserSession $session): View
+    public function show(ChatbotUserSession $report): View
     {
-        $session->load(['messages.question', 'messages.option'])
+        $session = $report->load(['messages.question', 'messages.option'])
             ->loadCount('messages');
 
         return view('admin.chatbot.reports.show', compact('session'));
