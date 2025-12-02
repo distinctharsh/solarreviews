@@ -3,19 +3,45 @@
 @section('page_title', 'Brands')
 
 @section('content')
-<div class="content-header">
-    <div class="content-header-left">
+@php
+    $totalBrands = $brands->total() ?? $brands->count();
+    $logoReady = $brands->filter(fn ($brand) => filled($brand->logo_url))->count();
+    $uniqueCountries = $brands->pluck('country')->filter()->unique()->count();
+@endphp
+
+<div class="page-hero">
+    <div>
+        <p class="eyebrow">Master data</p>
         <h1>Brands</h1>
-        <p class="text-muted">Manage product brands</p>
+        <p class="hero-copy">Manage product brands, logos, and provenance for solar components.</p>
     </div>
-    <div class="content-header-right">
-        <a href="{{ route('admin.brands.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Add New Brand
+    <div class="hero-actions">
+        <a href="{{ route('admin.brands.create') }}" class="btn btn-primary btn-pill">
+            <i class="fas fa-plus"></i>
+            Add Brand
         </a>
     </div>
 </div>
 
-<div class="card">
+<div class="metrics-grid">
+    <article class="metric-card">
+        <span class="metric-label">Total brands</span>
+        <div class="metric-value">{{ number_format($totalBrands) }}</div>
+        <small>{{ $brands->count() }} visible on this page</small>
+    </article>
+    <article class="metric-card">
+        <span class="metric-label">Logos on file</span>
+        <div class="metric-value text-success">{{ number_format($logoReady) }}</div>
+        <small>Ready for listing cards</small>
+    </article>
+    <article class="metric-card">
+        <span class="metric-label">Countries</span>
+        <div class="metric-value">{{ number_format($uniqueCountries) }}</div>
+        <small>Represented in catalog</small>
+    </article>
+</div>
+
+<div class="card surface-card">
     <div class="card-body">
         @if(session('success'))
             <div class="alert alert-success">
@@ -24,8 +50,21 @@
         @endif
 
         @if($brands->count() > 0)
+            <div class="table-intro">
+                <div>
+                    <h4>All brands</h4>
+                    <p class="text-muted">Includes logos, country of origin, and short descriptions.</p>
+                </div>
+                <div class="table-actions">
+                    <div class="input-chip">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search (coming soon)" disabled>
+                    </div>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table modern-table">
                     <thead>
                         <tr>
                             <th width="60">#</th>
@@ -54,7 +93,7 @@
                                     <div class="text-muted small">{{ $brand->slug }}</div>
                                 </td>
                                 <td>{{ $brand->country ?? '-' }}</td>
-                                <td>{{ Str::limit($brand->description, 50) ?? '-' }}</td>
+                                <td>{{ Str::limit($brand->description, 60) ?? '-' }}</td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('admin.brands.edit', $brand) }}" class="btn btn-sm btn-primary" title="Edit">
@@ -90,85 +129,4 @@
         @endif
     </div>
 </div>
-
-<style>
-.table-img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    padding: 4px;
-}
-
-.table-img-placeholder {
-    width: 50px;
-    height: 50px;
-    background: #f1f5f9;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    font-size: 1.25rem;
-}
-
-.btn-group {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-radius: 0.2rem;
-}
-
-.status-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-}
-
-.status-active {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.status-inactive {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.status-badge:hover {
-    opacity: 0.8;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-}
-
-.empty-state i {
-    font-size: 4rem;
-    color: #cbd5e1;
-    margin-bottom: 1rem;
-}
-
-.empty-state h3 {
-    color: #475569;
-    margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-    color: #94a3b8;
-    margin-bottom: 1.5rem;
-}
-</style>
 @endsection
