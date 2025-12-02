@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\State;
+use App\Models\City;
+use App\Models\Category;
 use App\Http\Requests\Admin\StoreCompanyRequest;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use Illuminate\Support\Str;
@@ -18,17 +21,12 @@ class CompanyController extends Controller
 
     public function create()
     {
-        $companyTypes = [
-            'manufacturer' => 'Manufacturer',
-            'distributor' => 'Distributor',
-            'dealer' => 'Dealer',
-            'installer' => 'Installer',
-            'wholesaler' => 'Wholesaler',
-            'retailer' => 'Retailer',
-            'epc' => 'EPC'
-        ];
+        $companyTypes = $this->companyTypes();
+        $states = State::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         
-        return view('admin.companies.create', compact('companyTypes'));
+        return view('admin.companies.create', compact('companyTypes', 'states', 'cities', 'categories'));
     }
 
     public function store(StoreCompanyRequest $request)
@@ -56,17 +54,12 @@ class CompanyController extends Controller
 
     public function edit(Company $company)
     {
-        $companyTypes = [
-            'manufacturer' => 'Manufacturer',
-            'distributor' => 'Distributor',
-            'dealer' => 'Dealer',
-            'installer' => 'Installer',
-            'wholesaler' => 'Wholesaler',
-            'retailer' => 'Retailer',
-            'epc' => 'EPC'
-        ];
+        $companyTypes = $this->companyTypes();
+        $states = State::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         
-        return view('admin.companies.edit', compact('company', 'companyTypes'));
+        return view('admin.companies.edit', compact('company', 'companyTypes', 'states', 'cities', 'categories'));
     }
 
     public function update(UpdateCompanyRequest $request, Company $company)
@@ -101,5 +94,18 @@ class CompanyController extends Controller
         
         return redirect()->route('admin.companies.index')
             ->with('success', 'Company deleted successfully.');
+    }
+
+    protected function companyTypes(): array
+    {
+        return [
+            'manufacturer' => 'Manufacturer',
+            'distributor' => 'Distributor',
+            'dealer' => 'Dealer',
+            'installer' => 'Installer',
+            'wholesaler' => 'Wholesaler',
+            'retailer' => 'Retailer',
+            'epc' => 'EPC',
+        ];
     }
 }

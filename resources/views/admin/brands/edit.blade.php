@@ -3,120 +3,110 @@
 @section('page_title', 'Edit Brand')
 
 @section('content')
-<div class="content-header">
-    <div class="content-header-left">
+<div class="form-page-hero">
+    <div>
         <h1>Edit Brand</h1>
-        <p class="text-muted">Update brand: {{ $brand->name }}</p>
+        <p>Refresh {{ $brand->name }} details and visuals.</p>
     </div>
-    <div class="content-header-right">
-        <a href="{{ route('admin.brands.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Brands
+    <div class="hero-actions">
+        <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary btn-pill">
+            <i class="fas fa-arrow-left"></i>
+            Back to list
         </a>
+        <span class="badge-note">
+            <i class="fas fa-tags"></i>
+            Brand #{{ $brand->id }}
+        </span>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form action="{{ route('admin.brands.update', $brand) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5>Brand Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label for="name" class="form-label">Brand Name <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" 
-                                       value="{{ old('name', $brand->name) }}" placeholder="e.g., Tata Solar, Luminous, Havells" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="country" class="form-label">Country of Origin</label>
-                                <input type="text" name="country" id="country" class="form-control @error('country') is-invalid @enderror" 
-                                       value="{{ old('country', $brand->country) }}" placeholder="e.g., India, China, USA">
-                                @error('country')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" 
-                                          rows="4" placeholder="Brief description about this brand">{{ old('description', $brand->description) }}</textarea>
-                                @error('description')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Brand Logo</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group mb-3">
-                                <label for="logo_url" class="form-label">Brand Logo</label>
-                                
-                                @if($brand->logo_url)
-                                    <div class="mb-2">
-                                        <img src="{{ asset($brand->logo_url) }}" alt="{{ $brand->name }}" class="img-thumbnail" style="max-width: 200px; max-height: 100px;">
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" name="remove_logo" id="remove_logo" value="1">
-                                        <label class="form-check-label" for="remove_logo">
-                                            Remove current logo
-                                        </label>
-                                    </div>
-                                    <small class="d-block text-muted mb-2">- OR -</small>
-                                @endif
-                                
-                                <input type="file" name="logo_url" id="logo_url" class="form-control-file @error('logo_url') is-invalid @enderror" 
-                                       accept="image/*">
-                                @error('logo_url')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                                <small class="form-text text-muted">Recommended size: 200x100px</small>
-                                
-                                <div class="mt-2" id="logo-preview" style="display: none;">
-                                    <img src="#" alt="Logo Preview" class="img-thumbnail" style="max-width: 200px; max-height: 100px;">
-                                </div>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Update Brand
-                                </button>
-                                <a href="{{ route('admin.brands.index') }}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times"></i> Cancel
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+@if($errors->any())
+    <div class="form-alert">
+        <strong>We found a few issues:</strong>
+        <ul class="mb-0 mt-2">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
-</div>
+@endif
+
+<form action="{{ route('admin.brands.update', $brand) }}" method="POST" enctype="multipart/form-data" class="form-wrapper">
+    @csrf
+    @method('PUT')
+
+    <section class="form-section">
+        <div class="form-grid-two">
+            <div class="form-control-stack">
+                <label for="name">Brand name <span class="text-danger">*</span></label>
+                <input type="text" id="name" name="name" value="{{ old('name', $brand->name) }}" required class="@error('name') is-invalid @enderror">
+                @error('name') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+            <div class="form-control-stack">
+                <label for="country">Country of origin</label>
+                <input type="text" id="country" name="country" value="{{ old('country', $brand->country) }}" placeholder="e.g., India, USA" class="@error('country') is-invalid @enderror">
+                @error('country') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
+        </div>
+
+        <div class="form-control-stack mt-3">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" class="@error('description') is-invalid @enderror" placeholder="Brief overview of the brand">{{ old('description', $brand->description) }}</textarea>
+            @error('description') <small class="text-danger">{{ $message }}</small> @enderror
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="form-grid-two" style="align-items: flex-start;">
+            <div class="form-control-stack">
+                <label for="logo_url">Brand logo</label>
+                @if($brand->logo_url)
+                    <div class="media-preview">
+                        <img src="{{ asset($brand->logo_url) }}" alt="{{ $brand->name }} logo">
+                        <div>
+                            <strong>Current logo</strong>
+                            <p class="mb-0 form-hint">Upload a file to replace</p>
+                        </div>
+                    </div>
+                    <label class="switch-stack mt-2">
+                        <span>
+                            <input class="form-check-input" type="checkbox" name="remove_logo" value="1">
+                            Remove current logo
+                        </span>
+                    </label>
+                @endif
+                <input type="file" id="logo_url" name="logo_url" accept="image/*" class="@error('logo_url') is-invalid @enderror">
+                <span class="form-hint">Recommended size: 200x100px PNG/JPG</span>
+                @error('logo_url') <small class="text-danger">{{ $message }}</small> @enderror
+                <div class="media-preview mt-3" id="logo-preview" style="display:none;">
+                    <img src="#" alt="Logo preview">
+                    <div>
+                        <strong>New upload preview</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="form-control-stack">
+                <label>Status</label>
+                <div class="switch-stack">
+                    <label>
+                        <input type="hidden" name="is_featured" value="0">
+                        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $brand->is_featured ?? false) ? 'checked' : '' }}>
+                        Featured brand
+                    </label>
+                </div>
+                <span class="form-hint">Optional badge for highlighting brands in listings.</span>
+            </div>
+        </div>
+
+        <div class="form-actions-bar mt-4">
+            <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary btn-pill">Cancel</a>
+            <button type="submit" class="btn btn-primary btn-pill">
+                <i class="fas fa-save"></i>
+                Update brand
+            </button>
+        </div>
+    </section>
+</form>
 
 @section('scripts')
 <script>
@@ -137,4 +127,6 @@
         }
     });
 </script>
+@endsection
+
 @endsection
