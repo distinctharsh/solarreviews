@@ -1302,7 +1302,7 @@
 
     </div>
 </section>
-
+@if($companies->isNotEmpty())
 
 
 
@@ -1317,108 +1317,57 @@
                 </aside>
 
                 <section>
-                    @if($companies->isNotEmpty())
-                        <div class="company-list">
-                            @foreach($companies as $index => $company)
-                                @php
-                                    $rating = (float) ($company->avg_rating ?? $company->average_rating ?? 0);
-                                    $reviewsCount = (int) ($company->total_reviews ?? 0);
-                                    $full = floor($rating);
-                                @endphp
-                                <article class="company-card">
-                                    <div class="company-main">
-                                        <div class="company-logo">
-                                            @if(!empty($company->logo))
-                                                <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }} logo">
-                                            @else
-                                                <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo">
+                    <div class="company-list">
+                        @foreach($companies as $index => $company)
+                            @php
+                                $rating = (float) ($company->avg_rating ?? $company->average_rating ?? 0);
+                                $reviewsCount = (int) ($company->total_reviews ?? 0);
+                                $full = floor($rating);
+                            @endphp
+                            <article class="company-card">
+                                <div class="company-main">
+                                    <div class="company-logo">
+                                        @if(!empty($company->logo))
+                                            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->name }} logo">
+                                        @else
+                                            <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo">
+                                        @endif
+                                    </div>
+                                    <div class="company-info">
+                                        <div class="company-name">{{ $company->name }}</div>
+                                        <div class="company-meta">
+                                            @if($company->state)
+                                                {{ $company->state->name }}
                                             @endif
                                         </div>
-                                        <div class="company-info">
-                                            <div class="company-name">{{ $company->name }}</div>
-                                            <div class="company-meta">
-                                                @if($company->state)
-                                                    {{ $company->state->name }}
-                                                @endif
+                                        <div class="rating-row">
+                                            <div class="stars">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <i class="{{ $i <= $full ? 'fas' : 'far' }} fa-star"></i>
+                                                @endfor
                                             </div>
-                                            <div class="rating-row">
-                                                <div class="stars">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        <i class="{{ $i <= $full ? 'fas' : 'far' }} fa-star"></i>
-                                                    @endfor
-                                                </div>
-                                                <div class="rating-text">
-                                                    {{ number_format($rating, 1) }}
-                                                    <span>&middot;</span>
-                                                    {{ $reviewsCount }} {{ \Illuminate\Support\Str::plural('review', $reviewsCount) }}
-                                                </div>
+                                            <div class="rating-text">
+                                                {{ number_format($rating, 1) }}
+                                                <span>&middot;</span>
+                                                {{ $reviewsCount }} {{ \Illuminate\Support\Str::plural('review', $reviewsCount) }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="company-actions">
-                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
-                                        <a href="{{ route('companies.show', $company->slug) }}" class="btn-outline-primary">
-                                            View profile
-                                            <i class="fas fa-arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </article>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="company-list">
-                            @foreach([
-                                ['name' => 'SunPeak Energy Co.', 'state' => 'California', 'rating' => 4.8, 'reviews' => 214],
-                                ['name' => 'GreenVolt Solar', 'state' => 'Texas', 'rating' => 4.6, 'reviews' => 189],
-                                ['name' => 'BrightSky Installers', 'state' => 'Florida', 'rating' => 4.9, 'reviews' => 321],
-                                ['name' => 'EcoRay Power', 'state' => 'Arizona', 'rating' => 4.7, 'reviews' => 167],
-                                ['name' => 'HelioSense Renewables', 'state' => 'Colorado', 'rating' => 4.5, 'reviews' => 142],
-                                ['name' => 'PeakGrid Solar Works', 'state' => 'New York', 'rating' => 4.4, 'reviews' => 118],
-                            ] as $index => $demo)
-                                @php
-                                    $rating = $demo['rating'];
-                                    $full = floor($rating);
-                                @endphp
-                                <article class="company-card">
-                                    <div class="company-main">
-                                        <div class="company-logo">
-                                            <img src="{{ asset('images/company/cmp.png') }}" alt="Default Company Logo">
-                                        </div>
-                                        <div class="company-info">
-                                            <div class="company-name">{{ $demo['name'] }}</div>
-                                            <div class="company-meta">{{ $demo['state'] }}</div>
-                                            <div class="rating-row">
-                                                <div class="stars">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        @if($i <= $full)
-                                                            <i class="fas fa-star"></i>
-                                                        @else
-                                                            <i class="far fa-star"></i>
-                                                        @endif
-                                                    @endfor
-                                                </div>
-                                                <div class="rating-text">
-                                                    {{ number_format($rating, 1) }}
-                                                    <span>&middot;</span>
-                                                    {{ $demo['reviews'] }} {{ $demo['reviews'] == 1 ? 'review' : 'reviews' }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="company-actions">
-                                        <span class="badge-rank">Rank #{{ $index + 1 }}</span>
-                                        <a href="#" class="btn-outline-primary">
-                                            View companies in {{ $demo['state'] }}
-                                            <i class="fas fa-arrow-right"></i>
-                                        </a>
-                                    </div>
-                                </article>
-                            @endforeach
-                        </div>
-                    @endif
+                                </div>
+                                <div class="company-actions">
+                                    <span class="badge-rank">Rank #{{ $index + 1 }}</span>
+                                    <a href="{{ route('companies.show', $company->slug) }}" class="btn-outline-primary">
+                                        View profile
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
                 </section>
             </div>
         </main>
+@endif
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
