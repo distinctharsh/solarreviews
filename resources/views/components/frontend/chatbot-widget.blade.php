@@ -261,8 +261,14 @@
 </style>
 
 <script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('chatbotWidget', ({ bootstrapUrl, answerUrl }) => ({
+    const registerChatbotWidget = () => {
+        if (!window.Alpine || window.__chatbotWidgetRegistered) {
+            return;
+        }
+
+        window.__chatbotWidgetRegistered = true;
+
+        window.Alpine.data('chatbotWidget', ({ bootstrapUrl, answerUrl }) => ({
             bootstrapUrl,
             answerUrl,
             isOpen: false,
@@ -385,5 +391,33 @@
                 });
             },
         }));
-    });
+    };
+
+    if (window.Alpine) {
+        registerChatbotWidget();
+    } else {
+        document.addEventListener('alpine:init', registerChatbotWidget);
+    }
+
+    if (!window.Alpine) {
+        const loadAlpineForChatbot = () => {
+            if (window.Alpine || window.__chatbotAlpineRequested) {
+                return;
+            }
+
+            window.__chatbotAlpineRequested = true;
+
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js';
+            script.defer = true;
+            script.setAttribute('data-chatbot-alpine', 'true');
+            document.head.appendChild(script);
+        };
+
+        if (document.readyState === 'complete') {
+            loadAlpineForChatbot();
+        } else {
+            window.addEventListener('load', loadAlpineForChatbot, { once: true });
+        }
+    }
 </script>
