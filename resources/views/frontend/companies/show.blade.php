@@ -846,6 +846,8 @@
                             </ul>
                         </article>
 
+                        {{-- Contact & links card temporarily hidden per request --}}
+                        {{--
                         <article class="card contact-card">
                             <header class="card-header">
                                 <div>
@@ -879,18 +881,15 @@
                                 <a href="{{ route('reviews.create') }}" class="btn-secondary w-100">Share your experience</a>
                             </div>
                         </article>
-
-                        <article class="card help-card">
-                            <h3>Need help choosing?</h3>
-                            <p>Talk to a SolarReviews concierge for personalized installer recommendations in your area.</p>
-                            <button type="button" class="btn-primary w-100">Chat with concierge</button>
-                        </article>
+                        --}}
                     </aside>
                 </div>
             </div>
         </section>
 
         @include('components.frontend.footer')
+        @include('components.frontend.chatbot-widget')
     </div>
 </body>
 </html>
+
