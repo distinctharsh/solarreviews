@@ -12,9 +12,35 @@ use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
+    /**
+     * Display all active companies in a tabular directory.
+     */
+    public function index()
+    {
+        $companies = Company::query()
+            ->select(
+                'companies.*',
+                DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
+                DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews')
+            )
+            ->leftJoin('rating_summaries as rs', function ($join) {
+                $join->on('rs.reviewable_id', '=', 'companies.id')
+                    ->where('rs.reviewable_type', '=', Company::class);
+            })
+            ->where('is_active', true)
+            ->orderBy('companies.owner_name')
+            ->get();
+
+        return view('frontend.companies.index', [
+            'companies' => $companies,
+            'totalCompanies' => $companies->count(),
+        ]);
+    }
+
     /**
      * Display the companies listing for a state
      */
@@ -158,66 +184,126 @@ class CompanyController extends Controller
     /**
      * Display a single company with reviews
      */
-    public function show($stateSlug, $companySlug)
+    public function show(Company $company)
     {
-        $cacheKey = "company_{$companySlug}";
-        
-        $data = Cache::remember($cacheKey, now()->addHours(12), function () use ($stateSlug, $companySlug) {
-            $company = Company::with(['city.state', 'reviews' => function($query) {
-                $query->orderBy('is_featured', 'desc')
-                      ->orderBy('review_date', 'desc');
-            }])
-            ->where('slug', $companySlug)
-            ->whereHas('city.state', function($query) use ($stateSlug) {
-                $query->where('slug', $stateSlug);
-            })
-            ->where('is_active', true)
-            ->firstOrFail();
-            
-            $reviews = $company->reviews->map(function($review) {
-                return [
-                    'id' => $review->id,
-                    'reviewer_name' => $review->reviewer_name,
-                    'review_text' => $review->review_text,
-                    'rating' => (int) $review->rating,
-                    'date' => $review->review_date->format('M d, Y'),
-                    'source' => $review->source,
-                    'is_featured' => (bool) $review->is_featured,
-                ];
-            });
-            
-            return [
-                'company' => [
-                    'id' => $company->id,
-                    'name' => $company->name,
-                    'description' => $company->description,
-                    'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
-                    'average_rating' => (float) $company->average_rating,
-                    'total_reviews' => $company->total_reviews,
-                    'state' => [
-                        'name' => $company->city->state->name,
-                        'slug' => $company->city->state->slug,
-                    ],
-                ],
-                'reviews' => $reviews,
-                'rating_distribution' => $this->getRatingDistribution($company->id),
-            ];
-        });
-        
-        return view('frontend.companies.show', $data);
+        $company->loadMissing('ratingSummary');
+
+        $averageRating = round((float) ($company->ratingSummary->avg_rating ?? $company->average_rating ?? 0), 2);
+        $totalReviews = (int) ($company->ratingSummary->total_reviews ?? $company->total_reviews ?? 0);
+
+        $ratingDistribution = $this->getRatingDistribution($company->id);
+        $ratingBreakdown = $this->buildRatingBreakdown($company, $averageRating);
+        $expertScoreRaw = collect($ratingBreakdown)->avg('score');
+
+        $expertScore = [
+            'value' => round($expertScoreRaw),
+            'label' => $this->expertScoreLabel($expertScoreRaw),
+            'stars' => round($expertScoreRaw / 20, 1),
+        ];
+
+        return view('frontend.companies.show', [
+            'company' => $company,
+            'logoUrl' => $this->companyLogoUrl($company),
+            'companyTypeLabel' => Str::headline($company->company_type ?? 'Installer'),
+            'tenureCopy' => $company->years_in_business
+                ? 'Installing solar for ' . $company->years_in_business . '+ years'
+                : 'Trusted solar professional',
+            'ratingSummary' => [
+                'average' => $averageRating,
+                'total' => $totalReviews,
+                'updated_at' => $company->updated_at,
+            ],
+            'ratingDistribution' => $ratingDistribution,
+            'ratingBreakdown' => $ratingBreakdown,
+            'expertScore' => $expertScore,
+        ]);
     }
-    
+
     /**
      * Get rating distribution for a company
      */
-    private function getRatingDistribution($companyId)
+    private function getRatingDistribution(int $companyId): array
     {
-        return [
-            5 => CompanyReview::where('company_id', $companyId)->where('rating', 5)->count(),
-            4 => CompanyReview::where('company_id', $companyId)->where('rating', 4)->count(),
-            3 => CompanyReview::where('company_id', $companyId)->where('rating', 3)->count(),
-            2 => CompanyReview::where('company_id', $companyId)->where('rating', 2)->count(),
-            1 => CompanyReview::where('company_id', $companyId)->where('rating', 1)->count(),
+        $distribution = CompanyReview::select('rating', DB::raw('COUNT(*) as total'))
+            ->where('company_id', $companyId)
+            ->groupBy('rating')
+            ->pluck('total', 'rating')
+            ->toArray();
+
+        $result = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $result[$i] = (int) ($distribution[$i] ?? 0);
+        }
+
+        return $result;
+    }
+
+    private function buildRatingBreakdown(Company $company, float $averageRating): array
+    {
+        $baseScore = $this->clampScore($averageRating / 5 * 100);
+        $yearsScore = $this->scoreFromYears($company->years_in_business);
+
+        $metrics = [
+            'Time in business' => $yearsScore,
+            'Verification of licenses and insurance' => $this->clampScore($baseScore + 8),
+            'Consumer reviews performance' => $this->clampScore($baseScore + 4),
+            'Company size and location' => $this->clampScore($baseScore + 2),
+            'Vertical integration' => $this->clampScore($baseScore - 2),
+            'Competitiveness of loan options' => $this->clampScore($baseScore - 4),
+            'Employee satisfaction and safety record' => $this->clampScore($baseScore + 6),
+            'Litigation and background' => $this->clampScore($baseScore - 6),
+            'Profitability of installer' => $this->clampScore($baseScore - 3),
+            'Transparency of pricing and sales process' => $this->clampScore($baseScore + 5),
+            'Quality of brands sold' => $this->clampScore($baseScore + 7),
+            'Sustainable pricing of systems' => $this->clampScore($baseScore + 1),
         ];
+
+        return collect($metrics)
+            ->map(fn ($score, $label) => [
+                'label' => $label,
+                'score' => (int) $score,
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function scoreFromYears(?int $years): int
+    {
+        if (! $years) {
+            return 65;
+        }
+
+        $normalized = min($years, 25) / 25;
+        return $this->clampScore(55 + ($normalized * 45));
+    }
+
+    private function clampScore(float $score): int
+    {
+        return (int) max(35, min(100, round($score)));
+    }
+
+    private function expertScoreLabel(float $score): string
+    {
+        return match (true) {
+            $score >= 85 => 'Elite',
+            $score >= 70 => 'Excellent',
+            $score >= 55 => 'Strong',
+            default => 'Developing',
+        };
+    }
+
+    private function companyLogoUrl(Company $company): string
+    {
+        $logo = $company->logo ?? $company->logo_url;
+
+        if ($logo) {
+            if (Str::startsWith($logo, ['http://', 'https://'])) {
+                return $logo;
+            }
+
+            return asset('storage/' . ltrim($logo, '/'));
+        }
+
+        return asset('images/company/cmp.png');
     }
 }

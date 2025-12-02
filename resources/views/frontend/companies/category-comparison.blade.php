@@ -391,211 +391,211 @@
             }
         }
 
-    /* Updated */
-    .updated-date {
-        color: #64748b;
-        font-size: 0.95rem;
-    }
+        /* Updated */
+        .updated-date {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
 
-    /* Description */
-    .section-desc {
-        max-width: 700px;
-        font-size: 1.1rem;
-        color: #334155;
-        margin: 20px 0 30px;
-    }
+        /* Description */
+        .section-desc {
+            max-width: 700px;
+            font-size: 1.1rem;
+            color: #334155;
+            margin: 20px 0 30px;
+        }
 
-    .on-page-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 15px;
-    }
+        .on-page-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
 
-    /* Options Grid */
-    .options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 15px;
-        max-width: 900px;
-    }
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+        }
 
-    .opt-btn {
-        background: var(--primary-color);
-        color: white;
-        padding: 14px 20px;
-        font-size: 1.05rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
+        .opt-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
 
-    /* Zip Calculator */
-    .zip-calculator {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
+        /* Zip Calculator */
+        .zip-calculator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .calc-title {
-        color: var(--primary-color);
-        font-size: 1.3rem;
-        font-weight: 700;
-    }
+        .calc-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
 
-    .zip-input {
-        padding: 12px 16px;
-        font-size: 1.1rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        width: 200px;
-    }
+        .zip-input {
+            padding: 12px 16px;
+            font-size: 1.1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            width: 200px;
+        }
 
-    .start-btn {
-        padding: 12px 24px;
-        background: var(--primary-color);
-        border: none;
-        color: white;
-        border-radius: 6px;
-        font-weight: 700;
-        cursor: pointer;
-    }
+        .start-btn {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
 
 
-    .section-title {
-        font-size: 2.25rem;
-        color: #1e293b;
-    }
+        .section-title {
+            font-size: 2.25rem;
+            color: #1e293b;
+        }
 
-    .brand-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1rem;
-    }
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
 
-    .brand-card-modern {
-        background: #fff;
-        border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        min-height: unset;
-    }
+        .brand-card-modern {
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-height: unset;
+        }
 
-    .brand-card-modern:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 30px rgba(15, 23, 42, 0.08);
-    }
+        .brand-card-modern:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px rgba(15, 23, 42, 0.08);
+        }
 
-    .brand-head {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
+        .brand-head {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-    .brand-logo {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.35rem;
-    }
+        .brand-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.35rem;
+        }
 
-    .brand-logo img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
+        .brand-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
 
-    .brand-meta h3 {
-        font-size: 1rem;
-        margin: 0;
-        color: var(--heading-color);
-    }
+        .brand-meta h3 {
+            font-size: 1rem;
+            margin: 0;
+            color: var(--heading-color);
+        }
 
-    .brand-meta span {
-        font-size: 0.78rem;
-        color: var(--muted-color);
-    }
+        .brand-meta span {
+            font-size: 0.78rem;
+            color: var(--muted-color);
+        }
 
-    .brand-rank-pill {
-        margin-left: auto;
-        background: rgba(59, 161, 76, 0.15);
-        color: var(--primary-color);
-        font-weight: 600;
-        padding: 0.25rem 0.85rem;
-        border-radius: 999px;
-        font-size: 0.8rem;
-    }
+        .brand-rank-pill {
+            margin-left: auto;
+            background: rgba(59, 161, 76, 0.15);
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 0.25rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+        }
 
-    .brand-stat-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 0.75rem;
-    }
+        .brand-stat-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
 
-    .brand-stat {
-        flex: 1;
-        background: #f8fafc;
-        border-radius: 10px;
-        padding: 0.75rem;
-    }
+        .brand-stat {
+            flex: 1;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
 
-    .stat-label {
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        color: var(--muted-color);
-        letter-spacing: 0.08em;
-        margin-bottom: 0.25rem;
-        display: block;
-    }
+        .stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: var(--muted-color);
+            letter-spacing: 0.08em;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
 
-    .stat-value {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--heading-color);
-    }
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--heading-color);
+        }
 
-    .stat-subtext {
-        font-size: 0.85rem;
-        color: var(--body-color);
-    }
+        .stat-subtext {
+            font-size: 0.85rem;
+            color: var(--body-color);
+        }
 
-    .brand-stars {
-        color: #fbbf24;
-        font-size: 0.85rem;
-    }
+        .brand-stars {
+            color: #fbbf24;
+            font-size: 0.85rem;
+        }
 
-    .brand-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.5rem;
-    }
+        .brand-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    .brand-actions a {
-        font-weight: 600;
-        color: var(--primary-color);
-        text-decoration: none;
-        font-size: 0.9rem;
-    }
+        .brand-actions a {
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
 
-    .brand-actions a:hover {
-        text-decoration: underline;
-    }
+        .brand-actions a:hover {
+            text-decoration: underline;
+        }
 
-    .brand-tagline {
-        font-size: 0.8rem;
-        color: var(--muted-color);
-    }
+        .brand-tagline {
+            font-size: 0.8rem;
+            color: var(--muted-color);
+        }
 
         .sort-box {
             display: flex;
@@ -1357,8 +1357,8 @@
                                     </div>
                                     <div class="company-actions">
                                         <span class="badge-rank">Rank #{{ $index + 1 }}</span>
-                                        <a href="{{ route('state.companies', $company->state->slug ?? '') }}" class="btn-outline-primary">
-                                            View companies in {{ $company->state->name ?? 'this state' }}
+                                        <a href="{{ route('companies.show', $company->slug) }}" class="btn-outline-primary">
+                                            View profile
                                             <i class="fas fa-arrow-right"></i>
                                         </a>
                                     </div>

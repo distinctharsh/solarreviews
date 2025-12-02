@@ -81,6 +81,16 @@ class Company extends Model
         return $this->ratingSummary ? $this->ratingSummary->total_reviews : 0;
     }
 
+    public function getStateNameAttribute(): ?string
+    {
+        return $this->state ?? null;
+    }
+
+    public function getCityNameAttribute(): ?string
+    {
+        return $this->city ?? null;
+    }
+
     public function ratingSummary()
     {
         return $this->morphOne(\App\Models\RatingSummary::class, 'reviewable');

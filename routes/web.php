@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ChatbotOptionController;
 use App\Http\Controllers\Admin\ChatbotQuestionController;
 use App\Http\Controllers\Admin\ChatbotReportController;
+use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController;
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,9 +25,16 @@ Route::get('/top-reviews', function () {
     return view('frontend.reviews.top-installers');
 })->name('reviews.top');
 
+// All companies listing
+Route::get('/compare/companies', [FrontendCompanyController::class, 'index'])
+    ->name('companies.index');
+
 // Category-based company comparison (temporarily disabled until frontend is ready)
 Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
     ->name('companies.compare');
+
+// Company profile
+Route::get('/companies/{company:slug}', [FrontendCompanyController::class, 'show'])->name('companies.show');
 
 // State Companies
 Route::get('/state/{stateSlug}', function ($stateSlug) {

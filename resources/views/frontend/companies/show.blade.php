@@ -1,491 +1,896 @@
-@extends('layouts.app')
+@php
+    $updatedDate = optional($ratingSummary['updated_at'] ?? null)?->format('F j, Y');
+    $breakdownChunks = collect($ratingBreakdown)->chunk(ceil(max(count($ratingBreakdown), 1) / 2));
+    $totalReviews = $ratingSummary['total'] ?? 0;
+    $location = collect([$company->city, $company->state])->filter()->implode(', ');
+@endphp
 
-@section('content')
-<div class="container py-5">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('state.companies', $company['state']['slug']) }}">Solar Companies in {{ $company['state']['name'] }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $company['name'] }}</li>
-        </ol>
-    </nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $company->name }} - Solar Company Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Company Header -->
-    <div class="row mb-5">
-        <div class="col-md-8">
-            <div class="d-flex align-items-start">
-                @if($company['logo'])
-                    <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }}" class="rounded me-4" style="width: 120px; height: auto;">
-                @endif
-                <div>
-                    <h1 class="h2 mb-2">{{ $company['name'] }}</h1>
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="me-3">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= $company['average_rating'])
-                                    <i class="fas fa-star text-warning"></i>
-                                @elseif($i - 0.5 <= $company['average_rating'])
-                                    <i class="fas fa-star-half-alt text-warning"></i>
-                                @else
-                                    <i class="far fa-star text-warning"></i>
-                                @endif
-                            @endfor
-                            <span class="ms-1 fw-bold">{{ number_format($company['average_rating'], 1) }}</span>
-                            <span class="text-muted ms-1">({{ $company['total_reviews'] }} reviews)</span>
-                        </div>
-                        <div class="badge bg-success">
-                            <i class="fas fa-check-circle me-1"></i> Verified Company
-                        </div>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <div class="text-muted">
-                            <i class="fas fa-map-marker-alt me-1"></i> {{ $company['address'] }}, {{ $company['city'] }}, {{ $company['state']['name'] }}
-                        </div>
-                    </div>
-                    <div class="d-flex flex-wrap gap-3">
-                        @if($company['website'])
-                            <a href="{{ $company['website'] }}" target="_blank" class="text-decoration-none">
-                                <i class="fas fa-globe me-1"></i> Website
-                            </a>
-                        @endif
-                        @if($company['phone'])
-                            <a href="tel:{{ $company['phone'] }}" class="text-decoration-none">
-                                <i class="fas fa-phone me-1"></i> {{ $company['phone'] }}
-                            </a>
-                        @endif
-                        @if($company['email'])
-                            <a href="mailto:{{ $company['email'] }}" class="text-decoration-none">
-                                <i class="fas fa-envelope me-1"></i> Email
-                            </a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center p-4">
-                    <div class="display-4 fw-bold text-primary mb-2">{{ number_format($company['average_rating'], 1) }}/5</div>
-                    <div class="text-warning mb-3">
-                        @for($i = 1; $i <= 5; $i++)
-                            @if($i <= $company['average_rating'])
-                                <i class="fas fa-star"></i>
-                            @elseif($i - 0.5 <= $company['average_rating'])
-                                <i class="fas fa-star-half-alt"></i>
-                            @else
-                                <i class="far fa-star"></i>
+    <style>
+        :root {
+            --shade-dark: #0a1c15;
+            --shade-light: #f7f9fb;
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --accent: #008453;
+        --accent-soft: #d5f5e6;
+        --border: #e3e8ef;
+    }
+
+    .container-custom {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .company-page {
+        background: var(--shade-light);
+    }
+
+    .company-hero {
+        background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 55%),
+            linear-gradient(135deg, #0d3725, var(--shade-dark));
+        color: #fff;
+        padding: 4rem 0 3rem;
+    }
+
+    .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) 320px;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .updated-pill {
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-size: 0.72rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .hero-title {
+        font-size: clamp(2.1rem, 4vw, 3rem);
+        margin: 0.4rem 0 0.8rem;
+    }
+
+    .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        color: rgba(255,255,255,0.8);
+    }
+
+    .meta-pill {
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.15);
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+    }
+
+    .meta-dot {
+        opacity: 0.5;
+    }
+
+    .rating-summary {
+        margin-top: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .rating-stars i {
+        color: #fbcf4b;
+        opacity: 0.35;
+        font-size: 1.15rem;
+    }
+
+    .rating-stars .filled {
+        opacity: 1;
+    }
+
+    .rating-value span {
+        font-size: 3.2rem;
+        font-weight: 700;
+    }
+
+    .rating-value small {
+        display: block;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .rating-method {
+        color: #8df2c5;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .hero-ctas {
+        margin-top: 2rem;
+        display: flex;
+        gap: 0.85rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        border-radius: 999px;
+        padding: 0.9rem 1.6rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(130deg, #22c55e, #0ea372);
+        color: #fff;
+        box-shadow: 0 12px 25px rgba(11, 187, 115, 0.35);
+        border: none;
+    }
+
+    .btn-secondary {
+        border: 1px solid rgba(255,255,255,0.4);
+        color: #fff;
+        background: transparent;
+    }
+
+    .hero-side-card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 24px;
+        padding: 1.75rem;
+        backdrop-filter: blur(6px);
+    }
+
+    .logo-wrapper {
+        background: rgba(255,255,255,0.12);
+        border-radius: 18px;
+        padding: 1rem;
+        text-align: center;
+        margin-bottom: 1.2rem;
+    }
+
+    .logo-wrapper img {
+        width: 115px;
+        height: 115px;
+        object-fit: contain;
+    }
+
+    .verified-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #a2f2d1;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .verified-pill i {
+        color: #63ffbc;
+    }
+
+    .quick-meta {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.95rem;
+    }
+
+    .quick-meta span {
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.58);
+    }
+
+    .quick-meta strong {
+        font-size: 1.05rem;
+    }
+
+    .stats-row {
+        margin-top: -55px;
+        padding-bottom: 1.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 1.3rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 15px 30px rgba(15,23,42,0.08);
+    }
+
+    .stat-card p {
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-size: 0.74rem;
+        color: var(--muted);
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-card h3 {
+        margin: 0;
+        font-size: 1.6rem;
+        color: var(--ink);
+    }
+
+    .company-main {
+        padding: 2.5rem 0 3rem;
+    }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) 330px;
+        gap: 1.75rem;
+        align-items: start;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        padding: 1.8rem;
+        box-shadow: 0 18px 45px rgba(15,23,42,0.06);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-bottom: 0.2rem;
+    }
+
+    .badge-light {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .distribution-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+    .distribution-row {
+        display: grid;
+        grid-template-columns: 70px 1fr 50px;
+        gap: 0.7rem;
+        align-items: center;
+        font-size: 0.92rem;
+        color: var(--ink);
+    }
+
+    .distribution-bar {
+        height: 11px;
+        background: #eff3f8;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .distribution-bar .fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(120deg, #2ac6ff, #1b5fff);
+    }
+
+    .expert-card .expert-value {
+        font-size: 1.55rem;
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .expert-stars i {
+        color: #f7c948;
+        opacity: 0.35;
+        font-size: 1.15rem;
+    }
+
+    .expert-stars .filled {
+        opacity: 1;
+    }
+
+    .expert-body .muted {
+        color: var(--muted);
+        margin-top: 0.9rem;
+    }
+
+    .expert-body .muted a {
+        color: #0a7bdc;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .expert-bar {
+        display: flex;
+        gap: 0.35rem;
+        margin-top: 0.9rem;
+    }
+
+    .expert-bar .segment {
+        flex: 1;
+        height: 9px;
+        border-radius: 999px;
+        background: #e3e7ef;
+    }
+
+    .expert-bar .segment.active {
+        background: linear-gradient(120deg, #00d8b2, #00a0de);
+    }
+
+    .breakdown-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .metric {
+        background: #f9fbfd;
+        border-radius: 16px;
+        padding: 0.9rem;
+    }
+
+    .metric-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .metric-bar {
+        height: 8px;
+        background: #e5ebf3;
+        border-radius: 999px;
+        margin-top: 0.45rem;
+    }
+
+    .metric-bar .fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(120deg, #007aff, #4c1dff);
+    }
+
+    .about-text {
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    .about-list,
+    .contact-list {
+        list-style: none;
+        margin: 1.25rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+    .about-list span,
+    .contact-list span {
+        text-transform: uppercase;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+    }
+
+    .about-list strong,
+    .contact-list strong {
+        font-size: 1rem;
+        color: var(--ink);
+    }
+
+    .contact-list a {
+        color: #0a78d1;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .about-list em,
+    .contact-list em {
+        color: var(--muted);
+    }
+
+    .help-card {
+        text-align: center;
+        background: linear-gradient(120deg, #e3fff2, #f4fffb);
+        border: 1px solid #d6f2e5;
+    }
+
+    .help-card h3 {
+        color: var(--ink);
+        margin-bottom: 0.5rem;
+    }
+
+    .help-card p {
+        color: var(--muted);
+        margin-bottom: 1rem;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+        .hero-grid,
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-side-card {
+            order: -1;
+        }
+    }
+
+    @media (max-width: 640px) {
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .distribution-row {
+            display: grid;
+            grid-template-columns: 70px 1fr 50px;
+            gap: 0.7rem;
+            align-items: center;
+            font-size: 0.92rem;
+            color: var(--ink);
+        }
+
+        .distribution-bar {
+            height: 11px;
+            background: #eff3f8;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .distribution-bar .fill {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(120deg, #2ac6ff, #1b5fff);
+        }
+
+        .expert-card .expert-value {
+            font-size: 1.55rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .expert-stars i {
+            color: #f7c948;
+            opacity: 0.35;
+            font-size: 1.15rem;
+        }
+
+        .expert-stars .filled {
+            opacity: 1;
+        }
+
+        .expert-body .muted {
+            color: var(--muted);
+            margin-top: 0.9rem;
+        }
+
+        .expert-body .muted a {
+            color: #0a7bdc;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .expert-bar {
+            display: flex;
+            gap: 0.35rem;
+            margin-top: 0.9rem;
+        }
+
+        .expert-bar .segment {
+            flex: 1;
+            height: 9px;
+            border-radius: 999px;
+            background: #e3e7ef;
+        }
+
+        .expert-bar .segment.active {
+            background: linear-gradient(120deg, #00d8b2, #00a0de);
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .metric {
+            background: #f9fbfd;
+            border-radius: 16px;
+            padding: 0.9rem;
+        }
+
+        .metric-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .metric-bar {
+            height: 8px;
+            background: #e5ebf3;
+            border-radius: 999px;
+            margin-top: 0.45rem;
+        }
+
+        .metric-bar .fill {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(120deg, #007aff, #4c1dff);
+        }
+
+        .about-text {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .about-list,
+        .contact-list {
+            list-style: none;
+            margin: 1.25rem 0 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .about-list span,
+        .contact-list span {
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+        }
+
+        .about-list strong,
+        .contact-list strong {
+            font-size: 1rem;
+            color: var(--ink);
+        }
+
+        .contact-list a {
+            color: #0a78d1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .about-list em,
+        .contact-list em {
+            color: var(--muted);
+        }
+
+        .help-card {
+            text-align: center;
+            background: linear-gradient(120deg, #e3fff2, #f4fffb);
+            border: 1px solid #d6f2e5;
+        }
+
+        .help-card h3 {
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .help-card p {
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-grid,
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-side-card {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rating-summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="company-page">
+        @include('components.frontend.navbar')
+        <section class="company-hero">
+            <div class="container-custom">
+                <div class="hero-grid">
+                    <div class="hero-info">
+                        <p class="updated-pill">Profile updated {{ $updatedDate ?? 'recently' }}</p>
+                        <h1 class="hero-title">{{ $company->name }}</h1>
+                        <div class="hero-meta">
+                            <span class="meta-pill">{{ $companyTypeLabel }}</span>
+                            <span class="meta-dot">•</span>
+                            <span>{{ $tenureCopy }}</span>
+                            @if($location)
+                                <span class="meta-dot">•</span>
+                                <span>{{ $location }}</span>
                             @endif
-                        @endfor
+                        </div>
+
+                        <div class="rating-summary">
+                            <div class="rating-stars">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star {{ $i <= round($ratingSummary['average']) ? 'filled' : '' }}"></i>
+                                @endfor
+                            </div>
+                            <div class="rating-value">
+                                <span>{{ number_format($ratingSummary['average'], 1) }}</span>
+                                <small>{{ number_format($ratingSummary['total']) }} verified reviews</small>
+                            </div>
+                            <a class="rating-method" href="#">How we calculate ratings</a>
+                        </div>
+
+                        <div class="hero-ctas">
+                            <a href="{{ route('reviews.create') }}" class="btn-primary">Write a review</a>
+                            <a href="#rating-breakdown" class="btn-secondary">View rating details</a>
+                        </div>
                     </div>
-                    <p class="text-muted mb-3">Based on {{ $company['total_reviews'] }} verified reviews</p>
-                    <a href="#write-review" class="btn btn-primary w-100 mb-2">
-                        <i class="far fa-edit me-1"></i> Write a Review
-                    </a>
-                    <a href="#" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-phone-alt me-1"></i> Request a Quote
-                    </a>
+
+                    <div class="hero-side-card">
+                        <div class="logo-wrapper">
+                            <img src="{{ $logoUrl }}" alt="{{ $company->name }} logo">
+                        </div>
+                        <div class="verified-pill">
+                            <i class="fas fa-badge-check"></i>
+                            Verified SolarReviews partner
+                        </div>
+                        <ul class="quick-meta">
+                            <li>
+                                <span>Founded</span>
+                                <strong>{{ $company->years_in_business ? (now()->year - $company->years_in_business) . ' yrs ago' : 'N/A' }}</strong>
+                            </li>
+                            <li>
+                                <span>Service type</span>
+                                <strong>{{ $companyTypeLabel }}</strong>
+                            </li>
+                            <li>
+                                <span>Last updated</span>
+                                <strong>{{ $updatedDate ?? 'Recently' }}</strong>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="row">
-        <!-- Left Column -->
-        <div class="col-lg-8">
-            <!-- About Company -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h2 class="h5 mb-4">About {{ $company['name'] }}</h2>
-                    @if($company['description'])
-                        <div class="mb-4">
-                            {!! nl2br(e($company['description'])) !!}
-                        </div>
-                    @else
-                        <div class="alert alert-info">
-                            No description available for this company.
-                        </div>
-                    @endif
-
-                    <h3 class="h6 mb-3">Services Offered</h3>
-                    <div class="row g-2 mb-4">
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                <span>Solar Panel Installation</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                <span>Battery Storage</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                <span>EV Chargers</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3 class="h6 mb-3">Service Areas</h3>
-                    <p>Serving {{ $company['city'] }} and surrounding areas in {{ $company['state']['name'] }}.</p>
+        <section class="stats-row">
+            <div class="container-custom">
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <p>Average rating</p>
+                        <h3>{{ number_format($ratingSummary['average'], 1) }} / 5</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p>Total reviews</p>
+                        <h3>{{ number_format($ratingSummary['total']) }}</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p>Expert tier</p>
+                        <h3>{{ $expertScore['label'] }}</h3>
+                    </article>
+                    <article class="stat-card">
+                        <p>Years in business</p>
+                        <h3>{{ $company->years_in_business ? $company->years_in_business . '+' : '10+' }}</h3>
+                    </article>
                 </div>
             </div>
+        </section>
 
-            <!-- Reviews Section -->
-            <div class="card shadow-sm mb-4" id="reviews">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h5 mb-0">Customer Reviews</h2>
-                        <a href="#write-review" class="btn btn-sm btn-outline-primary">
-                            <i class="far fa-edit me-1"></i> Write a Review
-                        </a>
-                    </div>
-
-                    <!-- Review Filters -->
-                    <div class="d-flex flex-wrap gap-2 mb-4">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-secondary btn-sm active">All Reviews ({{ $company['total_reviews'] }})</button>
-                            @for($i = 5; $i >= 1; $i--)
-                                <button type="button" class="btn btn-outline-secondary btn-sm">
-                                    {{ $i }} Star{{ $i > 1 ? 's' : '' }} ({{ $rating_distribution[$i] ?? 0 }})
-                                </button>
-                            @endfor
-                        </div>
-                    </div>
-
-                    <!-- Review List -->
-                    @forelse($reviews as $review)
-                        <div class="border-bottom pb-4 mb-4 {{ $review['is_featured'] ? 'featured-review' : '' }}">
-                            @if($review['is_featured'])
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge bg-warning text-dark me-2">
-                                        <i class="fas fa-star"></i> Featured
-                                    </span>
-                                    <small class="text-muted">This review was selected by our team</small>
-                                </div>
-                            @endif
-                            
-                            <div class="d-flex justify-content-between mb-2">
+        <section class="company-main">
+            <div class="container-custom">
+                <div class="main-grid">
+                    <div class="main-left">
+                        <article class="card" id="rating-breakdown">
+                            <header class="card-header">
                                 <div>
-                                    <h5 class="mb-1">{{ $review['reviewer_name'] }}</h5>
-                                    <div class="text-warning mb-1">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= $review['rating'])
-                                                <i class="fas fa-star"></i>
-                                            @else
-                                                <i class="far fa-star"></i>
-                                            @endif
-                                        @endfor
-                                        <span class="text-muted ms-1">{{ $review['date'] }}</span>
+                                    <p class="eyebrow">Customer feedback</p>
+                                    <h2>Rating distribution</h2>
+                                </div>
+                                <span class="badge-light">{{ number_format($ratingSummary['total']) }} reviews</span>
+                            </header>
+
+                            <div class="distribution-list">
+                                @foreach ($ratingDistribution as $stars => $count)
+                                    @php
+                                        $percent = $totalReviews ? round(($count / $totalReviews) * 100) : 0;
+                                    @endphp
+                                    <div class="distribution-row">
+                                        <span class="stars-label">{{ $stars }} star</span>
+                                        <div class="distribution-bar">
+                                            <span class="fill" style="width: {{ $percent }}%"></span>
+                                        </div>
+                                        <span class="count">{{ $count }}</span>
                                     </div>
-                                </div>
-                                <div>
-                                    <span class="badge bg-light text-dark">
-                                        <i class="fab fa-{{ strtolower($review['source']) }} me-1"></i> {{ $review['source'] }}
-                                    </span>
-                                </div>
+                                @endforeach
                             </div>
-                            
-                            <p class="mb-2">{{ $review['review_text'] }}</p>
-                            
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-secondary">
-                                    <i class="far fa-thumbs-up"></i> Helpful ({{ rand(0, 10) }})
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary">
-                                    <i class="far fa-flag"></i> Report
-                                </button>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center py-5">
-                            <i class="far fa-comment-alt fa-3x text-muted mb-3"></i>
-                            <h5>No reviews yet</h5>
-                            <p class="text-muted">Be the first to review {{ $company['name'] }}</p>
-                            <a href="#write-review" class="btn btn-primary">
-                                <i class="far fa-edit me-1"></i> Write a Review
-                            </a>
-                        </div>
-                    @endforelse
+                        </article>
 
-                    <!-- Pagination -->
-                    @if(count($reviews) > 5)
-                        <nav aria-label="Reviews pagination" class="mt-4">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        <article class="card expert-card">
+                            <header class="card-header">
+                                <div>
+                                    <p class="eyebrow">SolarReviews expert score</p>
+                                    <h2>{{ $expertScore['label'] }} tier</h2>
+                                </div>
+                                <span class="expert-value">{{ $expertScore['value'] }}/100</span>
+                            </header>
+                            <div class="expert-body">
+                                <div class="expert-stars">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star {{ $i <= round($expertScore['stars']) ? 'filled' : '' }}"></i>
+                                    @endfor
+                                </div>
+                                <div class="expert-bar">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span class="segment {{ $i <= round($expertScore['stars']) ? 'active' : '' }}"></span>
+                                    @endfor
+                                </div>
+                                <p class="muted">
+                                    Scores combine licensing checks, consumer sentiment, workforce practices, pricing transparency, and more.
+                                    <a href="#">See methodology</a>
+                                </p>
+                            </div>
+                        </article>
+
+                        <article class="card">
+                            <header class="card-header">
+                                <div>
+                                    <p class="eyebrow">Detailed scoring</p>
+                                    <h2>Expert rating breakdown</h2>
+                                </div>
+                            </header>
+                            <div class="breakdown-grid">
+                                @foreach ($breakdownChunks as $column)
+                                    <div class="breakdown-column">
+                                        @foreach ($column as $metric)
+                                            <div class="metric">
+                                                <div class="metric-top">
+                                                    <span>{{ $metric['label'] }}</span>
+                                                    <strong>{{ $metric['score'] }}%</strong>
+                                                </div>
+                                                <div class="metric-bar">
+                                                    <span class="fill" style="width: {{ $metric['score'] }}%"></span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        </article>
+                    </div>
+
+                    <aside class="main-right">
+                        <article class="card about-card">
+                            <header class="card-header">
+                                <div>
+                                    <p class="eyebrow">About</p>
+                                    <h2>{{ $company->name }}</h2>
+                                </div>
+                            </header>
+                            <p class="about-text">
+                                {{ $company->description ?: 'This installer is currently updating their story. Check back soon for more about their services, project approach, and certifications.' }}
+                            </p>
+                            <ul class="about-list">
+                                <li>
+                                    <span>Primary service type</span>
+                                    <strong>{{ $companyTypeLabel }}</strong>
                                 </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
+                                <li>
+                                    <span>Years installing solar</span>
+                                    <strong>{{ $company->years_in_business ? $company->years_in_business . '+ years' : 'Not disclosed' }}</strong>
+                                </li>
+                                <li>
+                                    <span>Headquarters</span>
+                                    <strong>{{ $location ?: 'Not listed' }}</strong>
                                 </li>
                             </ul>
-                        </nav>
-                    @endif
-                </div>
-            </div>
+                        </article>
 
-            <!-- Write Review Form -->
-            <div class="card shadow-sm mb-4" id="write-review">
-                <div class="card-body">
-                    <h2 class="h5 mb-4">Write a Review</h2>
-                    <form action="#" method="POST">
-                        @csrf
-                        <input type="hidden" name="company_id" value="{{ $company['id'] }}">
-                        
-                        <div class="mb-4">
-                            <label class="form-label">Your Rating</label>
-                            <div class="rating-input mb-2">
-                                <input type="radio" id="star5" name="rating" value="5" required>
-                                <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star4" name="rating" value="4" required>
-                                <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star3" name="rating" value="3" required>
-                                <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star2" name="rating" value="2" required>
-                                <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
-                                
-                                <input type="radio" id="star1" name="rating" value="1" required>
-                                <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="review_title" class="form-label">Review Title</label>
-                            <input type="text" class="form-control" id="review_title" name="title" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="review_text" class="form-label">Your Review</label>
-                            <textarea class="form-control" id="review_text" name="review_text" rows="5" required></textarea>
-                            <div class="form-text">Share details about your experience with {{ $company['name'] }}.</div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="reviewer_name" class="form-label">Your Name</label>
-                                <input type="text" class="form-control" id="reviewer_name" name="reviewer_name" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="reviewer_email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="reviewer_email" name="reviewer_email" required>
-                                <div class="form-text">Your email will not be published.</div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" id="terms" required>
-                            <label class="form-check-label" for="terms">
-                                I certify that this review is based on my own experience and is my genuine opinion of this company.
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane me-1"></i> Submit Review
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="col-lg-4">
-            <!-- Rating Breakdown -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h3 class="h6 mb-3">Rating Breakdown</h3>
-                    @for($i = 5; $i >= 1; $i--)
-                        <div class="row align-items-center mb-2">
-                            <div class="col-2 text-end">
-                                <span class="text-muted">{{ $i }} <i class="fas fa-star text-warning"></i></span>
-                            </div>
-                            <div class="col-7 px-0">
-                                <div class="progress" style="height: 8px;">
-                                    @php
-                                        $percentage = $company['total_reviews'] > 0 
-                                            ? ($rating_distribution[$i] / $company['total_reviews']) * 100 
-                                            : 0;
-                                    @endphp
-                                    <div class="progress-bar bg-warning" role="progressbar" 
-                                         style="width: {{ $percentage }}%" 
-                                         aria-valuenow="{{ $percentage }}" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="100">
-                                    </div>
+                        <article class="card contact-card">
+                            <header class="card-header">
+                                <div>
+                                    <p class="eyebrow">Contact & links</p>
+                                    <h2>Connect with {{ Str::limit($company->name, 26) }}</h2>
                                 </div>
+                            </header>
+                            <ul class="contact-list">
+                                <li>
+                                    <span>Website</span>
+                                    @if($company->website_url)
+                                        <a href="{{ $company->website_url }}" target="_blank">Visit site <i class="fas fa-arrow-up-right-from-square"></i></a>
+                                    @else
+                                        <em>Not shared</em>
+                                    @endif
+                                </li>
+                                <li>
+                                    <span>Email</span>
+                                    @if($company->email)
+                                        <a href="mailto:{{ $company->email }}">{{ $company->email }}</a>
+                                    @else
+                                        <em>Not shared</em>
+                                    @endif
+                                </li>
+                                <li>
+                                    <span>Phone</span>
+                                    <strong>{{ $company->phone ?? 'Not shared' }}</strong>
+                                </li>
+                            </ul>
+                            <div class="contact-cta">
+                                <a href="{{ route('reviews.create') }}" class="btn-secondary w-100">Share your experience</a>
                             </div>
-                            <div class="col-3">
-                                <small class="text-muted">{{ $rating_distribution[$i] ?? 0 }}</small>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            </div>
+                        </article>
 
-            <!-- Company Information -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h3 class="h6 mb-3">Company Information</h3>
-                    <ul class="list-unstyled mb-0">
-                        @if($company['address'])
-                            <li class="mb-2">
-                                <i class="fas fa-map-marker-alt text-muted me-2"></i>
-                                {{ $company['address'] }}, {{ $company['city'] }}, {{ $company['state']['name'] }}
-                            </li>
-                        @endif
-                        @if($company['phone'])
-                            <li class="mb-2">
-                                <i class="fas fa-phone text-muted me-2"></i>
-                                <a href="tel:{{ $company['phone'] }}" class="text-decoration-none">{{ $company['phone'] }}</a>
-                            </li>
-                        @endif
-                        @if($company['email'])
-                            <li class="mb-2">
-                                <i class="fas fa-envelope text-muted me-2"></i>
-                                <a href="mailto:{{ $company['email'] }}" class="text-decoration-none">{{ $company['email'] }}</a>
-                            </li>
-                        @endif
-                        @if($company['website'])
-                            <li class="mb-2">
-                                <i class="fas fa-globe text-muted me-2"></i>
-                                <a href="{{ $company['website'] }}" target="_blank" class="text-decoration-none">
-                                    {{ parse_url($company['website'], PHP_URL_HOST) }}
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
+                        <article class="card help-card">
+                            <h3>Need help choosing?</h3>
+                            <p>Talk to a SolarReviews concierge for personalized installer recommendations in your area.</p>
+                            <button type="button" class="btn-primary w-100">Chat with concierge</button>
+                        </article>
+                    </aside>
                 </div>
             </div>
+        </section>
 
-            <!-- Similar Companies -->
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h3 class="h6 mb-3">Similar Companies</h3>
-                    <div class="list-group list-group-flush">
-                        @for($i = 1; $i <= 3; $i++)
-                            <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0 me-3">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" 
-                                             style="width: 40px; height: 40px;">
-                                            <i class="fas fa-solar-panel text-muted"></i>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-0">Solar Company {{ $i }}</h6>
-                                            <small class="text-warning">
-                                                <i class="fas fa-star"></i> {{ rand(35, 50) / 10 }}
-                                            </small>
-                                        </div>
-                                        <small class="text-muted">{{ $company['city'] }}, {{ $company['state']['name'] }}</small>
-                                    </div>
-                                </div>
-                            </a>
-                        @endfor
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('components.frontend.footer')
     </div>
-</div>
-
-<!-- Call to Action -->
-<section class="bg-primary text-white py-5">
-    <div class="container text-center">
-        <h2 class="h3 mb-3">Ready to go solar with {{ $company['name'] }}?</h2>
-        <p class="lead mb-4">Get a free, no-obligation quote today and start saving on your energy bills.</p>
-        <a href="#" class="btn btn-light btn-lg px-4 me-2">
-            <i class="fas fa-phone-alt me-2"></i> Call Now
-        </a>
-        <a href="#" class="btn btn-outline-light btn-lg px-4">
-            <i class="fas fa-envelope me-2"></i> Email Us
-        </a>
-    </div>
-</section>
-
-@push('styles')
-<style>
-    .featured-review {
-        background-color: #f8f9fa;
-        border-left: 4px solid #ffc107;
-        padding-left: 1rem;
-        margin-left: -1rem;
-    }
-    
-    .rating-input {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-    }
-    
-    .rating-input input {
-        display: none;
-    }
-    
-    .rating-input label {
-        color: #ddd;
-        font-size: 1.5rem;
-        padding: 0 0.2rem;
-        cursor: pointer;
-    }
-    
-    .rating-input input:checked ~ label,
-    .rating-input input:checked ~ label ~ label {
-        color: #ffc107;
-    }
-    
-    .rating-input label:hover,
-    .rating-input label:hover ~ label,
-    .rating-input input:checked ~ label:hover,
-    .rating-input input:checked ~ label:hover ~ label {
-        color: #ffc107;
-    }
-    
-    .progress {
-        background-color: #e9ecef;
-    }
-</style>
-@endpush
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Update URL without page reload
-                    history.pushState(null, '', targetId);
-                }
-            });
-        });
-    });
-</script>
-@endpush
-@endsection
+</body>
+</html>

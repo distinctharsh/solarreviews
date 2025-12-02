@@ -16,7 +16,7 @@
                 <div class="mega-dropdown shadow">
                     <div class="mega-column">
                         <p class="mega-heading">Reviews</p>
-                        <a href="{{ url('compare/companies') }}" class="mega-link">Solar Companies</a>
+                        <a href="{{ route('companies.index') }}" class="mega-link">Solar Companies</a>
                         <a href="{{ url('compare/panels') }}" class="mega-link">Solar Panels</a>
                         <a href="{{ url('compare/inverters') }}" class="mega-link">Solar Inverters</a>
                         <a href="{{ url('compare/batteries') }}" class="mega-link">Solar Batteries</a>
@@ -392,4 +392,3 @@
     });
 </script>
 
-@include('components.frontend.chatbot-widget')
