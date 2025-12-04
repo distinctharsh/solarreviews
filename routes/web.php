@@ -14,7 +14,9 @@ use App\Http\Controllers\Admin\ChatbotQuestionController;
 use App\Http\Controllers\Admin\ChatbotReportController;
 use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController;
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
+use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use Illuminate\Support\Facades\Route;
+
 
 // Frontend Routes
 Route::get('/', function () {
@@ -33,8 +35,16 @@ Route::get('/compare/companies', [FrontendCompanyController::class, 'index'])
 Route::get('/compare/{categorySlug}', [\App\Http\Controllers\Frontend\CompanyController::class, 'categoryComparison'])
     ->name('companies.compare');
 
+// routes/web.php
+// routes/web.php
+Route::get('/brand/{brand:slug}', [FrontendBrandController::class, 'compareBrand'])
+    ->name('brands.compare');
+
 // Company profile
 Route::get('/companies/{company:slug}', [FrontendCompanyController::class, 'show'])->name('companies.show');
+
+
+
 
 // State Companies
 Route::get('/state/{stateSlug}', function ($stateSlug) {

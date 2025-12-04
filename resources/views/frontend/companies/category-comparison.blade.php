@@ -1081,7 +1081,7 @@
 
                                 <div class="brand-actions">
                                     <p class="brand-tagline">Based on verified consumer feedback</p>
-                                    <a href="{{ route('companies.compare', $brand->slug) }}">
+                                    <a href="{{ route('brands.compare', $brand->slug) }}">
                                         View details <i class="fas fa-arrow-right"></i>
                                     </a>
                                 </div>
@@ -1229,7 +1229,7 @@
 
                                 <div class="brand-actions">
                                     <p class="brand-tagline">Efficiency data reported by manufacturers</p>
-                                    <a href="{{ route('companies.compare', $brand->brand_id) }}">
+                                    <a href="{{ route('brands.compare', $brand->brand_slug) }}">
                                         Explore <i class="fas fa-arrow-right"></i>
                                     </a>
                                 </div>
