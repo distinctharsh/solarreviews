@@ -2,52 +2,238 @@
 
 namespace Database\Seeders;
 
-use App\Models\State;
 use App\Models\Company;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CompanySeeder extends Seeder
 {
-    private $companyNames = [
-        'SunPower Solar', 'Tesla Energy', 'Sunrun', 'Vivint Solar', 'Sunpro Solar',
-        'Momentum Solar', 'PetersenDean', 'Sunnova', 'Freedom Forever', 'Trinity Solar',
-        'Blue Raven Solar', 'Palmetto Solar', 'Sunlux', 'ADT Solar', 'SunPower by Blue Raven',
-        'Sunworks', 'SunPower by Infinity', 'SunPower by Custom Energy', 'SunPower by Horizon',
-        'SunPower by Sunworks'
+    /**
+     * Predefined set of companies aligned with the new schema.
+     */
+    private array $companies = [
+        [
+            'owner_name' => 'Sunline Renewables',
+            'company_type' => 'installer',
+            'gst_number' => '27SUN1234A1Z5',
+            'address' => 'B-12, Shanti Industrial Estate, Kathwada GIDC',
+            'city' => 'Ahmedabad',
+            'state' => 'Gujarat',
+            'pincode' => '382430',
+            'email' => 'hello@sunlinerenewables.in',
+            'phone' => '+91 98765 43210',
+            'website_url' => 'https://sunlinerenewables.in',
+            'description' => 'Ahmedabad-based EPC delivering turnkey solar rooftop plants and AMC services for MSMEs.',
+        ],
+        [
+            'owner_name' => 'Brightvolt Solar Works',
+            'company_type' => 'epc',
+            'gst_number' => '24BVW5678K2Z8',
+            'address' => 'Plot 4, Sterling Tech Park, MIDC Chakan',
+            'city' => 'Pune',
+            'state' => 'Maharashtra',
+            'pincode' => '410501',
+            'email' => 'sales@brightvolt.co.in',
+            'phone' => '+91 98202 11121',
+            'website_url' => 'https://brightvolt.co.in',
+            'description' => 'Industrial EPC with in-house design team for hybrid and on-grid plants up to 5 MW.',
+        ],
+        [
+            'owner_name' => 'HelioWave Energy',
+            'company_type' => 'manufacturer',
+            'gst_number' => '07HWE3345G7R6',
+            'address' => 'Phase II, Okhla Industrial Estate, D-225',
+            'city' => 'New Delhi',
+            'state' => 'Delhi',
+            'pincode' => '110020',
+            'email' => 'info@heliowave.in',
+            'phone' => '+91 93101 44455',
+            'website_url' => 'https://heliowave.in',
+            'description' => 'Tier-2 module manufacturer with BIS-certified mono PERC production line.',
+        ],
+        [
+            'owner_name' => 'Evergrid Solar Partners',
+            'company_type' => 'dealer',
+            'gst_number' => '29EGS9987D2Y9',
+            'address' => '8th Main, JP Nagar 3rd Phase',
+            'city' => 'Bengaluru',
+            'state' => 'Karnataka',
+            'pincode' => '560078',
+            'email' => 'partners@evergrid.in',
+            'phone' => '+91 94480 34567',
+            'website_url' => 'https://evergrid.in',
+            'description' => 'Multi-brand dealer network providing procurement support and financing tie-ups.',
+        ],
+        [
+            'owner_name' => 'Radiant Roof Solutions',
+            'company_type' => 'installer',
+            'gst_number' => '33RRS4521N4Z2',
+            'address' => 'No. 18, SIDCO Industrial Estate, Guindy',
+            'city' => 'Chennai',
+            'state' => 'Tamil Nadu',
+            'pincode' => '600032',
+            'email' => 'projects@radiantroofs.com',
+            'phone' => '+91 98400 22331',
+            'website_url' => 'https://radiantroofs.com',
+            'description' => 'Specialists in RCC rooftops with single-axis tracker retrofits.',
+        ],
+        [
+            'owner_name' => 'Zenith Sun Distributors',
+            'company_type' => 'distributor',
+            'gst_number' => '06ZSD7812Q8F4',
+            'address' => 'Warehouse 3, IMT Manesar Sector 4',
+            'city' => 'Gurugram',
+            'state' => 'Haryana',
+            'pincode' => '122052',
+            'email' => 'orders@zenithsun.in',
+            'phone' => '+91 124 400 9988',
+            'website_url' => 'https://zenithsun.in',
+            'description' => 'North India distribution hub for tier-1 inverters and energy storage.',
+        ],
+        [
+            'owner_name' => 'GreenPulse Power Corp',
+            'company_type' => 'epc',
+            'gst_number' => '09GPP2212L5X8',
+            'address' => 'C-56, Sector 62, Noida IT Zone',
+            'city' => 'Noida',
+            'state' => 'Uttar Pradesh',
+            'pincode' => '201301',
+            'email' => 'contact@greenpulsepower.com',
+            'phone' => '+91 99900 66778',
+            'website_url' => 'https://greenpulsepower.com',
+            'description' => 'Corporate EPC delivering O&M backed PPAs for commercial offices.',
+        ],
+        [
+            'owner_name' => 'Suryanet Retail',
+            'company_type' => 'retailer',
+            'gst_number' => '19SNR4532J2B7',
+            'address' => 'Eco Hub Mall, New Town Action Area II',
+            'city' => 'Kolkata',
+            'state' => 'West Bengal',
+            'pincode' => '700156',
+            'email' => 'support@suryanetretail.com',
+            'phone' => '+91 98302 88991',
+            'website_url' => 'https://suryanetretail.com',
+            'description' => 'Retail experience centre for home backup kits and solar water pumps.',
+        ],
+        [
+            'owner_name' => 'Nexsun Components',
+            'company_type' => 'wholesaler',
+            'gst_number' => '27NSC9088P4V1',
+            'address' => 'Unit 5, Kalamboli Logistics Park',
+            'city' => 'Navi Mumbai',
+            'state' => 'Maharashtra',
+            'pincode' => '410218',
+            'email' => 'bulk@nexsuncomponents.com',
+            'phone' => '+91 86550 11119',
+            'website_url' => 'https://nexsuncomponents.com',
+            'description' => 'Pan-India wholesaler stocking rails, clamps, and balance-of-system accessories.',
+        ],
+        [
+            'owner_name' => 'Prana Solar Systems',
+            'company_type' => 'installer',
+            'gst_number' => '18PSS6655Z9R3',
+            'address' => 'Hengrabari Industrial Area, Plot 21',
+            'city' => 'Guwahati',
+            'state' => 'Assam',
+            'pincode' => '781006',
+            'email' => 'hello@pranasolar.in',
+            'phone' => '+91 94350 77881',
+            'website_url' => 'https://pranasolar.in',
+            'description' => 'Focused on northeastern India with microgrid expertise.',
+        ],
+        [
+            'owner_name' => 'SolarCraft Infra',
+            'company_type' => 'epc',
+            'gst_number' => '23SCI3344M8D9',
+            'address' => 'Scheme 78, Vijay Nagar',
+            'city' => 'Indore',
+            'state' => 'Madhya Pradesh',
+            'pincode' => '452010',
+            'email' => 'projects@solarcraftinfra.com',
+            'phone' => '+91 90095 66770',
+            'website_url' => 'https://solarcraftinfra.com',
+            'description' => 'Handles captive solar for textile parks with remote monitoring.',
+        ],
+        [
+            'owner_name' => 'Sunharvest EPC Solutions',
+            'company_type' => 'epc',
+            'gst_number' => '21SHS7766V6C5',
+            'address' => 'Infocity Tower 2, Chandrasekharpur',
+            'city' => 'Bhubaneswar',
+            'state' => 'Odisha',
+            'pincode' => '751024',
+            'email' => 'info@sunharvest.co.in',
+            'phone' => '+91 95566 44332',
+            'website_url' => 'https://sunharvest.co.in',
+            'description' => 'Govt empanelled EPC delivering RESCO projects for institutions.',
+        ],
+        [
+            'owner_name' => 'Voltshore Energy Depot',
+            'company_type' => 'distributor',
+            'gst_number' => '36VED5522T1P6',
+            'address' => 'Survey 45, Kompally Logistics Corridor',
+            'city' => 'Hyderabad',
+            'state' => 'Telangana',
+            'pincode' => '500014',
+            'email' => 'sales@voltshore.in',
+            'phone' => '+91 98482 44321',
+            'website_url' => 'https://voltshore.in',
+            'description' => 'Battery and hybrid inverter distribution with assured stocking.',
+        ],
+        [
+            'owner_name' => 'Aurora Gridtech',
+            'company_type' => 'manufacturer',
+            'gst_number' => '32AGT9911L4Q7',
+            'address' => 'Plot 10, KINFRA Hi-Tech Park',
+            'city' => 'Kochi',
+            'state' => 'Kerala',
+            'pincode' => '683503',
+            'email' => 'contact@auroragridtech.com',
+            'phone' => '+91 94471 99881',
+            'website_url' => 'https://auroragridtech.com',
+            'description' => 'Manufactures string combiners and smart monitoring gateways.',
+        ],
+        [
+            'owner_name' => 'Skyvolt Rooftop Services',
+            'company_type' => 'installer',
+            'gst_number' => '08SVR4567Q8N1',
+            'address' => 'G1, Vaishali Nagar, Amrapali Circle',
+            'city' => 'Jaipur',
+            'state' => 'Rajasthan',
+            'pincode' => '302021',
+            'email' => 'care@skyvoltrooftop.com',
+            'phone' => '+91 99280 12345',
+            'website_url' => 'https://skyvoltrooftop.com',
+            'description' => 'Residential-focused installer with zero-cost EMI partnerships.',
+        ],
+        [
+            'owner_name' => 'PulsePeak Solar Mart',
+            'company_type' => 'retailer',
+            'gst_number' => '10PSM3344F2Z3',
+            'address' => 'Fraser Road, Maurya Lok Complex',
+            'city' => 'Patna',
+            'state' => 'Bihar',
+            'pincode' => '800001',
+            'email' => 'store@pulsepeakmart.com',
+            'phone' => '+91 97080 88990',
+            'website_url' => 'https://pulsepeakmart.com',
+            'description' => 'Offline retail plus service desk for home consumers and farmers.',
+        ],
     ];
 
-    public function run()
+    public function run(): void
     {
-        $states = State::all();
-        
-        foreach ($this->companyNames as $companyName) {
-            $state = $states->random();
-            
-            $company = Company::create([
-                'name' => $companyName,
-                'slug' => Str::slug($companyName),
-                'description' => $this->generateDescription($companyName, $state->name),
-                'state_id' => $state->id,
-                'logo' => null,
-                'average_rating' => 0,
-                'total_reviews' => 0,
-                'is_active' => true,
-            ]);
+        foreach ($this->companies as $company) {
+            $slug = Str::slug($company['owner_name']);
+
+            Company::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($company, [
+                    'slug' => $slug,
+                    'status' => $company['status'] ?? 'active',
+                ])
+            );
         }
     }
-
-    private function generateDescription($companyName, $city)
-    {
-        $descriptions = [
-            "{$companyName} is a leading solar energy company serving {$city} and surrounding areas. We provide high-quality solar panel installation and energy solutions for residential and commercial properties.",
-            "At {$companyName}, we're committed to helping {$city} residents save money on their energy bills with our top-rated solar panel systems and exceptional customer service.",
-            "Serving {$city} since " . (2000 + rand(0, 20)) . ", {$companyName} has established itself as a trusted name in the solar energy industry with thousands of satisfied customers.",
-            "{$companyName} offers innovative solar solutions in the {$city} area, including solar panel installation, battery storage, and energy efficiency upgrades.",
-            "As a locally-owned and operated solar company in {$city}, {$companyName} is dedicated to providing personalized service and the latest solar technology to our customers."
-        ];
-
-        return $descriptions[array_rand($descriptions)];
-    }
-
 }
