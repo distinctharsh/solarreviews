@@ -416,7 +416,7 @@
                                                 <td>{{ number_format($company->total_reviews) }}</td>
                                                 <td class="text-end">
                                                     <a href="{{ route('companies.show', $company->slug) }}" class="view-link">
-                                                        View profile
+                                                        View
                                                         <i class="fas fa-arrow-right"></i>
                                                     </a>
                                                 </td>
