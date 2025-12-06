@@ -565,6 +565,12 @@
 
         /* Search Input Field */
 
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+        }
+
         .search-input {
             flex: 1;
             border: none;
@@ -572,6 +578,31 @@
             font-size: 1rem;
             outline: none;
             background: transparent;
+            min-height: 52px;
+            line-height: 1.4;
+        }
+
+        .search-input::placeholder {
+            color: transparent;
+        }
+
+        .search-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1rem;
+            color: #475569;
+            font-size: clamp(0.95rem, 2.5vw, 1rem);
+            line-height: 1.4;
+            pointer-events: none;
+            white-space: normal;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-input:focus + .search-placeholder,
+        .search-input:not(:placeholder-shown) + .search-placeholder {
+            opacity: 0;
         }
 
         .search-btn {
@@ -699,10 +730,32 @@
                 margin-bottom: 0.5rem;
             }
             
+            .search-input-wrapper,
             .search-input,
             .search-btn {
                 width: 100%;
-                height: 44px;
+            }
+
+            .search-input-wrapper {
+                min-height: 48px;
+            }
+
+            .search-input {
+                min-height: 48px;
+                height: auto;
+                padding: 0.65rem 0.9rem;
+                line-height: 1.3;
+                font-size: clamp(0.9rem, 3.8vw, 1rem);
+            }
+
+            .search-placeholder {
+                font-size: clamp(0.85rem, 3.4vw, 0.95rem);
+                padding: 0.65rem 0.9rem;
+                line-height: 1.35;
+            }
+
+            .search-input::placeholder {
+                font-size: clamp(0.85rem, 3.4vw, 0.95rem);
             }
             
             .search-btn {
@@ -731,9 +784,27 @@
                 text-align: center;
             }
 
+            .search-input-wrapper {
+                width: 100%;
+            }
+
             .search-input {
                 width: 100%;
-                height: 45px;
+                min-height: 48px;
+                height: auto;
+                padding: 0.65rem 0.9rem;
+                line-height: 1.3;
+                font-size: clamp(0.9rem, 3.8vw, 1rem);
+            }
+
+            .search-placeholder {
+                font-size: clamp(0.85rem, 3.4vw, 0.95rem);
+                padding: 0.65rem 0.9rem;
+                line-height: 1.35;
+            }
+
+            .search-input::placeholder {
+                font-size: clamp(0.85rem, 3.4vw, 0.95rem);
             }
 
             .search-btn {
@@ -767,7 +838,10 @@
                     <i class="fas fa-search"></i>
                 </div>
 
-                <input type="text" class="search-input" placeholder="Search for Reviews of Product, Service, Company">
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" placeholder="Search for Reviews of Product, Service, Company">
+                    <span class="search-placeholder">Search for Reviews of Product, Service, Company</span>
+                </div>
 
                 <button class="search-btn">Search</button>
             </div>
