@@ -82,22 +82,31 @@
         }
 
         .category-card {
-            background: #fff;
+            background: linear-gradient(140deg, #ffffff, #f9fefb);
             border-radius: 18px;
-            padding: 1.5rem;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 12px 30px var(--card-shadow);
+            padding: 1.6rem 1.4rem;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
             transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
+        .category-card::after {
+            content: '';
+            position: absolute;
+            inset: 0.65rem;
+            border-radius: 14px;
+            border: 1px dashed rgba(15, 23, 42, 0.08);
+            pointer-events: none;
+        }
+
         .category-card.active,
         .category-card:hover {
             transform: translateY(-6px);
             border-color: var(--primary-color);
-            box-shadow: 0 20px 40px rgba(31, 122, 61, 0.15);
+            box-shadow: 0 18px 34px rgba(31, 122, 61, 0.15);
         }
 
         .category-icon {
@@ -113,20 +122,41 @@
             margin-bottom: 1rem;
         }
 
+        .category-review-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid rgba(15, 23, 42, 0.15);
+            margin-bottom: 0.85rem;
+        }
+
         .category-card h3 {
-            font-size: 1.2rem;
+            font-size: 1.28rem;
+            font-weight: 700;
             margin-bottom: 0.35rem;
+            color: #0f172a;
         }
 
         .category-card p {
-            font-size: 0.95rem;
-            color: var(--muted-text);
+            font-size: 0.92rem;
+            color: #475569;
+            font-weight: 500;
             margin-bottom: 0.75rem;
         }
 
         .category-card small {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
 
         .review-form-wrapper {
@@ -206,29 +236,65 @@
             color: #f5c518;
         }
 
+        .multi-rating {
+            --bs-gutter-y: 0.85rem;
+        }
+
         .multi-rating label {
-            font-weight: 500;
-            color: var(--muted-text);
+            font-weight: 600;
+            color: var(--dark-text);
+            letter-spacing: 0.01em;
         }
 
         .rating-stars.rating-sm label {
             font-size: 1.2rem;
         }
 
+        .rating-field-sm {
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 0.8rem 0.95rem;
+            background: #f8fafc;
+            gap: 0.45rem;
+        }
+
         .rating-field-sm label {
-            flex-basis: 160px;
-            font-size: 0.85rem;
-            color: var(--muted-text);
+            width: 100%;
+            font-size: 0.9rem;
+            color: var(--dark-text);
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .rating-field-sm .rating-stars {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .rating-field.rating-field-sm {
+            /* flex-direction: column; */
+            align-items: flex-start;
         }
 
         @media (max-width: 576px) {
             .rating-field {
-                flex-direction: column;
+                /* flex-direction: column; */
                 align-items: flex-start;
+                gap: 0.35rem;
             }
 
             .rating-field .rating-stars {
                 width: 100%;
+                justify-content: flex-start;
+            }
+
+            .multi-rating {
+                --bs-gutter-y: 0.5rem;
+            }
+
+            .rating-field.rating-field-sm {
+                padding: 0.75rem 0.9rem;
+                gap: 0.35rem;
             }
         }
 
@@ -280,6 +346,51 @@
             font-size: 0.85rem;
             color: var(--muted-text);
             font-weight: 400;
+        }
+
+        .review-hint {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+            margin-top: 0.4rem;
+        }
+
+        .review-hint ul {
+            padding-left: 1rem;
+            margin-bottom: 0;
+        }
+
+        .review-hint li {
+            margin-bottom: 0.15rem;
+        }
+
+        .review-title-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .review-title-input {
+            padding-right: 1rem;
+        }
+
+        .review-title-input::placeholder {
+            color: transparent;
+        }
+
+        .review-title-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            color: #94a3b8;
+            font-size: clamp(0.85rem, 3.4vw, 1rem);
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .review-title-input:focus + .review-title-placeholder,
+        .review-title-input:not(:placeholder-shown) + .review-title-placeholder {
+            opacity: 0;
         }
     </style>
 </head>
@@ -404,12 +515,25 @@
 
                                 <div class="col-12 col-lg-6">
                                     <label class="form-label">Review title <span>(Short summary - optional)</span></label>
-                                    <input type="text" class="form-control" name="review_title" placeholder="e.g., Seamless install and great support">
+                                    <div class="review-title-wrapper">
+                                        <input type="text" class="form-control review-title-input" name="review_title" placeholder="e.g., Seamless install and great support">
+                                        <span class="review-title-placeholder">e.g., Seamless install and great support</span>
+                                    </div>
+                                    <p class="review-hint">Sum up the highlight in a few words (e.g., “Flawless 6 kW rooftop install” or “Helpful service, slow paperwork”).</p>
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label">Describe your experience *</label>
                                     <textarea class="form-control" name="review_text" rows="4" placeholder="Share helpful details about communication, performance, timelines, and service." required></textarea>
+                                    <div class="review-hint">
+                                        <strong>Need pointers?</strong>
+                                        <ul class="mb-0">
+                                            <li>How did the team communicate before and after install?</li>
+                                            <li>Was the quoted price accurate and transparent?</li>
+                                            <li>Any delays or standout moments during installation?</li>
+                                            <li>How is the system performing now—support, output, upkeep?</li>
+                                        </ul>
+                                    </div>
                                 </div>
 
                                 <div class="col-12">
