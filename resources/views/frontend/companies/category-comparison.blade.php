@@ -798,7 +798,9 @@
             color: var(--heading-color);
         }
 
-
+        .anchor-target {
+            scroll-margin-top: 120px;
+        }
     </style>
 </head>
 <body>
@@ -877,143 +879,201 @@
 
                 <!-- Buttons Grid -->
                 <div class="options-grid">
-                    <button class="opt-btn">BEST BY EXPERT REVIEW</button>
-                    <button class="opt-btn">BEST BY CONSUMER REVIEW</button>
-                    <button class="opt-btn">MOST EFFICIENT</button>
-                    <button class="opt-btn">BEST VALUE</button>
-                    <button class="opt-btn">US {{ strtoupper($categoryName) }} MANUFACTURERS</button>
-                    <button class="opt-btn">TYPES OF MANUFACTURERS</button>
+                    @if($isPanels)
+                        <button class="opt-btn">Best by Expert Review</button>
+                        <a class="opt-btn" href="#panel-consumer-top">Best by Consumer Review</a>
+                        <a class="opt-btn" href="#panel-efficiency-top">Most Efficient</a>
+                        <button class="opt-btn">Best Value</button>
+                        <a class="opt-btn" href="#panel-manufacturers">Panel Manufacturers</a>
+                        <a class="opt-btn" href="#panel-tier1">Types of Manufacturers</a>
+                    @elseif($isBatteries)
+                        <a class="opt-btn" href="#battery-what">What is Solar Batteries</a>
+                        <a class="opt-btn" href="#battery-storage">Batteries vs Home Storage</a>
+                        <a class="opt-btn" href="#battery-types">Types of Solar Batteries</a>
+                        <a class="opt-btn" href="#battery-consumer-top">Top 4 Battery Brands</a>
+                        <button class="opt-btn">Solar Battery Cost</button>
+                        <button class="opt-btn">Tax Credits / Batteries</button>
+                    @elseif($isInverters)
+                        <a class="opt-btn" href="#inverter-basics">What is Solar Inverters</a>
+                        <a class="opt-btn" href="#inverter-types">Types of Solar Inverters</a>
+                        <a class="opt-btn" href="#inverter-consumer-top">Top 4 Inverter Brands</a>
+                        <button class="opt-btn">Hybrid &amp; Off-Grid Inverters</button>
+                    @else
+                        <button class="opt-btn">Overview</button>
+                        <button class="opt-btn">Top Picks</button>
+                    @endif
                 </div>
-
-              
-
             </div>
         </section>
 
+@if($isPanels)
+    <section class="why-important-section py-5 anchor-target" id="panel-manufacturers">
+        <div class="container-custom">
+            <h2 class="important-title">Solar panel manufacturers in India</h2>
+            <p class="important-text">
+                India now installs far more solar capacity than it manufactures. Gigawatt-scale factories run by Waaree,
+                Vikram Solar, Adani Solar, RenewSys, and Tata Power Solar serve the rooftop and utility market, yet installers
+                still import premium TOPCon/HJT modules from Southeast Asia to balance price, efficiency, and delivery times.
+            </p>
+            <p class="important-text">
+                Government measures like the Production Linked Incentive (PLI) scheme and the Basic Customs Duty (BCD) on
+                imported modules are expanding local capability, but for the next few years most projects will mix Indian modules
+                (for cost plus local support) with select imported batches when ultra-high efficiency is required.
+            </p>
+            <h3 class="important-title" style="font-size:1.4rem;">How to evaluate Indian panel makers</h3>
+            <ul class="important-list">
+                <li><strong>Manufacturing depth:</strong> Fully integrated lines from cell to module offer tighter quality control than assembly-only plants.</li>
+                <li><strong>Financial resilience:</strong> Favor brands with steady exports, transparent balance sheets, and long-standing EPC partnerships.</li>
+                <li><strong>After-sales presence:</strong> Confirm the manufacturer has service teams or authorized partners in your state for faster warranty swaps.</li>
+                <li><strong>Technology roadmap:</strong> Ask whether the brand ships mono PERC, bifacial, TOPCon, or HJT modules so your installer can design appropriately.</li>
+            </ul>
+            <p class="important-text">
+                If your ESG policy demands non-Chinese modules, niche U.S./EU brands can be sourced at a premium. For most households,
+                pairing a reputable Indian manufacturer with a proven local installer delivers the best blend of cost, availability, and support.
+            </p>
+        </div>
+    </section>
+@endif
 
 
-         @if($isBatteries)
-            <section class="why-important-section py-5">
-                <div class="container-custom">
-                    <h2 class="important-title">What is a solar battery?</h2>
-                    <p class="important-text">
-                        A solar battery bank stores the excess solar electricity your home doesn't need the moment it is generated.
-                        Because panels only work when the sun shines, batteries are what turn solar into a dependable 24×7 power source and are key to a 100% renewable future.
-                    </p>
-                    <p class="important-text">
-                        Energy storage systems today are sold as complete home storage solutions—think Tesla Powerwall or sonnen eco.
-                        They bundle the battery bank with management software, battery inverters, chargers, and controls, all tuned for modern lithium-ion chemistry.
-                    </p>
-                    <h3 class="important-title" style="font-size:1.4rem;">Why is lithium-ion battery technology now so popular?</h3>
-                    <ul class="important-list">
-                        <li><strong>Higher energy density:</strong> Stores more power per cubic inch than legacy deep-cycle lead acid batteries, making installs easier in tight garages and homes.</li>
-                        <li><strong>No vented gases:</strong> Safer indoor installation without separate enclosures, opening the mass-market opportunity.</li>
-                        <li><strong>Electronics built for Li-ion:</strong> Modern energy management software and hardware are engineered specifically for lithium chemistry.</li>
-                    </ul>
-                    <h3 class="important-title" style="font-size:1.4rem;">Are solar batteries worth it?</h3>
-                    <p class="important-text">It depends on four questions:</p>
-                    <ol class="important-list">
-                        <li><strong>Do you have access to 1:1 net metering?</strong> If yes, the grid already acts as your battery unless evening TOU rates are much higher.</li>
-                        <li><strong>Do you generate enough excess solar energy?</strong> Batteries only help if your system produces surplus kWh to store.</li>
-                        <li><strong>Does your utility use time-of-use pricing?</strong> Charging midday and discharging during expensive evening peaks can double the value of each stored kWh.</li>
-                        <li><strong>Are there rebates or tax credits?</strong> 30% federal ITC plus local incentives dramatically improve payback for home storage.</li>
-                    </ol>
-                </div>
-            </section>
+ @if($isBatteries)
+    <section class="why-important-section py-5 anchor-target" id="battery-what">
+        <div class="container-custom">
+            <h2 class="important-title">What is a solar battery?</h2>
+            <p class="important-text">
+                A solar battery bank stores the excess solar electricity your home doesn't need the moment it is generated.
+                Because panels only work when the sun shines, batteries are what turn solar into a dependable 24×7 power source and are key to a 100% renewable future.
+            </p>
+            <p class="important-text">
+                Energy storage systems today are sold as complete home storage solutions—think Tesla Powerwall or sonnen eco.
+                They bundle the battery bank with management software, battery inverters, chargers, and controls, all tuned for modern lithium-ion chemistry.
+            </p>
+            <h3 class="important-title" style="font-size:1.4rem;">Why is lithium-ion battery technology now so popular?</h3>
+            <ul class="important-list">
+                <li><strong>Higher energy density:</strong> Stores more power per cubic inch than legacy deep-cycle lead acid batteries, making installs easier in tight garages and homes.</li>
+                <li><strong>No vented gases:</strong> Safer indoor installation without separate enclosures, opening the mass-market opportunity.</li>
+                <li><strong>Electronics built for Li-ion:</strong> Modern energy management software and hardware are engineered specifically for lithium chemistry.</li>
+            </ul>
+            <h3 class="important-title" style="font-size:1.4rem;">Are solar batteries worth it?</h3>
+            <p class="important-text">It depends on four questions:</p>
+            <ol class="important-list">
+                <li><strong>Do you have access to 1:1 net metering?</strong> If yes, the grid already acts as your battery unless evening TOU rates are much higher.</li>
+                <li><strong>Do you generate enough excess solar energy?</strong> Batteries only help if your system produces surplus kWh to store.</li>
+                <li><strong>Does your utility use time-of-use pricing?</strong> Charging midday and discharging during expensive evening peaks can double the value of each stored kWh.</li>
+                <li><strong>Are there rebates or tax credits?</strong> 30% federal ITC plus local incentives dramatically improve payback for home storage.</li>
+            </ol>
+        </div>
+    </section>
 
-            <section class="why-important-section py-5">
-                <div class="container-custom">
-                    <h2 class="important-title">Energy storage systems</h2>
-                    <p class="important-text">
-                        Homeowners are now offered full storage systems rather than bare batteries. These all-in-one setups include
-                        battery management, inverters, chargers, and smart software so you can control how and when to charge or discharge.
-                        They all use lithium-ion cells—flooded lead-acid packs are effectively obsolete for modern home installs.
-                    </p>
-                    <h3 class="important-title" style="font-size:1.4rem;">AC-coupled vs DC-coupled solar batteries</h3>
-                    <p class="important-text">
-                        Solar panels make DC power and home appliances consume AC. Hybrid/off-grid systems handle that difference in two ways:
-                    </p>
-                    <h4 class="on-page-title" style="font-size:1.1rem;">AC-coupled batteries</h4>
-                    <p class="important-text">
-                        Panels feed DC into a grid-tie inverter first, converting it to AC. The AC can power the home, be exported to the grid,
-                        or get routed into an AC battery that internally converts it back to DC for storage. These batteries include electronics to manage all conversions seamlessly.
-                    </p>
-                    <h4 class="on-page-title" style="font-size:1.1rem;">DC-coupled batteries</h4>
-                    <p class="important-text">
-                        (For completeness) DC-coupled systems charge batteries directly with DC before a single inverter handles conversion for home loads.
-                        They can be more efficient but require specialized hybrid equipment.
-                    </p>
-                </div>
-            </section>
+    <section class="why-important-section py-5 anchor-target" id="battery-storage">
+        <div class="container-custom">
+            <h2 class="important-title">Energy storage systems</h2>
+            <p class="important-text">
+                In most cases homeowners are no longer being offered solar batteries on their own they are being offered complete home storage systems. Leading products such as the Tesla Powerwall and the sonnen eco do contain a battery bank but they are much more than this. They also contain a battery management system, a battery inverter, a battery charger and also software based controls that allow you to control how and when these products charge and discharge power.
+            </p>
+            <p class="important-text">
+                All of these newer all-in-one home energy storage and energy management systems use Lithium Ion battery technology and so if you have a home that is connected to the grid and are seeking a solar battery storage solution you no longer have to consider the question of battery chemistry technology. It was once the case that flooded lead acid battery technology was the most common solar battery bank for off grid homes but today there are no packaged home energy management solutions using lead acid batteries.
+            </p>
+        </div>
+    </section>
 
-            <!-- <section class="why-important-section py-5">
-                <div class="container-custom">
-                    <h2 class="important-title">Top battery brands in India 2025</h2>
-                    <p class="important-text">
-                        Scroll below to the "Best 20" list to see which storage brands consumers trust most this year.
-                        Every card summarizes review volume, satisfaction scores, and links into detailed pages so you can read reviews for every battery model we track.
-                    </p>
-                    <h3 class="important-title" style="font-size:1.4rem;">Reviews on all models of solar batteries</h3>
-                    <p class="important-text">
-                        Our reviewer community contributes detailed feedback on cycle life, warranty claims, and installer experiences for each product line.
-                        Use the filters and rankings to jump into the exact chemistry, capacity, or price band that fits your project.
-                    </p>
-                </div>
-            </section> -->
-        @endif
+    <section class="why-important-section py-5 anchor-target" id="battery-types">
+        <div class="container-custom">
+            <h2 class="important-title">Types of solar batteries</h2>
+            <p class="important-text">
+                Solar panels produce DC (direct current) electricity, batteries charge and discharge DC, while home appliances consume AC (alternating current).
+                Hybrid and off-grid systems manage those power flows differently depending on whether they use an AC-coupled or DC-coupled battery.
+            </p>
+            <p class="important-text">Here’s how each architecture works:</p>
+            <h3 class="important-title" style="font-size:1.4rem;">AC-coupled batteries</h3>
+            <p class="important-text">
+                DC power from the array is first converted to AC by a standard grid-tie inverter. That AC can power the home, be exported to the grid,
+                or head into an AC-coupled battery for storage. These all-in-one enclosures contain electronics that:
+            </p>
+            <ul class="important-list">
+                <li>Convert incoming AC from the inverter back into DC to charge the cells.</li>
+                <li>Manage charging profiles and protect the battery bank’s cycle life.</li>
+                <li>Invert stored DC back to AC when the home needs backup or peak shaving.</li>
+            </ul>
+            <h3 class="important-title" style="font-size:1.4rem;">DC-coupled batteries</h3>
+            <p class="important-text">
+                Panels charge the battery directly with DC before any AC conversion happens. A hybrid inverter then handles both the array and the battery,
+                delivering AC to the house. DC coupling is slightly more efficient and common on new hybrid builds, but it requires specialized hardware and wiring from day one.
+            </p>
+        </div>
+    </section>
+@endif
 
-        @if($isInverters)
-            <section class="why-important-section py-5">
-                <div class="container-custom">
-                    <h2 class="important-title">What does an inverter do?</h2>
-                    <p class="important-text">
-                        Solar inverters are the brains of every PV system. They convert the DC electricity that panels produce into the AC power your home uses,
-                        and they constantly track the Maximum Power Point (MPP) so panels operate at the most productive voltage/current pair as conditions change throughout the day.
-                    </p>
-                    <h3 class="important-title" style="font-size:1.4rem;">Solar inverter technology</h3>
-                    <ul class="important-list">
-                        <li><strong>String inverter:</strong> Cost-effective and simple for full strings, but least efficient under shading.</li>
-                        <li><strong>String inverter + optimizers:</strong> Module-level MPP tracking handles shade better while still feeding a single inverter.</li>
-                        <li><strong>Microinverter:</strong> Full AC conversion and MPP tracking per panel. Highest flexibility and monitoring granularity, at a higher cost.</li>
-                    </ul>
-                    <h3 class="important-title" style="font-size:1.4rem;">System compatibility</h3>
-                    <ul class="important-list">
-                        <li><strong>Grid-tied:</strong> Standard for most homes, enabling net metering.</li>
-                        <li><strong>Hybrid:</strong> Works with batteries by charging/discharging plus grid interaction.</li>
-                        <li><strong>Off-grid:</strong> Fully independent setups that require battery backup.</li>
-                    </ul>
-                </div>
-            </section>
+@if($isInverters)
+    <section class="why-important-section py-5 anchor-target" id="inverter-basics">
+        <div class="container-custom">
+            <h2 class="important-title">What does an inverter do?</h2>
+            <p class="important-text">
+                Solar inverters are the brains of every PV system. They convert the DC electricity that panels produce into the AC power your home uses,
+                and they constantly track the Maximum Power Point (MPP) so panels operate at the most productive voltage/current pair as conditions change throughout the day.
+            </p>
+            <h3 class="important-title" style="font-size:1.4rem;">Solar inverter technology</h3>
+            <ul class="important-list">
+                <li><strong>String inverter:</strong> Cost-effective and simple for full strings, but least efficient under shading.</li>
+                <li><strong>String inverter + optimizers:</strong> Module-level MPP tracking handles shade better while still feeding a single inverter.</li>
+                <li><strong>Microinverter:</strong> Full AC conversion and MPP tracking per panel. Highest flexibility and monitoring granularity, at a higher cost.</li>
+            </ul>
+            <h3 class="important-title" style="font-size:1.4rem;">System compatibility</h3>
+            <ul class="important-list">
+                <li><strong>Grid-tied:</strong> Standard for most homes, enabling net metering.</li>
+                <li><strong>Hybrid:</strong> Works with batteries by charging/discharging plus grid interaction.</li>
+                <li><strong>Off-grid:</strong> Fully independent setups that require battery backup.</li>
+            </ul>
+        </div>
+    </section>
 
-            <section class="why-important-section py-5">
-                <div class="container-custom">
-                    <h2 class="important-title">Types of solar inverter (at a glance)</h2>
-                    <p class="important-text">
-                        Deciding between technologies? Use this cheat sheet to match inverter styles with project goals:
-                    </p>
-                    <ul class="important-list">
-                        <li><strong>String inverter:</strong> Best for wide-open roofs with identical panel orientations.</li>
-                        <li><strong>Optimized string:</strong> Choose when partial shading or mixed module strings are unavoidable.</li>
-                        <li><strong>Microinverter:</strong> Ideal for modular growth, complex roofs, or premium monitoring requirements.</li>
-                    </ul>
-                    <p class="important-text">
-                        Below you'll also find rankings for Top 4 inverter brands, top-rated grid-tied models, plus the best hybrid/off-grid inverters based on consumer satisfaction.
-                    </p>
-                </div>
-            </section>
-        @endif
+    <section class="why-important-section py-5 anchor-target" id="inverter-types">
+        <div class="container-custom">
+            <h2 class="important-title">Types of solar inverter</h2>
+            <p class="important-text">
+                There are two layers to consider when picking the right inverter: the technology used inside the inverter, and the type of solar power system it needs to support.
+            </p>
+            <h3 class="important-title" style="font-size:1.4rem;">Solar inverter technology</h3>
+            <ul class="important-list">
+                <li><strong>String inverter:</strong> A single unit that converts DC from an entire string of panels. It’s the cheapest option but also the least efficient.</li>
+                <li><strong>String inverter + power optimizer:</strong> Optimizers on each panel handle MPP tracking before feeding optimized DC to the central inverter. Cost is higher, but shading performance improves dramatically.</li>
+                <li><strong>Microinverter:</strong> Performs both MPP tracking and DC→AC conversion on every panel. Excellent shade handling and easy expansion, but the highest upfront cost.</li>
+            </ul>
+         
+            <h3 class="important-title" style="font-size:1.4rem;">Match inverter to your system type</h3>
+            <ul class="important-list">
+                <li><strong>Grid-tied inverters:</strong> Ideal for standard grid-connected systems, managing two-way power flows with the utility.</li>
+                <li><strong>Hybrid inverters:</strong> Purpose-built for solar-plus-storage, handling the grid, the battery, and your loads simultaneously.</li>
+                <li><strong>Off-grid inverters:</strong> Used in fully independent systems; they require batteries to operate and can’t connect to the utility.</li>
+            </ul>
+        </div>
+    </section>
+@endif
 
 
 
 <!-- Top Rated Solar Brands Section -->
-<section class="solar-section py-5 bg-light border-bottom">
+<section class="solar-section py-5 bg-light border-bottom anchor-target"
+    @if($isPanels)
+        id="panel-consumer-top"
+    @elseif($isBatteries)
+        id="battery-consumer-top"
+    @elseif($isInverters)
+        id="inverter-consumer-top"
+    @endif>
     <div class="container-custom">
 
         <!-- Header Row -->
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
 
             <h2 class="fw-bold section-title">
-                {{ $isPanels ? 'Best 20 brands of solar panels by consumer reviews' : 'Best 20 ' . $categoryName . ' brands by consumer reviews' }}
+                @if($isPanels)
+                    Best brands of solar panels by consumer reviews
+                @elseif($isBatteries)
+                    Top 4 battery brands by consumer reviews
+                @else
+                    Best {{ $categoryName }} brands by consumer reviews
+                @endif
             </h2>
 
             <!-- Sort Box -->
@@ -1043,9 +1103,12 @@
 
         <div class="row">
             <div class="col-lg-9">
-                @if($brandsByReviews->isNotEmpty())
+                @php
+                    $displayBrands = $isBatteries ? $brandsByReviews->take(4) : $brandsByReviews;
+                @endphp
+                @if($displayBrands->isNotEmpty())
                     <div class="brand-grid">
-                        @foreach($brandsByReviews as $index => $brand)
+                        @foreach($displayBrands as $index => $brand)
                             @php
                                 $rating = (float) $brand->avg_rating;
                                 $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
@@ -1159,7 +1222,7 @@
 
 
 <!-- Top Rated Solar Brands Section -->
-<section class="solar-section py-5 bg-light border-bottom">
+<section class="solar-section py-5 bg-light border-bottom anchor-target" @if($isPanels) id="panel-efficiency-top" @endif>
     <div class="container-custom">
 
         <!-- Header Row -->
