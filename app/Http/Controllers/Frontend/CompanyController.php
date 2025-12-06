@@ -35,9 +35,15 @@ class CompanyController extends Controller
             ->orderBy('companies.owner_name')
             ->get();
 
+        $states = State::select('name', 'slug')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
         return view('frontend.companies.index', [
             'companies' => $companies,
             'totalCompanies' => $companies->count(),
+            'states' => $states,
         ]);
     }
 

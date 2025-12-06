@@ -892,7 +892,7 @@
                 </div>
                 
                 <div class="col-12 col-md-6 col-lg-3">
-                    <a href="#" class="product-card">
+                    <a href="{{ url('compare/companies') }}" class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/epc.jpg') }}" alt="Solar Inverters" class="img-fluid">
                         </div>
@@ -962,7 +962,7 @@
                         SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
                         to help you identify the best solar panel installation companies in your area.
                     </p>
-                    <a href="{{ route('reviews.top') }}" class="hero-btn" rel="noopener">See Reviews of Companies Near You</a>
+                    <a href="{{ url('compare/companies') }}" class="hero-btn" rel="noopener">See Reviews of Companies Near You</a>
                 </div>
             </div>
         </div>
