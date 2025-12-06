@@ -23,6 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/faq', 'frontend.faq')->name('faq');
+
 Route::get('/top-reviews', function () {
     return view('frontend.reviews.top-installers');
 })->name('reviews.top');
