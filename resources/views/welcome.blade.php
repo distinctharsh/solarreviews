@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Solar Reviews - Compare & Find Best Solar Solutions</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,6 +11,43 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @include('components.frontend.meta-tags', [
+        'title' => 'Solar Reviews India | Compare Solar Installers, Products & Services',
+        'description' => 'Discover verified solar installers, EPC partners, equipment brands and unbiased reviews in India. Compare ratings, read expert insights and find the right solar solution.',
+        'keywords' => 'solar reviews India, solar installer ratings, solar companies comparison, EPC, solar panels',
+        'canonical' => url('/'),
+        'image' => asset('favicon.svg'),
+    ])
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'Solar Reviews India',
+            'url' => url('/'),
+            'logo' => asset('favicon.svg'),
+            'sameAs' => [
+                'https://www.facebook.com/',
+                'https://www.instagram.com/',
+                'https://www.linkedin.com/',
+            ],
+        ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'Solar Reviews India',
+            'url' => url('/'),
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => route('companies.index', ['q' => '{search_term_string}']),
+                'query-input' => 'required name=search_term_string',
+            ],
+        ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     <style>
         :root {
@@ -573,6 +609,7 @@
 
         .search-input {
             flex: 1;
+            width: 100%;
             border: none;
             padding: 0.9rem 1rem;
             font-size: 1rem;
@@ -833,18 +870,23 @@
                 Find expert reviews of the solar equipment & service you need
             </p>
 
-            <div class="reviews-search-box">
+            <form class="reviews-search-box" action="{{ route('companies.index') }}" method="GET" role="search">
                 <div class="search-icon">
                     <i class="fas fa-search"></i>
                 </div>
 
                 <div class="search-input-wrapper">
-                    <input type="text" class="search-input" placeholder="Search for Reviews of Product, Service, Company">
+                    <input type="text"
+                           id="hero-search-input"
+                           class="search-input"
+                           name="q"
+                           aria-label="Search for reviews of products, services or companies"
+                           placeholder="Search for Reviews of Product, Service, Company">
                     <span class="search-placeholder">Search for Reviews of Product, Service, Company</span>
                 </div>
 
-                <button class="search-btn">Search</button>
-            </div>
+                <button class="search-btn" type="submit">Search</button>
+            </form>
 
         </div>
 

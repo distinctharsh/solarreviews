@@ -3,6 +3,15 @@
     $breakdownChunks = collect($ratingBreakdown)->chunk(ceil(max(count($ratingBreakdown), 1) / 2));
     $totalReviews = $ratingSummary['total'] ?? 0;
     $location = collect([$company->city, $company->state])->filter()->implode(', ');
+
+    $companyTitle = $company->name . ' Reviews & Profile | Solar Reviews India';
+    $companyDescription = ($company->description ?: 'Compare verified reviews, ratings and expert analysis for ' . $company->name . '.') . ' Explore service type, years in business and rating breakdown.';
+    $companyCanonical = route('companies.show', $company->slug);
+    $aggregateRating = [
+        '@type' => 'AggregateRating',
+        'ratingValue' => number_format($ratingSummary['average'], 1),
+        'reviewCount' => (int) $ratingSummary['total'],
+    ];
 @endphp
 
 <!DOCTYPE html>
@@ -10,7 +19,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar Company Profile</title>
+    @include('components.frontend.meta-tags', [
+        'title' => $companyTitle,
+        'description' => $companyDescription,
+        'canonical' => $companyCanonical,
+        'type' => 'article',
+        'image' => $logoUrl,
+    ])
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'LocalBusiness',
+            'name' => $company->name,
+            'url' => $companyCanonical,
+            'image' => $logoUrl,
+            'priceRange' => '₹₹₹',
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $company->city,
+                'addressRegion' => $company->state,
+                'addressCountry' => 'IN',
+            ],
+            'aggregateRating' => $aggregateRating,
+            'description' => $companyDescription,
+        ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">

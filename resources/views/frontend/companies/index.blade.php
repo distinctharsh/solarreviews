@@ -1,3 +1,15 @@
+@php
+    $directoryCanonical = route('companies.index');
+    $companyListSchema = $companies->take(10)->values()->map(function ($company, $index) {
+        return [
+            '@type' => 'ListItem',
+            'position' => $index + 1,
+            'name' => $company->owner_name ?? $company->name ?? 'Company',
+            'url' => route('companies.show', $company->slug),
+        ];
+    });
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +20,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @include('components.frontend.meta-tags', [
+        'title' => 'Solar Company Directory India | ' . number_format($totalCompanies) . ' installers reviewed',
+        'description' => 'Browse ' . number_format($totalCompanies) . ' verified solar installers, EPC partners and manufacturers. Compare average ratings, review counts and jump into detailed company profiles.',
+        'keywords' => 'solar companies India, solar installers directory, EPC reviews, solar ratings',
+        'canonical' => $directoryCanonical,
+    ])
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'CollectionPage',
+            'name' => 'Solar Company Directory India',
+            'url' => $directoryCanonical,
+            'mainEntity' => [
+                '@type' => 'ItemList',
+                'itemListElement' => $companyListSchema,
+            ],
+        ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     <style>
         body {
