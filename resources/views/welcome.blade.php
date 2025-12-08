@@ -579,144 +579,236 @@
             line-height: 1.6;
         }
 
-        .reviews-search-box {
-            max-width: 750px;
+        .reviews-submit-card {
+            max-width: 760px;
             margin: 0 auto;
             background: #ffffff;
-            display: flex;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        .reviews-submit-card .eyebrow {
+            font-size: 0.85rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            display: inline-flex;
             align-items: center;
-            padding: 0.9rem;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border: 1px solid #eee;
+            gap: 0.5rem;
         }
 
-        /* Search Icon */
-        .search-icon {
-            padding: 0 1rem;
-            font-size: 1.2rem;
-            color: #111;
-            border-right: 1px solid #e2e8f0;
+        .reviews-submit-card .eyebrow::before {
+            content: '';
+            width: 28px;
+            height: 1px;
+            background: #d6e1f5;
         }
 
-        /* Search Input Field */
-
-        .search-input-wrapper {
-            flex: 1;
-            position: relative;
-            width: 100%;
+        .reviews-submit-card h3 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
         }
 
-        .search-input {
-            flex: 1;
-            width: 100%;
-            border: none;
-            padding: 0.9rem 1rem;
-            font-size: 1rem;
-            outline: none;
-            background: transparent;
-            min-height: 52px;
-            line-height: 1.4;
-        }
-
-        .search-input::placeholder {
-            color: transparent;
-        }
-
-        .search-placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            padding: 0.9rem 1rem;
+        .reviews-submit-card p {
             color: #475569;
-            font-size: clamp(0.95rem, 2.5vw, 1rem);
-            line-height: 1.4;
-            pointer-events: none;
-            white-space: normal;
-            transition: opacity 0.2s ease;
-        }
-
-        .search-input:focus + .search-placeholder,
-        .search-input:not(:placeholder-shown) + .search-placeholder {
-            opacity: 0;
-        }
-
-        .search-btn {
-            background: #2E8B46;
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+            margin-bottom: 1.5rem;
             font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s ease;
         }
 
-        .search-btn:hover {
-            background: #36a353;
-            transform: translateY(-1px);
+        .reviews-submit-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .reviews-submit-actions .submit-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 0.85rem 1.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+            border: none;
+            text-decoration: none;
+            box-shadow: 0 12px 30px rgba(59, 161, 76, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .reviews-submit-actions .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 34px rgba(59, 161, 76, 0.28);
+        }
+
+        .reviews-submit-actions .info-pill {
+            color: #475569;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .reviews-submit-actions .info-pill i {
+            color: var(--primary-color);
         }
 
         /* ===========================================
         POPULAR CATEGORIES SECTION (Screenshot Match)
         =========================================== */
 
-        .popular-categories {
-            padding: 2rem 0 3rem;
-            background: #fff;
+        .epc-review-section {
+            background: #f8fafb;
         }
 
-        .popular-categories h2 {
-            font-size: 1.75rem;
-            color: #111;
+        .epc-card {
+            height: 100%;
+            background: #fff;
+            border-radius: 18px;
+            padding: 2.25rem;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+        }
+
+        .epc-card h3 {
+            font-size: 2rem;
             font-weight: 700;
-            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .epc-card p {
+            color: #475569;
             margin-bottom: 1.5rem;
-            text-decoration: underline;
+            line-height: 1.6;
         }
 
-        .product-card {
-            display: block;
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: 0.3s ease;
-            border: 1px solid #e5e7eb;
+        .epc-card .epc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
         }
 
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-        }
-
-        .product-image {
-            height: 150px;
-            background: #f8fafc;
+        .epc-card .epc-list li {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 1rem;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: #1f2937;
         }
 
-        .product-image img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .epc-card .epc-list li i {
+            color: var(--primary-color);
         }
 
-        .product-content {
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .product-content h3 {
-            font-size: 1.1rem;
-            color: #111827;
+        .epc-card .epc-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--primary-color);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 999px;
+            text-decoration: none;
             font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .epc-card .epc-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .review-ticker {
+            background: #fff;
+            border-radius: 18px;
+            padding: 2rem;
+            min-height: 420px;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .review-ticker .ticker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .ticker-header strong {
+            font-size: 1.2rem;
+        }
+
+        .ticker-window {
+            position: relative;
+            overflow: hidden;
+            height: clamp(320px, 46vh, 480px);
+        }
+
+        .ticker-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
+            animation: tickerMove 18s linear infinite;
+        }
+
+        .ticker-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .ticker-item .name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .ticker-item .company {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .ticker-item .stars {
+            color: var(--primary-color);
+            margin-bottom: 0.4rem;
+        }
+
+        @keyframes tickerMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        .ticker-window:hover .ticker-list {
+            animation-play-state: paused;
+        }
+
+        .map-viewport {
+            padding: 3rem 0 4rem;
+            background: linear-gradient(180deg, #f1fff6 0%, #ffffff 100%);
+        }
+
+        .map-viewport .container-custom {
+            max-width: 1100px;
+        }
+
+        .map-viewport .map-container {
+            padding: 1rem;
+            border-radius: 18px;
+            border: 1px solid rgba(59,161,76,0.15);
+            background: #fff;
+            box-shadow: 0 25px 50px rgba(59, 161, 76, 0.12);
+        }
+
+        .state-map-container svg {
+            width: 100%;
+            height: auto;
+            max-height: 520px;
         }
 
         /* ==============================================
@@ -870,78 +962,106 @@
                 Find expert reviews of the solar equipment & service you need
             </p>
 
-            <form class="reviews-search-box" action="{{ route('companies.index') }}" method="GET" role="search">
-                <div class="search-icon">
-                    <i class="fas fa-search"></i>
+            <div class="reviews-submit-card">
+                <span class="eyebrow">Share &amp; shine</span>
+                <h3>Submit your solar experience and help thousands choose better.</h3>
+                <p>Real installations. Real performance. Real service. Tell the community what went right (or wrong) so homeowners can make confident solar decisions.</p>
+                <div class="reviews-submit-actions">
+                    <a href="{{ route('reviews.create') }}" class="submit-btn">
+                        Submit a review
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <span class="info-pill">
+                        <i class="fas fa-shield-check"></i>
+                        2-minute guided form • Verified by our team
+                    </span>
                 </div>
-
-                <div class="search-input-wrapper">
-                    <input type="text"
-                           id="hero-search-input"
-                           class="search-input"
-                           name="q"
-                           aria-label="Search for reviews of products, services or companies"
-                           placeholder="Search for Reviews of Product, Service, Company">
-                    <span class="search-placeholder">Search for Reviews of Product, Service, Company</span>
-                </div>
-
-                <button class="search-btn" type="submit">Search</button>
-            </form>
+            </div>
 
         </div>
 
     </section>
 
-    <!-- Products Comparison Section -->
-    <section class="py-4 bg-white border-top border-bottom" style=" overflow-y: auto;">
+    <!-- Solar EPC & Reviews Section -->
+    <section class="epc-review-section py-5 border-top border-bottom">
         <div class="container-custom">
-            <div class="text-center pt-2 mb-2">
-                <h2 class="fw-bold mb-2" style="font-size: 1.75rem; color: #1e293b;">Popular Categories</h2>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-12 col-md-6 col-lg-3">
-                    <a href="{{ url('compare/panels') }}" class="product-card">
-                        <div class="product-image">
-                            <img src="{{ asset('images/panels.png') }}" alt="Solar Panels" class="img-fluid">
-                        </div>
-                        <div class="product-content">
-                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Panels</h3>
-                        </div>
-                    </a>
+            <div class="row g-4 align-items-stretch">
+                <div class="col-12 col-lg-5">
+                    <div class="epc-card h-100">
+                        <p class="text-uppercase fw-semibold mb-2" style="letter-spacing: 0.15em;">Solar EPC Spotlight</p>
+                        <h3>Partner with EPC teams built for Indian rooftops.</h3>
+                        <p>Compare vetted engineering, procurement, and construction partners who deliver bankable projects, predictable timelines, and transparent pricing.</p>
+                        <ul class="epc-list">
+                            <li><i class="fas fa-bolt"></i> Tier-1 equipment partnerships</li>
+                            <li><i class="fas fa-hard-hat"></i> NABCEP &amp; MNRE certified teams</li>
+                            <li><i class="fas fa-gauge-high"></i> Performance guarantees built-in</li>
+                        </ul>
+                        <a href="{{ url('compare/companies') }}" class="epc-btn">
+                            Explore Solar EPCs
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                
-                <div class="col-12 col-md-6 col-lg-3">
-                    <a href="{{ url('compare/batteries') }}" class="product-card">
-                        <div class="product-image">
-                            <img src="{{ asset('images/batteries.png') }}" alt="Solar Batteries" class="img-fluid">
+
+                <div class="col-12 col-lg-7">
+                    <div class="review-ticker h-100">
+                        <div class="ticker-header">
+                            <strong>Top to bottom live reviews</strong>
+                            <span class="badge bg-light text-dark text-uppercase" style="letter-spacing: 0.1em;">Updated hourly</span>
                         </div>
-                        <div class="product-content">
-                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Batteries</h3>
+                        <div class="ticker-window">
+                            <ul class="ticker-list">
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Kunal Verma</span>
+                                        <span class="company">NovaRay EPC</span>
+                                    </div>
+                                    <div class="stars">★★★★★</div>
+                                    <p class="mb-0">"Executed our 25kW system ahead of schedule and the monitoring dashboard is addictive."</p>
+                                </li>
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Sunita Rajput</span>
+                                        <span class="company">HelioGrid</span>
+                                    </div>
+                                    <div class="stars">★★★★☆</div>
+                                    <p class="mb-0">"Crew was professional, minor panel tilt correction solved instantly."</p>
+                                </li>
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Aniket J.</span>
+                                        <span class="company">PhotonWorks</span>
+                                    </div>
+                                    <div class="stars">★★★★★</div>
+                                    <p class="mb-0">"Transparent BOM, shared drone images post install. Highly recommended!"</p>
+                                </li>
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Harini Desai</span>
+                                        <span class="company">Sunleaf Energy</span>
+                                    </div>
+                                    <div class="stars">★★★★☆</div>
+                                    <p class="mb-0">"Support team proactively filed DISCOM paperwork, saved us time."</p>
+                                </li>
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Dipankar Mishra</span>
+                                        <span class="company">Aurora EPC</span>
+                                    </div>
+                                    <div class="stars">★★★★★</div>
+                                    <p class="mb-0">"Delivered promised generation—tracking app shows 14% over performance."</p>
+                                </li>
+                                <li class="ticker-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="name">Rhea K.</span>
+                                        <span class="company">VoltEdge</span>
+                                    </div>
+                                    <div class="stars">★★★★☆</div>
+                                    <p class="mb-0">"Neat wiring and safety briefing impressed my facility team."</p>
+                                </li>
+                            </ul>
                         </div>
-                    </a>
-                </div>
-                
-                <div class="col-12 col-md-6 col-lg-3">
-                    <a href="{{ url('compare/inverters') }}" class="product-card">
-                        <div class="product-image">
-                            <img src="{{ asset('images/inverters.png') }}" alt="Solar Inverters" class="img-fluid">
-                        </div>
-                        <div class="product-content">
-                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar Inverters</h3>
-                        </div>
-                    </a>
-                </div>
-                
-                <div class="col-12 col-md-6 col-lg-3">
-                    <a href="{{ url('compare/companies') }}" class="product-card">
-                        <div class="product-image">
-                            <img src="{{ asset('images/epc.jpg') }}" alt="Solar Inverters" class="img-fluid">
-                        </div>
-                        <div class="product-content">
-                            <h3 class="fw-semibold mb-0" style="font-size: 1.375rem; color: #1e293b;">Solar EPC</h3>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1022,7 +1142,7 @@
     </section> -->
 
     <!-- State Map Section -->
-    <section class="py-5">
+    <section class="map-viewport">
         <div class="container-custom">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: var(--primary-color);">Find Solar Solutions in Your State</h2>
@@ -1188,6 +1308,12 @@
                     });
                 }
             });
+        });
+
+        // Duplicate ticker items to keep the marquee filled
+        document.querySelectorAll('.ticker-list').forEach(list => {
+            const items = Array.from(list.children);
+            items.forEach(item => list.appendChild(item.cloneNode(true)));
         });
 
         const heroPincodeInput = document.querySelector('.hero-search-input');

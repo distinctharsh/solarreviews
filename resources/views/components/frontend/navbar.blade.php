@@ -30,8 +30,17 @@
                     </div>
                 </div>
             </div>
+            <form class="nav-search" action="{{ route('companies.index') }}" method="GET" role="search">
+                <span class="nav-search-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M15.5 15.5L21 21" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="10.5" cy="10.5" r="6.5" stroke="#94a3b8" stroke-width="2"/>
+                    </svg>
+                </span>
+                <input type="text" name="q" class="nav-search-input" placeholder="Search installers" aria-label="Search companies, products or reviews">
+                <button type="submit" class="nav-search-btn">Search</button>
+            </form>
             <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
-            <a class="nav-link fw-medium nav-btn-submit" href="{{ route('reviews.create') }}" style="color: white !important;">Submit Review</a>
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -57,6 +66,13 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" >Learn About Solar</a>
+            </li>
+            <li class="nav-item">
+                <form class="mobile-nav-search" action="{{ route('companies.index') }}" method="GET">
+                    <label class="visually-hidden" for="mobile-nav-search">Search companies, products or reviews</label>
+                    <input id="mobile-nav-search" name="q" type="text" placeholder="Search companies, products, reviews">
+                    <button type="submit">Search</button>
+                </form>
             </li>
             @if (Route::has('login'))
                 @auth
@@ -222,26 +238,92 @@
         background: #ffdb4d;
     }
 
-    .nav-btn-submit {
-        background-color: #3ba14c;
-        color: white !important;
-        padding: 0.5rem 1.25rem;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        box-shadow: 0 3px 12px rgba(59, 161, 76, 0.25);
-        transition: all 0.3s ease;
-        display: inline-flex;
+        .nav-search {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        padding: 0.35rem 0.35rem 0.35rem 0.85rem;
+        display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 0.3rem;
+        gap: 0.5rem;
+        min-width: 320px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .nav-btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(59, 161, 76, 0.4);
-        background: #4db96f;
+    .nav-search:focus-within {
+        border-color: var(--primary-color, #3ba14c);
+        box-shadow: 0 0 0 2px rgba(59, 161, 76, 0.12);
+    }
+
+    .nav-search-icon {
+        display: inline-flex;
+        padding-right: 0.5rem;
+        border-right: 1px solid #edf2f7;
+        color: #94a3b8;
+    }
+
+    .nav-search-input {
+        border: none;
+        background: transparent;
+        font-size: 0.95rem;
+        width: 100%;
+        color: #0f172a;
+        outline: none;
+    }
+
+    .nav-search-input::placeholder {
+        color: #94a3b8;
+    }
+
+    .nav-search-btn {
+        border: 1px solid transparent;
+        background: #3ba14c;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.95rem;
+        border-radius: 999px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nav-search-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 18px rgba(59, 161, 76, 0.25);
+    }
+
+    .mobile-nav-search {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+    }
+
+    .mobile-nav-search input {
+        width: 100%;
+        border: 1px solid #cbd5f5;
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        font-size: 0.95rem;
+    }
+
+    .mobile-nav-search button {
+        border: none;
+        background: #1e40af;
+        color: #fff;
+        border-radius: 10px;
+        padding: 0.6rem 0.9rem;
+        font-weight: 600;
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
     }
 
     /* Mobile-specific styles */
