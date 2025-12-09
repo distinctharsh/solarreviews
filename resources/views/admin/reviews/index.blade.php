@@ -81,7 +81,8 @@
                             <th>Reviewer</th>
                             <th>Rating</th>
                             <th>Review Title</th>
-                            <th>Submitted</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,8 +109,26 @@
                                     <div class="text-muted small">{{ Str::limit($review->review_text, 80) }}</div>
                                 </td>
                                 <td>
-                                    <div>{{ optional($review->review_date ?? $review->created_at)->format('d M Y') }}</div>
-                                    <div class="text-muted small">{{ optional($review->created_at)->format('H:i') }}</div>
+                                    <span class="badge bg-{{ $review->is_approved ? 'success' : 'warning' }}">
+                                        {{ $review->is_approved ? 'Approved' : 'Pending' }}
+                                    </span>
+                                    <div class="text-muted small">
+                                        {{ optional($review->review_date ?? $review->created_at)->format('d M Y') }}
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <form action="{{ route('admin.reviews.company.approve', $review) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-success" {{ $review->is_approved ? 'disabled' : '' }}>
+                                            Approve
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.reviews.company.reject', $review) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-warning" {{ !$review->is_approved ? 'disabled' : '' }}>
+                                            Reject
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

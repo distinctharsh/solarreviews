@@ -28,7 +28,7 @@ Route::group([
     Route::resource('reviews', ReviewController::class);
     Route::post('reviews/{review}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
     Route::post('reviews/{review}/reject', [ReviewController::class, 'reject'])->name('reviews.reject');
-    
+
     // Brand Categories Management
     Route::prefix('brand-categories')->name('brand-categories.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\BrandCategoryController::class, 'index'])->name('index');

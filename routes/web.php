@@ -111,6 +111,10 @@ Route::prefix('admin')
     
     // Reviews
     Route::resource('reviews', AdminReviewController::class);
+    Route::post('reviews/company/{companyReview}/approve', [AdminReviewController::class, 'approveCompanyReview'])
+        ->name('reviews.company.approve');
+    Route::post('reviews/company/{companyReview}/reject', [AdminReviewController::class, 'rejectCompanyReview'])
+        ->name('reviews.company.reject');
 
     // Chatbot (Questions + Options)
     Route::prefix('chatbot')->name('chatbot.')->group(function () {

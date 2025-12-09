@@ -141,14 +141,26 @@ class ReviewController extends Controller
     }
 
     /**
-     * Remove the specified review from storage.
+     * Approve a company review.
      */
-    public function destroy(Review $review): RedirectResponse
+    public function approveCompanyReview(CompanyReview $companyReview): RedirectResponse
     {
-        $review->delete();
+        $companyReview->update([
+            'is_approved' => true,
+        ]);
 
-        return redirect()
-            ->route('admin.reviews.index')
-            ->with('success', __('Review deleted successfully.'));
+        return back()->with('success', __('Company review approved.'));
+    }
+
+    /**
+     * Reject a company review.
+     */
+    public function rejectCompanyReview(CompanyReview $companyReview): RedirectResponse
+    {
+        $companyReview->update([
+            'is_approved' => false,
+        ]);
+
+        return back()->with('success', __('Company review rejected.'));
     }
 }
