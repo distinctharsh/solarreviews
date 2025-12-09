@@ -70,82 +70,143 @@
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Review</th>
-                        <th>Rating</th>
-                        <th>Reviewable</th>
-                        <th>User</th>
-                        <th>Submitted</th>
-                        <th class="text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($reviews as $review)
+@if($isCompanyReviewListing)
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>
-                                <strong>{{ $review->title ?? 'Untitled' }}</strong>
-                                <div class="text-muted small">{{ Str::limit($review->comment, 80) ?: '—' }}</div>
-                            </td>
-                            <td>
-                                <div class="rating-stars">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : '-o text-muted' }}"></i>
-                                    @endfor
-                                </div>
-                                <div class="small text-muted">{{ $review->rating }} / 5</div>
-                            </td>
-                            <td>
-                                @php
-                                    $meta = $reviewableTypeMetaByClass[$review->reviewable_type] ?? null;
-                                @endphp
-                                <div class="badge badge-light">
-                                    {{ optional($meta)['label'] ?? class_basename($review->reviewable_type) }}
-                                </div>
-                                <div class="text-muted small">
-                                    {{ $review->reviewable->name ?? $review->reviewable->owner_name ?? 'N/A' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div>{{ $review->user->name ?? 'Guest' }}</div>
-                                <div class="text-muted small">{{ $review->user->email ?? '—' }}</div>
-                            </td>
-                            <td>
-                                <div>{{ $review->created_at->format('d M Y') }}</div>
-                                <div class="text-muted small">{{ $review->created_at->format('H:i') }}</div>
-                            </td>
-                            <td class="text-right">
-                                <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST"
-                                      onsubmit="return confirm('Delete this review?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                            </td>
+                            <th>Company</th>
+                            <th>Reviewer</th>
+                            <th>Rating</th>
+                            <th>Review Title</th>
+                            <th>Submitted</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
-                                <i class="fas fa-star mb-2"></i>
-                                <p class="mb-0">No reviews found for the selected filters.</p>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @forelse($companyReviews as $review)
+                            <tr>
+                                <td>
+                                    <strong>{{ $review->company->owner_name ?? $review->company->name ?? 'Company' }}</strong>
+                                    <div class="text-muted small">#{{ $review->company_id }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ $review->reviewer_name ?? 'Anonymous' }}</div>
+                                    <div class="text-muted small">{{ $review->email ?? '—' }}</div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : '-o text-muted' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <div class="small text-muted">{{ $review->rating }} / 5</div>
+                                </td>
+                                <td>
+                                    <strong>{{ $review->review_title ?: '—' }}</strong>
+                                    <div class="text-muted small">{{ Str::limit($review->review_text, 80) }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ optional($review->review_date ?? $review->created_at)->format('d M Y') }}</div>
+                                    <div class="text-muted small">{{ optional($review->created_at)->format('H:i') }}</div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-5">
+                                    <i class="fas fa-star mb-2"></i>
+                                    <p class="mb-0">No company reviews found for the selected filters.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="mt-3">
-            {{ $reviews->links() }}
+            <div class="mt-3">
+                {{ $companyReviews->links() }}
+            </div>
         </div>
     </div>
-</div>
+@else
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Review</th>
+                            <th>Rating</th>
+                            <th>Reviewable</th>
+                            <th>User</th>
+                            <th>Submitted</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($reviews as $review)
+                            <tr>
+                                <td>
+                                    <strong>{{ $review->title ?? 'Untitled' }}</strong>
+                                    <div class="text-muted small">{{ Str::limit($review->comment, 80) ?: '—' }}</div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star{{ $i <= $review->rating ? ' text-warning' : '-o text-muted' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <div class="small text-muted">{{ $review->rating }} / 5</div>
+                                </td>
+                                <td>
+                                    @php
+                                        $meta = $reviewableTypeMetaByClass[$review->reviewable_type] ?? null;
+                                    @endphp
+                                    <div class="badge badge-light">
+                                        {{ optional($meta)['label'] ?? class_basename($review->reviewable_type) }}
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ $review->reviewable->name ?? $review->reviewable->owner_name ?? 'N/A' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>{{ $review->user->name ?? 'Guest' }}</div>
+                                    <div class="text-muted small">{{ $review->user->email ?? '—' }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ $review->created_at->format('d M Y') }}</div>
+                                    <div class="text-muted small">{{ $review->created_at->format('H:i') }}</div>
+                                </td>
+                                <td class="text-right">
+                                    <form action="{{ route('admin.reviews.destroy', $review) }}" method="POST"
+                                          onsubmit="return confirm('Delete this review?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    <i class="fas fa-star mb-2"></i>
+                                    <p class="mb-0">No reviews found for the selected filters.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $reviews->links() }}
+            </div>
+        </div>
+    </div>
+@endif
 @endsection
 
 @push('styles')

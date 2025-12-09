@@ -1206,7 +1206,7 @@
 
             <div class="hero-pill">
                 <span>Installed solar recently?</span>
-                <a href="{{ route('reviews.create') }}">Write a review →</a>
+                <a href="{{ route('reviews.write') }}">Write a review →</a>
             </div>
         </div>
     </section>

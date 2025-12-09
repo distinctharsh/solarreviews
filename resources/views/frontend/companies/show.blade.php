@@ -715,7 +715,7 @@
                         </div>
 
                         <div class="hero-ctas">
-                            <a href="{{ route('reviews.create') }}" class="btn-primary">Write a review</a>
+                            <a href="{{ route('reviews.write') }}" class="btn-primary">Write a review</a>
                             <a href="#rating-breakdown" class="btn-secondary">View rating details</a>
                         </div>
                     </div>
@@ -911,7 +911,7 @@
                                 </li>
                             </ul>
                             <div class="contact-cta">
-                                <a href="{{ route('reviews.create') }}" class="btn-secondary w-100">Share your experience</a>
+                                <a href="{{ route('reviews.write') }}" class="btn-secondary w-100">Share your experience</a>
                             </div>
                         </article>
                         --}}

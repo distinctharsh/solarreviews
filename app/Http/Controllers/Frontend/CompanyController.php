@@ -21,15 +21,23 @@ class CompanyController extends Controller
      */
     public function index()
     {
+        $reviewStats = CompanyReview::query()
+            ->select(
+                'company_id',
+                DB::raw('AVG(rating) as avg_rating'),
+                DB::raw('COUNT(*) as total_reviews')
+            )
+            ->where('is_approved', true)
+            ->groupBy('company_id');
+
         $companies = Company::query()
             ->select(
                 'companies.*',
-                DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
-                DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews')
+                DB::raw('COALESCE(review_stats.avg_rating, 0) as avg_rating'),
+                DB::raw('COALESCE(review_stats.total_reviews, 0) as total_reviews')
             )
-            ->leftJoin('rating_summaries as rs', function ($join) {
-                $join->on('rs.reviewable_id', '=', 'companies.id')
-                    ->where('rs.reviewable_type', '=', Company::class);
+            ->leftJoinSub($reviewStats, 'review_stats', function ($join) {
+                $join->on('review_stats.company_id', '=', 'companies.id');
             })
             ->where('is_active', true)
             ->orderBy('companies.owner_name')

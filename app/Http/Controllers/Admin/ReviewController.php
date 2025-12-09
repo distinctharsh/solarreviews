@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Company;
+use App\Models\CompanyReview;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
@@ -50,36 +51,74 @@ class ReviewController extends Controller
             'search' => null,
         ], $validatedFilters);
 
-        $reviewsQuery = Review::query()
-            ->with(['user', 'reviewable'])
-            ->latest();
+        $isCompanyReviewListing = $filters['type'] === 'company';
 
-        if ($filters['type']) {
-            $reviewsQuery->where('reviewable_type', $reviewableTypes[$filters['type']]['class']);
+        $reviews = null;
+        $companyReviews = null;
+
+        if ($isCompanyReviewListing) {
+            $companyReviewsQuery = CompanyReview::query()
+                ->with(['company:id,owner_name,slug']);
+
+            if ($filters['rating']) {
+                $companyReviewsQuery->where('rating', (int) $filters['rating']);
+            }
+
+            if ($filters['search']) {
+                $searchTerm = '%' . $filters['search'] . '%';
+                $companyReviewsQuery->where(function ($query) use ($searchTerm) {
+                    $query->where('review_title', 'like', $searchTerm)
+                        ->orWhere('review_text', 'like', $searchTerm)
+                        ->orWhere('reviewer_name', 'like', $searchTerm)
+                        ->orWhereHas('company', function ($companyQuery) use ($searchTerm) {
+                            $companyQuery->where('name', 'like', $searchTerm)
+                                ->orWhere('owner_name', 'like', $searchTerm);
+                        });
+                });
+            }
+
+            $companyReviews = $companyReviewsQuery
+                ->latest()
+                ->paginate(20)
+                ->withQueryString();
+        } else {
+            $reviewsQuery = Review::query()
+                ->with(['user', 'reviewable'])
+                ->latest();
+
+            if ($filters['type']) {
+                $reviewsQuery->where('reviewable_type', $reviewableTypes[$filters['type']]['class']);
+            }
+
+            if ($filters['rating']) {
+                $reviewsQuery->where('rating', (int) $filters['rating']);
+            }
+
+            if ($filters['search']) {
+                $searchTerm = '%' . $filters['search'] . '%';
+                $reviewsQuery->where(function ($query) use ($searchTerm) {
+                    $query->where('title', 'like', $searchTerm)
+                        ->orWhere('comment', 'like', $searchTerm);
+                });
+            }
+
+            /** @var LengthAwarePaginator $reviews */
+            $reviews = $reviewsQuery->paginate(20)->withQueryString();
         }
-
-        if ($filters['rating']) {
-            $reviewsQuery->where('rating', (int) $filters['rating']);
-        }
-
-        if ($filters['search']) {
-            $searchTerm = '%' . $filters['search'] . '%';
-            $reviewsQuery->where(function ($query) use ($searchTerm) {
-                $query->where('title', 'like', $searchTerm)
-                    ->orWhere('comment', 'like', $searchTerm);
-            });
-        }
-
-        /** @var LengthAwarePaginator $reviews */
-        $reviews = $reviewsQuery->paginate(20)->withQueryString();
 
         $typeCounts = Review::selectRaw('reviewable_type, COUNT(*) as total')
             ->groupBy('reviewable_type')
             ->pluck('total', 'reviewable_type');
 
+        $companyReviewCount = CompanyReview::count();
+
         $stats = [
-            'total' => Review::count(),
+            'total' => Review::count() + $companyReviewCount,
             'by_type' => collect($reviewableTypes)->mapWithKeys(function ($meta, $key) use ($typeCounts) {
+                if ($key === 'company') {
+                    return [$key => CompanyReview::count()];
+                }
+
                 return [$key => $typeCounts[$meta['class']] ?? 0];
             })->all(),
         ];
@@ -96,6 +135,8 @@ class ReviewController extends Controller
             'reviewableTypeMetaByClass' => $reviewableTypeMetaByClass,
             'filters' => $filters,
             'stats' => $stats,
+            'isCompanyReviewListing' => $isCompanyReviewListing,
+            'companyReviews' => $companyReviews,
         ]);
     }
 
