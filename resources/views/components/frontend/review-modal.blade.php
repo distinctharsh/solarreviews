@@ -1,0 +1,937 @@
+@props([
+    'categories' => collect(),
+    'states' => collect(),
+    'companies' => collect(),
+    'defaultStateId' => null,
+    'defaultStateName' => null,
+    'modalId' => 'reviewModal',
+    'triggerSelector' => '.btn-review',
+    'allowCompanySelection' => false,
+])
+
+@php
+    $resolvedStateId = $defaultStateId ?? data_get($state ?? null, 'id');
+    $resolvedStateName = $defaultStateName ?? data_get($state ?? null, 'name');
+    $categoryOptions = collect($categories ?? []);
+@endphp
+
+@once
+    <style>
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            align-items: flex-start;
+            justify-content: center;
+            padding: calc(80px + 1rem) 1rem 1.5rem;
+            overflow-y: auto;
+        }
+
+        .modal-container {
+            background: var(--surface, #ffffff);
+            width: 100%;
+            max-width: 560px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl, 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1));
+            overflow: hidden;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--gradient-start, #3ba14c) 0%, var(--gradient-end, #2d8f3e) 100%);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: var(--border-light, #f1f5f9);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-light, #6dc47d);
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary, #0f172a);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border, #e2e8f0);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: var(--surface, #ffffff);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary, #3ba14c);
+            box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .input-group .form-input {
+            flex: 1;
+        }
+
+        .btn-outline {
+            background: var(--surface, #ffffff);
+            color: var(--primary, #3ba14c);
+            border: 2px solid var(--primary, #3ba14c);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary, #3ba14c);
+            color: #fff;
+        }
+
+        .btn-outline:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted, #94a3b8);
+            margin-top: 0.35rem;
+        }
+
+        .modal-rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-rating-stars i {
+            font-size: 1.75rem;
+            color: var(--border, #e2e8f0);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-rating-stars i:hover,
+        .modal-rating-stars i.active {
+            color: var(--accent, #f59e0b);
+            transform: scale(1.1);
+        }
+
+        .metric-stars {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+        }
+
+        .metric-star-btn {
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .metric-stars i {
+            font-size: 1.4rem;
+            color: var(--border, #e2e8f0);
+            cursor: pointer;
+            transition: transform 0.15s ease, color 0.15s ease;
+        }
+
+        .metric-stars i:hover,
+        .metric-stars i.active {
+            color: var(--accent, #f59e0b);
+            transform: scale(1.05);
+        }
+
+        .metric-stars input[type="hidden"] {
+            display: none;
+        }
+
+        .system-toggle {
+            width: 100%;
+            background: #f1f5f9;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 12px;
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #0f172a;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .system-toggle:hover {
+            background: #e2e8f0;
+            border-color: rgba(15, 23, 42, 0.2);
+        }
+
+        .system-toggle span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .system-toggle i {
+            transition: transform 0.2s ease;
+        }
+
+        .system-toggle[aria-expanded="true"] .toggle-chevron {
+            transform: rotate(180deg);
+        }
+
+        .otp-status {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .otp-status.success {
+            color: var(--success, #3ba14c);
+        }
+
+        .otp-status.error {
+            color: var(--error, #ef4444);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--surface-elevated, #f8fafc);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border-light, #f1f5f9);
+        }
+
+        .btn-cancel {
+            background: var(--surface, #ffffff);
+            color: var(--text-secondary, #475569);
+            border: 1px solid var(--border, #e2e8f0);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: var(--surface-elevated, #f8fafc);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--gradient-start, #3ba14c) 0%, var(--gradient-end, #2d8f3e) 100%);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 161, 76, 0.35);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+@endonce
+
+@once
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endonce
+
+<div id="{{ $modalId }}" class="modal-overlay" data-review-modal>
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Write a Review</h3>
+            <button class="modal-close close-btn" type="button">&times;</button>
+        </div>
+        <form id="{{ $modalId }}Form" method="POST" action="{{ route('reviews.store') }}">
+            @csrf
+            <input type="hidden" name="company_id" id="{{ $modalId }}CompanyId">
+            @if($resolvedStateId)
+                <input type="hidden" name="state_id" id="{{ $modalId }}StateId" value="{{ $resolvedStateId }}">
+            @else
+                <input type="hidden" name="state_id" id="{{ $modalId }}StateId" value="">
+            @endif
+            <div class="modal-body">
+                @if($allowCompanySelection)
+                    <div class="form-group" data-company-select-wrapper style="display: none;">
+                        <label class="form-label" for="{{ $modalId }}CompanySelect">Select Company *</label>
+                        <select id="{{ $modalId }}CompanySelect" class="form-select" data-company-select {{ $companies->isEmpty() ? 'disabled' : '' }}>
+                            <option value="">Select Company</option>
+                            @foreach($companies as $companyOption)
+                                <option value="{{ $companyOption->id }}">{{ $companyOption->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                @endif
+
+                <input type="hidden" name="category_id" id="{{ $modalId }}CategoryId">
+                
+                <div class="form-group">
+                    <label class="form-label">Rate your experience with <span id="{{ $modalId }}CompanyName">this company</span> *</label>
+                    <div class="modal-rating-stars" data-review-stars>
+                        @for($i = 1; $i <= 5; $i++)
+                            <i class="far fa-star" data-rating="{{ $i }}"></i>
+                        @endfor
+                        <input type="hidden" name="rating" id="{{ $modalId }}Rating" required>
+                    </div>
+                </div>
+
+                @php
+                    $experienceMetrics = [
+                        'Sales process',
+                        'Price charged as quoted',
+                        'On schedule',
+                        'Installation quality',
+                        'After sales support',
+                    ];
+                @endphp
+                <div class="form-group">
+                    <label class="form-label">Tell us more about your experience - rate the following (optional)</label>
+                    <div class="row row-cols-1 row-cols-md-2 g-3 multi-rating">
+                        @foreach($experienceMetrics as $metric)
+                            @php
+                                $metricSlug = \Illuminate\Support\Str::slug($metric, '_');
+                            @endphp
+                            <div class="col">
+                                <div class="rating-field rating-field-sm">
+                                    <label class="form-label small mb-1">{{ $metric }}</label>
+                                    <div class="metric-stars" data-metric-stars>
+                                        @for($i = 1; $i <= 5; $i++)
+                                            @php
+                                                $metricInputId = $modalId . '-' . $metricSlug . '-rating-' . $i;
+                                            @endphp
+                                            <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                <i class="far fa-star"></i>
+                                            </button>
+                                        @endfor
+                                        <input type="hidden" name="metrics[{{ $metricSlug }}]" data-metric-input>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="{{ $modalId }}ReviewTitle">Review Title (Optional)</label>
+                    <input type="text" id="{{ $modalId }}ReviewTitle" name="review_title" class="form-input" placeholder="Summarize your experience">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="{{ $modalId }}ReviewText">Your Review *</label>
+                    <textarea id="{{ $modalId }}ReviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Add photos of your system <span>(optional, jpg/png, max 5MB)</span></label>
+                    <div class="upload-box" data-upload-box>
+                        <p class="mb-2 fw-semibold text-dark">Add or drop a file here</p>
+                        <p class="small text-muted mb-3">Images help your review stand out.</p>
+                        <input type="file" class="form-control" name="photos[]" accept="image/png,image/jpeg" multiple data-photo-input>
+                        <div class="form-check mt-3">
+                            <input class="form-check-input" type="checkbox" name="media_terms" id="{{ $modalId }}MediaTerms">
+                            <label class="form-check-label" for="{{ $modalId }}MediaTerms">I agree to media upload terms</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="system-toggle mt-3" data-system-toggle aria-expanded="false">
+                    <span>
+                        <i class="fas fa-plus"></i>
+                        Add solar system details
+                    </span>
+                    <i class="fas fa-chevron-down toggle-chevron"></i>
+                </button>
+                <div class="subtle-card mt-3" data-system-details style="display: none;">
+                    <h5 class="fw-semibold mb-3">Your solar system details</h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">System size (kW)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" min="0" class="form-control" name="system_size" placeholder="e.g., 6.5">
+                                <span class="input-group-text">kW</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">System price <span>(optional)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" min="0" class="form-control" name="system_price" placeholder="Total cost">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Year installed</label>
+                            <input type="number" class="form-control" name="year_installed" min="2000" max="{{ now()->year }}" value="{{ now()->year }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Panel brand</label>
+                            <input type="text" class="form-control" name="panel_brand" placeholder="e.g., REC, Adani, Waaree">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Inverter brand <span>(optional)</span></label>
+                            <input type="text" class="form-control" name="inverter_brand" placeholder="e.g., Sungrow, Enphase">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subtle-card mt-4">
+                    <h5 class="fw-semibold mb-3">How should we display your review?</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Choose a display name *</label>
+                            <input type="text" class="form-control" name="reviewer_name" placeholder="e.g., Priya M." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Add email address *</label>
+                            <input type="email" class="form-control" name="email" placeholder="name@email.com" required data-email-input>
+                            <small class="text-muted d-block mt-1">We send the verification code automatically once this field is filled.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Your state *</label>
+                            <select class="form-select" name="user_state" required>
+                                <option value="" selected disabled>Select state</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Your city *</label>
+                            <input type="text" class="form-control" name="user_city" placeholder="City" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">OTP *</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit code" maxlength="6" data-otp-input>
+                                <button type="button" class="btn btn-outline-secondary btn-send-otp" data-send-otp-btn>Resend OTP</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end gap-2 otp-actions">
+                            <button type="button" class="btn btn-outline-primary btn-verify-otp flex-grow-1" data-verify-otp-btn>Verify OTP</button>
+                            <div class="small text-success d-none" data-otp-status aria-live="polite">Verified!</div>
+                        </div>
+                    </div>
+                    <p class="info-note mt-3 mb-0">
+                        We only use your email for verification and anti-spam checks. No marketing emails—ever.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel cancel-btn">Cancel</button>
+                <button type="submit" class="btn-submit" data-review-submit disabled>Submit Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function initReviewModal() {
+        const modalId = '{{ $modalId }}';
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        const config = {
+            triggerSelector: @json($triggerSelector),
+            defaultStateId: '{{ $resolvedStateId ?? '' }}',
+            defaultStateName: '{{ $resolvedStateName ?? '' }}',
+            modalId,
+        };
+
+        const form = modal.querySelector('form');
+        const companyIdInput = document.getElementById(`${modalId}CompanyId`);
+        const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
+        const companySelectWrapper = modal.querySelector('[data-company-select-wrapper]');
+        const companySelect = modal.querySelector('[data-company-select]');
+        const stateIdInput = document.getElementById(`${modalId}StateId`);
+        const ratingStars = modal.querySelectorAll('[data-review-stars] i');
+        const ratingInput = document.getElementById(`${modalId}Rating`);
+        const metricGroups = modal.querySelectorAll('[data-metric-stars]');
+        const categoryInput = document.getElementById(`${modalId}CategoryId`);
+        const emailInput = document.getElementById(`${modalId}Email`);
+        const sendOtpBtn = modal.querySelector('[data-send-otp]');
+        const otpField = modal.querySelector('[data-otp-field]');
+        const otpInput = document.getElementById(`${modalId}Otp`);
+        const verifyOtpBtn = modal.querySelector('[data-verify-otp]');
+        const otpStatus = modal.querySelector('[data-otp-status]');
+        const submitReviewBtn = modal.querySelector('[data-review-submit]');
+        const closeBtn = modal.querySelector('.close-btn');
+        const cancelBtn = modal.querySelector('.cancel-btn');
+        const systemToggle = modal.querySelector('[data-system-toggle]');
+        const systemToggleIcon = systemToggle ? systemToggle.querySelector('span i') : null;
+        const systemDetails = modal.querySelector('[data-system-details]');
+
+        const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+        const triggerSelector = config.triggerSelector && config.triggerSelector !== 'null'
+            ? config.triggerSelector
+            : '';
+
+        const triggerCandidates = [
+            ...document.querySelectorAll(`[data-review-modal-trigger="${modalId}"]`)
+        ];
+
+        if (triggerSelector) {
+            triggerCandidates.push(...document.querySelectorAll(triggerSelector));
+        }
+
+        const triggers = triggerCandidates.filter((element, index, self) => self.indexOf(element) === index);
+
+        let otpVerified = false;
+        let otpSent = false;
+        function setCompanyContext(companyId, companyName) {
+            if (companyIdInput) companyIdInput.value = companyId || '';
+            if (companyNameDisplay) companyNameDisplay.textContent = companyName || 'this company';
+        }
+
+        function setCategoryContext(categoryIdsCsv) {
+            if (!categoryInput) return;
+
+            const parsedIds = (categoryIdsCsv || '')
+                .split(',')
+                .map(id => id.trim())
+                .filter(Boolean);
+
+            categoryInput.value = parsedIds[0] || '';
+        }
+
+        function toggleCompanySelect(show) {
+            if (!manualCompanySelectionEnabled) return;
+            companySelectWrapper.style.display = show ? 'block' : 'none';
+            companySelect.required = !!show;
+            if (show) {
+                companySelect.value = '';
+            }
+        }
+
+        function setStateDisplay(stateId) {
+            if (stateIdInput) stateIdInput.value = stateId || '';
+        }
+
+        function toggleSystemDetails(expanded) {
+            if (!systemDetails || !systemToggle) return;
+
+            systemDetails.style.display = expanded ? 'block' : 'none';
+            systemToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            if (systemToggleIcon) {
+                systemToggleIcon.classList.toggle('fa-plus', !expanded);
+                systemToggleIcon.classList.toggle('fa-minus', expanded);
+            }
+            console.log(`[Review Modal] System details toggled: ${expanded}`);
+        }
+
+        function resetForm() {
+            if (form) form.reset();
+            if (ratingInput) ratingInput.value = '';
+            ratingStars.forEach(star => {
+                star.classList.remove('active', 'fas');
+                star.classList.add('far');
+            });
+            metricGroups.forEach(group => {
+                const buttons = group.querySelectorAll('[data-metric-star]');
+                const hiddenInput = group.querySelector('[data-metric-input]');
+                if (hiddenInput) hiddenInput.value = '';
+
+                buttons.forEach(btn => {
+                    const starIcon = btn.querySelector('i');
+                    if (!starIcon) return;
+                    starIcon.classList.remove('active', 'fas');
+                    starIcon.classList.add('far');
+                });
+            });
+            if (otpField) otpField.style.display = 'none';
+            if (otpStatus) {
+                otpStatus.textContent = '';
+                otpStatus.className = 'otp-status';
+            }
+            otpSent = false;
+            otpVerified = false;
+            if (submitReviewBtn) submitReviewBtn.disabled = true;
+            toggleSystemDetails(false);
+
+            if (sendOtpBtn) {
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerHTML = 'Send OTP';
+            }
+            if (verifyOtpBtn) {
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerHTML = 'Verify';
+                verifyOtpBtn.style.background = '';
+                verifyOtpBtn.style.color = '';
+                verifyOtpBtn.style.borderColor = '';
+            }
+            if (manualCompanySelectionEnabled) {
+                toggleCompanySelect(true);
+            }
+            setCompanyContext('', 'this company');
+            if (stateIdInput) stateIdInput.value = '';
+        }
+
+        function openModal(trigger) {
+            if (!modal) return;
+
+            resetForm();
+
+            const dataset = trigger ? trigger.dataset : {};
+            const companyId = dataset.companyId || '';
+            const companyName = dataset.companyName || 'this company';
+            const categoryIds = dataset.categoryIds || '';
+            const stateId = dataset.stateId || config.defaultStateId || '';
+            const stateName = dataset.stateName || config.defaultStateName || 'State';
+
+            setCategoryContext(categoryIds);
+            setStateDisplay(stateId);
+
+            if (manualCompanySelectionEnabled) {
+                if (companyId) {
+                    toggleCompanySelect(false);
+                    setCompanyContext(companyId, companyName);
+                } else {
+                    toggleCompanySelect(true);
+                    setCompanyContext('', 'this company');
+                }
+            } else {
+                setCompanyContext(companyId, companyName);
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function (event) {
+                event.preventDefault();
+                openModal(trigger);
+            });
+        });
+
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function () {
+                const rating = parseInt(this.getAttribute('data-rating'), 10);
+                ratingInput.value = rating;
+
+                ratingStars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active', 'fas');
+                        s.classList.remove('far');
+                    } else {
+                        s.classList.remove('active', 'fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+        });
+
+        metricGroups.forEach(group => {
+            const buttons = group.querySelectorAll('[data-metric-star]');
+            const hiddenInput = group.querySelector('[data-metric-input]');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const value = parseInt(this.getAttribute('data-value'), 10);
+                    if (hiddenInput) hiddenInput.value = value;
+
+                    buttons.forEach(btn => {
+                        const starIcon = btn.querySelector('i');
+                        if (!starIcon) return;
+
+                        if (parseInt(btn.getAttribute('data-value'), 10) <= value) {
+                            starIcon.classList.add('active', 'fas');
+                            starIcon.classList.remove('far');
+                        } else {
+                            starIcon.classList.remove('active', 'fas');
+                            starIcon.classList.add('far');
+                        }
+                    });
+                });
+            });
+        });
+
+        if (sendOtpBtn) {
+            sendOtpBtn.addEventListener('click', function () {
+                const email = emailInput.value.trim();
+
+                if (!email) {
+                    Swal.fire('Error', 'Please enter your email address', 'error');
+                    return;
+                }
+
+                const originalText = sendOtpBtn.innerHTML;
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
+
+                fetch('{{ route("reviews.send-otp") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.otp) {
+                            console.log('Your OTP for testing:', data.otp);
+                            Swal.fire('OTP Sent', `OTP sent to ${email}. Check console for OTP (testing).`, 'success');
+                        } else {
+                            Swal.fire('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
+                        }
+                        otpField.style.display = 'block';
+                        otpSent = true;
+                        otpInput.focus();
+                    } else {
+                        throw new Error(data.message || 'Failed to send OTP');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending OTP:', error);
+                    Swal.fire('Error', error.message || 'Failed to send OTP. Please try again.', 'error');
+                })
+                .finally(() => {
+                    sendOtpBtn.disabled = false;
+                    sendOtpBtn.innerHTML = otpSent ? 'Resend OTP' : originalText;
+                });
+            });
+        }
+
+        if (verifyOtpBtn) {
+            verifyOtpBtn.addEventListener('click', function () {
+                const otp = otpInput.value.trim();
+                const email = emailInput.value.trim();
+
+                if (!otp || otp.length !== 6) {
+                    Swal.fire('Error', 'Please enter a valid 6-digit OTP', 'error');
+                    return;
+                }
+
+                const originalText = verifyOtpBtn.innerHTML;
+                verifyOtpBtn.disabled = true;
+                verifyOtpBtn.innerHTML = '<span class="spinner"></span>';
+
+                fetch('{{ route("reviews.verify-otp") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ email, otp })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        otpVerified = true;
+                        if (submitReviewBtn) submitReviewBtn.disabled = false;
+                        otpStatus.textContent = 'OTP verified successfully!';
+                        otpStatus.className = 'otp-status success';
+                        verifyOtpBtn.innerHTML = '<i class="fas fa-check"></i> Verified';
+                        verifyOtpBtn.disabled = true;
+                        verifyOtpBtn.style.background = 'var(--success, #3ba14c)';
+                        verifyOtpBtn.style.color = '#fff';
+                        verifyOtpBtn.style.borderColor = 'var(--success, #3ba14c)';
+
+                        Swal.fire('Success', 'OTP verified successfully!', 'success');
+                    } else {
+                        throw new Error(data.message || 'Failed to verify OTP');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error verifying OTP:', error);
+                    otpStatus.textContent = error.message || 'Failed to verify OTP. Please try again.';
+                    otpStatus.className = 'otp-status error';
+                    verifyOtpBtn.disabled = false;
+                    verifyOtpBtn.innerHTML = originalText;
+
+                    Swal.fire('Error', error.message || 'Failed to verify OTP. Please try again.', 'error');
+                });
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                if (!otpVerified) {
+                    Swal.fire('Error', 'Please verify your email with OTP first', 'error');
+                    return;
+                }
+
+                submitReviewBtn.disabled = true;
+                submitReviewBtn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+                const formData = new FormData(form);
+                const formObject = {};
+                formData.forEach((value, key) => {
+                    formObject[key] = value;
+                });
+
+                if (emailInput && emailInput.value) {
+                    formObject['email'] = emailInput.value;
+                }
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: JSON.stringify(formObject),
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
+                        modal.style.display = 'none';
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        throw new Error(data.message || 'Failed to submit review');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', error.message || 'Failed to submit review. Please try again.', 'error');
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = 'Submit Review';
+                });
+            });
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            resetForm();
+        }
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+        window.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initReviewModal, { once: true });
+        } else {
+            initReviewModal();
+        }
+    })();
+</script>

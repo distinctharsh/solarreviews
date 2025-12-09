@@ -95,6 +95,40 @@ class ReviewController extends Controller
     }
 
     /**
+     * Landing page for selecting a company via search before opening the modal.
+     */
+    public function landing(Request $request)
+    {
+        $companies = Company::query()
+            ->select('id', 'owner_name', 'state_id', 'state')
+            ->with([
+                'categories:id',
+            ])
+            ->where('is_active', true)
+            ->orderBy('owner_name')
+            ->get()
+            ->map(function ($company) {
+                return [
+                    'id' => $company->id,
+                    'name' => $company->owner_name,
+                    'state_id' => $company->state_id,
+                    'state_name' => $company->state,
+                    'category_ids' => $company->categories->pluck('id')->values(),
+                ];
+            });
+
+        $states = State::select('id', 'name')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('frontend.reviews.write', [
+            'companies' => $companies,
+            'states' => $states,
+        ]);
+    }
+
+    /**
      * Store a newly created review in storage.
      */
     public function store(Request $request)

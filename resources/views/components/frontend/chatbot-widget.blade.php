@@ -10,9 +10,19 @@
     x-data="chatbotWidget({ bootstrapUrl: '{{ $chatbotConfig['bootstrapUrl'] }}', answerUrl: '{{ $chatbotConfig['answerUrl'] }}' })"
     x-init="init()"
 >
-    <button class="chatbot-launcher" @click="toggle" aria-label="Open chat support">
-        <i class="fas" :class="isOpen ? 'fa-times' : 'fa-comments'"></i>
-    </button>
+    <div class="chatbot-launcher-wrapper">
+        <button class="chatbot-launcher" @click="toggle" aria-label="Open chat support">
+            <span class="chatbot-face">
+                <span class="chatbot-eye left"></span>
+                <span class="chatbot-eye right"></span>
+                <span class="chatbot-smile"></span>
+            </span>
+        </button>
+        <div class="chatbot-helper" x-show="!isOpen" x-transition x-cloak>
+            <p class="mb-0 fw-semibold">Hi, I am SolarBOT.</p>
+            <small>How can I help you?</small>
+        </div>
+    </div>
 
     <div class="chatbot-panel" x-show="isOpen" x-transition x-cloak>
         <div class="chatbot-panel__header">
@@ -104,19 +114,76 @@
     bottom: 2rem;
     z-index: 1500;
 }
+.chatbot-launcher-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
 .chatbot-launcher {
     width: 58px;
     height: 58px;
     border-radius: 50%;
     border: none;
-    background: linear-gradient(135deg, #3ba14c, #1f7a30);
-    color: #fff;
-    font-size: 1.3rem;
+    background: linear-gradient(160deg, #32a852, #2d8b46);
+    color: transparent;
     box-shadow: 0 15px 30px rgba(15, 118, 54, 0.35);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    border: 3px solid #e4f7eb;
+    position: relative;
+}
+.chatbot-face {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #fff;
+    display: block;
+    position: relative;
+}
+.chatbot-eye {
+    position: absolute;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    background: #1f7a30;
+    border-radius: 50%;
+}
+.chatbot-eye.left { left: 7px; }
+.chatbot-eye.right { right: 7px; }
+.chatbot-smile {
+    position: absolute;
+    bottom: 7px;
+    left: 50%;
+    width: 14px;
+    height: 6px;
+    border-bottom: 2px solid #1f7a30;
+    border-radius: 0 0 10px 10px;
+    transform: translateX(-50%);
+}
+.chatbot-helper {
+    background: #ffd84d;
+    border-radius: 12px;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.85rem;
+    max-width: 200px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+.chatbot-helper::after {
+    content: '';
+    position: absolute;
+    right: 70px;
+    bottom: 6px;
+    width: 14px;
+    height: 14px;
+    background: #ffd84d;
+    transform: rotate(45deg);
+    border-left: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 .chatbot-panel {
     position: absolute;

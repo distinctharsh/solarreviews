@@ -559,10 +559,10 @@
 
         .reviews-hero-clean {
             position: relative;
-            padding: 120px 0 120px;
-            background: radial-gradient(circle at 10% 30%, rgba(86, 190, 132, 0.22), transparent 45%),
-                        radial-gradient(circle at 90% 30%, rgba(107, 189, 120, 0.18), transparent 45%),
-                        linear-gradient(180deg, #fffdf7 0%, #f9fff8 55%, #f4fbf1 100%);
+            padding: 140px 0 110px;
+            background: radial-gradient(circle at 15% 30%, rgba(77, 208, 154, 0.18), transparent 45%),
+                        radial-gradient(circle at 85% 35%, rgba(72, 187, 120, 0.15), transparent 45%),
+                        linear-gradient(180deg, #fffef8 0%, #fbfff9 60%, #f2fbf2 100%);
             overflow: hidden;
         }
 
@@ -570,24 +570,24 @@
         .reviews-hero-clean::after {
             content: '';
             position: absolute;
-            width: 400px;
-            height: 400px;
+            width: 420px;
+            height: 420px;
             border-radius: 50%;
-            filter: blur(50px);
-            opacity: 0.4;
+            filter: blur(40px);
+            opacity: 0.35;
             z-index: 0;
         }
 
         .reviews-hero-clean::before {
-            left: -140px;
+            left: -120px;
             top: -80px;
-            background: radial-gradient(circle, rgba(66, 158, 90, 0.55), transparent 70%);
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.45), transparent 70%);
         }
 
         .reviews-hero-clean::after {
-            right: -120px;
-            top: -40px;
-            background: radial-gradient(circle, rgba(66, 143, 68, 0.45), transparent 70%);
+            right: -140px;
+            top: -60px;
+            background: radial-gradient(circle, rgba(65, 117, 5, 0.35), transparent 70%);
         }
 
         .reviews-hero-inner {
@@ -615,18 +615,18 @@
         }
 
         .reviews-title {
-            font-size: clamp(2.4rem, 4.5vw, 3.2rem);
-            font-weight: 400;
-            color: #0f172a;
-            line-height: 1.25;
-            margin-bottom: 0.6rem;
+            font-size: clamp(2.6rem, 5vw, 3.4rem);
+            font-weight: 600;
+            color: #1B1B1B;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
         }
 
         .reviews-title span {
             display: block;
-            font-size: 42px;
-            color: #1b9d4b;
-            font-weight: 600;
+            font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+            color: #1f9a47;
+            font-weight: 700;
         }
 
         .reviews-subtitle {
@@ -641,22 +641,23 @@
             display: flex;
             align-items: center;
             background: #fff;
-            padding: 0.4rem 0.4rem 0.4rem 0.75rem;
-            box-shadow: 0 25px 55px rgba(15, 23, 42, 0.15);
-            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 60px;
+            padding: 0.35rem 0.35rem 0.35rem 0.75rem;
+            box-shadow: 0 30px 60px rgba(24, 40, 72, 0.12);
+            border: 1px solid rgba(15, 23, 42, 0.06);
             gap: 0.85rem;
-            border-radius: 8px;
         }
 
         .hero-search-icon {
             width: 48px;
             height: 48px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
             color: #0f172a;
-            border-right: 2px solid gray;
         }
 
         .hero-search-input {
@@ -671,15 +672,15 @@
 
         .hero-search-button {
             border: none;
-            border-radius: 8px;
-            padding: 0.85rem 2.4rem;
-            background: #24a048;
+            border-radius: 50px;
+            padding: 0.85rem 2.5rem;
+            background: linear-gradient(135deg, #1f9a47, #2cb35a);
             color: #fff;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 18px 28px rgba(36, 160, 72, 0.35);
+            box-shadow: 0 12px 20px rgba(31, 154, 71, 0.35);
         }
 
         .hero-search-button:hover {
@@ -687,42 +688,27 @@
             box-shadow: 0 16px 30px rgba(31, 154, 71, 0.45);
         }
 
-        .hero-pill-wrapper {
-            margin-top: 10rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .hero-pill-wrapper::before,
-        .hero-pill-wrapper::after {
-            content: '';
-            flex: 0 0 120px;
-            height: 1px;
-            background: rgba(15, 23, 42, 0.2);
-        }
-
         .hero-pill {
+            margin-top: 2.5rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.75rem;
             border-radius: 999px;
             border: 1px solid rgba(15, 23, 42, 0.15);
-            padding: 0.65rem 1.4rem;
+            padding: 0.7rem 1.5rem;
             background: #fff;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-            font-size: 0.96rem;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.1);
+            font-size: 0.98rem;
         }
 
         .hero-pill span {
-            color: #111827;
+            color: #0f172a;
             font-weight: 500;
         }
 
         .hero-pill a {
             color: #1f9a47;
-            font-weight: 600;
+            font-weight: 700;
             text-decoration: none;
         }
 
@@ -1195,8 +1181,11 @@
     <!-- Hero Section -->
     <section class="reviews-hero-clean">
         <div class="reviews-hero-inner">
+            <span class="hero-eyebrow">
+                <i class="fas fa-star text-warning"></i> India’s most trusted platform
+            </span>
             <h1 class="reviews-title">
-                India's most trusted
+                Smarter Choices with Transparent
                 <span>Solar EPC Reviews</span>
             </h1>
             <p class="reviews-subtitle">
@@ -1215,11 +1204,9 @@
                 <button type="submit" class="hero-search-button">Search</button>
             </form>
 
-            <div class="hero-pill-wrapper">
-                <div class="hero-pill">
-                    <span>Installed solar recently?</span>
-                    <a href="{{ route('reviews.write') }}">Write a review →</a>
-                </div>
+            <div class="hero-pill">
+                <span>Installed solar recently?</span>
+                <a href="{{ route('reviews.create') }}">Write a review →</a>
             </div>
         </div>
     </section>

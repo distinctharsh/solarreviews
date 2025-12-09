@@ -23,6 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/write-review', [FrontendReviewController::class, 'landing'])->name('reviews.write');
+
 Route::view('/faq', 'frontend.faq')->name('faq');
 
 Route::get('/top-reviews', function () {
