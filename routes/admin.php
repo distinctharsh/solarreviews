@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -25,9 +25,9 @@ Route::group([
     Route::resource('brands', BrandController::class);
     
     // Reviews
-    Route::resource('reviews', ReviewController::class);
-    Route::post('reviews/{review}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
-    Route::post('reviews/{review}/reject', [ReviewController::class, 'reject'])->name('reviews.reject');
+    Route::resource('reviews', AdminReviewController::class);
+    Route::post('reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
 
     // Brand Categories Management
     Route::prefix('brand-categories')->name('brand-categories.')->group(function () {

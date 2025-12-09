@@ -163,4 +163,16 @@ class ReviewController extends Controller
 
         return back()->with('success', __('Company review rejected.'));
     }
+
+    /**
+     * Remove a legacy morph review (brands/products) from storage.
+     */
+    public function destroy(Review $review): RedirectResponse
+    {
+        $review->delete();
+
+        return redirect()
+            ->route('admin.reviews.index')
+            ->with('success', __('Review deleted successfully.'));
+    }
 }
