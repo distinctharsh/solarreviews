@@ -173,7 +173,7 @@
     box-shadow: 0 12px 25px rgba(0,0,0,0.15);
     border: 1px solid rgba(0,0,0,0.05);
 }
-.chatbot-helper::after {
+/* .chatbot-helper::after {
     content: '';
     position: absolute;
     right: 70px;
@@ -184,7 +184,7 @@
     transform: rotate(45deg);
     border-left: 1px solid rgba(0,0,0,0.05);
     border-bottom: 1px solid rgba(0,0,0,0.05);
-}
+} */
 .chatbot-panel {
     position: absolute;
     right: 0;

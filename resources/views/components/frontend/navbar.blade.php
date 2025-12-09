@@ -30,16 +30,7 @@
                     </div>
                 </div>
             </div>
-            <form class="nav-search" action="{{ route('companies.index') }}" method="GET" role="search">
-                <span class="nav-search-icon" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path d="M15.5 15.5L21 21" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="10.5" cy="10.5" r="6.5" stroke="#94a3b8" stroke-width="2"/>
-                    </svg>
-                </span>
-                <input type="text" name="q" class="nav-search-input" placeholder="Search installers" aria-label="Search companies, products or reviews">
-                <button type="submit" class="nav-search-btn">Search</button>
-            </form>
+            <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Submit Review</a>
             <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
         </div>
         
@@ -67,13 +58,6 @@
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" >Learn About Solar</a>
             </li>
-            <li class="nav-item">
-                <form class="mobile-nav-search" action="{{ route('companies.index') }}" method="GET">
-                    <label class="visually-hidden" for="mobile-nav-search">Search companies, products or reviews</label>
-                    <input id="mobile-nav-search" name="q" type="text" placeholder="Search companies, products, reviews">
-                    <button type="submit">Search</button>
-                </form>
-            </li>
             @if (Route::has('login'))
                 @auth
                     <li class="nav-item">
@@ -86,7 +70,7 @@
                 @endauth
             @endif
             <li class="nav-item">
-                <a class="nav-link fw-medium py-3" href="{{ route('reviews.create') }}">Submit Review</a>
+                <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Submit Review</a>
             </li>
         </ul>
     </div>

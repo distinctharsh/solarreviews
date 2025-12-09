@@ -269,7 +269,7 @@
                 <div class="add-company-card">
                     <h4>Can't find a company?</h4>
                     <p>It might not be listed on SolarReviews yet. Add it and be the first to write a review.</p>
-                    <a href="{{ route('reviews.create') }}" class="btn btn-primary">Add Company</a>
+                    <a href="#" class="btn btn-primary">Add Company</a>
                 </div>
             </div>
         </section>
