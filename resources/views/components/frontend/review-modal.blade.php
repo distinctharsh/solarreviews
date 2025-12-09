@@ -268,20 +268,6 @@
             transform: rotate(180deg);
         }
 
-        .otp-status {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .otp-status.success {
-            color: var(--success, #3ba14c);
-        }
-
-        .otp-status.error {
-            color: var(--error, #ef4444);
-        }
-
         .modal-footer {
             padding: 1rem 1.5rem;
             background: var(--surface-elevated, #f8fafc);
@@ -496,8 +482,8 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Add email address *</label>
-                            <input type="email" class="form-control" name="email" placeholder="name@email.com" required data-email-input>
-                            <small class="text-muted d-block mt-1">We send the verification code automatically once this field is filled.</small>
+                            <input type="email" class="form-control" name="email" placeholder="name@email.com" required>
+                            <small class="text-muted d-block mt-1">We only email you about this review.</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your state *</label>
@@ -512,26 +498,15 @@
                             <label class="form-label">Your city *</label>
                             <input type="text" class="form-control" name="user_city" placeholder="City" required>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">OTP *</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit code" maxlength="6" data-otp-input>
-                                <button type="button" class="btn btn-outline-secondary btn-send-otp" data-send-otp-btn>Resend OTP</button>
-                            </div>
-                        </div>
-                        <div class="col-md-6 d-flex align-items-end gap-2 otp-actions">
-                            <button type="button" class="btn btn-outline-primary btn-verify-otp flex-grow-1" data-verify-otp-btn>Verify OTP</button>
-                            <div class="small text-success d-none" data-otp-status aria-live="polite">Verified!</div>
-                        </div>
                     </div>
-                    <p class="info-note mt-3 mb-0">
+                    <!-- <p class="info-note mt-3 mb-0">
                         We only use your email for verification and anti-spam checks. No marketing emails—ever.
-                    </p>
+                    </p> -->
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel cancel-btn">Cancel</button>
-                <button type="submit" class="btn-submit" data-review-submit disabled>Submit Review</button>
+                <button type="submit" class="btn-submit" data-review-submit>Submit Review</button>
             </div>
         </form>
     </div>
@@ -561,12 +536,7 @@
         const ratingInput = document.getElementById(`${modalId}Rating`);
         const metricGroups = modal.querySelectorAll('[data-metric-stars]');
         const categoryInput = document.getElementById(`${modalId}CategoryId`);
-        const emailInput = document.getElementById(`${modalId}Email`);
-        const sendOtpBtn = modal.querySelector('[data-send-otp]');
-        const otpField = modal.querySelector('[data-otp-field]');
-        const otpInput = document.getElementById(`${modalId}Otp`);
-        const verifyOtpBtn = modal.querySelector('[data-verify-otp]');
-        const otpStatus = modal.querySelector('[data-otp-status]');
+        const emailInput = document.querySelector(`[data-review-modal="#${modalId}"] [name="email"]`);
         const submitReviewBtn = modal.querySelector('[data-review-submit]');
         const closeBtn = modal.querySelector('.close-btn');
         const cancelBtn = modal.querySelector('.cancel-btn');
@@ -592,8 +562,6 @@
 
         const triggers = triggerCandidates.filter((element, index, self) => self.indexOf(element) === index);
 
-        let otpVerified = false;
-        let otpSent = false;
         function setCompanyContext(companyId, companyName) {
             if (companyIdInput) companyIdInput.value = companyId || '';
             if (companyNameDisplay) companyNameDisplay.textContent = companyName || 'this company';
@@ -654,27 +622,11 @@
                     starIcon.classList.add('far');
                 });
             });
-            if (otpField) otpField.style.display = 'none';
-            if (otpStatus) {
-                otpStatus.textContent = '';
-                otpStatus.className = 'otp-status';
-            }
             otpSent = false;
             otpVerified = false;
-            if (submitReviewBtn) submitReviewBtn.disabled = true;
+            // if (submitReviewBtn) submitReviewBtn.disabled = true;
             toggleSystemDetails(false);
 
-            if (sendOtpBtn) {
-                sendOtpBtn.disabled = false;
-                sendOtpBtn.innerHTML = 'Send OTP';
-            }
-            if (verifyOtpBtn) {
-                verifyOtpBtn.disabled = false;
-                verifyOtpBtn.innerHTML = 'Verify';
-                verifyOtpBtn.style.background = '';
-                verifyOtpBtn.style.color = '';
-                verifyOtpBtn.style.borderColor = '';
-            }
             if (manualCompanySelectionEnabled) {
                 toggleCompanySelect(true);
             }
@@ -761,148 +713,39 @@
             });
         });
 
-        if (sendOtpBtn) {
-            sendOtpBtn.addEventListener('click', function () {
-                const email = emailInput.value.trim();
-
-                if (!email) {
-                    Swal.fire('Error', 'Please enter your email address', 'error');
-                    return;
-                }
-
-                const originalText = sendOtpBtn.innerHTML;
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.innerHTML = '<span class="spinner"></span> Sending...';
-
-                fetch('{{ route("reviews.send-otp") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ email })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (data.otp) {
-                            console.log('Your OTP for testing:', data.otp);
-                            Swal.fire('OTP Sent', `OTP sent to ${email}. Check console for OTP (testing).`, 'success');
-                        } else {
-                            Swal.fire('OTP Sent', 'We have sent a 6-digit OTP to your email address.', 'success');
-                        }
-                        otpField.style.display = 'block';
-                        otpSent = true;
-                        otpInput.focus();
-                    } else {
-                        throw new Error(data.message || 'Failed to send OTP');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error sending OTP:', error);
-                    Swal.fire('Error', error.message || 'Failed to send OTP. Please try again.', 'error');
-                })
-                .finally(() => {
-                    sendOtpBtn.disabled = false;
-                    sendOtpBtn.innerHTML = otpSent ? 'Resend OTP' : originalText;
-                });
-            });
-        }
-
-        if (verifyOtpBtn) {
-            verifyOtpBtn.addEventListener('click', function () {
-                const otp = otpInput.value.trim();
-                const email = emailInput.value.trim();
-
-                if (!otp || otp.length !== 6) {
-                    Swal.fire('Error', 'Please enter a valid 6-digit OTP', 'error');
-                    return;
-                }
-
-                const originalText = verifyOtpBtn.innerHTML;
-                verifyOtpBtn.disabled = true;
-                verifyOtpBtn.innerHTML = '<span class="spinner"></span>';
-
-                fetch('{{ route("reviews.verify-otp") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ email, otp })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        otpVerified = true;
-                        if (submitReviewBtn) submitReviewBtn.disabled = false;
-                        otpStatus.textContent = 'OTP verified successfully!';
-                        otpStatus.className = 'otp-status success';
-                        verifyOtpBtn.innerHTML = '<i class="fas fa-check"></i> Verified';
-                        verifyOtpBtn.disabled = true;
-                        verifyOtpBtn.style.background = 'var(--success, #3ba14c)';
-                        verifyOtpBtn.style.color = '#fff';
-                        verifyOtpBtn.style.borderColor = 'var(--success, #3ba14c)';
-
-                        Swal.fire('Success', 'OTP verified successfully!', 'success');
-                    } else {
-                        throw new Error(data.message || 'Failed to verify OTP');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error verifying OTP:', error);
-                    otpStatus.textContent = error.message || 'Failed to verify OTP. Please try again.';
-                    otpStatus.className = 'otp-status error';
-                    verifyOtpBtn.disabled = false;
-                    verifyOtpBtn.innerHTML = originalText;
-
-                    Swal.fire('Error', error.message || 'Failed to verify OTP. Please try again.', 'error');
-                });
-            });
-        }
-
         if (form) {
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
-
-                if (!otpVerified) {
-                    Swal.fire('Error', 'Please verify your email with OTP first', 'error');
-                    return;
-                }
 
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.innerHTML = '<span class="spinner"></span> Submitting...';
 
                 const formData = new FormData(form);
-                const formObject = {};
-                formData.forEach((value, key) => {
-                    formObject[key] = value;
-                });
-
                 if (emailInput && emailInput.value) {
-                    formObject['email'] = emailInput.value;
+                    formData.set('email', emailInput.value);
                 }
 
                 fetch(form.action, {
                     method: 'POST',
-                    body: JSON.stringify(formObject),
+                    body: formData,
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
+                .then(async response => {
+                    const data = await response.json().catch(() => ({}));
+                    if (response.ok && data.success) {
                         Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
                         modal.style.display = 'none';
                         setTimeout(() => window.location.reload(), 1500);
-                    } else {
-                        throw new Error(data.message || 'Failed to submit review');
+                        return;
                     }
+
+                    const errorMessage = data.message || (response.status === 422
+                        ? 'Please check required fields and try again.'
+                        : 'Failed to submit review. Please try again.');
+                    throw new Error(errorMessage);
                 })
                 .catch(error => {
                     console.error('Error:', error);

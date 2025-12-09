@@ -298,7 +298,7 @@
             const emptyState = document.querySelector('[data-suggestions-empty]');
             const countLabel = document.querySelector('[data-suggestions-count]');
             const hiddenTrigger = document.getElementById('landingReviewModalTrigger');
-            const MAX_RESULTS = 7;
+            const MAX_RESULTS = companies.length;
 
             if (!form || !input || !suggestions || !suggestionsList || !hiddenTrigger) {
                 return;
@@ -331,7 +331,7 @@
                 emptyState.style.display = 'none';
                 countLabel.textContent = formatCount(matches.length);
 
-                matches.slice(0, MAX_RESULTS).forEach(company => {
+                matches.forEach(company => {
                     const item = document.createElement('li');
                     item.className = 'suggestion-item';
                     item.innerHTML = `
@@ -350,7 +350,7 @@
 
             function filterCompanies(term) {
                 if (!term) {
-                    return companies.slice(0, MAX_RESULTS);
+                    return [...companies];
                 }
 
                 const normalized = term.toLowerCase();
