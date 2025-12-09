@@ -603,6 +603,13 @@
             console.log(`[Review Modal] System details toggled: ${expanded}`);
         }
 
+        if (systemToggle) {
+            systemToggle.addEventListener('click', () => {
+                const currentlyExpanded = systemToggle.getAttribute('aria-expanded') === 'true';
+                toggleSystemDetails(!currentlyExpanded);
+            });
+        }
+
         function resetForm() {
             if (form) form.reset();
             if (ratingInput) ratingInput.value = '';
