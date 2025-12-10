@@ -560,34 +560,14 @@
         .reviews-hero-clean {
             position: relative;
             padding: 120px 0 120px;
-            background: radial-gradient(circle at 10% 30%, rgba(86, 190, 132, 0.22), transparent 45%),
-                        radial-gradient(circle at 90% 30%, rgba(107, 189, 120, 0.18), transparent 45%),
-                        linear-gradient(180deg, #fffdf7 0%, #f9fff8 55%, #f4fbf1 100%);
+            background: url('{{ asset('images/im/5.jpg') }}') center/cover no-repeat;
             overflow: hidden;
+            min-height: 60vh;
         }
 
         .reviews-hero-clean::before,
         .reviews-hero-clean::after {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            filter: blur(50px);
-            opacity: 0.4;
-            z-index: 0;
-        }
-
-        .reviews-hero-clean::before {
-            left: -140px;
-            top: -80px;
-            background: radial-gradient(circle, rgba(66, 158, 90, 0.55), transparent 70%);
-        }
-
-        .reviews-hero-clean::after {
-            right: -120px;
-            top: -40px;
-            background: radial-gradient(circle, rgba(66, 143, 68, 0.45), transparent 70%);
+            display: none;
         }
 
         .reviews-hero-inner {
@@ -615,23 +595,24 @@
         }
 
         .reviews-title {
-            font-size: clamp(2.4rem, 4.5vw, 3.2rem);
+            font-size: clamp(3.25rem, 4.5vw, 52px);
             font-weight: 400;
             color: #0f172a;
-            line-height: 1.25;
+            line-height: 1.15;
             margin-bottom: 0.6rem;
         }
 
         .reviews-title span {
             display: block;
-            font-size: 42px;
+            font-size: clamp(2.75rem, 4vw, 44px);
             color: #1b9d4b;
             font-weight: 600;
+            line-height: 1.1;
         }
 
         .reviews-subtitle {
-            font-size: 1.05rem;
-            color: #475569;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.78);
             margin-bottom: 2.5rem;
         }
 
@@ -688,47 +669,53 @@
         }
 
         .hero-pill-wrapper {
-            margin-top: 10rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            justify-content: center;
+            margin-top: 4rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    position: relative;
         }
 
-        .hero-pill-wrapper::before,
-        .hero-pill-wrapper::after {
-            content: '';
-            flex: 0 0 120px;
-            height: 1px;
-            background: rgba(15, 23, 42, 0.2);
-        }
+.hero-pill-wrapper::before,
+.hero-pill-wrapper::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background: #d4d4d4; /* Grey line – same as screenshot */
+}
 
-        .hero-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.65rem;
-            border-radius: 999px;
-            border: 1px solid rgba(15, 23, 42, 0.15);
-            padding: 0.65rem 1.4rem;
-            background: #fff;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-            font-size: 0.96rem;
-        }
+/* Pill */
+.hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 26px;
+    background: #ffffff;
+    border-radius: 9999px;
+    border: 1px solid #d4d4d4;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08); /* softer shadow like screenshot */
+    font-size: 17px;
+    font-weight: 500;
+}
 
-        .hero-pill span {
-            color: #111827;
-            font-weight: 500;
-        }
+      
+/* Inside text */
+.hero-pill span {
+    color: #000;
+}
 
-        .hero-pill a {
-            color: #1f9a47;
-            font-weight: 600;
-            text-decoration: none;
-        }
+/* Link */
+.hero-pill a {
+    color: #6b3ffe;     /* SAME purple color as shown */
+    text-decoration: none;
+    font-weight: 600;
+}
 
-        .hero-pill a:hover {
-            text-decoration: underline;
-        }
+.hero-pill a:hover {
+    text-decoration: underline;
+}
 
         /* Hero Subtitle */
         .reviews-subtitle {
@@ -1056,7 +1043,11 @@
         @media (max-width: 760px) {
 
             .reviews-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
+            }
+            
+            .reviews-title span {
+                font-size: 2.25rem;
             }
 
             .reviews-search-box {
