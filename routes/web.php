@@ -51,24 +51,8 @@ Route::get('/companies/{company:slug}', [FrontendCompanyController::class, 'show
 
 
 // State Companies
-Route::get('/state/{stateSlug}', function ($stateSlug) {
-    $states = \App\Models\State::query()
-        ->where('is_active', true)
-        ->orderBy('name')
-        ->get(['id', 'name', 'slug']);
-
-    $state = $states->firstWhere('slug', $stateSlug);
-
-    if (!$state) {
-        abort(404);
-    }
-
-    return view('frontend.companies.state', [
-        'state' => $state,
-        'states' => $states,
-        'categories' => [],
-    ]);
-})->name('state.companies');
+Route::get('/state/{stateSlug}', [FrontendCompanyController::class, 'stateCompanies'])
+    ->name('state.companies');
 
 // Review Routes
 Route::prefix('reviews')->name('reviews.')->group(function () {

@@ -375,6 +375,16 @@
             opacity: 1;
         }
 
+        .no-company-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px dashed var(--border);
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-md);
+        }
+
         .company-header {
             display: flex;
             gap: 1.25rem;
@@ -1123,18 +1133,26 @@
         </div>
         <h1 class="hero-title">Top Solar Companies in {{ $state['name'] }}</h1>
         <p class="hero-subtitle">Compare verified solar installation companies with real customer reviews and expert ratings to find your perfect match.</p>
+
+        @php
+            $totalReviews = $companies ? $companies->sum('total_reviews') : 0;
+            $averageStateRating = ($companies && $companies->count())
+                ? number_format($companies->avg('average_rating'), 2)
+                : '—';
+            $companyStatCount = $companyCount ?? ($companies ? $companies->count() : 0);
+        @endphp
         
         <div class="hero-stats">
             <div class="hero-stat">
-                <div class="hero-stat-value">7+</div>
+                <div class="hero-stat-value">{{ $companyStatCount }}{{ $companyStatCount ? '+' : '' }}</div>
                 <div class="hero-stat-label">Verified Companies</div>
             </div>
             <div class="hero-stat">
-                <div class="hero-stat-value">1,066+</div>
+                <div class="hero-stat-value">{{ number_format($totalReviews) }}{{ $totalReviews ? '+' : '' }}</div>
                 <div class="hero-stat-label">Customer Reviews</div>
             </div>
             <div class="hero-stat">
-                <div class="hero-stat-value">4.7</div>
+                <div class="hero-stat-value">{{ $averageStateRating }}</div>
                 <div class="hero-stat-label">Average Rating</div>
             </div>
         </div>
@@ -1151,7 +1169,7 @@
             </h3>
             <ul class="state-list">
                 @foreach($states as $s)
-                    <li><a href="{{ url('state/'.$s['slug']) }}">{{ $s['name'] }}</a></li>
+                    <li><a href="{{ url('state/'.$s->slug) }}">{{ $s->name }}</a></li>
                 @endforeach
             </ul>
         </div>
@@ -1172,77 +1190,28 @@
     <!-- Content -->
     <main class="content-area">
         @php
-            $dummyCompanies = [
-                [
-                    'name' => 'Sunergy Solutions LLC',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.91,
-                    'reviews' => 145,
-                    'description' => 'Thank you for taking the time to learn more about Sunergy Solutions! We are ranked as the #1 installer for all of New England with years of know-how…',
-                    'latest_review' => 'Fantastic crew and clean install. System performing better than projections.'
-                ],
-                [
-                    'name' => 'BrightPath Solar Pros',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.78,
-                    'reviews' => 212,
-                    'description' => 'BrightPath focuses on premium hardware paired with concierge installation support for every homeowner.',
-                    'latest_review' => 'Sales team was transparent and the install was done in only two days.'
-                ],
-                [
-                    'name' => 'EcoBeam Installers',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.65,
-                    'reviews' => 189,
-                    'description' => 'EcoBeam has delivered over 12,000 rooftop systems nationwide and offers lifetime monitoring.',
-                    'latest_review' => 'Monitoring app is excellent and the crew cleaned up perfectly.'
-                ],
-                [
-                    'name' => 'HelioPrime Energy',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.59,
-                    'reviews' => 98,
-                    'description' => 'Specialists in hybrid solar + battery packages for homes that want unstoppable backup.',
-                    'latest_review' => 'Battery backup kicked in during the first storm and worked flawlessly.'
-                ],
-                [
-                    'name' => 'NorthStar Renewables',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.83,
-                    'reviews' => 167,
-                    'description' => 'NorthStar blends premium panels with affordable financing tailored for families.',
-                    'latest_review' => 'Financing was easy and the project manager kept us informed daily.'
-                ],
-                [
-                    'name' => 'Summit Skyline Solar',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.72,
-                    'reviews' => 134,
-                    'description' => 'Summit Skyline provides white-glove solar installs plus optional EV charger upgrades.',
-                    'latest_review' => 'Loved the attention to detail. EV charger add-on is super handy.'
-                ],
-                [
-                    'name' => 'Evergreen Grid Co.',
-                    'logo' => asset('images/company/cmp.png'),
-                    'rating' => 4.58,
-                    'reviews' => 121,
-                    'description' => 'Evergreen Grid brings 15 years of craftsmanship with NABCEP-certified crews.',
-                    'latest_review' => 'Crew was respectful and the workmanship is tidy and professional.'
-                ],
-            ];
+            $categoryLookup = isset($categories) && $categories ? $categories->pluck('name', 'id') : collect();
         @endphp
 
-        @foreach($dummyCompanies as $company)
-            @php
-                $rating = $company['rating'];
-                $fullStars = floor($rating);
-                $hasHalfStar = $rating - $fullStars >= 0.5;
-                $reviewCount = $company['reviews'];
-            @endphp
+        @if(($companyCount ?? 0) > 0 && $companies)
+            @foreach($companies as $company)
+                @php
+                    $rating = $company['average_rating'] ?? 0;
+                    $fullStars = floor($rating);
+                    $hasHalfStar = ($rating - $fullStars) >= 0.5;
+                    $reviewCount = $company['total_reviews'] ?? 0;
+                    $logo = $company['logo'] ?? asset('images/company/cmp.png');
+                    $featuredReview = $company['featured_review'] ?? null;
+                    $companyCategories = collect($company['category_ids'] ?? [])
+                        ->map(fn($id) => $categoryLookup->get($id))
+                        ->filter()
+                        ->values()
+                        ->all();
+                @endphp
             <article class="company-card">
                 <div class="company-header">
                     <div class="company-logo">
-                        <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo">
+                        <img src="{{ $logo }}" alt="{{ $company['name'] }} logo">
                     </div>
                     <div class="company-details">
                         <div class="company-top-row">
@@ -1262,11 +1231,12 @@
                                 </div>
                             </div>
                             <div class="action-buttons">
-                                {{-- <button class="btn-primary-action">
-                                    <i class="fas fa-paper-plane"></i>
-                                    Get Quote
-                                </button> --}}
-                                <button type="button" class="btn-secondary-action btn-review">
+                                <button
+                                    type="button"
+                                    class="btn-secondary-action btn-review"
+                                    data-company-id="{{ $company['id'] }}"
+                                    data-category-ids="{{ implode(',', $company['category_ids'] ?? []) }}"
+                                >
                                     <i class="fas fa-pen"></i>
                                     Write Review
                                 </button>
@@ -1277,8 +1247,8 @@
 
                 <div class="description-box">
                     <div class="description-label">About Company</div>
-                    <p class="description-text">{{ $company['description'] }}</p>
-                    <a href="#" class="learn-more-link">
+                    <p class="description-text">{{ $company['description'] ?? 'Description coming soon.' }}</p>
+                    <a href="{{ route('companies.show', $company['slug']) }}" class="learn-more-link">
                         Learn more <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1335,7 +1305,12 @@
                     </summary>
                     <div class="accordion-content">
                         <div class="services-tags">
-                            @foreach($company->services ?? ['Solar Installation', 'Battery Backup', 'System Maintenance', 'Energy Monitoring', 'Panel Cleaning'] as $service)
+                            @php
+                                $serviceTags = !empty($companyCategories)
+                                    ? $companyCategories
+                                    : ['Solar Installation', 'Battery Backup', 'System Maintenance'];
+                            @endphp
+                            @foreach($serviceTags as $service)
                                 <span class="service-tag">{{ $service }}</span>
                             @endforeach
                         </div>
@@ -1351,13 +1326,24 @@
                         <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
                     </summary>
                     <div class="accordion-content">
-                        <div class="review-quote">
-                            <p class="review-text">{{ $company['latest_review'] }}</p>
-                        </div>
+                        @if($featuredReview)
+                            <div class="review-quote">
+                                <p class="review-text">"{{ $featuredReview['review_text'] }}"</p>
+                                <p class="reviewer" style="margin-top:0.75rem; font-weight:600;">— {{ $featuredReview['reviewer_name'] }}, {{ $featuredReview['date'] }}</p>
+                            </div>
+                        @else
+                            <p class="description-text">No featured review available yet.</p>
+                        @endif
                     </div>
                 </details>
             </article>
-        @endforeach
+            @endforeach
+        @else
+            <div class="no-company-card">
+                <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 0.5rem;">No companies available</h2>
+                <p>We couldn’t find any verified solar companies in {{ $state['name'] }} yet. Check back soon or explore other nearby states.</p>
+            </div>
+        @endif
     </main>
 </div>
 

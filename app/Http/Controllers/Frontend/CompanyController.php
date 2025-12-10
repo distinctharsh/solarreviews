@@ -72,14 +72,25 @@ class CompanyController extends Controller
             
         // Include a version suffix in the cache key to invalidate old cached data
         // (needed after adding category_ids and other new fields)
-        $cacheKey = "state_companies_{$stateSlug}_v2";
+        $cacheKey = "state_companies_{$stateSlug}_v4";
         
         // Only cache the companies data, not the state data
         $companies = Cache::remember($cacheKey, now()->addHours(12), function () use ($currentState) {
-            return Company::with(['state', 'reviews', 'categories'])
+            return Company::query()
+                ->select(
+                    'companies.*',
+                    DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
+                    DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews')
+                )
+                ->leftJoin('rating_summaries as rs', function ($join) {
+                    $join->on('rs.reviewable_id', '=', 'companies.id')
+                        ->where('rs.reviewable_type', '=', Company::class);
+                })
+                ->with(['state', 'reviews', 'categories'])
                 ->where('state_id', $currentState->id)
                 ->where('is_active', true)
-                ->orderBy('average_rating', 'desc')
+                ->orderByDesc('avg_rating')
+                ->orderByDesc('total_reviews')
                 ->get()
                 ->map(function($company) {
                     return [
@@ -87,10 +98,10 @@ class CompanyController extends Controller
                         'name' => $company->name,
                         'slug' => $company->slug,
                         'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
-                        'state' => $company->state->name,
+                        'state' => optional($company->state)->name ?? $company->state_name ?? '',
                         'description' => $company->description,
-                        'average_rating' => (float) $company->average_rating,
-                        'total_reviews' => $company->total_reviews,
+                        'average_rating' => (float) $company->avg_rating,
+                        'total_reviews' => (int) $company->total_reviews,
                         'category_ids' => $company->categories->pluck('id')->toArray(),
                         'featured_review' => $company->reviews->where('is_featured', true)->first() ? [
                             'reviewer_name' => $company->reviews->where('is_featured', true)->first()->reviewer_name,
@@ -101,10 +112,10 @@ class CompanyController extends Controller
                     ];
                 });
         });
+        $companyCount = $companies->count();
         
         // Prepare the data for the view
         $categories = Category::where('is_active', true)
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
 
@@ -115,7 +126,8 @@ class CompanyController extends Controller
                 'slug' => $currentState->slug,
             ],
             'states' => $states,
-            'companies' => $companies,
+            'companies' => $companyCount ? $companies : null,
+            'companyCount' => $companyCount,
             'categories' => $categories,
         ];
         
