@@ -450,7 +450,7 @@
         }
 
         .as-seen-in-section {
-            background: #ffffff;
+                background: #f9fafb;
             padding-top: 60px;
             padding-bottom: 60px;
         }

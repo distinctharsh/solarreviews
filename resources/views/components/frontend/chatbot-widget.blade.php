@@ -13,9 +13,7 @@
     <div class="chatbot-launcher-wrapper">
         <button class="chatbot-launcher" @click="toggle" aria-label="Open chat support">
             <span class="chatbot-face">
-                <span class="chatbot-eye left"></span>
-                <span class="chatbot-eye right"></span>
-                <span class="chatbot-smile"></span>
+                <img src="{{ asset('images/im/chatbot.png') }}" alt="SolaBOT" loading="lazy">
             </span>
         </button>
         <div class="chatbot-helper" x-show="!isOpen" x-transition x-cloak>
@@ -121,81 +119,62 @@
     justify-content: flex-end;
 }
 .chatbot-launcher {
-    width: 58px;
-    height: 58px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
-    border: none;
-    background: linear-gradient(160deg, #32a852, #2d8b46);
+    border: 2px solid #b2dfc1;
+    background: #ffffff;
     color: transparent;
-    box-shadow: 0 15px 30px rgba(15, 118, 54, 0.35);
+    box-shadow: 0 15px 35px rgba(12, 114, 52, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    border: 3px solid #e4f7eb;
     position: relative;
 }
 .chatbot-face {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: #fff;
+    width: 48px;
+    height: 48px;
     display: block;
-    position: relative;
 }
-.chatbot-eye {
-    position: absolute;
-    top: 10px;
-    width: 6px;
-    height: 6px;
-    background: #1f7a30;
-    border-radius: 50%;
-}
-.chatbot-eye.left { left: 7px; }
-.chatbot-eye.right { right: 7px; }
-.chatbot-smile {
-    position: absolute;
-    bottom: 7px;
-    left: 50%;
-    width: 14px;
-    height: 6px;
-    border-bottom: 2px solid #1f7a30;
-    border-radius: 0 0 10px 10px;
-    transform: translateX(-50%);
+.chatbot-face img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 .chatbot-helper {
     position: absolute;
-    right: 70px;
-    bottom: 10px;
-
-    background: #FFD84D;
-    color: #000;
-    padding: 10px 15px;
-    border-radius: 12px;
-    max-width: 220px;
-
-    font-size: 15px;
+    right: 80px;
+    bottom: 20px;
+    background: #FFC93A;
+    color: #0b1724;
+    padding: 12px 22px;
+    border-radius: 24px;
+    max-width: 240px;
+    font-size: 16px;
     font-weight: 600;
-    line-height: 1.3;
-
-    box-shadow: 0px 8px 22px rgba(0,0,0,0.18);
+    line-height: 1.35;
+    box-shadow: 0 18px 35px rgba(0,0,0,0.15);
 }
 
 .chatbot-helper small {
-    font-size: 14px;
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 13px;
     font-weight: 500;
 }
 
 .chatbot-helper::after {
     content: "";
     position: absolute;
-    right: -6px;
-    bottom: 20px;
-    width: 14px;
-    height: 14px;
-    background: #FFD84D;
+    right: -10px;
+    bottom: 18px;
+    width: 24px;
+    height: 24px;
+    background: #FFC93A;
     transform: rotate(45deg);
-    box-shadow: 3px 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.08);
 }
 
 .chatbot-panel {
@@ -338,14 +317,17 @@
     .chatbot-widget { right: 1rem; bottom: 1rem; }
     .chatbot-panel { width: calc(100vw - 2rem); }
     .chatbot-helper {
-        position: absolute;
         right: 0;
         bottom: calc(100% + 0.75rem);
+        padding: 10px 16px;
+        font-size: 15px;
+        border-radius: 20px;
     }
     .chatbot-helper::after {
-        right: 18px;
+        right: 20px;
         bottom: -6px;
-        transform: rotate(45deg);
+        width: 18px;
+        height: 18px;
     }
 }
 

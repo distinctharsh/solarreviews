@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Submit Review</a>
+            <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
         </div>
         
@@ -70,7 +70,7 @@
                 @endauth
             @endif
             <li class="nav-item">
-                <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Submit Review</a>
+                <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             </li>
         </ul>
     </div>
