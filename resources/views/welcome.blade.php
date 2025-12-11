@@ -713,7 +713,7 @@
             justify-content: center;
             font-size: 1.2rem;
             color: #0f172a;
-            border-right: 2px solid gray;
+            /* border-right: 2px solid gray; */
         }
 
         .hero-search-input {
