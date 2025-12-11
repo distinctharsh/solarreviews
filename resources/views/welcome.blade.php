@@ -539,33 +539,37 @@
         ------------------------------ */
         .reviews-hero-clean {
             position: relative;
-            padding: clamp(90px, 10vw, 160px) 0 110px;
-            background: linear-gradient(180deg, #fffef8 0%, #f6f8ff 100%);
-            background: url('/images/im/5.png') center/cover no-repeat;
+            padding: clamp(90px, 10vw, 160px) 0 70px;
+            background: linear-gradient(180deg, rgba(255, 254, 248, 0.95) 0%, rgba(247, 250, 255, 0.92) 100%);
             overflow: hidden;
             text-align: center;
         }
 
-        .reviews-hero-clean::before,
+        .reviews-hero-clean::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('/images/im/5.png') center/cover no-repeat;
+            opacity: 0.9;
+            z-index: 1;
+        }
+
         .reviews-hero-clean::after {
             content: '';
             position: absolute;
             width: 520px;
             height: 520px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(59,161,76,0.25) 0%, rgba(59,161,76,0.05) 60%, transparent 75%);
+            background: radial-gradient(circle, rgba(59,161,76,0.2) 0%, rgba(59,161,76,0.04) 65%, transparent 80%);
             z-index: 1;
+            top: -160px;
+            left: -120px;
             filter: blur(0.5px);
         }
 
+        .reviews-hero-clean::after,
         .reviews-hero-clean::before {
-            top: -140px;
-            left: -120px;
-        }
-
-        .reviews-hero-clean::after {
-            bottom: -200px;
-            right: -160px;
+            pointer-events: none;
         }
 
         .reviews-hero-inner {
@@ -599,21 +603,22 @@
         }
 
         .hero-search-form {
-            max-width: 720px;
+            max-width: min(660px, calc(100% - 2rem));
+            width: 100%;
             margin: 0 auto;
-            padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+            padding: 0.45rem 0.45rem 0.45rem 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.85rem;
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.06);
             border-radius: 8px;
-            box-shadow: 0 35px 80px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.1);
         }
 
         .hero-search-icon {
-            width: 50px;
-            height: 50px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -645,7 +650,7 @@
             font-size: 14px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 18px 32px rgba(36, 160, 72, 0.35);
+            min-width: 120px;
         }
 
         .hero-search-button:hover {
@@ -735,27 +740,34 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            padding: 0 1.5rem 2.5rem;
+            max-width: 960px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-pill-wrapper::before,
         .hero-pill-wrapper::after {
             content: '';
             flex: 1;
-            height: 1px;
+            height: 2px;
             background: #dcdfe4;
+            min-width: 60px;
         }
 
         .hero-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 26px;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 28px;
             background: #ffffff;
             border-radius: 999px;
-            border: 1px solid #d4d4d4;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
             font-size: 15px;
             font-weight: 500;
+            width: clamp(260px, 70vw, 440px);
+            border: 2px solid #dcdfe4;
         }
 
         .hero-pill span {
@@ -772,47 +784,154 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 767.98px) {
-            .reviews-hero-clean {
-                padding: 90px 0 80px;
-            }
-
+        @media (max-width: 991.98px) {
             .reviews-title {
-                font-size: 34px;
+                font-size: 42px;
             }
 
             .reviews-title span {
-                font-size: 30px;
+                font-size: 34px;
             }
 
             .hero-search-form {
-                flex-direction: column;
-                gap: 0.65rem;
-                padding: 0.9rem;
+                max-width: 600px;
+                padding: 0.5rem 0.5rem 0.5rem 0.8rem;
+                gap: 0.6rem;
             }
 
             .hero-search-icon {
-                border: none;
-                border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-                width: 100%;
-                height: auto;
-                padding-bottom: 0.5rem;
-                justify-content: flex-start;
+                width: 44px;
+                height: 44px;
+                font-size: 1rem;
             }
 
-            .hero-search-input,
+            .hero-search-input {
+                font-size: 15px;
+            }
+
             .hero-search-button {
-                width: 100%;
+                padding: 0.75rem 2rem;
+                font-size: 13px;
+                flex-shrink: 0;
+            }
+
+            .hero-pill-wrapper {
+                gap: 1rem;
+                padding: 1.5rem 1rem 2.5rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .reviews-hero-clean {
+                padding: 70px 0 45px;
+            }
+
+            .reviews-title {
+                font-size: 32px;
+            }
+
+            .reviews-title span {
+                font-size: 28px;
+            }
+
+            .hero-search-form {
+                max-width: calc(100% - 1.5rem);
+                padding: 0.45rem 0.45rem 0.45rem 0.75rem;
+                gap: 0.4rem;
+            }
+
+            .hero-search-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+            }
+
+            .hero-search-input {
+                font-size: 14px;
+            }
+
+            .hero-search-button {
+                font-size: 13px;
+                padding: 0.6rem 1.55rem;
             }
 
             .hero-pill-wrapper {
                 flex-direction: column;
+                text-align: center;
+                gap: 0.65rem;
+                padding: 1.2rem 0 1.8rem;
             }
 
             .hero-pill-wrapper::before,
             .hero-pill-wrapper::after {
                 display: none;
             }
+
+            .hero-pill {
+                width: 100%;
+                max-width: 320px;
+                justify-content: center;
+            }
+
+            .hero-search-suggestions {
+                width: calc(100% - 2rem);
+            }
+
+
+
+
+            /* Mobile pill style (like your example image) */
+            .hero-pill {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                padding: 12px 22px;
+                background: #ffffff;
+
+                border-radius: 999px;
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                box-shadow: 0 10px 22px rgba(15, 23, 42, 0.10);
+
+                width: auto;                 /* shrink to content like image */
+                max-width: 100%;
+                font-size: 14px;
+                font-weight: 500;
+                gap: 8px;                    /* text & arrow spacing */
+            }
+
+            .hero-pill span {
+                color: #0f172a;
+                font-size: 14px;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .hero-pill a {
+                color: #6b3ffe;
+                font-weight: 600;
+                font-size: 14px;
+                text-decoration: none;
+            }
+
+            .hero-pill a:hover {
+                text-decoration: underline;
+            }
+
+            /* Wrapper mobile fix */
+            .hero-pill-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 1rem 0 1.5rem;
+            }
+
+            .hero-pill-wrapper::before,
+            .hero-pill-wrapper::after {
+                display: none;
+            }
+
         }
 
         /* ===========================================
@@ -1049,6 +1168,77 @@
             .search-btn {
                 margin-top: 0.25rem;
             }
+
+
+            
+    .reviews-hero-clean {
+        padding: 55px 0 35px;
+        text-align: center;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .reviews-hero-inner {
+        padding: 0 1rem;
+    }
+
+    .reviews-title {
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 1.25;
+        margin-bottom: 0.6rem;
+    }
+
+    .reviews-title span {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1b9d4b;
+    }
+
+    .reviews-subtitle {
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 1.8rem;
+        color: #4b5563;
+    }
+
+    /* Search Box Fix */
+    .hero-search-form {
+        padding: 0.55rem 0.55rem 0.55rem 0.75rem;
+        gap: 0.45rem;
+        border-radius: 18px;
+        max-width: 100%;
+        box-shadow: 0 12px 28px rgba(15,23,42,0.08);
+    }
+
+    .hero-search-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .hero-search-input {
+        font-size: 14px;
+    }
+
+    .hero-search-button {
+        font-size: 13px;
+        padding: 0.65rem 1.5rem;
+        border-radius: 14px;
+    }
+
+    /* Pill Fix (already correct but small improvements) */
+    .hero-pill-wrapper {
+        margin-top: 1.8rem;
+        padding-top: 0.5rem;
+    }
+
+    .hero-pill {
+        padding: 14px 24px;
+        border-radius: 50px;
+        font-size: 14px;
+        box-shadow: 0 12px 25px rgba(15,23,42,0.10);
+    }
         }
 
         /* MOBILE RESPONSIVE */
@@ -1103,11 +1293,17 @@
                 width: 100%;
                 height: 45px;
             }
+
+            .reviews-hero-clean {
+                min-height: 70vh; /* Full mobile screen height */
+                display: flex;
+                align-items: flex-start;  /* or center if you want */
+                justify-content: flex-start;
+                padding-top: 70px; /* adjust top spacing */
+                padding-bottom: 30px;
+            }
+
         }
-
-
-
-
 
          .reviews-search-box {
             max-width: 750px;
