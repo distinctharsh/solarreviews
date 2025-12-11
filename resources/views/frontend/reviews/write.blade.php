@@ -244,6 +244,44 @@
                 width: 100%;
             }
         }
+
+        .trustpilot-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+.trustpilot-empty h4 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+}
+
+.trustpilot-empty p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.trustpilot-empty .add-btn {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #d0d7de;
+    padding: 10px 28px;
+    border-radius: 100px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    transition: 0.2s ease;
+}
+
+.trustpilot-empty .add-btn:hover {
+    background: #f5f5f5;
+}
+
     </style>
 </head>
 <body>
@@ -272,13 +310,14 @@
                     <div class="suggestions-empty" data-suggestions-empty>No companies found. Try another name.</div>
                 </div>
 
-                <div class="add-company-card">
-                    <h4>Can't find a company?</h4>
-                    <p>It might not be listed on SolarReviews yet. Add it and be the first to write a review.</p>
-                    <a href="#" class="btn btn-primary">Add Company</a>
-                </div>
             </div>
         </section>
+    <div class="add-company-card trustpilot-empty">
+    <h4>Can't find a company?</h4>
+    <p>It might not be listed on Trustpilot yet. Add it and be the first to write a review.</p>
+    <a href="#" class="add-btn">Add company</a>
+</div>
+
     </main>
 
     <button type="button" id="landingReviewModalTrigger" data-review-modal-trigger="landingReviewModal" style="display: none;"></button>
