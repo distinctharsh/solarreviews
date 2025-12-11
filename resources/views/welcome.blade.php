@@ -1285,7 +1285,7 @@
 
             <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
                 <div class="hero-suggestions-header">
-                    <span>Top matches</span>
+                    <span>Suggested searches</span>
                     <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
                 </div>
                 <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
