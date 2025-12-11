@@ -539,26 +539,14 @@
         ------------------------------ */
         .reviews-hero-clean {
             position: relative;
-            padding: clamp(90px, 10vw, 160px) 0 70px;
-            background: linear-gradient(180deg, rgba(255, 254, 248, 0.95) 0%, rgba(247, 250, 255, 0.92) 100%);
-            overflow: visible;
+            padding: clamp(80px, 9vw, 140px) clamp(1rem, 4vw, 2.5rem) clamp(35px, 5vw, 50px);
+            background: url('/images/im/5.jpg') center top/cover no-repeat;
             text-align: center;
-        }
-
-        .reviews-hero-clean::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: -200px;
-            background: url('/images/im/5.jpg') center/cover no-repeat;
-            opacity: 0.9;
-            z-index: 1;
-        }
-
-        .reviews-hero-clean::before {
-            pointer-events: none;
+            min-height: min(760px, 100vh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .reviews-hero-inner {
@@ -567,6 +555,10 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 0 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: clamp(520px, 70vh, 640px);
         }
 
         .reviews-title {
@@ -724,16 +716,17 @@
         }
 
         .hero-pill-wrapper {
-            margin-top: 3.5rem;
+            margin-top: clamp(28px, 4vw, 48px);
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 0 1.5rem 2.5rem;
+            padding: 0 1.5rem clamp(20px, 3vw, 35px);
             max-width: 960px;
             margin-left: auto;
             margin-right: auto;
             z-index: 2;
+            width: 100%;
         }
 
         .hero-pill-wrapper::before,
@@ -742,7 +735,7 @@
             flex: 1;
             height: 2px;
             background: #dcdfe4;
-            min-width: 60px;
+            min-width: 140px;
         }
 
         .hero-pill {
@@ -864,43 +857,45 @@
 
         @media (max-width: 767.98px) {
             .reviews-hero-clean {
-                padding: 70px 0 45px;
+                padding: 65px 1rem 35px;
             }
 
             .reviews-title {
-                font-size: 32px;
-            }
-
-            .reviews-title span {
                 font-size: 28px;
             }
 
+            .reviews-title span {
+                font-size: 24px;
+            }
+
             .hero-search-form {
-                max-width: calc(100% - 1.5rem);
-                padding: 0.45rem 0.45rem 0.45rem 0.75rem;
-                gap: 0.4rem;
+                max-width: 88vw;
+                padding: 0.35rem 0.45rem;
+                gap: 0.3rem;
             }
 
             .hero-search-icon {
-                width: 38px;
-                height: 38px;
-                font-size: 0.95rem;
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
             }
 
             .hero-search-input {
-                font-size: 14px;
+                font-size: 13px;
             }
 
             .hero-search-button {
-                font-size: 13px;
-                padding: 0.6rem 1.55rem;
+                font-size: 12px;
+                padding: 0.5rem 1.2rem;
             }
 
             .hero-pill-wrapper {
                 flex-direction: column;
                 text-align: center;
                 gap: 0.65rem;
-                padding: 1.2rem 0 1.8rem;
+                padding: 1rem 0 1.3rem;
+                margin-top: 1.2rem;
+                align-items: center;
             }
 
             .hero-pill-wrapper::before,
@@ -921,26 +916,26 @@
             }
 
             .reviews-title {
-                font-size: 28px;
+                font-size: 24px;
             }
 
             .reviews-title span {
-                font-size: 24px;
+                font-size: 20px;
             }
 
             .hero-search-form {
                 flex-wrap: nowrap;
                 flex-direction: row;
-                max-width: calc(100% - 1rem);
-                padding: 0.45rem;
-                gap: 0.35rem;
-                border-radius: 14px;
+                max-width: calc(100% - 1.25rem);
+                padding: 0.4rem;
+                gap: 0.25rem;
+                border-radius: 12px;
             }
 
             .hero-search-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 0.9rem;
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
                 border-right: 1px solid rgba(15, 23, 42, 0.08);
                 border-bottom: none;
                 padding-bottom: 0;
@@ -948,13 +943,13 @@
             }
 
             .hero-search-input {
-                font-size: 13px;
+                font-size: 12.5px;
             }
 
             .hero-search-button {
-                min-width: 90px;
-                font-size: 12px;
-                padding: 0.55rem 1.2rem;
+                min-width: 80px;
+                font-size: 11.5px;
+                padding: 0.5rem 1rem;
             }
 
             .hero-search-suggestions {
@@ -967,17 +962,24 @@
 
             .hero-pill {
                 width: 90%;
-                max-width: 280px;
-                padding: 12px 20px;
-                font-size: 13px;
-                gap: 6px;
+                max-width: 260px;
+                padding: 10px 18px;
+                font-size: 12px;
+                gap: 4px;
             }
 
             .hero-pill span,
             .hero-pill a {
-                font-size: 13px;
+                font-size: 12px;
             }
         }
+
+
+          @media (max-width: 480px) {
+            .reviews-title {
+                font-size: 18px;
+            }
+          }
 
         /* ===========================================
         POPULAR CATEGORIES SECTION (Screenshot Match)
@@ -1216,74 +1218,75 @@
 
 
             
-    .reviews-hero-clean {
-        padding: 55px 0 35px;
-        text-align: center;
-        background-size: cover;
-        background-position: center;
-    }
+            .reviews-hero-clean {
+                padding: 55px 0 35px;
+                text-align: center;
+                background-size: cover;
+                background-position: center;
+            }
 
-    .reviews-hero-inner {
-        padding: 0 1rem;
-    }
+            .reviews-hero-inner {
+                padding: 0 1rem;
+            }
 
-    .reviews-title {
-        font-size: 30px;
-        font-weight: 500;
-        line-height: 1.25;
-        margin-bottom: 0.6rem;
-    }
+            .reviews-title {
+                font-size: 30px;
+                font-weight: 500;
+                line-height: 1.25;
+                margin-bottom: 0.6rem;
+            }
 
-    .reviews-title span {
-        font-size: 26px;
-        font-weight: 700;
-        color: #1b9d4b;
-    }
+            .reviews-title span {
+                font-size: 26px;
+                font-weight: 700;
+                color: #1b9d4b;
+            }
 
-    .reviews-subtitle {
-        font-size: 14px;
-        font-weight: 400;
-        margin-bottom: 1.8rem;
-        color: #4b5563;
-    }
+            .reviews-subtitle {
+                font-size: 14px;
+                font-weight: 400;
+                margin-bottom: 1.8rem;
+                color: #4b5563;
+            }
 
-    /* Search Box Fix */
-    .hero-search-form {
-        padding: 0.55rem 0.55rem 0.55rem 0.75rem;
-        gap: 0.45rem;
-        border-radius: 18px;
-        max-width: 100%;
-        box-shadow: 0 12px 28px rgba(15,23,42,0.08);
-    }
+            /* Search Box Fix */
+            .hero-search-form {
+                padding: 0.55rem 0.55rem 0.55rem 0.75rem;
+                gap: 0.45rem;
+                border-radius: 18px;
+                max-width: 60%;
+                box-shadow: 0 12px 28px rgba(15,23,42,0.08);
+            }
 
-    .hero-search-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 1rem;
-    }
+            .hero-search-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
 
-    .hero-search-input {
-        font-size: 14px;
-    }
+            .hero-search-input {
+                font-size: 14px;
+                width: 75%;
+            }
 
-    .hero-search-button {
-        font-size: 13px;
-        padding: 0.65rem 1.5rem;
-        border-radius: 14px;
-    }
+            .hero-search-button {
+                font-size: 13px;
+                padding: 0.65rem 1.5rem;
+                border-radius: 14px;
+            }
 
-    /* Pill Fix (already correct but small improvements) */
-    .hero-pill-wrapper {
-        margin-top: 1.8rem;
-        padding-top: 0.5rem;
-    }
+            /* Pill Fix (already correct but small improvements) */
+            .hero-pill-wrapper {
+                margin-top: 1.8rem;
+                padding-top: 0.5rem;
+            }
 
-    .hero-pill {
-        padding: 14px 24px;
-        border-radius: 50px;
-        font-size: 14px;
-        box-shadow: 0 12px 25px rgba(15,23,42,0.10);
-    }
+            .hero-pill {
+                padding: 14px 24px;
+                border-radius: 50px;
+                font-size: 14px;
+                box-shadow: 0 12px 25px rgba(15,23,42,0.10);
+            }
         }
 
         /* MOBILE RESPONSIVE */
@@ -1439,44 +1442,46 @@
     <!-- Hero Section -->
     <section class="reviews-hero-clean">
         <div class="reviews-hero-inner">
-            <h1 class="reviews-title">
-                India's most trusted
-                <span>Solar EPC Reviews</span>
-            </h1>
-            <p class="reviews-subtitle">
-                Discover, read, and write reviews
-            </p>
+            <div>
+                <h1 class="reviews-title">
+                    India's most trusted
+                    <span>Solar EPC Reviews</span>
+                </h1>
+                <p class="reviews-subtitle">
+                    Discover, read, and write reviews
+                </p>
 
-            <form class="hero-search-form" data-hero-company-form>
-                <span class="hero-search-icon"><i class="fas fa-search"></i></span>
-                <input
-                    type="text"
-                    class="hero-search-input"
-                    name="q"
-                    placeholder="Search Company"
-                    aria-label="Search Company"
-                    data-hero-company-input
-                >
-                <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
-            </form>
+                <form class="hero-search-form" data-hero-company-form>
+                    <span class="hero-search-icon"><i class="fas fa-search"></i></span>
+                    <input
+                        type="text"
+                        class="hero-search-input"
+                        name="q"
+                        placeholder="Search Company"
+                        aria-label="Search Company"
+                        data-hero-company-input
+                    >
+                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
+                </form>
 
-            <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
-                <div class="hero-suggestions-header">
-                    <span>Suggested searches</span>
-                    <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
+                    <div class="hero-suggestions-header">
+                        <span>Suggested searches</span>
+                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                    </div>
+                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
+                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
                 </div>
-                <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
-                <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
             </div>
 
+            <div class="hero-pill-wrapper">
+                <div class="hero-pill">
+                    <span>Installed solar recently?</span>
+                    <a href="{{ route('reviews.write') }}">Write a review →</a>
+                </div>
+            </div>
         </div>
     </section>
-    <div class="hero-pill-wrapper">
-        <div class="hero-pill">
-            <span>Installed solar recently?</span>
-            <a href="{{ route('reviews.write') }}">Write a review →</a>
-        </div>
-    </div>
 
 
         <!-- As Seen In Section -->
