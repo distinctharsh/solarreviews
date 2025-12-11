@@ -557,20 +557,6 @@
             z-index: 1;
         }
 
-        .reviews-hero-clean::after {
-            content: '';
-            position: absolute;
-            width: 520px;
-            height: 520px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(59,161,76,0.2) 0%, rgba(59,161,76,0.04) 65%, transparent 80%);
-            z-index: 1;
-            top: -160px;
-            left: -120px;
-            filter: blur(0.5px);
-        }
-
-        .reviews-hero-clean::after,
         .reviews-hero-clean::before {
             pointer-events: none;
         }
