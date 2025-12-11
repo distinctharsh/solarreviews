@@ -337,6 +337,16 @@
 @media (max-width: 640px) {
     .chatbot-widget { right: 1rem; bottom: 1rem; }
     .chatbot-panel { width: calc(100vw - 2rem); }
+    .chatbot-helper {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + 0.75rem);
+    }
+    .chatbot-helper::after {
+        right: 18px;
+        bottom: -6px;
+        transform: rotate(45deg);
+    }
 }
 
 
