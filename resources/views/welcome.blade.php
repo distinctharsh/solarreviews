@@ -540,13 +540,27 @@
         .reviews-hero-clean {
             position: relative;
             padding: clamp(80px, 9vw, 140px) clamp(1rem, 4vw, 2.5rem) clamp(35px, 5vw, 50px);
-            background: url('/images/im/5.jpg') center top/cover no-repeat;
             text-align: center;
             min-height: min(760px, 100vh);
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background: transparent;
+        }
+
+        .reviews-hero-clean::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(1200px, 110vw);
+            height: max(650px, 90vh);
+            background: url('/images/im/5.jpg') center top/contain no-repeat;
+            opacity: 1;
+            z-index: 1;
+            pointer-events: none;
         }
 
         .reviews-hero-inner {
@@ -1254,7 +1268,7 @@
                 padding: 0.55rem 0.55rem 0.55rem 0.75rem;
                 gap: 0.45rem;
                 border-radius: 18px;
-                max-width: 60%;
+                /* max-width: 60%; */
                 box-shadow: 0 12px 28px rgba(15,23,42,0.08);
             }
 
