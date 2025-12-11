@@ -549,7 +549,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: url('/images/im/5.png') center/cover no-repeat;
+            background: url('/images/im/5.jpg') center/cover no-repeat;
             opacity: 0.9;
             z-index: 1;
         }
@@ -759,14 +759,14 @@
             display: inline-flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 14px 28px;
+            padding: 14px 14px;
             background: #ffffff;
+            gap:3px;
             border-radius: 999px;
             box-shadow: 0 18px 35px rgba(15, 23, 42, 0.08);
             font-size: 15px;
             font-weight: 500;
-            width: clamp(260px, 70vw, 440px);
+            /* width: clamp(260px, 70vw, 440px); */
             border: 2px solid #dcdfe4;
         }
 
