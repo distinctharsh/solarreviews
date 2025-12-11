@@ -58,6 +58,82 @@
             --tw-gradient-via-position: ;
             --tw-gradient-to-position: ;
         }
+
+        .hero-search-suggestions {
+            max-width: 720px;
+            margin: 1rem auto 0;
+            background: #fff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
+            padding: 0.5rem 0;
+        }
+
+        .hero-search-suggestions[hidden] {
+            display: none;
+        }
+
+        .hero-suggestions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.35rem 1.25rem;
+            font-size: 0.85rem;
+            color: #475569;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+        }
+
+        .hero-suggestions-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .hero-suggestion-item {
+            padding: 0.85rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s ease;
+        }
+
+        .hero-suggestion-item:not(:last-child) {
+            border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+        }
+
+        .hero-suggestion-item:hover {
+            background: rgba(59, 161, 76, 0.06);
+        }
+
+        .hero-suggestion-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .hero-suggestion-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .hero-suggestions-empty {
+            padding: 1rem 1.25rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .hero-suggestion-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e293b;
+            background: rgba(36, 160, 72, 0.12);
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            margin-left: 0.75rem;
+        }
         
         body {
             font-family: 'Poppins', sans-serif;
@@ -1194,7 +1270,7 @@
                 Discover, read, and write reviews
             </p>
 
-            <form class="hero-search-form" action="#" method="GET">
+            <form class="hero-search-form" data-hero-company-form>
                 <span class="hero-search-icon"><i class="fas fa-search"></i></span>
                 <input
                     type="text"
@@ -1202,9 +1278,19 @@
                     name="q"
                     placeholder="Search Company"
                     aria-label="Search Company"
+                    data-hero-company-input
                 >
-                <button type="submit" class="hero-search-button">Search</button>
+                <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
             </form>
+
+            <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
+                <div class="hero-suggestions-header">
+                    <span>Top matches</span>
+                    <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                </div>
+                <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
+                <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
+            </div>
 
             <div class="hero-pill-wrapper">
                 <div class="hero-pill">
@@ -1463,6 +1549,108 @@
             const items = Array.from(list.children);
             items.forEach(item => list.appendChild(item.cloneNode(true)));
         });
+
+        (function setupHeroCompanySearch() {
+            const companies = @json($companies ?? []);
+            const form = document.querySelector('[data-hero-company-form]');
+            const input = document.querySelector('[data-hero-company-input]');
+            const button = document.querySelector('[data-hero-company-button]');
+            const suggestions = document.querySelector('[data-hero-company-suggestions]');
+            const suggestionsList = document.querySelector('[data-hero-suggestions-list]');
+            const emptyState = document.querySelector('[data-hero-suggestions-empty]');
+            const countLabel = document.querySelector('[data-hero-suggestions-count]');
+            const MAX_RESULTS = 8;
+
+            if (!form || !input || !suggestions || !suggestionsList) {
+                return;
+            }
+
+            function formatCount(value) {
+                return value === 1 ? '1 company' : `${value} companies`;
+            }
+
+            function hideSuggestions() {
+                suggestions.hidden = true;
+            }
+
+            function showSuggestions() {
+                suggestions.hidden = false;
+            }
+
+            function goToCompany(company) {
+                if (!company?.slug) return;
+                window.location.href = `/companies/${company.slug}`;
+            }
+
+            function renderSuggestions(matches) {
+                suggestionsList.innerHTML = '';
+
+                if (!matches.length) {
+                    emptyState.style.display = 'block';
+                    countLabel.textContent = '0 results';
+                    showSuggestions();
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                countLabel.textContent = formatCount(matches.length);
+
+                matches.slice(0, MAX_RESULTS).forEach(company => {
+                    const item = document.createElement('li');
+                    item.className = 'hero-suggestion-item';
+                    item.innerHTML = `
+                        <div>
+                            <div class="hero-suggestion-name">${company.name}</div>
+                            <div class="hero-suggestion-meta">${company.state_name ?? 'State unavailable'}</div>
+                        </div>
+                        <span class="hero-suggestion-pill">View</span>
+                    `;
+                    item.addEventListener('click', () => goToCompany(company));
+                    suggestionsList.appendChild(item);
+                });
+
+                showSuggestions();
+            }
+
+            function filterCompanies(term) {
+                if (!term) {
+                    return [...companies];
+                }
+
+                const normalized = term.toLowerCase();
+                return companies.filter(company =>
+                    (company.name || '').toLowerCase().includes(normalized)
+                );
+            }
+
+            input.addEventListener('input', (event) => {
+                const matches = filterCompanies(event.target.value.trim());
+                renderSuggestions(matches);
+            });
+
+            input.addEventListener('focus', () => {
+                const matches = filterCompanies(input.value.trim());
+                renderSuggestions(matches);
+            });
+
+            button?.addEventListener('click', () => {
+                const matches = filterCompanies(input.value.trim());
+                renderSuggestions(matches);
+                if (matches.length === 1) {
+                    goToCompany(matches[0]);
+                }
+            });
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!suggestions.contains(event.target) && !form.contains(event.target)) {
+                    hideSuggestions();
+                }
+            });
+        })();
 
         const heroPincodeInput = document.querySelector('.hero-search-input');
         const heroCalculateBtn = document.querySelector('.hero-calculate-btn');

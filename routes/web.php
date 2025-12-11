@@ -16,11 +16,28 @@ use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Company;
 
 
 // Frontend Routes
 Route::get('/', function () {
-    return view('welcome');
+    $companies = Company::query()
+        ->select('slug', 'owner_name', 'state')
+        ->where('is_active', true)
+        ->whereNotNull('slug')
+        ->orderBy('owner_name')
+        ->get()
+        ->map(function ($company) {
+            return [
+                'name' => $company->owner_name ?? $company->slug,
+                'slug' => $company->slug,
+                'state_name' => $company->state,
+            ];
+        });
+
+    return view('welcome', [
+        'companies' => $companies,
+    ]);
 });
 
 Route::get('/write-review', [FrontendReviewController::class, 'landing'])->name('reviews.write');
