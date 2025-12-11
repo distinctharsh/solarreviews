@@ -555,8 +555,8 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: min(1200px, 110vw);
-            height: max(650px, 90vh);
+            width: min(1600px, 100vw);
+            height: clamp(520px, 62.5vw, 900px);
             background: url('/images/im/5.jpg') center top/contain no-repeat;
             opacity: 1;
             z-index: 1;
