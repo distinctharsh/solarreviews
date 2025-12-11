@@ -23,9 +23,15 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top left, #fff7df 0%, #ffffff 45%, #f6fbff 100%);
+            background: #fff;
             color: var(--dark);
             min-height: 100vh;
+        }
+
+        .write-review-page {
+            position: relative;
+            min-height: 100vh;
+            background: url('{{ asset('images/im/review-page.jpg') }}') center/cover no-repeat fixed, #fdfbf5;
         }
 
         .write-review-page::before {
