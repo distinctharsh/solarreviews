@@ -541,14 +541,17 @@
             position: relative;
             padding: clamp(90px, 10vw, 160px) 0 70px;
             background: linear-gradient(180deg, rgba(255, 254, 248, 0.95) 0%, rgba(247, 250, 255, 0.92) 100%);
-            overflow: hidden;
+            overflow: visible;
             text-align: center;
         }
 
         .reviews-hero-clean::before {
             content: '';
             position: absolute;
-            inset: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: -200px;
             background: url('/images/im/5.jpg') center/cover no-repeat;
             opacity: 0.9;
             z-index: 1;
@@ -744,6 +747,7 @@
             max-width: 960px;
             margin-left: auto;
             margin-right: auto;
+            z-index: 2;
         }
 
         .hero-pill-wrapper::before,
