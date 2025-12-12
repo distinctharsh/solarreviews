@@ -346,7 +346,7 @@
         display: block;
         width: 100%;
         height: 3px;
-        background-color: #1e40af;
+        /*background-color: #1e40af;*/
         border-radius: 2px;
         transition: all 0.3s ease;
     }

@@ -450,7 +450,7 @@
         }
 
         .as-seen-in-section {
-                background: #f9fafb;
+                background: #fff;
             padding-top: 60px;
             padding-bottom: 60px;
         }
@@ -557,7 +557,7 @@
             transform: translateX(-50%);
             width: min(1600px, 100vw);
             height: clamp(520px, 62.5vw, 900px);
-            background: url('/images/im/5.jpg') center top/contain no-repeat;
+            background: url('/images/im/6.jpg') center top/contain no-repeat;
             opacity: 1;
             z-index: 1;
             pointer-events: none;
@@ -607,7 +607,7 @@
             gap: 0.85rem;
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.06);
-            border-radius: 8px;
+            border-radius: 8px 8px 0 0;
             box-shadow: 0 22px 45px rgba(15, 23, 42, 0.1);
         }
 
@@ -655,7 +655,7 @@
 
         .hero-search-suggestions {
             max-width: 660px;
-            margin: 1rem auto 0;
+            margin: 0rem auto 0;
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.06);
             border-radius: 18px;
@@ -681,7 +681,7 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            max-height: 320px;
+            max-height: 220px;
             overflow-y: auto;
         }
 
@@ -710,6 +710,7 @@
         .hero-suggestion-meta {
             font-size: 0.85rem;
             color: #6b7280;
+            text-align:left;
         }
 
         .hero-suggestion-pill {
@@ -749,13 +750,14 @@
             flex: 1;
             height: 2px;
             background: #dcdfe4;
-            min-width: 140px;
+            min-width: 90%;
         }
 
         .hero-pill {
             display: inline-flex;
             align-items: center;
             justify-content: space-between;
+            white-space: nowrap;
             padding: 14px 14px;
             background: #ffffff;
             gap:3px;
@@ -769,6 +771,9 @@
 
         .hero-pill span {
             color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .hero-pill a {
@@ -865,7 +870,9 @@
             }
 
             .hero-pill {
-                width: clamp(320px, 65vw, 420px);
+                width: auto;
+                min-width: 320px;
+                max-width: 100%;
             }
         }
 
@@ -918,9 +925,11 @@
             }
 
             .hero-pill {
-                width: 100%;
-                max-width: 320px;
+                width: auto;
+                min-width: 0;
+                max-width: 100%;
                 justify-content: center;
+                padding: 10px 16px;
             }
         }
 
@@ -975,11 +984,15 @@
             }
 
             .hero-pill {
-                width: 90%;
-                max-width: 260px;
-                padding: 10px 18px;
+                width: auto;
+                min-width: 0;
+                max-width: 90%;
+                padding: 10px 16px;
+                gap: 6px;
                 font-size: 12px;
-                gap: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .hero-pill span,
@@ -1446,15 +1459,237 @@
             background: #36a353;
             transform: translateY(-1px);
         }
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+/* Full Hero Wrapper */
+.solarHero-wrap {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
+    background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
+    background-color: #f5f5f5; 
+    display: flex;
+    align-items: flex-start; /* 👈 center se upar */
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+}
+
+
+
+/* Inner content container */
+.solarHero-inner {
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+}
+
+/* Title */
+.solarHero-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.3;
+}
+
+.solarHero-title span {
+    color: #2fa83f;
+}
+
+/* Subtitle */
+.solarHero-subtitle {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #444;
+}
+
+/* Search Box */
+.solarHero-searchBox {
+    margin: 30px auto 0;
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+.solarHero-pillBox {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.solarHero-pill {
+    background: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    border: 1px solid #dcdfe4;  /* ✔ Added border */
+    box-shadow: none;           /* ✔ Removed shadow */
+    font-size: 12px;
+    display: flex;
+    gap: 5px;
+    position: relative;
+    z-index: 2;
+	white-space: nowrap; 
+}
+
+/* Left & Right Lines */
+.solarHero-pillBox::before,
+.solarHero-pillBox::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #dcdfe4;
+    margin: auto 0px;
+	 max-width: 450px;
+}
+
+
+.solarHero-pill a {
+    color: #4a3aff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+
+
+@media (max-width: 600px) {
+    .solarHero-pillBox {
+        bottom: 260px;  
+    }
+    
+    .solarHero-pillBox::before,
+    .solarHero-pillBox::after {
+        content: '';
+        flex: 1;
+        height: 0px;
+        background: #dcdfe4;
+        margin: auto 0px;
+    	 max-width: 350px;
+    }
+    
+    .solarHero-wrap {
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        padding-top: 40px;
+         background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-left: 20px;
+        padding-right: 20px;
+        position: relative;
+    }
+}
+
+.hero-search-form {
+    position: relative;
+    z-index: 110;
+}
+
+.hero-search-suggestions {
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    z-index: 115;
+    position: relative;
+}
+
+.hero-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 100;
+}
+
+.hero-search-form{
+    margin-top: 30px;
+}
 
     </style>
 </head>
 <body>
     <!-- Navigation -->
     @include('components.frontend.navbar')
+    <div class="hero-overlay" data-hero-overlay hidden></div>
+	
+	
+	
+	<!-- New Hero Section -->
+<section class="solarHero-wrap">
+    <div class="solarHero-inner">
+
+        <div class="solarHero-content">
+            <h1 class="reviews-title">
+                India's most trusted <br>
+                <span>Solar EPC Reviews</span>
+            </h1>
+
+            <p class="solarHero-subtitle">
+                Discover, read, and write reviews
+            </p>
+
+          <form class="hero-search-form" data-hero-company-form>
+                    <span class="hero-search-icon"><i class="fas fa-search"></i></span>
+                    <input
+                        type="text"
+                        class="hero-search-input"
+                        name="q"
+                        placeholder="Search Company"
+                        aria-label="Search Company"
+                        data-hero-company-input
+                    >
+                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
+                </form>
+				
+				
+				 <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
+                    <div class="hero-suggestions-header">
+                        <span>Suggested searches</span>
+                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                    </div>
+                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
+                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
+                </div>
+        </div>
+
+        <div class="solarHero-pillBox">
+            <div class="solarHero-pill">
+                <span>Installed solar recently?</span>
+                <a href="{{ route('reviews.write') }}">Write a review →</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
 
     <!-- Hero Section -->
-    <section class="reviews-hero-clean">
+   <!--  <section class="reviews-hero-clean">
         <div class="reviews-hero-inner">
             <div>
                 <h1 class="reviews-title">
@@ -1496,10 +1731,10 @@
             </div>
         </div>
     </section>
-
+ -->
 
         <!-- As Seen In Section -->
-    <section class="as-seen-in-section section-spacing py-5">
+    <section class="as-seen-in-section section-spacing " style="padding: 80px 0px; ">
         <div class="container-custom">
             <div class="text-center mb-4">
                 <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
@@ -1755,6 +1990,7 @@
             const suggestionsList = document.querySelector('[data-hero-suggestions-list]');
             const emptyState = document.querySelector('[data-hero-suggestions-empty]');
             const countLabel = document.querySelector('[data-hero-suggestions-count]');
+            const overlay = document.querySelector('[data-hero-overlay]');
             const MAX_RESULTS = 8;
 
             if (!form || !input || !suggestions || !suggestionsList) {
@@ -1765,12 +2001,19 @@
                 return value === 1 ? '1 company' : `${value} companies`;
             }
 
+            function toggleOverlay(visible) {
+                if (!overlay) return;
+                overlay.hidden = !visible;
+            }
+
             function hideSuggestions() {
                 suggestions.hidden = true;
+                toggleOverlay(false);
             }
 
             function showSuggestions() {
                 suggestions.hidden = false;
+                toggleOverlay(true);
             }
 
             function goToCompany(company) {
@@ -1837,9 +2080,29 @@
                 }
             });
 
+            form.addEventListener('mouseenter', () => {
+                const matches = filterCompanies(input.value.trim());
+                renderSuggestions(matches);
+            });
+
+            function handleHoverExit() {
+                requestAnimationFrame(() => {
+                    const hoveringForm = form.matches(':hover');
+                    const hoveringSuggestions = suggestions.matches(':hover');
+                    if (!hoveringForm && !hoveringSuggestions) {
+                        hideSuggestions();
+                    }
+                });
+            }
+
+            form.addEventListener('mouseleave', handleHoverExit);
+            suggestions.addEventListener('mouseleave', handleHoverExit);
+
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
             });
+
+            overlay?.addEventListener('click', hideSuggestions);
 
             document.addEventListener('click', (event) => {
                 if (!suggestions.contains(event.target) && !form.contains(event.target)) {
