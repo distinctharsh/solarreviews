@@ -80,7 +80,7 @@
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            background: rgba(15,23,42,0.05);
+            /* background: rgba(15,23,42,0.05); */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -232,7 +232,7 @@
 
             .write-search-form {
                 flex-direction: column;
-                padding: 0.85rem;
+                padding: 0.45rem;
             }
 
             .write-search-form .icon {
@@ -286,6 +286,13 @@
     font-size: 18px
 }
 
+
+  @media (max-width: 768px) {
+    .write-search-form{
+        flex-wrap: nowrap;
+        flex-direction: row;
+    }
+  }
     </style>
 </head>
 <body>
