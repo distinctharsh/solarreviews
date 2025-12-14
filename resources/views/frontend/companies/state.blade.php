@@ -1174,7 +1174,7 @@
             </ul>
         </div>
 
-        <div class="calculator-card">
+        <!-- <div class="calculator-card">
             <h3 class="sidebar-title">
                 <i class="fas fa-calculator"></i>
                 Solar Calculator
@@ -1184,7 +1184,7 @@
                 <i class="fas fa-bolt"></i>
                 Calculate Now
             </button>
-        </div>
+        </div> -->
     </aside>
 
     <!-- Content -->

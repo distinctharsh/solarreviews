@@ -2,6 +2,20 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <!-- User Type -->
+        <div class="mt-4">
+            <x-input-label for="user_type_id" :value="__('Registering as')" />
+            <select id="user_type_id" name="user_type_id" class="block mt-1 w-full" required>
+                <option value="">{{ __('Select user type') }}</option>
+                @foreach($userTypes ?? [] as $type)
+                    <option value="{{ $type->id }}" {{ (int) old('user_type_id') === $type->id ? 'selected' : '' }}>
+                        {{ $type->name }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('user_type_id')" class="mt-2" />
+        </div>
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

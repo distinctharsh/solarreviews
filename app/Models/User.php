@@ -3,20 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\UserProfileSubmission;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * User Types
-     */
-    const TYPE_REGULAR = 'regular';
-    const TYPE_DISTRIBUTOR = 'distributor';
-    const TYPE_MANUFACTURER = 'manufacturer';
+    public const TYPE_DISTRIBUTOR = 'distributor';
+    public const TYPE_MANUFACTURER = 'manufacturer';
+    public const TYPE_SUPPLIER = 'supplier';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,10 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'user_type',
+        'user_type_id',
+        'company_id',
+        'status',
+        'role',
         'is_admin',
         'is_active',
     ];
@@ -60,31 +63,24 @@ class User extends Authenticatable
         return $this->is_admin === true;
     }
 
-    /**
-     * Check if the user is a distributor
-     */
+    public function userType()
+    {
+        return $this->belongsTo(UserType::class);
+    }
+
     public function isDistributor(): bool
     {
-        return $this->user_type === self::TYPE_DISTRIBUTOR;
+        return $this->userType?->slug === self::TYPE_DISTRIBUTOR;
     }
 
-    /**
-     * Check if the user is a manufacturer
-     */
     public function isManufacturer(): bool
     {
-        return $this->user_type === self::TYPE_MANUFACTURER;
+        return $this->userType?->slug === self::TYPE_MANUFACTURER;
     }
 
-    /**
-     * Get user type options for forms
-     */
-    public static function getUserTypeOptions(): array
+    public function isSupplier(): bool
     {
-        return [
-            self::TYPE_DISTRIBUTOR => 'Distributor',
-            self::TYPE_MANUFACTURER => 'Manufacturer',
-        ];
+        return $this->userType?->slug === self::TYPE_SUPPLIER;
     }
 
     /**
@@ -93,5 +89,21 @@ class User extends Authenticatable
     public function company(): HasOne
     {
         return $this->hasOne(Company::class, 'owner_id');
+    }
+
+    public function profileSubmissions(): HasMany
+    {
+        return $this->hasMany(UserProfileSubmission::class);
+    }
+
+    public function hasCompletedProfileForm(string $formType): bool
+    {
+        if (! Schema::hasTable('user_profile_submissions')) {
+            return false;
+        }
+
+        return $this->profileSubmissions()
+            ->where('form_type', $formType)
+            ->exists();
     }
 }

@@ -686,7 +686,7 @@
         }
 
         .hero-suggestion-item {
-            padding: 0.85rem 1.25rem;
+            padding: 0.55rem 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -705,6 +705,7 @@
         .hero-suggestion-name {
             font-weight: 600;
             color: #0f172a;
+            font-size: 0.9rem;
         }
 
         .hero-suggestion-meta {
@@ -1665,7 +1666,7 @@
 				 <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
                     <div class="hero-suggestions-header">
                         <span>Suggested searches</span>
-                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                        <!-- <span class="suggestion-count" data-hero-suggestions-count>0 results</span> -->
                     </div>
                     <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
                     <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
@@ -1989,9 +1990,9 @@
             const suggestions = document.querySelector('[data-hero-company-suggestions]');
             const suggestionsList = document.querySelector('[data-hero-suggestions-list]');
             const emptyState = document.querySelector('[data-hero-suggestions-empty]');
-            const countLabel = document.querySelector('[data-hero-suggestions-count]');
+            // const countLabel = document.querySelector('[data-hero-suggestions-count]');
             const overlay = document.querySelector('[data-hero-overlay]');
-            const MAX_RESULTS = 8;
+            const MAX_RESULTS = 5;
 
             if (!form || !input || !suggestions || !suggestionsList) {
                 return;
@@ -2026,23 +2027,19 @@
 
                 if (!matches.length) {
                     emptyState.style.display = 'block';
-                    countLabel.textContent = '0 results';
+                    // countLabel.textContent = '0 results';
                     showSuggestions();
                     return;
                 }
 
                 emptyState.style.display = 'none';
-                countLabel.textContent = formatCount(matches.length);
+                // countLabel.textContent = formatCount(matches.length);
 
                 matches.slice(0, MAX_RESULTS).forEach(company => {
                     const item = document.createElement('li');
                     item.className = 'hero-suggestion-item';
                     item.innerHTML = `
-                        <div>
-                            <div class="hero-suggestion-name">${company.name}</div>
-                            <div class="hero-suggestion-meta">${company.state_name ?? 'State unavailable'}</div>
-                        </div>
-                        <span class="hero-suggestion-pill">View</span>
+                        <div class="hero-suggestion-name">${company.name}</div>
                     `;
                     item.addEventListener('click', () => goToCompany(company));
                     suggestionsList.appendChild(item);

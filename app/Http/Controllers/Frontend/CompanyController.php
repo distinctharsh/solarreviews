@@ -72,33 +72,39 @@ class CompanyController extends Controller
             
         // Include a version suffix in the cache key to invalidate old cached data
         // (needed after adding category_ids and other new fields)
-        $cacheKey = "state_companies_{$stateSlug}_v4";
+        $cacheKey = "state_companies_{$stateSlug}_v5";
         
         // Only cache the companies data, not the state data
         $companies = Cache::remember($cacheKey, now()->addHours(12), function () use ($currentState) {
             return Company::query()
                 ->select(
                     'companies.*',
+                    'states.name as related_state_name',
+                    'states.slug as related_state_slug',
                     DB::raw('COALESCE(rs.avg_rating, 0) as avg_rating'),
                     DB::raw('COALESCE(rs.total_reviews, 0) as total_reviews')
                 )
+                ->leftJoin('states', 'states.id', '=', 'companies.state_id')
                 ->leftJoin('rating_summaries as rs', function ($join) {
                     $join->on('rs.reviewable_id', '=', 'companies.id')
                         ->where('rs.reviewable_type', '=', Company::class);
                 })
                 ->with(['state', 'reviews', 'categories'])
-                ->where('state_id', $currentState->id)
-                ->where('is_active', true)
+                ->where('companies.state_id', $currentState->id)
+                ->where('companies.is_active', true)
                 ->orderByDesc('avg_rating')
                 ->orderByDesc('total_reviews')
                 ->get()
                 ->map(function($company) {
                     return [
                         'id' => $company->id,
-                        'name' => $company->name,
+                        'name' => $company->name ?? $company->owner_name,
                         'slug' => $company->slug,
-                        'logo' => $company->logo ? asset('storage/' . $company->logo) : null,
-                        'state' => optional($company->state)->name ?? $company->state_name ?? '',
+                        'logo' => $company->logo_url ? asset($company->logo_url) : null,
+                        'state' => $company->related_state_name
+                            ?? optional($company->state)->name
+                            ?? $company->state
+                            ?? '',
                         'description' => $company->description,
                         'average_rating' => (float) $company->avg_rating,
                         'total_reviews' => (int) $company->total_reviews,

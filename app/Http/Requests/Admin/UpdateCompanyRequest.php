@@ -14,20 +14,22 @@ class UpdateCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'company_name' => 'required|string|max:255',
-            'company_type' => 'required|in:manufacturer,distributor,dealer,installer,wholesaler,retailer,epc',
             'owner_name' => 'required|string|max:255',
-            'gst_number' => 'nullable|string|max:50',
-            'address' => 'required|string',
-            'city' => 'required|string|max:100',
-            'state' => 'required|string|max:100',
-            'pincode' => 'required|string|max:20',
+            'company_type' => 'required|in:manufacturer,distributor,dealer,installer,wholesaler,retailer,epc',
+            'phone' => 'required|string|max:32',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
             'website_url' => 'nullable|url|max:255',
-            'logo_url' => 'nullable|url|max:255',
+            'years_in_business' => 'nullable|integer|min:0|max:200',
+            'gst_number' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'address' => 'required|string',
+            'city' => 'required|string|max:255',
+            'city_id' => 'nullable|exists:cities,id',
+            'state_id' => 'required|exists:states,id',
+            'pincode' => 'required|string|max:20',
             'status' => 'required|in:active,inactive',
+            'is_active' => 'nullable|boolean',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }

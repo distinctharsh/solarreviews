@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserType;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $userTypes = UserType::orderBy('name')->get(['id', 'name', 'slug']);
+
+        return view('auth.register', compact('userTypes'));
     }
 
     /**
@@ -31,7 +34,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'user_type' => ['required', Rule::in(['manufacturer', 'distributor'])],
+            'user_type_id' => ['required', 'exists:user_types,id'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'phone' => ['required', 'string', 'max:32'],
@@ -43,7 +46,7 @@ class RegisteredUserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'user_type' => $validated['user_type'],
+            'user_type_id' => $validated['user_type_id'],
             'password' => Hash::make($validated['password']),
         ]);
 

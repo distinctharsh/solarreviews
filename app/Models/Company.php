@@ -10,27 +10,30 @@ class Company extends Model
 {
     use HasFactory;
 
-    // app/Models/Company.php
     protected $fillable = [
         'owner_id',
         'slug',
         'company_type',
         'owner_name',
-        'gst_number',
-        'address',
-        'city',
-        'state',
-        'pincode',
-        'email',
         'phone',
         'website_url',
         'logo_url',
         'description',
-        'status'
+        'status',
+        'email',
+        'years_in_business',
+        'gst_number',
+        'address',
+        'city',
+        'pincode',
+        'state_id',
+        'city_id',
+        'is_active',
     ];
 
     protected $casts = [
         'status' => 'string',
+        'is_active' => 'boolean',
     ];
 
     public function getRouteKeyName()
@@ -84,17 +87,26 @@ class Company extends Model
 
     public function getStateNameAttribute(): ?string
     {
-        return $this->state ?? null;
+        return $this->state?->name;
     }
 
     public function getCityNameAttribute(): ?string
     {
-        return $this->city ?? null;
+        if ($this->cityRelation) {
+            return $this->cityRelation->name;
+        }
+
+        return $this->city;
     }
 
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
+    }
+
+    public function cityRelation(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     public function ratingSummary()

@@ -15,6 +15,10 @@
     @endphp
 @endif
 
+@php
+    $selectedStateId = old('state_id', $company->state_id ?? optional($states->firstWhere('name', $company->state))->id);
+@endphp
+
 <style>
     .form-container {
         max-width: 1000px;
@@ -163,164 +167,151 @@
             @method($method)
 
             <div class="form-row">
-                <!-- Left Column -->
                 <div>
-                    <!-- Company Name -->
                     <div class="form-group">
-                        <label for="name" class="form-label">
-                            Company Name <span style="color: #e53e3e;">*</span>
+                        <label for="owner_name" class="form-label">
+                            Company / Owner Name <span style="color:#e53e3e;">*</span>
                         </label>
-                        <input type="text" name="name" id="name" required
-                               class="form-input @error('name') border-red-500 @enderror"
-                               value="{{ old('name', $company->name) }}">
-                        @error('name')
+                        <input type="text" id="owner_name" name="owner_name" required
+                               class="form-input @error('owner_name') border-red-500 @enderror"
+                               value="{{ old('owner_name', $company->owner_name) }}">
+                        @error('owner_name')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <!-- Company Type -->
-                    <div class="form-group">
-                        <label for="company_type" class="form-label">Company Type *</label>
-                        <select id="company_type" name="company_type" required class="form-input @error('company_type') border-red-500 @enderror">
-                            <option value="">Select Type</option>
-                            @foreach($companyTypes as $value => $label)
-                                <option value="{{ $value }}" {{ old('company_type', $company->company_type) === $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('company_type')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- State -->
-                    <div class="form-group">
-                        <label for="state_id" class="form-label">
-                            State <span style="color: #e53e3e;">*</span>
-                        </label>
-                        <select id="state_id" name="state_id" required
-                                class="form-input @error('state_id') border-red-500 @enderror">
-                            <option value="">Select State</option>
-                            @foreach($states as $state)
-                                <option value="{{ $state->id }}" {{ old('state_id', $company->state_id) == $state->id ? 'selected' : '' }}>
-                                    {{ $state->name }} ({{ $state->code }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('state_id')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- City -->
-                    <div class="form-group">
-                        <label for="city_id" class="form-label">City</label>
-                        <select id="city_id" name="city_id" class="form-input @error('city_id') border-red-500 @enderror">
-                            <option value="">Select City</option>
-                            @foreach($cities as $city)
-                                <option value="{{ $city->id }}" {{ old('city_id', $company->city_id) == $city->id ? 'selected' : '' }}>
-                                    {{ $city->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('city_id')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Address</label>
-                        <input type="text" name="address_line1" placeholder="Address line 1" class="form-input @error('address_line1') border-red-500 @enderror" value="{{ old('address_line1', $company->address_line1) }}" style="margin-bottom:10px;">
-                        <input type="text" name="address_line2" placeholder="Address line 2" class="form-input @error('address_line2') border-red-500 @enderror" value="{{ old('address_line2', $company->address_line2) }}" style="margin-bottom:10px;">
-                        <div class="form-row" style="gap:10px;">
-                            <input type="text" name="postal_code" placeholder="Postal code" class="form-input @error('postal_code') border-red-500 @enderror" value="{{ old('postal_code', $company->postal_code) }}">
-                            <input type="text" name="service_area" placeholder="Service area" class="form-input @error('service_area') border-red-500 @enderror" value="{{ old('service_area', $company->service_area) }}">
-                        </div>
-                        @error('address_line1')<p class="error-message">{{ $message }}</p>@enderror
-                    </div>
-
-                    <!-- Categories -->
-                    <div class="form-group">
-                        <label for="category_ids" class="form-label">
-                            Categories (Products Provided)
-                        </label>
-                        <select id="category_ids" name="category_ids[]" multiple
-                                class="form-input @error('category_ids') border-red-500 @enderror">
-                            @if(isset($categories))
-                                @php
-                                    $selectedCategoryIds = old('category_ids', isset($company)
-                                        ? $company->categories()->pluck('categories.id')->toArray()
-                                        : []);
-                                @endphp
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ in_array($category->id, $selectedCategoryIds) ? 'selected' : '' }}>
-                                        {{ $category->name }}
+                    <div class="form-row" style="gap:10px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="company_type" class="form-label">Company Type *</label>
+                            <select id="company_type" name="company_type" required class="form-input @error('company_type') border-red-500 @enderror">
+                                <option value="">Select Type</option>
+                                @foreach($companyTypes as $value => $label)
+                                    <option value="{{ $value }}" {{ old('company_type', $company->company_type) === $value ? 'selected' : '' }}>
+                                        {{ $label }}
                                     </option>
                                 @endforeach
-                            @endif
-                        </select>
-                        @error('category_ids')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
+                            </select>
+                            @error('company_type')
+                                <p class="error-message">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="status" class="form-label">Status *</label>
+                            <select id="status" name="status" class="form-input @error('status') border-red-500 @enderror" required>
+                                <option value="active" {{ old('status', $company->status ?? 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ old('status', $company->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                            @error('status')
+                                <p class="error-message">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
-                </div>
 
-                <!-- Right Column -->
-                <div>
-
-                    <!-- Description -->
-                    <div class="form-group">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea id="description" name="description" rows="4"
-                                  class="form-input form-textarea @error('description') border-red-500 @enderror">{{ old('description', $company->description) }}</textarea>
-                        @error('description')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
+                    <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                        <input type="hidden" name="is_active" value="0">
+                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $company->is_active ?? 1) ? 'checked' : '' }}>
+                            Visible on site
+                        </label>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Contact Details</label>
-                        <input type="url" name="website" placeholder="Website" class="form-input @error('website') border-red-500 @enderror" value="{{ old('website', $company->website) }}" style="margin-bottom:10px;">
-                        <input type="email" name="email" placeholder="Email" class="form-input @error('email') border-red-500 @enderror" value="{{ old('email', $company->email) }}" style="margin-bottom:10px;">
-                        <input type="text" name="phone" placeholder="Phone" class="form-input @error('phone') border-red-500 @enderror" value="{{ old('phone', $company->phone) }}">
+                        <input type="text" name="phone" placeholder="Phone *" required
+                               class="form-input @error('phone') border-red-500 @enderror"
+                               value="{{ old('phone', $company->phone) }}" style="margin-bottom:10px;">
+                        <input type="email" name="email" placeholder="Email *" required
+                               class="form-input @error('email') border-red-500 @enderror"
+                               value="{{ old('email', $company->email) }}" style="margin-bottom:10px;">
+                        <input type="url" name="website_url" placeholder="Website"
+                               class="form-input @error('website_url') border-red-500 @enderror"
+                               value="{{ old('website_url', $company->website_url) }}">
+                        @error('phone')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('email')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('website_url')<p class="error-message">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Business Details</label>
                         <div class="form-row" style="gap:10px;">
-                            <input type="number" name="years_in_business" placeholder="Years in business" class="form-input @error('years_in_business') border-red-500 @enderror" value="{{ old('years_in_business', $company->years_in_business) }}">
-                            <input type="text" name="gst_number" placeholder="GST / Registration" class="form-input @error('gst_number') border-red-500 @enderror" value="{{ old('gst_number', $company->gst_number) }}">
+                            <input type="number" name="years_in_business" placeholder="Years in business"
+                                   class="form-input @error('years_in_business') border-red-500 @enderror"
+                                   value="{{ old('years_in_business', $company->years_in_business) }}">
+                            <input type="text" name="gst_number" placeholder="GST / Registration"
+                                   class="form-input @error('gst_number') border-red-500 @enderror"
+                                   value="{{ old('gst_number', $company->gst_number) }}">
                         </div>
-                        <textarea name="certifications" rows="2" placeholder="Certifications" class="form-input form-textarea @error('certifications') border-red-500 @enderror" style="margin-top:10px;">{{ old('certifications', $company->certifications) }}</textarea>
-                        <textarea name="licenses" rows="2" placeholder="Licenses" class="form-input form-textarea @error('licenses') border-red-500 @enderror" style="margin-top:10px;">{{ old('licenses', $company->licenses) }}</textarea>
+                        @error('years_in_business')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('gst_number')<p class="error-message">{{ $message }}</p>@enderror
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Distributor / Manufacturer info</label>
-                        <textarea name="coverage_states" rows="2" placeholder="Coverage states (for distributors)" class="form-input form-textarea @error('coverage_states') border-red-500 @enderror" style="margin-bottom:10px;">{{ old('coverage_states', $company->coverage_states) }}</textarea>
-                        <textarea name="distribution_regions" rows="2" placeholder="Distribution regions (for manufacturers)" class="form-input form-textarea @error('distribution_regions') border-red-500 @enderror" style="margin-bottom:10px;">{{ old('distribution_regions', $company->distribution_regions) }}</textarea>
-                        <input type="number" name="installations_per_year" placeholder="Installations per year" class="form-input @error('installations_per_year') border-red-500 @enderror" value="{{ old('installations_per_year', $company->installations_per_year) }}" style="margin-bottom:10px;">
-                        <input type="text" name="production_capacity" placeholder="Production capacity" class="form-input @error('production_capacity') border-red-500 @enderror" value="{{ old('production_capacity', $company->production_capacity) }}">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" name="description" rows="6"
+                                  class="form-input form-textarea @error('description') border-red-500 @enderror">{{ old('description', $company->description) }}</textarea>
+                        @error('description')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label for="address" class="form-label">Full Address *</label>
+                        <textarea id="address" name="address" rows="3" required
+                                  class="form-input form-textarea @error('address') border-red-500 @enderror">{{ old('address', $company->address) }}</textarea>
+                        @error('address')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <!-- Logo Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <div class="form-row" style="gap:10px;">
+                            <select id="state_id" name="state_id" required
+                                    class="form-input @error('state_id') border-red-500 @enderror">
+                                <option value="">Select State</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}" {{ $selectedStateId == $state->id ? 'selected' : '' }}>
+                                        {{ $state->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <input type="text" name="city" placeholder="City *" required
+                                   class="form-input @error('city') border-red-500 @enderror"
+                                   value="{{ old('city', $company->city) }}">
+                        </div>
+                        <div class="form-row" style="gap:10px; margin-top:10px;">
+                            <select id="city_id" name="city_id" class="form-input @error('city_id') border-red-500 @enderror">
+                                <option value="">Linked City (optional)</option>
+                                @foreach($cities as $cityOption)
+                                    <option value="{{ $cityOption->id }}" {{ old('city_id', $company->city_id) == $cityOption->id ? 'selected' : '' }}>
+                                        {{ $cityOption->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <input type="text" name="pincode" placeholder="Pincode *" required
+                                   class="form-input @error('pincode') border-red-500 @enderror"
+                                   value="{{ old('pincode', $company->pincode) }}">
+                        </div>
+                        @error('state_id')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('city')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('city_id')<p class="error-message">{{ $message }}</p>@enderror
+                        @error('pincode')<p class="error-message">{{ $message }}</p>@enderror
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Company Logo</label>
                         <div class="logo-upload">
-                            @if($company->logo)
+                            @if($company->logo_url)
                                 <div class="logo-preview">
-                                    <img src="{{ asset($company->logo) }}" 
-                                         alt="{{ $company->name }} logo"
-                                         style="width: 100%; height: 100%; object-fit: cover; max-width: 200px; max-height: 200px;">
+                                    <img src="{{ asset($company->logo_url) }}" 
+                                         alt="{{ $company->owner_name }} logo"
+                                         style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                                 <div style="flex: 1; margin-left: 20px;">
-                                    <input type="file" id="logo" name="logo" accept="image/*" 
-                                           class="form-input" style="padding: 5px; margin-bottom: 10px;">
-                                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                                        Current logo will be replaced
-                                    </div>
+                                    <input type="file" id="logo" name="logo" accept="image/*" class="form-input" style="padding:5px; margin-bottom:10px;">
+                                    <div style="font-size:12px; color:#666;">Uploading a new image will replace the current logo.</div>
                                 </div>
                             @else
                                 <label class="logo-preview" style="cursor: pointer;">
@@ -328,32 +319,17 @@
                                         <div>Logo</div>
                                         <div>+</div>
                                     </div>
-                                    <input type="file" id="logo" name="logo" accept="image/*" 
-                                           style="display: none;">
+                                    <input type="file" id="logo" name="logo" accept="image/*" style="display:none;">
                                 </label>
                                 <div>
-                                    <div style="font-size: 14px; margin-bottom: 4px;">Click to upload logo</div>
-                                    <div style="font-size: 12px; color: #a0aec0;">PNG, JPG up to 2MB</div>
+                                    <div style="font-size:14px; margin-bottom:4px;">Click to upload logo</div>
+                                    <div style="font-size:12px; color:#a0aec0;">PNG / JPG up to 2MB</div>
                                 </div>
                             @endif
                         </div>
                         @error('logo')
                             <p class="error-message">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <!-- Active / Featured -->
-                    <div class="form-group" style="display: flex; gap:20px; align-items:center;">
-                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
-                            <input type="hidden" name="is_active" value="0">
-                            <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $company->is_active ?? 1) ? 'checked' : '' }}>
-                            Active
-                        </label>
-                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
-                            <input type="hidden" name="is_featured" value="0">
-                            <input type="checkbox" id="is_featured" name="is_featured" value="1" {{ old('is_featured', $company->is_featured ?? 0) ? 'checked' : '' }}>
-                            Featured
-                        </label>
                     </div>
                 </div>
             </div>

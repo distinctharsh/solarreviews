@@ -1244,25 +1244,35 @@
             </div>
         @endif
 
+        @php
+            $roleOptions = ($userTypes ?? collect());
+            $defaultUserTypeId = old('user_type_id', optional($roleOptions->first())->id);
+        @endphp
+
         <!-- Step 1: Basic info -->
         <div class="form-step active" id="step1">
             <div class="role-selection" style="width:100%; text-align:left; margin-top:5px;">
                 <h4>Are you registering as</h4>
                 <div class="role-grid">
-                    <label class="role-card {{ old('user_type') == 'manufacturer' ? 'active' : '' }}" data-role-option>
-                        <input type="radio" name="user_type" value="manufacturer" {{ old('user_type') == 'manufacturer' ? 'checked' : '' }} required>
-                        <div class="role-icon" style="background:#eef2ff; color:#4338ca;">M</div>
-                        <div class="role-text">
-                            <span class="role-title">Manufacturer</span>
-                        </div>
-                    </label>
-                    <label class="role-card {{ old('user_type') == 'distributor' ? 'active' : '' }}" data-role-option>
-                        <input type="radio" name="user_type" value="distributor" {{ old('user_type') == 'distributor' ? 'checked' : '' }} required>
-                        <div class="role-icon" style="background:#fff7ed; color:#c2410c;">D</div>
-                        <div class="role-text">
-                            <span class="role-title">Distributor / Service Provider</span>
-                        </div>
-                    </label>
+                    @forelse($roleOptions as $type)
+                        <label class="role-card {{ (int) $defaultUserTypeId === $type->id ? 'active' : '' }}" data-role-option>
+                            <input
+                                type="radio"
+                                name="user_type_id"
+                                value="{{ $type->id }}"
+                                {{ (int) $defaultUserTypeId === $type->id ? 'checked' : '' }}
+                                required
+                            >
+                            <div class="role-icon" style="background:#eef2ff; color:#4338ca;">
+                                {{ strtoupper(substr($type->slug, 0, 1)) }}
+                            </div>
+                            <div class="role-text">
+                                <span class="role-title">{{ $type->name }}</span>
+                            </div>
+                        </label>
+                    @empty
+                        <p class="text-sm text-slate-500">No user types configured yet.</p>
+                    @endforelse
                 </div>
                 <span class="error-msg"></span>
             </div>

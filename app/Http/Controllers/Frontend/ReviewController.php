@@ -101,8 +101,9 @@ class ReviewController extends Controller
     public function landing(Request $request)
     {
         $companies = Company::query()
-            ->select('id', 'owner_name', 'state_id', 'state')
+            ->select('id', 'owner_name', 'state_id')
             ->with([
+                'state:id,name',
                 'categories:id',
             ])
             ->where('is_active', true)
@@ -113,7 +114,7 @@ class ReviewController extends Controller
                     'id' => $company->id,
                     'name' => $company->owner_name,
                     'state_id' => $company->state_id,
-                    'state_name' => $company->state,
+                    'state_name' => $company->state?->name,
                     'category_ids' => $company->categories->pluck('id')->values(),
                 ];
             });

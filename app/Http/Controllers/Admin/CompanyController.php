@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\State;
 use App\Models\City;
-use App\Models\Category;
 use App\Http\Requests\Admin\StoreCompanyRequest;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use Illuminate\Support\Str;
@@ -24,9 +23,9 @@ class CompanyController extends Controller
         $companyTypes = $this->companyTypes();
         $states = State::orderBy('name')->get();
         $cities = City::orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
+        $company = new Company();
         
-        return view('admin.companies.create', compact('companyTypes', 'states', 'cities', 'categories'));
+        return view('admin.companies.create', compact('companyTypes', 'states', 'cities', 'company'));
     }
 
     public function store(StoreCompanyRequest $request)
@@ -57,9 +56,8 @@ class CompanyController extends Controller
         $companyTypes = $this->companyTypes();
         $states = State::orderBy('name')->get();
         $cities = City::orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
         
-        return view('admin.companies.edit', compact('company', 'companyTypes', 'states', 'cities', 'categories'));
+        return view('admin.companies.edit', compact('company', 'companyTypes', 'states', 'cities'));
     }
 
     public function update(UpdateCompanyRequest $request, Company $company)

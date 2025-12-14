@@ -24,7 +24,13 @@
         <p class="text-sm text-slate-500">Provide detailed company data so installers and distributors can evaluate you faster.</p>
     </div>
 
-    <form method="POST" action="#" enctype="multipart/form-data" class="space-y-10">
+    @if (session('status') === 'supplier-profile-submitted')
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            Supplier profile submitted successfully. Our team will review it shortly.
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('dashboard.supplier-profile.store') }}" enctype="multipart/form-data" class="space-y-10">
         @csrf
 
         {{-- Company Information --}}
