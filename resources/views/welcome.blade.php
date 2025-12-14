@@ -1649,8 +1649,9 @@
 }
 
 .stat-label {
-    font-size: clamp(12px, 1.5vw, 16px);
-    color: #000;
+    font-size: 16px;
+    color: #4b5563;
+    font-weight: 500;
 }
 
 .yellow {
@@ -1668,6 +1669,42 @@
     background: #fff;
 }
 
+@media (max-width: 768px) {
+
+
+    .stats-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 0;
+    }
+
+
+    .stat-box:last-child {
+    margin-right: 0;
+}
+
+    .stat-value {
+        font-size: 14px;
+    }
+
+    .stat-box span{
+        font-size: 12px;
+    }
+
+    .stats-section {
+        margin: -192px 0 -40px 0;
+        position: absolute;
+        z-index: 2;
+        padding: 50px 0;
+        width: 100%;
+    }
+}
+
+
+
+@media (max-width: 600px) {
+
+}
 
     </style>
 </head>
