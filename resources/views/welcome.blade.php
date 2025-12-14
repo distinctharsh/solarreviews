@@ -688,7 +688,7 @@
         }
 
         .hero-suggestion-item {
-            padding: 0.55rem 0.9rem;
+            padding: 0.25rem 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
