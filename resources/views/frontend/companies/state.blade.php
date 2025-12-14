@@ -1163,15 +1163,15 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="calculator-card">
-            <h3 class="sidebar-title">
+            <p>
                 Verified Companies {{ $companyStatCount }}{{ $companyStatCount ? '+' : '' }}
-            </h3>
-            <h3 class="sidebar-title">
+            </p>
+            <p>
                 Customer Reviews {{ $totalReviews }}{{ $totalReviews ? '+' : '' }}
-            </h3>
-            <h3 class="sidebar-title">
+            </p>
+            <p>
                 Average Rating {{ $averageStateRating }}
-            </h3>
+            </p>
         </div>
         <div class="sidebar-card">
             <h3 class="sidebar-title">
