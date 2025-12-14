@@ -1828,7 +1828,7 @@
 
         /* ================= SECTION ================= */
         .bank-section {
-            padding: 40px;
+            padding-bottom: 80px;
         }
 
         /* ================= HEADER ================= */
@@ -1938,6 +1938,39 @@
             color: #666;
             font-style: italic;
         }
+
+        @media (max-width: 768px) {
+
+            .bank-cards {
+                padding-right: 14px;   /* 🔥 small breathing space */
+                gap: 14px;
+            }
+
+            .bank-card {
+                min-width: 85%;       /* 🔥 main card almost full */
+                max-width: 85%;
+                scroll-snap-align: start;
+            }
+
+            .bank-header {
+                gap: 12px;
+            }
+
+            .bank-header h2 {
+                font-size: 20px;          /* 🔥 thoda chota */
+                line-height: 1.3;
+                flex: 1;                  /* 🔥 space le sake */
+            }
+
+            .see-more {
+                white-space: nowrap;     /* 🔥 wrap band */
+                font-size: 13px;         /* 🔥 thoda compact */
+                padding: 6px 14px;
+                flex-shrink: 0;          /* 🔥 kabhi shrink na ho */
+            }
+        }
+
+
 
 
 
@@ -2228,7 +2261,7 @@
                 </div>
 
                 <div class="stat-box">
-                    <div class="stat-value green">+350m</div>
+                    <div class="stat-value green">350m+</div>
                     <span>Total Reviews</span>
                 </div>
 
@@ -2312,7 +2345,7 @@
         <div class="container-custom">
             <div class="bank-header">
                 <h2>Trending Companies on Solar Review</h2>
-                <a href="#" class="see-more">See more</a>
+                <a href="{{ route('companies.index') }}" class="see-more">See more</a>
             </div>
 
             <div class="bank-cards" id="autoScrollCards">
@@ -2838,7 +2871,7 @@
                     } else {
                         container.scrollBy({ left: cardWidth, behavior: "smooth" });
                     }
-                }, 4000); // 🔥
+                }, 84000); // 🔥
             }
 
             function stopAutoScroll() {

@@ -1125,7 +1125,7 @@
 @include('components.frontend.navbar')
 
 <!-- Hero Section -->
-<section class="hero-section">
+<!-- <section class="hero-section">
     <div class="hero-content">
         <div class="hero-badge">
             <i class="fas fa-solar-panel"></i>
@@ -1157,11 +1157,22 @@
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <div class="main-wrapper">
     <!-- Sidebar -->
     <aside class="sidebar">
+        <div class="calculator-card">
+            <h3 class="sidebar-title">
+                Verified Companies {{ $companyStatCount }}{{ $companyStatCount ? '+' : '' }}
+            </h3>
+            <h3 class="sidebar-title">
+                Customer Reviews {{ $totalReviews }}{{ $totalReviews ? '+' : '' }}
+            </h3>
+            <h3 class="sidebar-title">
+                Average Rating {{ $averageStateRating }}
+            </h3>
+        </div>
         <div class="sidebar-card">
             <h3 class="sidebar-title">
                 <i class="fas fa-map-marker-alt"></i>
@@ -1174,17 +1185,6 @@
             </ul>
         </div>
 
-        <!-- <div class="calculator-card">
-            <h3 class="sidebar-title">
-                <i class="fas fa-calculator"></i>
-                Solar Calculator
-            </h3>
-            <input type="text" class="calculator-input state-calculator-input" placeholder="Enter your PIN code" maxlength="6" inputmode="numeric">
-            <button class="calculator-btn state-calculator-btn" type="button">
-                <i class="fas fa-bolt"></i>
-                Calculate Now
-            </button>
-        </div> -->
     </aside>
 
     <!-- Content -->

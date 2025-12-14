@@ -31,6 +31,7 @@
                 </div>
             </div>
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
+            <a class="nav-link fw-medium py-3" href="#">Login</a>
             @auth
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
@@ -86,6 +87,10 @@
             @endif
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
+            </li>
+
+             <li class="nav-item">
+                <a class="nav-link fw-medium py-3" href="#">Login</a>
             </li>
         </ul>
     </div>
