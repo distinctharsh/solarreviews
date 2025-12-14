@@ -1949,6 +1949,9 @@
 
 /* ================= HEADER ================= */
 .reviews-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
 }
 
@@ -1956,6 +1959,40 @@
     font-size: 28px;
     font-weight: 600;
     color: #111;
+}
+
+
+/* ================= NAV ARROWS ================= */
+.reviews-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    font-size: 22px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    border-color: #4b5cff;
+    color: #4b5cff;
+}
+
+.nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* ================= SCROLL CONTAINER ================= */
@@ -2411,7 +2448,17 @@
 
             <div class="reviews-header">
                 <h2>Recent reviews</h2>
+
+                <div class="reviews-nav">
+                    <button class="nav-btn prev" aria-label="Previous">
+                        ‹
+                    </button>
+                    <button class="nav-btn next" aria-label="Next">
+                        ›
+                    </button>
+                </div>
             </div>
+
 
             <div class="reviews-scroll">
                 @foreach($recentReviews ?? [] as $review)
@@ -2806,6 +2853,31 @@
             container.addEventListener("mouseleave", startAutoScroll);
             container.addEventListener("touchstart", stopAutoScroll);
             container.addEventListener("touchend", startAutoScroll);
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.querySelector('.reviews-scroll');
+            const prevBtn = document.querySelector('.nav-btn.prev');
+            const nextBtn = document.querySelector('.nav-btn.next');
+
+            if (!container) return;
+
+            const scrollAmount = 360; // ek card + gap
+
+            prevBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
         });
 
     </script>
