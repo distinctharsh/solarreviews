@@ -87,18 +87,34 @@ Route::get('/', function () {
             ->get();
     }
 
-    $formatTrendingCompanies = function ($collection) {
-        return $collection->map(function ($company) {
+    $resolveLogoUrl = function (?string $logoPath) {
+        if (empty($logoPath)) {
+            return asset('images/company/cmp.png');
+        }
+
+        if (Str::startsWith($logoPath, ['http://', 'https://'])) {
+            return $logoPath;
+        }
+
+        return asset(ltrim($logoPath, '/'));
+    };
+
+    $computeInitials = function (?string $text, ?string $fallback = null) {
+        $initials = collect(preg_split('/\s+/', (string) $text, -1, PREG_SPLIT_NO_EMPTY))
+            ->map(fn ($part) => Str::upper(Str::substr($part, 0, 1)))
+            ->take(2)
+            ->implode('');
+
+        if ($initials === '') {
+            $initials = Str::upper(Str::substr($fallback ?? 'SR', 0, 2));
+        }
+
+        return $initials;
+    };
+
+    $formatTrendingCompanies = function ($collection) use ($resolveLogoUrl, $computeInitials) {
+        return $collection->map(function ($company) use ($resolveLogoUrl, $computeInitials) {
             $name = $company->owner_name ?? $company->slug;
-
-            $initials = collect(preg_split('/\s+/', (string) $name, -1, PREG_SPLIT_NO_EMPTY))
-                ->map(fn ($part) => Str::upper(Str::substr($part, 0, 1)))
-                ->take(2)
-                ->implode('');
-
-            if ($initials === '') {
-                $initials = Str::upper(Str::substr($company->slug ?? 'SR', 0, 2));
-            }
 
             $websiteHost = null;
             if (!empty($company->website_url)) {
@@ -116,19 +132,8 @@ Route::get('/', function () {
                 'website_host' => $websiteHost,
                 'avg_rating' => round((float) $company->avg_rating, 1),
                 'review_count' => (int) $company->review_count,
-                'initials' => $initials,
-                'logo' => tap($company->logo_url, function (&$logo) {
-                    if (empty($logo)) {
-                        $logo = asset('images/company/cmp.png');
-                        return;
-                    }
-
-                    if (Str::startsWith($logo, ['http://', 'https://'])) {
-                        return;
-                    }
-
-                    $logo = asset(ltrim($logo, '/'));
-                }),
+                'initials' => $computeInitials($name, $company->slug),
+                'logo' => $resolveLogoUrl($company->logo_url),
             ];
         });
     };
@@ -155,16 +160,12 @@ Route::get('/', function () {
         ->orderByDesc('created_at')
         ->limit(20)
         ->get()
-        ->map(function ($review) use ($formatWebsiteHost) {
+        ->map(function ($review) use ($formatWebsiteHost, $resolveLogoUrl, $computeInitials) {
             $company = $review->company;
             $companyName = $company?->owner_name ?? $company?->slug ?? 'Solar EPC';
             $reviewerName = $review->reviewer_name ?: 'Verified customer';
 
-            $avatar = Str::upper(Str::substr($reviewerName, 0, 1));
-
-            if ($avatar === '') {
-                $avatar = Str::upper(Str::substr($companyName, 0, 1));
-            }
+            $avatar = Str::upper(Str::substr($reviewerName, 0, 1)) ?: Str::upper(Str::substr($companyName, 0, 1));
 
             $websiteUrl = $company?->website_url;
 
@@ -181,6 +182,8 @@ Route::get('/', function () {
                     'state' => $company?->state?->name,
                     'website_url' => $websiteUrl,
                     'website_host' => $formatWebsiteHost($websiteUrl),
+                    'logo' => $company ? $resolveLogoUrl($company->logo_url) : asset('images/company/cmp.png'),
+                    'initials' => $computeInitials($companyName, $company?->slug),
                 ],
             ];
         });

@@ -1941,39 +1941,32 @@
 
 
 
-
 /* ================= SECTION ================= */
 .reviews-section {
     padding: 40px 0;
+    background: #fff;
 }
 
 /* ================= HEADER ================= */
 .reviews-header {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .reviews-header h2 {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 600;
+    color: #111;
 }
 
 /* ================= SCROLL CONTAINER ================= */
-/*
-KEY IDEA:
-- grid-auto-flow: column
-- grid-template-rows: repeat(2, auto)
-- overflow-x: auto
-*/
-
 .reviews-scroll {
     display: grid;
-    grid-auto-flow: column;             /* 🔥 left → right */
-    grid-template-rows: repeat(2, auto);/* 🔥 2 rows */
-    gap: 20px;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, auto);
+    gap: 24px;
 
     overflow-x: auto;
     overflow-y: hidden;
-
     scroll-snap-type: x mandatory;
     padding-bottom: 10px;
 }
@@ -1984,11 +1977,14 @@ KEY IDEA:
 
 /* ================= CARD ================= */
 .review-card {
-    width: 320px;                       /* fixed card width */
+    width: 330px;
     background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 18px;
+    border: 1px solid #e6dcd5;
+    border-radius: 22px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     scroll-snap-align: start;
 }
@@ -1996,53 +1992,134 @@ KEY IDEA:
 /* ================= TOP ================= */
 .review-top {
     display: flex;
-    gap: 10px;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 14px;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    background: #9b4bdc;
-    color: #fff;
+    background: #eee;
+    color: #555;
+    font-weight: 600;
+    font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    flex-shrink: 0;
 }
 
+.review-top strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+/* ================= STARS ================= */
+.stars {
+    display: flex;
+    gap: 2px;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.stars span,
 .stars {
     color: #00b67a;
-    font-size: 16px;
 }
 
 /* ================= TEXT ================= */
 .review-text {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.55;
     color: #333;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 /* ================= FOOTER ================= */
 .review-footer {
     border-top: 1px solid #eee;
-    padding-top: 12px;
+    padding-top: 14px;
     font-size: 13px;
+}
+
+.review-footer strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
 }
 
 .review-footer span {
     display: block;
     color: #666;
-    font-size: 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
 }
+
+.review-footer a {
+    color: #555;
+    text-decoration: none;
+}
+
+.review-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= COMPANY FOOTER ================= */
+.company-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.company-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.company-logo span {
+    font-weight: 600;
+    font-size: 14px;
+    color: #666;
+}
+
+.company-meta strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+}
+
+.company-meta span {
+    font-size: 12px;
+    color: #666;
+}
+
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
     .review-card {
-        width: 280px;
+        width: 290px;
     }
 }
 
@@ -2329,79 +2406,79 @@ KEY IDEA:
 
 
 
-  <section class="reviews-section">
-    <div class="container-custom">
+    <section class="reviews-section">
+        <div class="container-custom">
 
-        <div class="reviews-header">
-            <h2>Recent reviews</h2>
-        </div>
+            <div class="reviews-header">
+                <h2>Recent reviews</h2>
+            </div>
 
-        <div class="reviews-scroll">
-            @foreach($recentReviews ?? [] as $review)
-                <div class="review-card">
-                    <div class="review-top">
-                        <div class="avatar">{{ $review['avatar'] }}</div>
-                        <div>
-                            <strong>{{ $review['reviewer'] }}</strong>
-                            <div class="stars">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    {{ $review['rating'] >= $i ? '★' : '☆' }}
-                                @endfor
+            <div class="reviews-scroll">
+                @foreach($recentReviews ?? [] as $review)
+                    <div class="review-card">
+                        <div class="review-top">
+                            <div class="avatar">{{ $review['avatar'] }}</div>
+                            <div>
+                                <strong>{{ $review['reviewer'] }}</strong>
+                                <div class="stars">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        {{ $review['rating'] >= $i ? '★' : '☆' }}
+                                    @endfor
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <p class="review-text">
-                        {{ $review['text'] }}
-                    </p>
+                        <p class="review-text">
+                            {{ $review['text'] }}
+                        </p>
 
-                    <div class="review-footer">
-                        <strong>
-                            @if(!empty($review['company']['slug']))
-                                <a href="{{ route('companies.show', $review['company']['slug']) }}" class="text-decoration-none">
-                                    {{ $review['company']['name'] }}
-                                </a>
-                            @else
-                                {{ $review['company']['name'] }}
-                            @endif
-                        </strong>
-                        @if(!empty($review['company']['state']))
-                            <span>{{ $review['company']['state'] }}</span>
-                        @endif
-                        @if(!empty($review['company']['website_url']))
-                            <span>
-                                <a href="{{ $review['company']['website_url'] }}" target="_blank" rel="noopener" class="text-decoration-none">
-                                    {{ $review['company']['website_host'] ?? $review['company']['website_url'] }}
-                                </a>
-                            </span>
-                        @endif
-                        @if(!empty($review['date']))
-                            <span>{{ $review['date'] }}</span>
-                        @endif
+                        <div class="review-footer">
+                            <div class="company-info">
+                                <div class="company-logo">
+                                    <img src="{{ $review['company']['logo'] }}" alt="{{ $review['company']['name'] }} logo">
+                                </div>
+
+                                <div class="company-meta">
+                                    <strong>
+                                        @if(!empty($review['company']['slug']))
+                                            <a href="{{ route('companies.show', $review['company']['slug']) }}">
+                                                {{ $review['company']['name'] }}
+                                            </a>
+                                        @else
+                                            {{ $review['company']['name'] }}
+                                        @endif
+                                    </strong>
+
+                                    @if(!empty($review['company']['website_host']))
+                                        <span>{{ $review['company']['website_host'] }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-            @endforeach
-            @if(($recentReviews ?? collect())->isEmpty())
-                <div class="review-card">
-                    <div class="review-top">
-                        <div class="avatar">SR</div>
-                        <div>
-                            <strong>No recent reviews yet</strong>
+                @endforeach
+                @if(($recentReviews ?? collect())->isEmpty())
+                    <div class="review-card">
+                        <div class="review-top">
+                            <div class="avatar">SR</div>
+                            <div>
+                                <strong>No recent reviews yet</strong>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            Be the first to share your experience with a solar installer on Solar Reviews.
+                        </p>
+                        <div class="review-footer">
+                            <strong>Solar Reviews Community</strong>
+                            <span><a href="{{ route('reviews.write') }}" class="text-decoration-none">Write a review</a></span>
                         </div>
                     </div>
-                    <p class="review-text">
-                        Be the first to share your experience with a solar installer on Solar Reviews.
-                    </p>
-                    <div class="review-footer">
-                        <strong>Solar Reviews Community</strong>
-                        <span><a href="{{ route('reviews.write') }}" class="text-decoration-none">Write a review</a></span>
-                    </div>
-                </div>
-            @endif
-        </div>
+                @endif
+            </div>
 
-    </div>
-</section>
+        </div>
+    </section>
 
 
 
