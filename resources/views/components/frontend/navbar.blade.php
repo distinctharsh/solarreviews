@@ -39,7 +39,7 @@
                     </button>
                 </form>
             @else
-                <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
+                <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">For Business</a>
             @endauth
         </div>
         
@@ -80,7 +80,7 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('login') }}">Login / Register</a>
+                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ route('login') }}">For Business</a>
                     </li>
                 @endauth
             @endif

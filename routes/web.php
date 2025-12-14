@@ -19,6 +19,8 @@ use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Company;
+use App\Models\CompanyReview;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
 
 
@@ -39,8 +41,154 @@ Route::get('/', function () {
             ];
         });
 
+    $trendingBaseQuery = Company::query()
+        ->select([
+            'companies.id',
+            'companies.slug',
+            'companies.owner_name',
+            'companies.website_url',
+            'companies.logo_url',
+            'states.name as state_name',
+        ])
+        ->selectRaw('AVG(company_reviews.rating) as avg_rating')
+        ->selectRaw('COUNT(company_reviews.id) as review_count')
+        ->join('company_reviews', 'company_reviews.company_id', '=', 'companies.id')
+        ->leftJoin('states', 'states.id', '=', 'companies.state_id')
+        ->where('companies.is_active', true)
+        ->where('company_reviews.is_approved', true)
+        ->groupBy(
+            'companies.id',
+            'companies.slug',
+            'companies.owner_name',
+            'companies.website_url',
+            'companies.logo_url',
+            'states.name'
+        );
+
+    $perfectCompanies = (clone $trendingBaseQuery)
+        ->havingRaw('AVG(company_reviews.rating) = 5')
+        ->orderByDesc('review_count')
+        ->limit(10)
+        ->get();
+
+    $remaining = max(0, 10 - $perfectCompanies->count());
+
+    $additionalCompanies = collect();
+
+    if ($remaining > 0) {
+        $additionalCompanies = (clone $trendingBaseQuery)
+            ->havingRaw('AVG(company_reviews.rating) < 5')
+            ->when($perfectCompanies->isNotEmpty(), function ($query) use ($perfectCompanies) {
+                return $query->whereNotIn('companies.id', $perfectCompanies->pluck('id'));
+            })
+            ->orderByDesc('avg_rating')
+            ->orderByDesc('review_count')
+            ->limit($remaining)
+            ->get();
+    }
+
+    $formatTrendingCompanies = function ($collection) {
+        return $collection->map(function ($company) {
+            $name = $company->owner_name ?? $company->slug;
+
+            $initials = collect(preg_split('/\s+/', (string) $name, -1, PREG_SPLIT_NO_EMPTY))
+                ->map(fn ($part) => Str::upper(Str::substr($part, 0, 1)))
+                ->take(2)
+                ->implode('');
+
+            if ($initials === '') {
+                $initials = Str::upper(Str::substr($company->slug ?? 'SR', 0, 2));
+            }
+
+            $websiteHost = null;
+            if (!empty($company->website_url)) {
+                $parsed = parse_url($company->website_url);
+                $websiteHost = $parsed['host'] ?? ltrim($company->website_url, '/');
+                $websiteHost = Str::replaceFirst('www.', '', $websiteHost);
+            }
+
+            return [
+                'id' => $company->id,
+                'slug' => $company->slug,
+                'name' => $name,
+                'state' => $company->state_name,
+                'website_url' => $company->website_url,
+                'website_host' => $websiteHost,
+                'avg_rating' => round((float) $company->avg_rating, 1),
+                'review_count' => (int) $company->review_count,
+                'initials' => $initials,
+                'logo' => tap($company->logo_url, function (&$logo) {
+                    if (empty($logo)) {
+                        $logo = asset('images/company/cmp.png');
+                        return;
+                    }
+
+                    if (Str::startsWith($logo, ['http://', 'https://'])) {
+                        return;
+                    }
+
+                    $logo = asset(ltrim($logo, '/'));
+                }),
+            ];
+        });
+    };
+
+    $trendingCompanies = $formatTrendingCompanies(
+        $perfectCompanies->concat($additionalCompanies)
+    );
+
+    $formatWebsiteHost = function (?string $url) {
+        if (empty($url)) {
+            return null;
+        }
+
+        $parsed = parse_url($url);
+        $host = $parsed['host'] ?? ltrim($url, '/');
+
+        return Str::replaceFirst('www.', '', $host);
+    };
+
+    $recentReviews = CompanyReview::query()
+        ->with(['company.state'])
+        ->where('is_approved', true)
+        ->orderByDesc('review_date')
+        ->orderByDesc('created_at')
+        ->limit(20)
+        ->get()
+        ->map(function ($review) use ($formatWebsiteHost) {
+            $company = $review->company;
+            $companyName = $company?->owner_name ?? $company?->slug ?? 'Solar EPC';
+            $reviewerName = $review->reviewer_name ?: 'Verified customer';
+
+            $avatar = Str::upper(Str::substr($reviewerName, 0, 1));
+
+            if ($avatar === '') {
+                $avatar = Str::upper(Str::substr($companyName, 0, 1));
+            }
+
+            $websiteUrl = $company?->website_url;
+
+            return [
+                'id' => $review->id,
+                'reviewer' => $reviewerName,
+                'avatar' => $avatar,
+                'rating' => (int) $review->rating,
+                'text' => Str::limit(strip_tags((string) $review->review_text), 220),
+                'date' => optional($review->review_date ?? $review->created_at)->format('M d, Y'),
+                'company' => [
+                    'name' => $companyName,
+                    'slug' => $company?->slug,
+                    'state' => $company?->state?->name,
+                    'website_url' => $websiteUrl,
+                    'website_host' => $formatWebsiteHost($websiteUrl),
+                ],
+            ];
+        });
+
     return view('welcome', [
         'companies' => $companies,
+        'trendingCompanies' => $trendingCompanies,
+        'recentReviews' => $recentReviews,
     ]);
 });
 

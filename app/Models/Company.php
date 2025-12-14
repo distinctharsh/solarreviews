@@ -73,6 +73,11 @@ class Company extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
+    public function companyReviews(): HasMany
+    {
+        return $this->hasMany(CompanyReview::class);
+    }
+
     // Add this to calculate average rating
     public function averageRating(): float
     {

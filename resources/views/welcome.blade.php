@@ -1471,244 +1471,585 @@
 		
 		
 		
-/* Full Hero Wrapper */
-.solarHero-wrap {
-    width: 100%;
-    min-height: calc(100vh - 80px);
-    padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
-    background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
-    background-color: #f5f5f5; 
-    display: flex;
-    align-items: flex-start; /* 👈 center se upar */
-    justify-content: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    position: relative;
+        /* Full Hero Wrapper */
+        .solarHero-wrap {
+            width: 100%;
+            min-height: calc(100vh - 80px);
+            padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
+            background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
+            background-color: #f5f5f5; 
+            display: flex;
+            align-items: flex-start; /* 👈 center se upar */
+            justify-content: center;
+            padding-left: 20px;
+            padding-right: 20px;
+            position: relative;
+        }
+
+
+
+        /* Inner content container */
+        .solarHero-inner {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Title */
+        .solarHero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #222;
+            line-height: 1.3;
+        }
+
+        .solarHero-title span {
+            color: #2fa83f;
+        }
+
+        /* Subtitle */
+        .solarHero-subtitle {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #444;
+        }
+
+        /* Search Box */
+        .solarHero-searchBox {
+            margin: 30px auto 0;
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .solarHero-pillBox {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .solarHero-pill {
+            background: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid #dcdfe4;  /* ✔ Added border */
+            box-shadow: none;           /* ✔ Removed shadow */
+            font-size: 14px;
+            display: flex;
+            gap: 5px;
+            position: relative;
+            z-index: 2;
+            white-space: nowrap; 
+        }
+
+        /* Left & Right Lines */
+        .solarHero-pillBox::before,
+        .solarHero-pillBox::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dcdfe4;
+            margin: auto 0px;
+            max-width: 450px;
+        }
+
+
+        .solarHero-pill a {
+            color: #4a3aff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+
+
+        @media (max-width: 600px) {
+            .solarHero-pillBox {
+                bottom: 260px;  
+            }
+            
+            .solarHero-pillBox::before,
+            .solarHero-pillBox::after {
+                content: '';
+                flex: 1;
+                height: 0px;
+                background: #dcdfe4;
+                margin: auto 0px;
+                max-width: 350px;
+            }
+            
+            .solarHero-wrap {
+                width: 100%;
+                min-height: calc(100vh - 80px);
+                padding-top: 40px;
+                background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
+                background-color: #f5f5f5;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                padding-left: 20px;
+                padding-right: 20px;
+                position: relative;
+            }
+        }
+
+        .hero-search-form {
+            position: relative;
+            z-index: 110;
+        }
+
+        .hero-search-suggestions {
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            z-index: 115;
+            position: relative;
+        }
+
+        .hero-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            z-index: 100;
+        }
+
+        .hero-search-form{
+            margin-top: 30px;
+        }
+
+
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            white-space: nowrap;     /* 🔥 prevents wrapping */
+            overflow: hidden;
+        }
+
+        .stat-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: clamp(18px, 2.5vw, 28px);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .yellow {
+            color: #f5b400;
+        }
+
+        .green {
+            color: #28a745;
+        }
+
+
+        .stats-section {
+            padding: 70px 0;
+            margin: 60px 0;
+            background: #fff;
+        }
+
+        @media (max-width: 768px) {
+
+
+            .stats-container {
+                display: flex;
+                justify-content: space-between;
+                gap: 0;
+            }
+
+
+            .stat-box:last-child {
+            margin-right: 0;
+        }
+
+            .stat-value {
+                font-size: 14px;
+            }
+
+            .stat-box span{
+                font-size: 12px;
+            }
+
+            .stats-section {
+                margin: -192px 0 -40px 0;
+                position: absolute;
+                z-index: 2;
+                padding: 50px 0;
+                width: 100%;
+            }
+        }
+
+
+        /* ========================= */
+        /* CTA CONTAINER */
+        /* ========================= */
+        .cta-wrapper {
+            position: relative;
+            background: #ffe1ea;
+            border-radius: 28px;
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* ========================= */
+        /* CONTENT */
+        /* ========================= */
+        .cta-content h3 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .cta-content p {
+            margin: 0;
+            font-size: 16px;
+            color: #000;
+        }
+
+        /* ========================= */
+        /* BUTTON */
+        /* ========================= */
+        .cta-action {
+            position: relative;
+            z-index: 5;
+        }
+
+        .cta-btn {
+            position: relative;
+            z-index: 6;
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* ========================= */
+        /* DECORATIVE BARS */
+        /* ========================= */
+        .cta-bars {
+            position: absolute;
+            right: 20px;
+            bottom: 0;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            z-index: 1;
+        }
+
+        .cta-bars span {
+            width: 50px;
+            background: #ffc6d4;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .cta-bars span:nth-child(1) { height: 22px; }
+        .cta-bars span:nth-child(2) { height: 40px; }
+        .cta-bars span:nth-child(3) { height: 60px; }
+        .cta-bars span:nth-child(4) { height: 80px; }
+
+        /* ========================= */
+        /* RESPONSIVE (MOBILE) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            .cta-wrapper {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+
+            .cta-content {
+                order: 1;
+            }
+
+            .cta-action {
+                order: 2;
+                width: 100%;
+            }
+
+            .cta-btn {
+                margin: 0 auto;
+            }
+
+            .cta-bars {
+                right: 50%;
+                transform: translateX(50%);
+                gap: 25px;
+            }
+
+            .cta-content h3 {
+                margin: 0 0 8px;
+                font-weight: 600;
+                color: #000;
+                white-space: nowrap;          /* 🔥 ek hi line */
+                font-size: clamp(16px, 3.5vw, 22px);  /* 🔥 responsive shrink */
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .cta-content p {
+                max-width: 85%;          /* 🔥 h3 se kam width */
+                margin: 0 auto;          /* center align */
+                font-size: 14px;
+            }
+
+        }
+
+
+
+
+        /* ================= SECTION ================= */
+        .bank-section {
+            padding: 40px;
+        }
+
+        /* ================= HEADER ================= */
+        .bank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .bank-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .see-more {
+            border: 1px solid #4b5cff;
+            color: #4b5cff;
+            padding: 8px 16px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* ================= CARDS CONTAINER ================= */
+        .bank-cards {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;              /* 🔥 horizontal scroll */
+            scroll-snap-type: x mandatory; /* smooth snap */
+            padding-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .bank-cards::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ================= CARD ================= */
+        .bank-card {
+            min-width: 280px;              /* 🔥 prevents wrap */
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            padding: 20px;
+            scroll-snap-align: start;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .bank-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bank-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 6px;
+        }
+
+        .bank-card h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .domain {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .site-link {
+            display: inline-block;
+            font-size: 14px;
+            color: #4b5cff;
+            text-decoration: none;
+            margin-bottom: 12px;
+        }
+
+        .site-link:hover {
+            text-decoration: underline;
+        }
+
+        .rating {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rating .stars {
+            color: #f5b400;
+            font-size: 16px;
+        }
+
+        .bank-card.empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+
+
+
+/* ================= SECTION ================= */
+.reviews-section {
+    padding: 40px 0;
 }
 
-
-
-/* Inner content container */
-.solarHero-inner {
-    text-align: center;
-    max-width: 900px;
-    width: 100%;
+/* ================= HEADER ================= */
+.reviews-header {
+    margin-bottom: 20px;
 }
 
-/* Title */
-.solarHero-title {
-    font-size: 48px;
-    font-weight: 700;
-    color: #222;
-    line-height: 1.3;
-}
-
-.solarHero-title span {
-    color: #2fa83f;
-}
-
-/* Subtitle */
-.solarHero-subtitle {
-    margin-top: 10px;
-    font-size: 18px;
-    color: #444;
-}
-
-/* Search Box */
-.solarHero-searchBox {
-    margin: 30px auto 0;
-    width: 100%;
-    max-width: 600px;
-    background: #fff;
-    padding: 12px 16px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-.solarHero-pillBox {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 20px;
-}
-
-.solarHero-pill {
-    background: #fff;
-    padding: 12px 25px;
-    border-radius: 30px;
-    border: 1px solid #dcdfe4;  /* ✔ Added border */
-    box-shadow: none;           /* ✔ Removed shadow */
-    font-size: 14px;
-    display: flex;
-    gap: 5px;
-    position: relative;
-    z-index: 2;
-	white-space: nowrap; 
-}
-
-/* Left & Right Lines */
-.solarHero-pillBox::before,
-.solarHero-pillBox::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #dcdfe4;
-    margin: auto 0px;
-	 max-width: 450px;
-}
-
-
-.solarHero-pill a {
-    color: #4a3aff;
-    text-decoration: none;
+.reviews-header h2 {
+    font-size: 26px;
     font-weight: 600;
 }
 
+/* ================= SCROLL CONTAINER ================= */
+/*
+KEY IDEA:
+- grid-auto-flow: column
+- grid-template-rows: repeat(2, auto)
+- overflow-x: auto
+*/
 
+.reviews-scroll {
+    display: grid;
+    grid-auto-flow: column;             /* 🔥 left → right */
+    grid-template-rows: repeat(2, auto);/* 🔥 2 rows */
+    gap: 20px;
 
-@media (max-width: 600px) {
-    .solarHero-pillBox {
-        bottom: 260px;  
-    }
-    
-    .solarHero-pillBox::before,
-    .solarHero-pillBox::after {
-        content: '';
-        flex: 1;
-        height: 0px;
-        background: #dcdfe4;
-        margin: auto 0px;
-    	 max-width: 350px;
-    }
-    
-    .solarHero-wrap {
-        width: 100%;
-        min-height: calc(100vh - 80px);
-        padding-top: 40px;
-         background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
-        background-color: #f5f5f5;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-left: 20px;
-        padding-right: 20px;
-        position: relative;
-    }
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
 }
 
-.hero-search-form {
-    position: relative;
-    z-index: 110;
+.reviews-scroll::-webkit-scrollbar {
+    display: none;
 }
 
-.hero-search-suggestions {
+/* ================= CARD ================= */
+.review-card {
+    width: 320px;                       /* fixed card width */
     background: #fff;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    z-index: 115;
-    position: relative;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    padding: 20px;
+
+    scroll-snap-align: start;
 }
 
-.hero-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.45);
-    z-index: 100;
-}
-
-.hero-search-form{
-    margin-top: 30px;
-}
-
-
-
-.stats-container {
+/* ================= TOP ================= */
+.review-top {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
     align-items: center;
-    gap: 40px;
-    white-space: nowrap;     /* 🔥 prevents wrapping */
-    overflow: hidden;
+    margin-bottom: 12px;
 }
 
-.stat-box {
-    text-align: center;
-    flex: 1;
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #9b4bdc;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
 }
 
-.stat-value {
-    font-weight: 700;
-    font-size: clamp(18px, 2.5vw, 28px);
-    margin-bottom: 6px;
-}
-
-.stat-label {
+.stars {
+    color: #00b67a;
     font-size: 16px;
-    color: #4b5563;
-    font-weight: 500;
 }
 
-.yellow {
-    color: #f5b400;
+/* ================= TEXT ================= */
+.review-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 16px;
 }
 
-.green {
-    color: #28a745;
+/* ================= FOOTER ================= */
+.review-footer {
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    font-size: 13px;
 }
 
-
-.stats-section {
-    padding: 70px 0;
-    margin: 60px 0;
-    background: #fff;
+.review-footer span {
+    display: block;
+    color: #666;
+    font-size: 12px;
 }
 
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-
-
-    .stats-container {
-        display: flex;
-        justify-content: space-between;
-        gap: 0;
-    }
-
-
-    .stat-box:last-child {
-    margin-right: 0;
-}
-
-    .stat-value {
-        font-size: 14px;
-    }
-
-    .stat-box span{
-        font-size: 12px;
-    }
-
-    .stats-section {
-        margin: -192px 0 -40px 0;
-        position: absolute;
-        z-index: 2;
-        padding: 50px 0;
-        width: 100%;
+    .review-card {
+        width: 280px;
     }
 }
 
-
-
-@media (max-width: 600px) {
-
-}
 
     </style>
 </head>
-<body>
+<body style="background-color: #fff;">
     <!-- Navigation -->
     @include('components.frontend.navbar')
     <div class="hero-overlay" data-hero-overlay hidden></div>
@@ -1785,6 +2126,28 @@
         </div>
     </section>
 
+    <div class="container-custom">
+        <div class="cta-wrapper mb-4">
+            <div class="cta-content">
+                <h3>Looking to grow your business?</h3>
+                <p>Strengthen your reputation with reviews on Trustpilot.</p>
+            </div>
+
+            <div class="cta-action">
+                <button class="cta-btn" onclick="window.location.href='{{ route('login') }}'">Get started</button>
+            </div>
+
+            <!-- decorative bars -->
+            <div class="cta-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+
         <!-- As Seen In Section -->
     <section class="as-seen-in-section section-spacing " style="padding: 80px 0px; ">
         <div class="container-custom">
@@ -1829,6 +2192,51 @@
     </section>
 
 
+
+
+    <section class="bank-section">
+        <div class="container-custom">
+            <div class="bank-header">
+                <h2>Trending Companies on Solar Review</h2>
+                <a href="#" class="see-more">See more</a>
+            </div>
+
+            <div class="bank-cards" id="autoScrollCards">
+                @forelse($trendingCompanies ?? [] as $company)
+                    <div class="bank-card">
+                        <a href="{{ route('companies.show', $company['slug']) }}">
+                            <div class="bank-logo">
+                                <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo">
+                            </div>
+                            <h3>{{ $company['name'] }}</h3>
+
+                            @if(!empty($company['website_url']))
+                                <a class="site-link" href="{{ $company['website_url'] }}" target="_blank" rel="noopener">
+                                    {{ $company['website_host'] ?? $company['website_url'] }}
+                                </a>
+                            @endif
+
+                            <div class="rating">
+                                <span class="stars">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        {{ $company['avg_rating'] >= $i ? '★' : '☆' }}
+                                    @endfor
+                                </span>
+                                <span>{{ number_format($company['avg_rating'], 1) }} ({{ number_format($company['review_count']) }})</span>
+                            </div>
+                        </a>
+                    </div>
+                @empty
+                    <div class="bank-card empty-state">
+                        No trending companies available right now. Check back soon.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
+
+
     <!-- Reviews Hero Section -->
     <section class="reviews-hero">
         <div class="hero-gradient bg-gradient-to-r from-slate-900 to-transparent"></div>
@@ -1870,7 +2278,7 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section id="testimonials" class="py-5 bg-white">
+    <!-- <section id="testimonials" class="py-5 bg-white">
         <div class="container-custom">
             <div class="text-center mb-5">
                 <a href="#" class="fw-medium text-decoration-none mb-2 d-block" style="color: var(--primary-color);">See What Others Are Saying About Us</a>
@@ -1917,15 +2325,92 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
+
+
+
+  <section class="reviews-section">
+    <div class="container-custom">
+
+        <div class="reviews-header">
+            <h2>Recent reviews</h2>
+        </div>
+
+        <div class="reviews-scroll">
+            @foreach($recentReviews ?? [] as $review)
+                <div class="review-card">
+                    <div class="review-top">
+                        <div class="avatar">{{ $review['avatar'] }}</div>
+                        <div>
+                            <strong>{{ $review['reviewer'] }}</strong>
+                            <div class="stars">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    {{ $review['rating'] >= $i ? '★' : '☆' }}
+                                @endfor
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="review-text">
+                        {{ $review['text'] }}
+                    </p>
+
+                    <div class="review-footer">
+                        <strong>
+                            @if(!empty($review['company']['slug']))
+                                <a href="{{ route('companies.show', $review['company']['slug']) }}" class="text-decoration-none">
+                                    {{ $review['company']['name'] }}
+                                </a>
+                            @else
+                                {{ $review['company']['name'] }}
+                            @endif
+                        </strong>
+                        @if(!empty($review['company']['state']))
+                            <span>{{ $review['company']['state'] }}</span>
+                        @endif
+                        @if(!empty($review['company']['website_url']))
+                            <span>
+                                <a href="{{ $review['company']['website_url'] }}" target="_blank" rel="noopener" class="text-decoration-none">
+                                    {{ $review['company']['website_host'] ?? $review['company']['website_url'] }}
+                                </a>
+                            </span>
+                        @endif
+                        @if(!empty($review['date']))
+                            <span>{{ $review['date'] }}</span>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+            @if(($recentReviews ?? collect())->isEmpty())
+                <div class="review-card">
+                    <div class="review-top">
+                        <div class="avatar">SR</div>
+                        <div>
+                            <strong>No recent reviews yet</strong>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        Be the first to share your experience with a solar installer on Solar Reviews.
+                    </p>
+                    <div class="review-footer">
+                        <strong>Solar Reviews Community</strong>
+                        <span><a href="{{ route('reviews.write') }}" class="text-decoration-none">Write a review</a></span>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+    </div>
+</section>
+
+
 
 
     <!-- Experts Section -->
-    <section class="experts-section section-spacing py-5">
+    <!-- <section class="experts-section section-spacing py-5">
         <div class="container-custom">
             <div class="row align-items-center">
 
-                <!-- Left Content -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <h6 class="fw-semibold mb-3" style="color: var(--primary-color);">Our Experts</h6>
                     <h2 class="fw-bold mb-4" style="font-size: 2.5rem; line-height: 1.3;">
@@ -1943,7 +2428,6 @@
                     </a>
                 </div>
 
-                <!-- Right Side Images -->
                 <div class="col-12 col-lg-6">
                     <div class="experts-grid">
                         <img src="/images/expert1.jpg" class="expert-img" alt="">
@@ -1956,7 +2440,7 @@
 
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <section class="latest-articles section-spacing py-5">
@@ -2210,6 +2694,43 @@
                 }
             });
         }
+
+
+   
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("autoScrollCards");
+            const card = container.querySelector(".bank-card");
+
+            if (!container || !card) return;
+
+            const cardWidth = card.offsetWidth + 20; // 20 = gap
+            let autoScroll;
+
+            function startAutoScroll() {
+                autoScroll = setInterval(() => {
+                    // If reached end → go back to start
+                    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                        container.scrollTo({ left: 0, behavior: "smooth" });
+                    } else {
+                        container.scrollBy({ left: cardWidth, behavior: "smooth" });
+                    }
+                }, 4000); // 🔥
+            }
+
+            function stopAutoScroll() {
+                clearInterval(autoScroll);
+            }
+
+            // Start auto scroll
+            startAutoScroll();
+
+            // Pause on user interaction
+            container.addEventListener("mouseenter", stopAutoScroll);
+            container.addEventListener("mouseleave", startAutoScroll);
+            container.addEventListener("touchstart", stopAutoScroll);
+            container.addEventListener("touchend", startAutoScroll);
+        });
+
     </script>
 
     @include('components.frontend.chatbot-widget')
