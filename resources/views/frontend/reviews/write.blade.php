@@ -19,6 +19,7 @@
             --dark: #0f172a;
             --soft-yellow: #fdecb2;
             --search-shadow: 0 24px 45px rgba(15, 23, 42, 0.12);
+            --write-hero-width: min(580px, calc(100% - 2.5rem));
         }
 
         body {
@@ -50,6 +51,11 @@
             text-align: center;
         }
 
+        .hero-area .container-custom {
+            max-width: var(--write-hero-width);
+            margin: 0 auto;
+        }
+
         .hero-area h1 {
             font-size: clamp(2rem, 4vw, 3.1rem);
             font-weight: 700;
@@ -64,7 +70,7 @@
         }
 
         .write-search-form {
-            max-width: 620px;
+            max-width: var(--write-hero-width);
             margin: 0 auto;
             background: #fff;
             border-radius: 18px;
@@ -119,7 +125,7 @@
         }
 
         .company-suggestions {
-            max-width: 620px;
+            max-width: var(--write-hero-width);
             margin: 1rem auto 0;
             background: #fff;
             border-radius: 18px;
@@ -199,7 +205,7 @@
             background: #fff;
             border-radius: 24px;
             padding: 2.5rem 1.5rem;
-            max-width: 560px;
+            max-width: var(--write-hero-width);
             margin-left: auto;
             margin-right: auto;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);

@@ -54,6 +54,7 @@
             --primary-color: #3ba14c;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
+            --hero-content-width: min(560px, calc(100% - 2.5rem));
             --tw-gradient-from-position: ;
             --tw-gradient-via-position: ;
             --tw-gradient-to-position: ;
@@ -598,9 +599,10 @@
         }
 
         .hero-search-form {
-            max-width: min(660px, calc(100% - 2rem));
+            max-width: var(--hero-content-width);
             width: 100%;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
             padding: 0.45rem 0.45rem 0.45rem 0.85rem;
             display: flex;
             align-items: center;
@@ -1495,6 +1497,12 @@
             width: 100%;
         }
 
+        .solarHero-content {
+            max-width: var(--hero-content-width);
+            margin: 0 auto;
+            width: 100%;
+        }
+
         /* Title */
         .solarHero-title {
             font-size: 48px;
@@ -1613,6 +1621,10 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             z-index: 115;
             position: relative;
+            max-width: var(--hero-content-width);
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-overlay {
