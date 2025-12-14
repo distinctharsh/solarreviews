@@ -1508,20 +1508,26 @@
 
         /* Title */
         .solarHero-title {
-            font-size: 48px;
+            font-size: clamp(1.85rem, 3.6vw, 2.9rem);
             font-weight: 700;
             color: #222;
-            line-height: 1.3;
+            line-height: 1.1;
         }
 
-        .solarHero-title span {
+        .solarHero-title .solarHero-title-line {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .solarHero-title .solarHero-title-line.secondary {
             color: #2fa83f;
+            font-size: clamp(1.7rem, 3.2vw, 2.6rem);
         }
 
         /* Subtitle */
         .solarHero-subtitle {
             margin-top: 10px;
-            font-size: 18px;
+            font-size: clamp(0.85rem, 2.5vw, 1.125rem);
             color: #444;
         }
 
@@ -2246,9 +2252,9 @@
         <div class="solarHero-inner">
 
             <div class="solarHero-content">
-                <h1 class="reviews-title">
-                    India's most trusted <br>
-                    <span>Solar EPC Reviews</span>
+                <h1 class="solarHero-title">
+                    <span class="solarHero-title-line">India's most trusted</span>
+                    <span class="solarHero-title-line secondary">Solar EPC Reviews</span>
                 </h1>
 
                 <p class="solarHero-subtitle">
