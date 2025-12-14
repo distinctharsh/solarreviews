@@ -139,8 +139,10 @@
         .content-grid {
             display: grid;
             grid-template-columns: 280px 1fr;
+            grid-template-areas: "sidebar table";
             gap: 2rem;
             margin-top: 2.5rem;
+            align-items: start;
         }
 
         .sidebar-card,
@@ -152,6 +154,7 @@
         }
 
         .sidebar-card {
+            grid-area: sidebar;
             padding: 1.75rem;
         }
 
@@ -191,6 +194,7 @@
         }
 
         .table-card {
+            grid-area: table;
             padding: 1.5rem;
         }
 
@@ -318,41 +322,65 @@
 
         @media (max-width: 992px) {
             .content-grid {
-            }
-
-            .lede {
-                color: #475569;
-                max-width: 720px;
-                line-height: 1.6;
-            }
-
-            .content-grid {
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                gap: 2rem;
-                margin-top: 2.5rem;
-            }
-
-            .sidebar-card,
-            .table-card {
-                background: #fff;
-                border-radius: 18px;
-                border: 1px solid #e2e8f0;
-                box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "table"
+                    "sidebar";
             }
 
             .sidebar-card {
-                padding: 1.75rem;
+                padding: 1.5rem;
             }
 
-            .sidebar-card h5 {
+            .table-card {
+                padding: 1.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .directory-hero {
+                padding: 4rem 0 2.25rem;
+            }
+
+            .directory-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                width: 100%;
+            }
+
+            .table-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container-custom {
+                padding: 0 1rem;
+            }
+
+            .directory-hero {
+                padding: 3.5rem 0 2rem;
+            }
+
+            .table-card {
+                padding: 1rem;
+            }
+
+            .table-card .table th,
+            .table-card .table td {
                 font-size: 0.9rem;
-                text-transform: uppercase;
-                letter-spacing: 0.12em;
-                color: #94a3b8;
-                margin-bottom: 0.75rem;
-            .table-responsive {
-                border-radius: 14px;
+            }
+
+            .rating-chip {
+                font-size: 0.85rem;
             }
         }
     </style>
