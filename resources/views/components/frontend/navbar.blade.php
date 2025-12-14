@@ -14,13 +14,13 @@
                     </svg>
                 </button>
                 <div class="mega-dropdown shadow">
-                    <div class="mega-column">
+                    <!-- <div class="mega-column">
                         <p class="mega-heading">Reviews</p>
                         <a href="{{ route('companies.index') }}" class="mega-link">Solar Companies</a>
                         <a href="{{ url('compare/panels') }}" class="mega-link">Solar Panels</a>
                         <a href="{{ url('compare/inverters') }}" class="mega-link">Solar Inverters</a>
                         <a href="{{ url('compare/batteries') }}" class="mega-link">Solar Batteries</a>
-                    </div>
+                    </div> -->
                     <div class="mega-column">
                         <p class="mega-heading">Guides</p>
                         <a href="#" class="mega-link">Buying Guide</a>
@@ -175,7 +175,7 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(180px, 1fr));
         gap: 32px;
-        min-width: 520px;
+        /* min-width: 520px; */
         border: 1px solid rgba(30,41,59,0.08);
         box-shadow: 0 25px 60px rgba(15,23,42,0.12);
         opacity: 0;
