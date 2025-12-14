@@ -53,6 +53,10 @@
                     <i class="fas fa-star"></i>
                     All Reviews
                 </a>
+                <a href="{{ route('admin.profile-submissions.index') }}" class="sidebar-link {{ request()->routeIs('admin.profile-submissions.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-check"></i>
+                    Profile Submissions
+                </a>
 
                 <div class="sidebar-section-title">Chatbot</div>
 

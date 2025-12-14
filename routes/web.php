@@ -19,6 +19,8 @@ use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Company;
+use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
+
 
 
 // Frontend Routes
@@ -136,6 +138,13 @@ Route::prefix('admin')
 
         Route::resource('reports', ChatbotReportController::class)->only(['index', 'show']);
     });
+
+
+       // Profile submissions
+    Route::get('profile-submissions', [AdminProfileSubmissionController::class, 'index'])->name('profile-submissions.index');
+    Route::get('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'show'])->name('profile-submissions.show');
+    Route::patch('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'update'])->name('profile-submissions.update');
+
 });
 
 // User Dashboard

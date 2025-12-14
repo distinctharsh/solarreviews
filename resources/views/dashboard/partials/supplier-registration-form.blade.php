@@ -11,9 +11,9 @@
     ];
 
     $supplierCommitments = [
-        'MOQ Requirements',
-        'Warranty Terms',
-        'After-Sales & Support Availability',
+        'MOQ Requirements (tick)',
+        'Warranty Terms (tick)',
+        'After-Sales & Support Availability (tick)',
     ];
 @endphp
 
@@ -84,7 +84,7 @@
                     <input type="text" name="cin_number" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                 </div>
                 <div class="space-y-3">
-                    <label class="{{ $labelClass }}">ISO Certifications*</label>
+                    <label class="{{ $labelClass }}">ISO Certifications (Yes/No, upload certificates)*</label>
                     <div class="flex gap-4">
                         <label class="inline-flex items-center gap-2 text-sm text-slate-600">
                             <input type="radio" name="iso_certified" value="yes" required class="text-amber-500 border-slate-300">
@@ -95,10 +95,10 @@
                             No
                         </label>
                     </div>
-                    <input type="file" name="iso_certificates" accept=".pdf,.png,.jpg" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                    <input type="file" name="iso_certificates" accept=".pdf,.png,.jpg" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                 </div>
                 <div class="space-y-3">
-                    <label class="{{ $labelClass }}">MSME Registration</label>
+                    <label class="{{ $labelClass }}">MSME Registration (Yes/No, upload certificate)</label>
                     <div class="flex gap-4">
                         <label class="inline-flex items-center gap-2 text-sm text-slate-600">
                             <input type="radio" name="msme_registered" value="yes" class="text-amber-500 border-slate-300">
@@ -173,7 +173,7 @@
                 </div>
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
-                        <label class="{{ $labelClass }}">Upload Product Catalogue (PDF)</label>
+                        <label class="{{ $labelClass }}">Upload Product Catalogue (pdf)</label>
                         <input type="file" name="product_catalogue" accept=".pdf" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                     </div>
                     <div>
@@ -226,15 +226,15 @@
             </div>
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
-                    <label class="{{ $labelClass }}">Copy of GST Certificate*</label>
-                    <input type="file" name="gst_certificate" accept=".pdf,.jpg,.png" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                    <label class="{{ $labelClass }}">Copy of GST Certificate (upload)</label>
+                    <input type="file" name="gst_certificate" accept=".pdf,.jpg,.png" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                 </div>
                 <div>
-                    <label class="{{ $labelClass }}">Copy of PAN*</label>
-                    <input type="file" name="pan_copy" accept=".pdf,.jpg,.png" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                    <label class="{{ $labelClass }}">Copy of PAN (upload)</label>
+                    <input type="file" name="pan_copy" accept=".pdf,.jpg,.png" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                 </div>
                 <div>
-                    <label class="{{ $labelClass }}">Company Profile (PDF)</label>
+                    <label class="{{ $labelClass }}">Company Profile (upload PDF)</label>
                     <input type="file" name="company_profile" accept=".pdf" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
                 </div>
                 <div>
@@ -286,11 +286,11 @@
             </div>
             <div class="space-y-4">
                 <label class="inline-flex items-start gap-3 text-sm text-slate-700">
-                    <input type="checkbox" name="accept_terms" required class="mt-1 text-amber-500 border-slate-300">
+                    <input type="checkbox" name="accept_terms" class="mt-1 text-amber-500 border-slate-300">
                     <span>Agreement to Terms & Conditions</span>
                 </label>
                 <label class="inline-flex items-start gap-3 text-sm text-slate-700">
-                    <input type="checkbox" name="anti_bribery" required class="mt-1 text-amber-500 border-slate-300">
+                    <input type="checkbox" name="anti_bribery" class="mt-1 text-amber-500 border-slate-300">
                     <span>Anti-Bribery / Compliance Declaration</span>
                 </label>
                 <div class="grid gap-5 md:grid-cols-2">

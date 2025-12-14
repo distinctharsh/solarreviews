@@ -282,6 +282,10 @@
     background: #f5f5f5;
 }
 
+.container-custom p{
+    font-size: 18px
+}
+
     </style>
 </head>
 <body>
@@ -290,15 +294,15 @@
     <main class="write-review-page">
         <section class="hero-area">
             <div class="container-custom">
-                <h1>Share your experience</h1>
+                <span style="font-size: 44px; font-weight: 600;">Share your experience</span>
                 <p>Help others make the right choice.</p>
 
                 <form class="write-search-form" data-company-search-form>
                     <div class="icon">
                         <i class="fas fa-search" aria-hidden="true"></i>
                     </div>
-                    <input type="text" name="company" placeholder="Find a company to review" aria-label="Find a company to review" data-company-search-input autocomplete="off">
-                    <button type="button" data-company-search-button>Search</button>
+                    <input  type="text" name="company" placeholder="Find a company to review" aria-label="Find a company to review" data-company-search-input autocomplete="off">
+                  
                 </form>
 
                 <div class="company-suggestions" data-company-suggestions hidden>

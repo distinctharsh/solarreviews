@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -28,6 +29,11 @@ Route::group([
     Route::resource('reviews', AdminReviewController::class);
     Route::post('reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
     Route::post('reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
+
+    // Profile submissions
+    Route::get('profile-submissions', [AdminProfileSubmissionController::class, 'index'])->name('profile-submissions.index');
+    Route::get('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'show'])->name('profile-submissions.show');
+    Route::patch('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'update'])->name('profile-submissions.update');
 
     // Brand Categories Management
     Route::prefix('brand-categories')->name('brand-categories.')->group(function () {

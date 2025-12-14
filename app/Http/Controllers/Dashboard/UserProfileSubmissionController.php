@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\UserProfileSubmission;
+use App\Notifications\NewProfileSubmissionNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 
 class UserProfileSubmissionController extends Controller
 {
@@ -18,10 +21,12 @@ class UserProfileSubmissionController extends Controller
 
         $payload = $this->preparePayload($request, UserProfileSubmission::FORM_DISTRIBUTOR);
 
-        UserProfileSubmission::updateOrCreate(
+        $submission = UserProfileSubmission::updateOrCreate(
             ['user_id' => $user->id, 'form_type' => UserProfileSubmission::FORM_DISTRIBUTOR],
             ['payload' => $payload]
         );
+
+        $this->notifyAdmins($submission);
 
         return back()->with('status', 'distributor-profile-submitted');
     }
@@ -34,10 +39,12 @@ class UserProfileSubmissionController extends Controller
 
         $payload = $this->preparePayload($request, UserProfileSubmission::FORM_SUPPLIER);
 
-        UserProfileSubmission::updateOrCreate(
+        $submission = UserProfileSubmission::updateOrCreate(
             ['user_id' => $user->id, 'form_type' => UserProfileSubmission::FORM_SUPPLIER],
             ['payload' => $payload]
         );
+
+        $this->notifyAdmins($submission);
 
         return back()->with('status', 'supplier-profile-submitted');
     }
@@ -84,5 +91,18 @@ class UserProfileSubmissionController extends Controller
         }
 
         return null;
+    }
+
+    protected function notifyAdmins(UserProfileSubmission $submission): void
+    {
+        $admins = User::query()
+            ->where('is_admin', true)
+            ->get();
+
+        if ($admins->isEmpty()) {
+            return;
+        }
+
+        Notification::send($admins, new NewProfileSubmissionNotification($submission->fresh('user')));
     }
 }

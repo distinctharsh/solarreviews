@@ -1544,7 +1544,7 @@
     border-radius: 30px;
     border: 1px solid #dcdfe4;  /* ✔ Added border */
     box-shadow: none;           /* ✔ Removed shadow */
-    font-size: 12px;
+    font-size: 14px;
     display: flex;
     gap: 5px;
     position: relative;
@@ -1626,6 +1626,49 @@
     margin-top: 30px;
 }
 
+
+
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    white-space: nowrap;     /* 🔥 prevents wrapping */
+    overflow: hidden;
+}
+
+.stat-box {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: clamp(18px, 2.5vw, 28px);
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: #000;
+}
+
+.yellow {
+    color: #f5b400;
+}
+
+.green {
+    color: #28a745;
+}
+
+
+.stats-section {
+    padding: 70px 0;
+    margin: 60px 0;
+    background: #fff;
+}
+
+
     </style>
 </head>
 <body>
@@ -1636,68 +1679,16 @@
 	
 	
 	<!-- New Hero Section -->
-<section class="solarHero-wrap">
-    <div class="solarHero-inner">
+    <section class="solarHero-wrap">
+        <div class="solarHero-inner">
 
-        <div class="solarHero-content">
-            <h1 class="reviews-title">
-                India's most trusted <br>
-                <span>Solar EPC Reviews</span>
-            </h1>
-
-            <p class="solarHero-subtitle">
-                Discover, read, and write reviews
-            </p>
-
-          <form class="hero-search-form" data-hero-company-form>
-                    <span class="hero-search-icon"><i class="fas fa-search"></i></span>
-                    <input
-                        type="text"
-                        class="hero-search-input"
-                        name="q"
-                        placeholder="Search Company"
-                        aria-label="Search Company"
-                        data-hero-company-input
-                    >
-                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
-                </form>
-				
-				
-				 <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
-                    <div class="hero-suggestions-header">
-                        <span>Suggested searches</span>
-                        <!-- <span class="suggestion-count" data-hero-suggestions-count>0 results</span> -->
-                    </div>
-                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
-                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
-                </div>
-        </div>
-
-        <div class="solarHero-pillBox">
-            <div class="solarHero-pill">
-                <span>Installed solar recently?</span>
-                <a href="{{ route('reviews.write') }}">Write a review →</a>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-
-
-
-
-
-
-    <!-- Hero Section -->
-   <!--  <section class="reviews-hero-clean">
-        <div class="reviews-hero-inner">
-            <div>
+            <div class="solarHero-content">
                 <h1 class="reviews-title">
-                    India's most trusted
+                    India's most trusted <br>
                     <span>Solar EPC Reviews</span>
                 </h1>
-                <p class="reviews-subtitle">
+
+                <p class="solarHero-subtitle">
                     Discover, read, and write reviews
                 </p>
 
@@ -1711,28 +1702,51 @@
                         aria-label="Search Company"
                         data-hero-company-input
                     >
-                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
                 </form>
-
-                <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
-                    <div class="hero-suggestions-header">
-                        <span>Suggested searches</span>
-                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
+                    
+                    
+                    <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
+                        <div class="hero-suggestions-header">
+                            <span>Suggested searches</span>
+                            <!-- <span class="suggestion-count" data-hero-suggestions-count>0 results</span> -->
+                        </div>
+                        <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
+                        <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
                     </div>
-                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
-                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
-                </div>
             </div>
 
-            <div class="hero-pill-wrapper">
-                <div class="hero-pill">
+            <div class="solarHero-pillBox">
+                <div class="solarHero-pill">
                     <span>Installed solar recently?</span>
                     <a href="{{ route('reviews.write') }}">Write a review →</a>
                 </div>
             </div>
+
         </div>
     </section>
- -->
+
+
+
+    <section class="stats-section" >
+        <div class="container-custom"  >
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value yellow">1.3 million</div>
+                    <span>No. Of listed EPC</span>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value green">+350m</div>
+                    <span>Total Reviews</span>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value yellow">1,500+</div>
+                    <span>Active Users</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
         <!-- As Seen In Section -->
     <section class="as-seen-in-section section-spacing " style="padding: 80px 0px; ">

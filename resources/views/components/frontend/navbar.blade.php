@@ -31,7 +31,16 @@
                 </div>
             </div>
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
-            <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
+            @auth
+                <form method="POST" action="{{ route('logout') }}" class="m-0">
+                    @csrf
+                    <button type="submit" class="nav-link fw-medium nav-btn-primary" style="border:none; background:none;">
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">Login / Register</a>
+            @endauth
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -61,7 +70,13 @@
             @if (Route::has('login'))
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link fw-medium py-3 nav-btn-outline" href="{{ url('/dashboard') }}">Dashboard</a>
+                        <a class="nav-link fw-medium py-3" href="{{ url('/dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="nav-link fw-medium py-3 nav-btn-outline w-100 text-start">Logout</button>
+                        </form>
                     </li>
                 @else
                     <li class="nav-item">
