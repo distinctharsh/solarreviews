@@ -73,7 +73,7 @@
             max-width: var(--write-hero-width);
             margin: 0 auto;
             background: #fff;
-            border-radius: 18px;
+            border-radius: 18px 18px 0 0;
             padding: 0.35rem 0.35rem 0.35rem 0.95rem;
             box-shadow: var(--search-shadow);
             border: 1px solid rgba(15, 23, 42, 0.08);
@@ -127,8 +127,9 @@
         .company-suggestions {
             max-width: var(--write-hero-width);
             margin: 1rem auto 0;
+            margin-top: 0;
             background: #fff;
-            border-radius: 18px;
+            border-radius: 0 0 18px 18px;
             border: 1px solid rgba(15, 23, 42, 0.08);
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
             padding: 0.4rem 0;
@@ -249,6 +250,13 @@
             .write-search-form button {
                 width: 100%;
             }
+
+         
+            .write-search-form input {
+                font-size: 14px;
+                width: 75%;
+            }
+
         }
 
         .trustpilot-empty {
@@ -267,9 +275,18 @@
 }
 
 .trustpilot-empty p {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 2vw, 1rem);
     color: #666;
-    margin-bottom: 25px;
+    margin: 0 auto 25px;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+@media (max-width: 576px) {
+    .trustpilot-empty p {
+        white-space: normal;
+        display: block;
+    }
 }
 
 .trustpilot-empty .add-btn {
@@ -330,15 +347,17 @@
             </div>
         </section>
     <div class="add-company-card trustpilot-empty">
-    <h4>Can't find a company?</h4>
-    <p>It might not be listed on Trustpilot yet. Add it and be the first to write a review.</p>
-    <a href="#" class="add-btn">Add company</a>
-</div>
+        <h4>Can't find a company?</h4>
+        <p>It might not be listed on Trustpilot yet. Add it and be the first to write a review.</p>
+        <a href="#" class="add-btn">Add company</a>
+    </div>
 
     </main>
 
     <button type="button" id="landingReviewModalTrigger" data-review-modal-trigger="landingReviewModal" style="display: none;"></button>
 
+
+    
     <x-frontend.review-modal
         modalId="landingReviewModal"
         triggerSelector="#landingReviewModalTrigger"

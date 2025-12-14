@@ -705,9 +705,12 @@
         }
 
         .hero-suggestion-name {
-            font-weight: 600;
+            /* font-weight: 600;
             color: #0f172a;
-            font-size: 0.9rem;
+            font-size: 0.9rem; */
+            font-size: 0.85rem;
+            color: #475569;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
         }
 
         .hero-suggestion-meta {
@@ -2218,6 +2221,14 @@
     .review-card {
         width: 290px;
     }
+
+    .hero-search-suggestions {
+        max-width: min(77vw, 292px);
+    }
+
+    .hero-search-form{
+        border-radius: 12px 12px 0 0;
+    }
 }
 
 
@@ -2712,6 +2723,92 @@
             // const countLabel = document.querySelector('[data-hero-suggestions-count]');
             const overlay = document.querySelector('[data-hero-overlay]');
             const MAX_RESULTS = 5;
+            const curatedSuggestions = [
+                'Best Companies in Delhi',
+                'Solar installers near you',
+                'Search reviews by city or state',
+                'Best Solar Companies',
+                'Search verified customer reviews',
+            ];
+            const intentRoutes = [
+                {
+                    keywords: ['delhi'],
+                    url: "{{ url('state/delhi') }}",
+                },
+                {
+                    keywords: ['installer'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['reviews'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['best', 'solar', 'companies'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['verified', 'customer', 'reviews'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['city'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['state'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['write', 'review'],
+                    url: "{{ route('reviews.write') }}",
+                },
+                {
+                    keywords: ['submit', 'review'],
+                    url: "{{ route('reviews.write') }}",
+                },
+                {
+                    keywords: ['compare', 'companies'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['find', 'company'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['near', 'me'],
+                    url: "{{ route('companies.index') }}",
+                },
+            ];
+            const stateBaseUrl = "{{ url('state') }}/";
+            const locationIntents = {
+                'delhi': 'delhi',
+                'maharashtra': 'maharashtra',
+                'mumbai': 'maharashtra',
+                'pune': 'maharashtra',
+                'karnataka': 'karnataka',
+                'bengaluru': 'karnataka',
+                'bangalore': 'karnataka',
+                'tamil nadu': 'tamil-nadu',
+                'tamil-nadu': 'tamil-nadu',
+                'kerala': 'kerala',
+                'gujarat': 'gujarat',
+                'rajasthan': 'rajasthan',
+                'punjab': 'punjab',
+                'uttar pradesh': 'uttar-pradesh',
+                'uttar-pradesh': 'uttar-pradesh',
+                'madhya pradesh': 'madhya-pradesh',
+                'madhya-pradesh': 'madhya-pradesh',
+                'west bengal': 'west-bengal',
+                'west-bengal': 'west-bengal',
+                'telangana': 'telangana',
+                'hyderabad': 'telangana',
+                'haryana': 'haryana',
+                'odisha': 'odisha',
+                'odisa': 'odisha',
+                'andhra pradesh': 'andhra-pradesh',
+                'andhra-pradesh': 'andhra-pradesh',
+            };
 
             if (!form || !input || !suggestions || !suggestionsList) {
                 return;
@@ -2741,8 +2838,75 @@
                 window.location.href = `/companies/${company.slug}`;
             }
 
+            function resolveIntent(term) {
+                if (!term) {
+                    return null;
+                }
+
+                const normalized = term.toLowerCase();
+
+                const curatedMatch = curatedSuggestions.find(
+                    suggestion => suggestion.toLowerCase() === normalized
+                );
+
+                if (curatedMatch) {
+                    const exactIntent = intentRoutes.find(intent =>
+                        intent.keywords.every(keyword => normalized.includes(keyword))
+                    );
+
+                    return exactIntent?.url ?? "{{ route('companies.index') }}";
+                }
+
+                for (const intent of intentRoutes) {
+                    if (intent.keywords.every(keyword => normalized.includes(keyword))) {
+                        return intent.url;
+                    }
+                }
+
+                for (const [keyword, slug] of Object.entries(locationIntents)) {
+                    if (normalized.includes(keyword)) {
+                        return `${stateBaseUrl}${slug}`;
+                    }
+                }
+
+                return null;
+            }
+
+            function handleIntentNavigation(term) {
+                const intentUrl = resolveIntent(term);
+                if (intentUrl) {
+                    window.location.href = intentUrl;
+                    return true;
+                }
+                return false;
+            }
+
+            function renderCuratedSuggestions() {
+                suggestionsList.innerHTML = '';
+                curatedSuggestions.forEach(text => {
+                    const item = document.createElement('li');
+                    item.className = 'hero-suggestion-item';
+                    item.innerHTML = `<div class="hero-suggestion-name">${text}</div>`;
+                    item.addEventListener('click', () => {
+                        if (handleIntentNavigation(text)) {
+                            return;
+                        }
+                        input.value = text;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    suggestionsList.appendChild(item);
+                });
+                emptyState.style.display = 'none';
+                showSuggestions();
+            }
+
             function renderSuggestions(matches) {
                 suggestionsList.innerHTML = '';
+
+                if (!input.value.trim()) {
+                    renderCuratedSuggestions();
+                    return;
+                }
 
                 if (!matches.length) {
                     emptyState.style.display = 'block';
@@ -2788,12 +2952,29 @@
                 renderSuggestions(matches);
             });
 
-            button?.addEventListener('click', () => {
-                const matches = filterCompanies(input.value.trim());
-                renderSuggestions(matches);
+            function handleSearchTrigger() {
+                const term = input.value.trim();
+
+                if (handleIntentNavigation(term)) {
+                    return;
+                }
+
+                const matches = filterCompanies(term);
                 if (matches.length === 1) {
                     goToCompany(matches[0]);
+                    return;
                 }
+
+                 if (!matches.length) {
+                    window.location.href = "{{ route('companies.index') }}";
+                    return;
+                }
+
+                renderSuggestions(matches);
+            }
+
+            button?.addEventListener('click', () => {
+                handleSearchTrigger();
             });
 
             form.addEventListener('mouseenter', () => {
@@ -2816,6 +2997,7 @@
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
+                handleSearchTrigger();
             });
 
             overlay?.addEventListener('click', hideSuggestions);

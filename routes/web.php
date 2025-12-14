@@ -18,8 +18,10 @@ use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\CompanyReview;
+use App\Models\State;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
 
@@ -199,8 +201,91 @@ Route::get('/write-review', [FrontendReviewController::class, 'landing'])->name(
 
 Route::view('/faq', 'frontend.faq')->name('faq');
 
-Route::get('/top-reviews', function () {
-    return view('frontend.reviews.top-installers');
+Route::get('/top-reviews', function (Request $request) {
+    $stateFilter = $request->query('state');
+
+    $states = State::query()
+        ->select('name', 'slug')
+        ->orderBy('name')
+        ->get();
+
+    $resolveLogoUrl = function (?string $logoPath) {
+        if (empty($logoPath)) {
+            return asset('images/company/cmp.png');
+        }
+
+        if (Str::startsWith($logoPath, ['http://', 'https://'])) {
+            return $logoPath;
+        }
+
+        return asset(ltrim($logoPath, '/'));
+    };
+
+    $topCompaniesQuery = Company::query()
+        ->select([
+            'companies.id',
+            'companies.slug',
+            'companies.owner_name',
+            'companies.website_url',
+            'companies.logo_url',
+            'states.name as state_name',
+        ])
+        ->selectRaw('AVG(company_reviews.rating) as avg_rating')
+        ->selectRaw('COUNT(company_reviews.id) as review_count')
+        ->join('company_reviews', function ($join) {
+            $join->on('company_reviews.company_id', '=', 'companies.id')
+                ->where('company_reviews.is_approved', true);
+        })
+        ->leftJoin('states', 'states.id', '=', 'companies.state_id')
+        ->where('companies.is_active', true)
+        ->groupBy(
+            'companies.id',
+            'companies.slug',
+            'companies.owner_name',
+            'companies.website_url',
+            'companies.logo_url',
+            'states.name'
+        )
+        ->when($stateFilter, function ($query) use ($stateFilter) {
+            $query->whereHas('state', function ($stateQuery) use ($stateFilter) {
+                $stateQuery->where('slug', $stateFilter);
+            });
+        })
+        ->orderByDesc('avg_rating')
+        ->orderByDesc('review_count');
+
+    $topCompanies = $topCompaniesQuery
+        ->get()
+        ->map(function ($company) use ($resolveLogoUrl) {
+            $websiteHost = null;
+            if (!empty($company->website_url)) {
+                $parsed = parse_url($company->website_url);
+                $websiteHost = $parsed['host'] ?? ltrim($company->website_url, '/');
+                $websiteHost = Str::replaceFirst('www.', '', $websiteHost);
+            }
+
+            return [
+                'id' => $company->id,
+                'name' => $company->owner_name ?? $company->slug,
+                'slug' => $company->slug,
+                'state' => $company->state_name,
+                'website_url' => $company->website_url,
+                'website_host' => $websiteHost,
+                'avg_rating' => round((float) $company->avg_rating, 2),
+                'review_count' => (int) $company->review_count,
+                'logo' => $resolveLogoUrl($company->logo_url),
+            ];
+        });
+
+    $activeState = $stateFilter
+        ? $states->firstWhere('slug', $stateFilter)
+        : null;
+
+    return view('frontend.reviews.top-installers', [
+        'states' => $states,
+        'topCompanies' => $topCompanies,
+        'activeState' => $activeState,
+    ]);
 })->name('reviews.top');
 
 // All companies listing

@@ -84,6 +84,10 @@
             text-decoration: none;
             font-weight: 500;
         }
+        .state-list a.active,
+        .state-list a:hover {
+            color: #0f172a;
+        }
         .table-card {
             background: white;
             border: 1px solid var(--border);
@@ -141,10 +145,7 @@
 <body>
     @include('components.frontend.navbar')
 
-    <div class="page-wrapper">
-        @php
-            $states = \App\Models\State::select('name', 'slug')->orderBy('name')->get();
-        @endphp
+    <div class="page-wrapper container-custom">
         <p class="text-uppercase text-muted fw-semibold mb-2" style="letter-spacing: 1.5px;">Consumer Reviews</p>
         <h1 class="page-title">Top 100 Solar Installers Ranked by Consumer Reviews</h1>
         <p class="lede mt-3">SolarReviews is the leading American website for solar panel reviews and solar panel installation companies. Our independent expert rating keeps things unbiased so you can hire with confidence.</p>
@@ -153,14 +154,19 @@
             <aside class="sidebar-card">
                 <h5>About this list</h5>
                 <p>SolarReviews has the most verified homeowner feedback in the industry. No company can pay to alter these scores &mdash; every star you see is earned.</p>
-                <a href="#" class="d-inline-block mt-2 fw-semibold" style="color: var(--accent);">Learn more about our scoring &rarr;</a>
+                <!-- <a href="#" class="d-inline-block mt-2 fw-semibold" style="color: var(--accent);">Learn more about our scoring &rarr;</a> -->
 
                 <hr class="my-4">
                 <h5>Solar in your state</h5>
                 <ul class="state-list">
                     @forelse($states as $state)
                         <li>
-                            <a href="{{ route('state.companies', $state->slug) }}">{{ $state->name }}</a>
+                            <a
+                                href="{{ route('reviews.top', ['state' => $state->slug]) }}"
+                                class="{{ $activeState?->slug === $state->slug ? 'active fw-semibold' : '' }}"
+                            >
+                                {{ $state->name }}
+                            </a>
                         </li>
                     @empty
                         <li class="text-muted">States coming soon.</li>
@@ -169,6 +175,17 @@
             </aside>
 
             <section class="table-card">
+                <div class="d-flex justify-content-between align-items-center border-bottom px-4 py-3">
+                    <div>
+                        <strong>Showing:</strong>
+                        <span>
+                            {{ $activeState?->name ?? 'All states' }}
+                        </span>
+                    </div>
+                    @if($activeState)
+                        <a href="{{ route('reviews.top') }}" class="btn btn-sm btn-outline-secondary">Clear filter</a>
+                    @endif
+                </div>
                 <div class="table-responsive">
                     <table class="table mb-0">
                         <thead>
@@ -176,40 +193,57 @@
                                 <th style="width:30%;">Company</th>
                                 <th style="width:25%;">SolarReviews expert rating</th>
                                 <th style="width:25%;">Consumer rating</th>
-                                <th style="width:20%;" class="text-center">Quote</th>
+                                <th style="width:20%;" class="text-center">View</th>
                             </tr>
                         </thead>
                         <tbody>
-                        @php
-                            $companies = [
-                                ['name' => 'Affordable Solar Roofing', 'expert' => 5, 'consumer' => '4.92', 'reviews' => 718],
-                                ['name' => 'Lumina', 'expert' => 5, 'consumer' => '4.87', 'reviews' => 450],
-                                ['name' => 'Sunergy Solutions LLC', 'expert' => 5, 'consumer' => '4.91', 'reviews' => 145],
-                                ['name' => 'Green Power Energy', 'expert' => 4, 'consumer' => '4.83', 'reviews' => 404],
-                                ['name' => 'SUNation Energy', 'expert' => 4, 'consumer' => '4.82', 'reviews' => 264],
-                                ['name' => 'NorthPeak Installers', 'expert' => 4, 'consumer' => '4.79', 'reviews' => 231],
-                            ];
-                        @endphp
-                        @foreach($companies as $company)
+                        @forelse($topCompanies as $company)
                             <tr>
-                                <td class="fw-semibold">{{ $company['name'] }}</td>
-                                <td>
-                                    <div class="expert-dots">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <span class="{{ $i <= $company['expert'] ? 'active' : '' }}"></span>
-                                        @endfor
+                                <td class="fw-semibold">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div style="width:48px;height:48px;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;background:#fff;">
+                                            <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo" style="width:100%;height:100%;object-fit:contain;">
+                                        </div>
+                                        <div>
+                                            <a href="{{ route('companies.show', $company['slug']) }}" class="text-decoration-none text-dark fw-semibold">
+                                                {{ $company['name'] }}
+                                            </a>
+                                            <div class="text-muted small">
+                                                {{ $company['state'] ?? 'Pan India' }}
+                                                @if($company['website_host'])
+                                                    &middot;
+                                                    <a href="{{ $company['website_url'] }}" target="_blank" rel="noopener" class="text-muted text-decoration-none">
+                                                        {{ $company['website_host'] }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
+                                    <div class="expert-dots">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <span class="{{ $i <= 5 ? 'active' : '' }}"></span>
+                                        @endfor
+                                    </div>
+                                    <small class="text-muted d-block mt-1">SolarReviews rating</small>
+                                </td>
+                                <td>
                                     <span class="rating-stars">★★★★★</span>
-                                    <span class="fw-semibold">{{ $company['consumer'] }}</span>
-                                    <span class="text-muted">({{ $company['reviews'] }})</span>
+                                    <span class="fw-semibold">{{ number_format($company['avg_rating'], 2) }}</span>
+                                    <span class="text-muted">({{ number_format($company['review_count']) }} reviews)</span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-outline-primary btn-quote">Get Quote</a>
+                                    <a href="{{ route('companies.show', $company['slug']) }}" class="btn btn-outline-primary btn-quote">View Profile</a>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-5">
+                                    No installer data available yet. Check back soon.
+                                </td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
