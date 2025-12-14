@@ -1706,7 +1706,7 @@
         /* ========================= */
         .cta-wrapper {
             position: relative;
-            background: #ffe1ea;
+            background: #47a458;
             border-radius: 28px;
             padding: 32px 40px;
             display: flex;
@@ -1722,13 +1722,13 @@
             margin: 0 0 8px;
             font-size: 22px;
             font-weight: 600;
-            color: #000;
+            color: #fff;
         }
 
         .cta-content p {
             margin: 0;
             font-size: 16px;
-            color: #000;
+            color: #fff;
         }
 
         /* ========================= */
@@ -1742,8 +1742,8 @@
         .cta-btn {
             position: relative;
             z-index: 6;
-            background: #000;
-            color: #fff;
+            background: #fff;
+            color: #000;
             border: none;
             padding: 14px 28px;
             border-radius: 30px;
@@ -1767,7 +1767,7 @@
 
         .cta-bars span {
             width: 50px;
-            background: #ffc6d4;
+            background: #ffc93a;
             border-radius: 10px 10px 0 0;
         }
 
@@ -1808,7 +1808,7 @@
             .cta-content h3 {
                 margin: 0 0 8px;
                 font-weight: 600;
-                color: #000;
+                color: #fff;
                 white-space: nowrap;          /* 🔥 ek hi line */
                 font-size: clamp(16px, 3.5vw, 22px);  /* 🔥 responsive shrink */
                 margin-left: 0;
@@ -1856,11 +1856,21 @@
         /* ================= CARDS CONTAINER ================= */
         .bank-cards {
             display: flex;
-            gap: 20px;
+            gap: 6px;
             overflow-x: auto;              /* 🔥 horizontal scroll */
             scroll-snap-type: x mandatory; /* smooth snap */
             padding-bottom: 10px;
             scroll-behavior: smooth;
+        }
+
+        /* 🔥 fallback for old browsers */
+        .bank-card {
+            margin-right: 20px;
+        }
+
+        /* last card ka extra margin hata do */
+        .bank-card:last-child {
+            margin-right: 0;
         }
 
         .bank-cards::-webkit-scrollbar {
@@ -1950,6 +1960,11 @@
                 min-width: 85%;       /* 🔥 main card almost full */
                 max-width: 85%;
                 scroll-snap-align: start;
+                margin-right: 14px; /* 🔥 fallback */
+            }
+
+            .bank-card:last-child {
+                margin-right: 0;
             }
 
             .bank-header {

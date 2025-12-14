@@ -5,7 +5,7 @@
         </a>
         
         <!-- Desktop Nav Links -->
-        <div class="desktop-nav d-none d-lg-flex align-items-center gap-3">
+        <div class="desktop-nav d-none d-lg-flex align-items-center">
             <div class="mega-nav-item position-relative">
                 <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1" data-mega-trigger>
                     Learn About Solar
@@ -437,6 +437,16 @@
     .btn-close:hover .close-icon::after {
         background-color: #1e3a8a;
     }
+
+
+    .desktop-nav > * {
+    margin-right: 1rem; /* same as gap-3 */
+}
+
+.desktop-nav > *:last-child {
+    margin-right: 0;
+}
+
 </style>
 
 <script>
