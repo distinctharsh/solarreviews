@@ -503,23 +503,11 @@
   
   
   
-       .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
   
   
   
-   @media (max-width: 768px) {
-            .hero-content {
-                padding: 0 1.25rem;
-            }
-        }
-
+  
+  
   
   
   
@@ -576,13 +564,129 @@
         <a href="#" class="add-btn">Add company</a>
     </div>
 
-    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container-custom">
     
-    <div style="background: #11411a; width: 100%">
-        <div class="hero-content" >
-            @include('components.frontend.footer')
+
+
+
+<footer class="footer py-5">
+    <div class="container">
+        <div class="row g-4 mb-4" style="padding-left: 176px;">
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="footer-about">
+                    <a href="/" class="d-inline-block mb-3">
+                        <img src="{{ asset('images/abc.png') }}" alt="SolarReviews Logo" class="footer-logo">
+                    </a>
+                    <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="footer-links">
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Quick Links</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">How It Works</a></li>
+                            <li class="mb-2"><a href="#">Solar Companies</a></li>
+                            <li class="mb-2"><a href="#">Reviews</a></li>
+                            <li class="mb-2"><a href="#">Blog</a></li>
+                            <li class="mb-2"><a href="#">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="footer-links">
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Solar Resources</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">Solar Guides</a></li>
+                            <li class="mb-2"><a href="#">Solar Calculator</a></li>
+                            <li class="mb-2"><a href="#">Solar Incentives</a></li>
+                            <li class="mb-2"><a href="#">Financing Options</a></li>
+                            <li class="mb-2"><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="footer-links">
+                    <button class="footer-toggle" type="button" aria-expanded="true">
+                        <span>Legal</span>
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="footer-collapse is-open">
+                        <ul>
+                            <li class="mb-2"><a href="#">Privacy Policy</a></li>
+                            <li class="mb-2"><a href="#">Terms of Service</a></li>
+                            <li class="mb-2"><a href="#">Cookie Policy</a></li>
+                            <li class="mb-2"><a href="#">Sitemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="border-top border-secondary pt-4">
+        <div class="container text-center">
+            <p class="mb-0" style="font-size: 0.875rem;">&copy; {{ date('Y') }} SolarReviews. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
 
     <button type="button" id="landingReviewModalTrigger" data-review-modal-trigger="landingReviewModal" style="display: none;"></button>
 

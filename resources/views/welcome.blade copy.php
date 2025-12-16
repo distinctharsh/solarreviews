@@ -54,6 +54,7 @@
             --primary-color: #3ba14c;
             --secondary-color: #1e3a8a;
             --accent-color: #3b82f6;
+            --hero-content-width: min(560px, calc(100% - 2.5rem));
             --tw-gradient-from-position: ;
             --tw-gradient-via-position: ;
             --tw-gradient-to-position: ;
@@ -598,16 +599,17 @@
         }
 
         .hero-search-form {
-            max-width: min(660px, calc(100% - 2rem));
+            max-width: var(--hero-content-width);
             width: 100%;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
             padding: 0.45rem 0.45rem 0.45rem 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.85rem;
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.06);
-            border-radius: 8px;
+            border-radius: 18px;
             box-shadow: 0 22px 45px rgba(15, 23, 42, 0.1);
         }
 
@@ -686,30 +688,40 @@
         }
 
         .hero-suggestion-item {
-            padding: 0.85rem 1.25rem;
+            padding: 0.25rem 0.9rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: normal;
+            gap: 10px;
             align-items: center;
             cursor: pointer;
             transition: background 0.15s ease;
-        }
-
-        .hero-suggestion-item:not(:last-child) {
-            border-bottom: 1px solid rgba(15, 23, 42, 0.04);
         }
 
         .hero-suggestion-item:hover {
             background: rgba(59, 161, 76, 0.08);
         }
 
+          .hero-suggestion-item:not(:last-child) {
+            border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+        }
+
         .hero-suggestion-name {
-            font-weight: 600;
+            /* font-weight: 600;
             color: #0f172a;
+            font-size: 0.9rem; */
+            font-size: 0.85rem;
+            color: #475569;
         }
 
         .hero-suggestion-meta {
             font-size: 0.85rem;
             color: #6b7280;
+            text-align:left;
+        }
+
+        .hero-suggestion-icon-2 i {
+            font-size: 0.85rem;
+            color: #475569;
         }
 
         .hero-suggestion-pill {
@@ -1469,226 +1481,812 @@
 		
 		
 		
-/* Full Hero Wrapper */
-.solarHero-wrap {
-    width: 100%;
-    min-height: calc(100vh - 80px);
-    padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
-    background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
-    background-color: #f5f5f5; 
-    display: flex;
-    align-items: flex-start; /* 👈 center se upar */
-    justify-content: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    position: relative;
-}
+        /* Full Hero Wrapper */
+        .solarHero-wrap {
+            width: 100%;
+            min-height: calc(100vh - 80px);
+            padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
+            background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
+            background-color: #f5f5f5; 
+            display: flex;
+            align-items: flex-start; /* 👈 center se upar */
+            justify-content: center;
+            padding-left: 20px;
+            padding-right: 20px;
+            position: relative;
+        }
 
 
 
-/* Inner content container */
-.solarHero-inner {
-    text-align: center;
-    max-width: 900px;
-    width: 100%;
-}
+        /* Inner content container */
+        .solarHero-inner {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
 
-/* Title */
-.solarHero-title {
-    font-size: 48px;
-    font-weight: 700;
-    color: #222;
-    line-height: 1.3;
-}
+        .solarHero-content {
+            max-width: var(--hero-content-width);
+            margin: 0 auto;
+            width: 100%;
+        }
 
-.solarHero-title span {
-    color: #2fa83f;
-}
+        /* Title */
+        /*.solarHero-title {*/
+        /*    font-size: clamp(1.85rem, 3.6vw, 2.9rem);*/
+        /*    font-weight: 700;*/
+        /*    color: #222;*/
+        /*    line-height: 1.1;*/
+        /*}*/
+        
+        
+        .solarHero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #222;
+            line-height: 1.3;
+        }
 
-/* Subtitle */
-.solarHero-subtitle {
-    margin-top: 10px;
-    font-size: 18px;
-    color: #444;
-}
+        /*.solarHero-title .solarHero-title-line {*/
+        /*    display: block;*/
+        /*    white-space: nowrap;*/
+        /*}*/
 
-/* Search Box */
-.solarHero-searchBox {
-    margin: 30px auto 0;
-    width: 100%;
-    max-width: 600px;
+        .solarHero-title .solarHero-title-line.secondary {
+            color: #2fa83f;
+            /*font-size: clamp(1.7rem, 3.2vw, 2.6rem);*/
+        }
+
+        /* Subtitle */
+        .solarHero-subtitle {
+            margin-top: 10px;
+            font-size: clamp(0.85rem, 2.5vw, 1.125rem);
+            color: #444;
+            font-size: 16px !important;
+        }
+
+        /* Search Box */
+        .solarHero-searchBox {
+            margin: 30px auto 0;
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .solarHero-pillBox {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .solarHero-pill {
+            background: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: 1px solid #dcdfe4;  /* ✔ Added border */
+            box-shadow: none;           /* ✔ Removed shadow */
+            font-size: 14px;
+            display: flex;
+            gap: 5px;
+            position: relative;
+            z-index: 2;
+            white-space: nowrap; 
+        }
+
+        /* Left & Right Lines */
+        .solarHero-pillBox::before,
+        .solarHero-pillBox::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dcdfe4;
+            margin: auto 0px;
+            max-width: 450px;
+        }
+
+
+        .solarHero-pill a {
+            color: #4a3aff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+
+
+        @media (max-width: 600px) {
+            .solarHero-pillBox {
+                bottom: 260px;  
+            }
+            
+            .solarHero-pillBox::before,
+            .solarHero-pillBox::after {
+                content: '';
+                flex: 1;
+                height: 0px;
+                background: #dcdfe4;
+                margin: auto 0px;
+                max-width: 350px;
+            }
+            
+            .solarHero-wrap {
+                width: 100%;
+                min-height: calc(100vh - 80px);
+                padding-top: 40px;
+                background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
+                background-color: #f5f5f5;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                padding-left: 20px;
+                padding-right: 20px;
+                position: relative;
+            }
+        }
+
+        .hero-search-form {
+            position: relative;
+            z-index: 110;
+        }
+
+        .hero-search-suggestions {
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            z-index: 115;
+            position: relative;
+            max-width: var(--hero-content-width);
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            z-index: 100;
+        }
+
+        .hero-search-form{
+            margin-top: 30px;
+        }
+
+
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+            white-space: nowrap;     /* 🔥 prevents wrapping */
+            overflow: hidden;
+        }
+
+        .stat-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: clamp(18px, 2.5vw, 28px);
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .yellow {
+            color: #f5b400;
+        }
+
+        .green {
+            color: #28a745;
+        }
+
+
+        .stats-section {
+            padding: 70px 0;
+            margin: 60px 0;
+            background: #fff;
+        }
+
+        @media (max-width: 768px) {
+
+
+            .stats-container {
+                display: flex;
+                justify-content: space-between;
+                gap: 0;
+            }
+
+
+            .stat-box:last-child {
+            margin-right: 0;
+        }
+
+            .stat-value {
+                font-size: 14px;
+            }
+
+            .stat-box span{
+                font-size: 12px;
+            }
+
+            .stats-section {
+                margin: -192px 0 -40px 0;
+                position: absolute;
+                z-index: 2;
+                padding: 50px 0;
+                width: 100%;
+            }
+        }
+
+
+        /* ========================= */
+        /* CTA CONTAINER */
+        /* ========================= */
+        .cta-wrapper {
+            position: relative;
+            background: #47a458;
+            border-radius: 28px;
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* ========================= */
+        /* CONTENT */
+        /* ========================= */
+        .cta-content h3 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .cta-content p {
+            margin: 0;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        /* ========================= */
+        /* BUTTON */
+        /* ========================= */
+        .cta-action {
+            position: relative;
+            z-index: 5;
+        }
+
+        .cta-btn {
+            position: relative;
+            z-index: 6;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* ========================= */
+        /* DECORATIVE BARS */
+        /* ========================= */
+        .cta-bars {
+            position: absolute;
+            right: 20px;
+            bottom: 0;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            z-index: 1;
+        }
+
+        .cta-bars span {
+            width: 50px;
+            background: #ffc93a;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .cta-bars span:nth-child(1) { height: 22px; }
+        .cta-bars span:nth-child(2) { height: 40px; }
+        .cta-bars span:nth-child(3) { height: 60px; }
+        .cta-bars span:nth-child(4) { height: 80px; }
+
+        /* ========================= */
+        /* RESPONSIVE (MOBILE) */
+        /* ========================= */
+        @media (max-width: 768px) {
+            .cta-wrapper {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+
+            .cta-content {
+                order: 1;
+            }
+
+            .cta-action {
+                order: 2;
+                width: 100%;
+            }
+
+            .cta-btn {
+                margin: 0 auto;
+            }
+
+            .cta-bars {
+                right: 50%;
+                transform: translateX(50%);
+                gap: 25px;
+            }
+
+            .cta-content h3 {
+                margin: 0 0 8px;
+                font-weight: 600;
+                color: #fff;
+                white-space: nowrap;          /* 🔥 ek hi line */
+                font-size: clamp(16px, 3.5vw, 22px);  /* 🔥 responsive shrink */
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .cta-content p {
+                max-width: 85%;          /* 🔥 h3 se kam width */
+                margin: 0 auto;          /* center align */
+                font-size: 14px;
+            }
+
+        }
+
+
+
+
+        /* ================= SECTION ================= */
+        .bank-section {
+            padding-bottom: 80px;
+        }
+
+        /* ================= HEADER ================= */
+        .bank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .bank-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .see-more {
+            border: 1px solid #4b5cff;
+            color: #4b5cff;
+            padding: 8px 16px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* ================= CARDS CONTAINER ================= */
+        .bank-cards {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;              /* 🔥 horizontal scroll */
+            scroll-snap-type: x mandatory; /* smooth snap */
+            padding-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        /* 🔥 fallback for old browsers */
+        .bank-card {
+            margin-right: 20px;
+        }
+
+        /* last card ka extra margin hata do */
+        .bank-card:last-child {
+            margin-right: 0;
+        }
+
+        .bank-cards::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ================= CARD ================= */
+        .bank-card {
+            min-width: 280px;              /* 🔥 prevents wrap */
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            padding: 20px;
+            scroll-snap-align: start;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .bank-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .bank-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 6px;
+        }
+
+        .bank-card h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .domain {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .site-link {
+            display: inline-block;
+            font-size: 14px;
+            color: #4b5cff;
+            text-decoration: none;
+            margin-bottom: 12px;
+        }
+
+        .site-link:hover {
+            text-decoration: underline;
+        }
+
+        .rating {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rating .stars {
+            color: #f5b400;
+            font-size: 16px;
+        }
+
+        .bank-card.empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+
+            .bank-cards {
+                padding-right: 14px;   /* 🔥 small breathing space */
+                gap: 14px;
+            }
+
+            .bank-card {
+                min-width: 85%;       /* 🔥 main card almost full */
+                max-width: 85%;
+                scroll-snap-align: start;
+                margin-right: 14px; /* 🔥 fallback */
+            }
+
+            .bank-card:last-child {
+                margin-right: 0;
+            }
+
+            .bank-header {
+                gap: 12px;
+            }
+
+            .bank-header h2 {
+                font-size: 20px;          /* 🔥 thoda chota */
+                line-height: 1.3;
+                flex: 1;                  /* 🔥 space le sake */
+            }
+
+            .see-more {
+                white-space: nowrap;     /* 🔥 wrap band */
+                font-size: 13px;         /* 🔥 thoda compact */
+                padding: 6px 14px;
+                flex-shrink: 0;          /* 🔥 kabhi shrink na ho */
+            }
+        }
+
+
+
+
+
+/* ================= SECTION ================= */
+.reviews-section {
+    padding: 40px 0;
     background: #fff;
-    padding: 12px 16px;
-    border-radius: 10px;
+}
+
+/* ================= HEADER ================= */
+.reviews-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.reviews-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #111;
+}
+
+
+/* ================= NAV ARROWS ================= */
+.reviews-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    font-size: 22px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    border-color: #4b5cff;
+    color: #4b5cff;
+}
+
+.nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ================= SCROLL CONTAINER ================= */
+.reviews-scroll {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, auto);
+    gap: 24px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+}
+
+.reviews-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* ================= CARD ================= */
+.review-card {
+    width: 330px;
+    background: #fff;
+    border: 1px solid #e6dcd5;
+    border-radius: 22px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    scroll-snap-align: start;
+}
+
+/* ================= TOP ================= */
+.review-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #eee;
+    color: #555;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.review-top strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+/* ================= STARS ================= */
+.stars {
+    display: flex;
+    gap: 2px;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.stars span,
+.stars {
+    color: #00b67a;
+}
+
+/* ================= TEXT ================= */
+.review-text {
+    font-size: 15px;
+    line-height: 1.55;
+    color: #333;
+    margin-bottom: 18px;
+}
+
+/* ================= FOOTER ================= */
+.review-footer {
+    border-top: 1px solid #eee;
+    padding-top: 14px;
+    font-size: 13px;
+}
+
+.review-footer strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+.review-footer span {
+    display: block;
+    color: #666;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.review-footer a {
+    color: #555;
+    text-decoration: none;
+}
+
+.review-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= COMPANY FOOTER ================= */
+.company-info {
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
-.solarHero-pillBox {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
+
+.company-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
     display: flex;
+    align-items: center;
     justify-content: center;
-    padding: 0 20px;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.solarHero-pill {
-    background: #fff;
-    padding: 12px 25px;
-    border-radius: 30px;
-    border: 1px solid #dcdfe4;  /* ✔ Added border */
-    box-shadow: none;           /* ✔ Removed shadow */
-    font-size: 12px;
-    display: flex;
-    gap: 5px;
-    position: relative;
-    z-index: 2;
-	white-space: nowrap; 
+.company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-/* Left & Right Lines */
-.solarHero-pillBox::before,
-.solarHero-pillBox::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #dcdfe4;
-    margin: auto 0px;
-	 max-width: 450px;
-}
-
-
-.solarHero-pill a {
-    color: #4a3aff;
-    text-decoration: none;
+.company-logo span {
     font-weight: 600;
+    font-size: 14px;
+    color: #666;
+}
+
+.company-meta strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+}
+
+.company-meta span {
+    font-size: 12px;
+    color: #666;
 }
 
 
-
-@media (max-width: 600px) {
-    .solarHero-pillBox {
-        bottom: 260px;  
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .review-card {
+        width: 290px;
     }
-    
-    .solarHero-pillBox::before,
-    .solarHero-pillBox::after {
-        content: '';
-        flex: 1;
-        height: 0px;
-        background: #dcdfe4;
-        margin: auto 0px;
-    	 max-width: 350px;
+
+    .hero-search-suggestions {
+        max-width: min(77vw, 292px);
     }
-    
-    .solarHero-wrap {
-        width: 100%;
-        min-height: calc(100vh - 80px);
-        padding-top: 40px;
-         background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
-        background-color: #f5f5f5;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-left: 20px;
-        padding-right: 20px;
-        position: relative;
-    }
+
+  
 }
 
-.hero-search-form {
-    position: relative;
+
+.hero-search-form:hover {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.hero-search-suggestions {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    z-index: 2;
-	
+.hero-search-suggestions:not([hidden]) ~ .hero-search-form {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 
 
-.hero-search-form{
-    margin-top: 30px;
-}
 
     </style>
 </head>
-<body>
+<body style="background-color: #fff;">
     <!-- Navigation -->
     @include('components.frontend.navbar')
+    <div class="hero-overlay" data-hero-overlay hidden></div>
 	
 	
 	
 	<!-- New Hero Section -->
-<section class="solarHero-wrap">
-    <div class="solarHero-inner">
-
-        <div class="solarHero-content">
-            <h1 class="reviews-title">
-                India's most trusted <br>
-                <span>Solar EPC Reviews</span>
-            </h1>
-
-            <p class="solarHero-subtitle">
-                Discover, read, and write reviews
-            </p>
-
-          <form class="hero-search-form" data-hero-company-form>
-                    <span class="hero-search-icon"><i class="fas fa-search"></i></span>
-                    <input
-                        type="text"
-                        class="hero-search-input"
-                        name="q"
-                        placeholder="Search Company"
-                        aria-label="Search Company"
-                        data-hero-company-input
-                    >
-                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
-                </form>
-				
-				
-				 <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
-                    <div class="hero-suggestions-header">
-                        <span>Suggested searches</span>
-                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
-                    </div>
-                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
-                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
-                </div>
-        </div>
-
-        <div class="solarHero-pillBox">
-            <div class="solarHero-pill">
-                <span>Installed solar recently?</span>
-                <a href="{{ route('reviews.write') }}">Write a review →</a>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-
-
-
-
-
-
-    <!-- Hero Section -->
-   <!--  <section class="reviews-hero-clean">
-        <div class="reviews-hero-inner">
-            <div>
-                <h1 class="reviews-title">
-                    India's most trusted
+    <section class="solarHero-wrap">
+        <div class="solarHero-inner">
+            <div class="solarHero-content">
+                <!--<h1 class="solarHero-title">-->
+                <!--    <span class="solarHero-title-line">India's most trusted</span>-->
+                <!--    <span class="solarHero-title-line secondary">Solar EPC Reviews</span>-->
+                <!--</h1>-->
+                
+                 <h1 class="reviews-title">
+                    India's most trusted <br>
                     <span>Solar EPC Reviews</span>
                 </h1>
-                <p class="reviews-subtitle">
+
+                <p class="solarHero-subtitle">
                     Discover, read, and write reviews
                 </p>
 
@@ -1702,28 +2300,70 @@
                         aria-label="Search Company"
                         data-hero-company-input
                     >
-                    <button type="button" class="hero-search-button" data-hero-company-button>Search</button>
                 </form>
-
                 <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
                     <div class="hero-suggestions-header">
                         <span>Suggested searches</span>
-                        <span class="suggestion-count" data-hero-suggestions-count>0 results</span>
                     </div>
                     <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
                     <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
                 </div>
             </div>
 
-            <div class="hero-pill-wrapper">
-                <div class="hero-pill">
+            <div class="solarHero-pillBox">
+                <div class="solarHero-pill">
                     <span>Installed solar recently?</span>
                     <a href="{{ route('reviews.write') }}">Write a review →</a>
                 </div>
             </div>
+
         </div>
     </section>
- -->
+
+
+
+    <section class="stats-section" >
+        <div class="container-custom"  >
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value yellow">1,500+</div>
+                    <span>No. Of listed EPC</span>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value green">350m+</div>
+                    <span>Total Reviews</span>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-value yellow">1,500+</div>
+                    <span>Active Users</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-custom">
+        <div class="cta-wrapper mb-4">
+            <div class="cta-content">
+                <h3>Looking to grow your business?</h3>
+                <p>Strengthen your reputation with reviews on Solar Reviews.</p>
+            </div>
+
+            <div class="cta-action">
+                <button class="cta-btn" onclick="window.location.href='{{ route('login') }}'">Get started</button>
+            </div>
+
+            <!-- decorative bars -->
+            <div class="cta-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
 
         <!-- As Seen In Section -->
     <section class="as-seen-in-section section-spacing " style="padding: 80px 0px; ">
@@ -1732,41 +2372,92 @@
                 <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
             </div>
 
-            <div class="row justify-content-center align-items-center g-4 text-center">
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
-                </div>
+            <div class="row justify-content-between align-items-center g-4 text-center">
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
                 </div>
-
-                <div class="col-6 col-md-3 col-lg-3">
+                
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
+                </div>
+                
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
                 </div>
+                
+               
             </div>
         </div>
     </section>
+
+
+
+
+    <section class="bank-section">
+        <div class="container-custom">
+            <div class="bank-header">
+                <h2>Trending Companies on Solar Reviews</h2>
+                <a href="{{ route('companies.index') }}" class="see-more">See more</a>
+            </div>
+
+            <div class="bank-cards" id="autoScrollCards">
+                @forelse($trendingCompanies ?? [] as $company)
+                    <div class="bank-card">
+                        <a href="{{ route('companies.show', $company['slug']) }}">
+                            <div class="bank-logo">
+                                <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo">
+                            </div>
+                            <h3>{{ $company['name'] }}</h3>
+
+                            @if(!empty($company['website_url']))
+                                <a class="site-link" href="{{ $company['website_url'] }}" target="_blank" rel="noopener">
+                                    {{ $company['website_host'] ?? $company['website_url'] }}
+                                </a>
+                            @endif
+
+                            <div class="rating">
+                                <span class="stars">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        {{ $company['avg_rating'] >= $i ? '★' : '☆' }}
+                                    @endfor
+                                </span>
+                                <span>{{ number_format($company['avg_rating'], 1) }} ({{ number_format($company['review_count']) }})</span>
+                            </div>
+                        </a>
+                    </div>
+                @empty
+                    <div class="bank-card empty-state">
+                        No trending companies available right now. Check back soon.
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
 
 
     <!-- Reviews Hero Section -->
@@ -1810,7 +2501,7 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section id="testimonials" class="py-5 bg-white">
+    <!-- <section id="testimonials" class="py-5 bg-white">
         <div class="container-custom">
             <div class="text-center mb-5">
                 <a href="#" class="fw-medium text-decoration-none mb-2 d-block" style="color: var(--primary-color);">See What Others Are Saying About Us</a>
@@ -1857,15 +2548,102 @@
                 </div>
             </div>
         </div>
+    </section> -->
+
+
+
+    <section class="reviews-section">
+        <div class="container-custom">
+
+            <div class="reviews-header">
+                <h2>Recent reviews</h2>
+
+                <div class="reviews-nav">
+                    <button class="nav-btn prev" aria-label="Previous">
+                        ‹
+                    </button>
+                    <button class="nav-btn next" aria-label="Next">
+                        ›
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="reviews-scroll">
+                @foreach($recentReviews ?? [] as $review)
+                    <div class="review-card">
+                        <div class="review-top">
+                            <div class="avatar">{{ $review['avatar'] }}</div>
+                            <div>
+                                <strong>{{ $review['reviewer'] }}</strong>
+                                <div class="stars">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        {{ $review['rating'] >= $i ? '★' : '☆' }}
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="review-text">
+                            {{ $review['text'] }}
+                        </p>
+
+                        <div class="review-footer">
+                            <div class="company-info">
+                                <div class="company-logo">
+                                    <img src="{{ $review['company']['logo'] }}" alt="{{ $review['company']['name'] }} logo">
+                                </div>
+
+                                <div class="company-meta">
+                                    <strong>
+                                        @if(!empty($review['company']['slug']))
+                                            <a href="{{ route('companies.show', $review['company']['slug']) }}">
+                                                {{ $review['company']['name'] }}
+                                            </a>
+                                        @else
+                                            {{ $review['company']['name'] }}
+                                        @endif
+                                    </strong>
+
+                                    @if(!empty($review['company']['website_host']))
+                                        <span>{{ $review['company']['website_host'] }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
+                @if(($recentReviews ?? collect())->isEmpty())
+                    <div class="review-card">
+                        <div class="review-top">
+                            <div class="avatar">SR</div>
+                            <div>
+                                <strong>No recent reviews yet</strong>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            Be the first to share your experience with a solar installer on Solar Reviews.
+                        </p>
+                        <div class="review-footer">
+                            <strong>Solar Reviews Community</strong>
+                            <span><a href="{{ route('reviews.write') }}" class="text-decoration-none">Write a review</a></span>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+        </div>
     </section>
 
 
+
+
     <!-- Experts Section -->
-    <section class="experts-section section-spacing py-5">
+    <!-- <section class="experts-section section-spacing py-5">
         <div class="container-custom">
             <div class="row align-items-center">
 
-                <!-- Left Content -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <h6 class="fw-semibold mb-3" style="color: var(--primary-color);">Our Experts</h6>
                     <h2 class="fw-bold mb-4" style="font-size: 2.5rem; line-height: 1.3;">
@@ -1883,7 +2661,6 @@
                     </a>
                 </div>
 
-                <!-- Right Side Images -->
                 <div class="col-12 col-lg-6">
                     <div class="experts-grid">
                         <img src="/images/expert1.jpg" class="expert-img" alt="">
@@ -1896,7 +2673,7 @@
 
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     <section class="latest-articles section-spacing py-5">
@@ -1981,8 +2758,95 @@
             const suggestions = document.querySelector('[data-hero-company-suggestions]');
             const suggestionsList = document.querySelector('[data-hero-suggestions-list]');
             const emptyState = document.querySelector('[data-hero-suggestions-empty]');
-            const countLabel = document.querySelector('[data-hero-suggestions-count]');
-            const MAX_RESULTS = 8;
+            // const countLabel = document.querySelector('[data-hero-suggestions-count]');
+            const overlay = document.querySelector('[data-hero-overlay]');
+            const MAX_RESULTS = 5;
+            const curatedSuggestions = [
+                'Best Companies in Delhi',
+                'Solar installers near you',
+                'Search reviews by city or state',
+                'Best Solar Companies',
+                'Search verified customer reviews',
+            ];
+            const intentRoutes = [
+                {
+                    keywords: ['delhi'],
+                    url: "{{ url('state/delhi') }}",
+                },
+                {
+                    keywords: ['installer'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['reviews'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['best', 'solar', 'companies'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['verified', 'customer', 'reviews'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['city'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['state'],
+                    url: "{{ route('reviews.top') }}",
+                },
+                {
+                    keywords: ['write', 'review'],
+                    url: "{{ route('reviews.write') }}",
+                },
+                {
+                    keywords: ['submit', 'review'],
+                    url: "{{ route('reviews.write') }}",
+                },
+                {
+                    keywords: ['compare', 'companies'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['find', 'company'],
+                    url: "{{ route('companies.index') }}",
+                },
+                {
+                    keywords: ['near', 'me'],
+                    url: "{{ route('companies.index') }}",
+                },
+            ];
+            const stateBaseUrl = "{{ url('state') }}/";
+            const locationIntents = {
+                'delhi': 'delhi',
+                'maharashtra': 'maharashtra',
+                'mumbai': 'maharashtra',
+                'pune': 'maharashtra',
+                'karnataka': 'karnataka',
+                'bengaluru': 'karnataka',
+                'bangalore': 'karnataka',
+                'tamil nadu': 'tamil-nadu',
+                'tamil-nadu': 'tamil-nadu',
+                'kerala': 'kerala',
+                'gujarat': 'gujarat',
+                'rajasthan': 'rajasthan',
+                'punjab': 'punjab',
+                'uttar pradesh': 'uttar-pradesh',
+                'uttar-pradesh': 'uttar-pradesh',
+                'madhya pradesh': 'madhya-pradesh',
+                'madhya-pradesh': 'madhya-pradesh',
+                'west bengal': 'west-bengal',
+                'west-bengal': 'west-bengal',
+                'telangana': 'telangana',
+                'hyderabad': 'telangana',
+                'haryana': 'haryana',
+                'odisha': 'odisha',
+                'odisa': 'odisha',
+                'andhra pradesh': 'andhra-pradesh',
+                'andhra-pradesh': 'andhra-pradesh',
+            };
 
             if (!form || !input || !suggestions || !suggestionsList) {
                 return;
@@ -1992,12 +2856,32 @@
                 return value === 1 ? '1 company' : `${value} companies`;
             }
 
+            function toggleOverlay(visible) {
+                if (!overlay) return;
+                overlay.hidden = !visible;
+            }
+
             function hideSuggestions() {
                 suggestions.hidden = true;
+                toggleOverlay(false);
+                form.style.borderBottomLeftRadius = '';
+                form.style.borderBottomRightRadius = '';
+            
+                input.style.borderBottomLeftRadius = '';
+                input.style.borderBottomRightRadius = '';
             }
 
             function showSuggestions() {
                 suggestions.hidden = false;
+                toggleOverlay(true);
+                console.log("jjj");
+                 // 👇 bottom radius remove
+                form.style.borderBottomLeftRadius = '0px';
+                form.style.borderBottomRightRadius = '0px';
+            
+                // agar radius input pe hai
+                input.style.borderBottomLeftRadius = '0px';
+                input.style.borderBottomRightRadius = '0px';
             }
 
             function goToCompany(company) {
@@ -2005,29 +2889,102 @@
                 window.location.href = `/companies/${company.slug}`;
             }
 
+            function resolveIntent(term) {
+                if (!term) {
+                    return null;
+                }
+
+                const normalized = term.toLowerCase();
+
+                const curatedMatch = curatedSuggestions.find(
+                    suggestion => suggestion.toLowerCase() === normalized
+                );
+
+                if (curatedMatch) {
+                    const exactIntent = intentRoutes.find(intent =>
+                        intent.keywords.every(keyword => normalized.includes(keyword))
+                    );
+
+                    return exactIntent?.url ?? "{{ route('companies.index') }}";
+                }
+
+                for (const intent of intentRoutes) {
+                    if (intent.keywords.every(keyword => normalized.includes(keyword))) {
+                        return intent.url;
+                    }
+                }
+
+                for (const [keyword, slug] of Object.entries(locationIntents)) {
+                    if (normalized.includes(keyword)) {
+                        return `${stateBaseUrl}${slug}`;
+                    }
+                }
+
+                return null;
+            }
+
+            function handleIntentNavigation(term) {
+                const intentUrl = resolveIntent(term);
+                if (intentUrl) {
+                    window.location.href = intentUrl;
+                    return true;
+                }
+                return false;
+            }
+
+            function renderCuratedSuggestions() {
+                suggestionsList.innerHTML = '';
+                curatedSuggestions.forEach(text => {
+                    const item = document.createElement('li');
+                    item.className = 'hero-suggestion-item';
+                   item.innerHTML = `
+                        <span class="hero-suggestion-icon-2 mr-5">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <div class="hero-suggestion-name">${text}</div>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        if (handleIntentNavigation(text)) {
+                            return;
+                        }
+                        input.value = text;
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    });
+                    suggestionsList.appendChild(item);
+                });
+                emptyState.style.display = 'none';
+                showSuggestions();
+            }
+
             function renderSuggestions(matches) {
                 suggestionsList.innerHTML = '';
 
+                if (!input.value.trim()) {
+                    renderCuratedSuggestions();
+                    return;
+                }
+
                 if (!matches.length) {
                     emptyState.style.display = 'block';
-                    countLabel.textContent = '0 results';
+                    // countLabel.textContent = '0 results';
                     showSuggestions();
                     return;
                 }
 
                 emptyState.style.display = 'none';
-                countLabel.textContent = formatCount(matches.length);
+                // countLabel.textContent = formatCount(matches.length);
 
                 matches.slice(0, MAX_RESULTS).forEach(company => {
                     const item = document.createElement('li');
                     item.className = 'hero-suggestion-item';
-                    item.innerHTML = `
-                        <div>
-                            <div class="hero-suggestion-name">${company.name}</div>
-                            <div class="hero-suggestion-meta">${company.state_name ?? 'State unavailable'}</div>
-                        </div>
-                        <span class="hero-suggestion-pill">View</span>
-                    `;
+                   item.innerHTML = `
+    <span class="hero-suggestion-icon-2 mr-5">
+        <i class="fas fa-search"></i>
+    </span>
+    <div class="hero-suggestion-name">${company.name}</div>
+`;
+
                     item.addEventListener('click', () => goToCompany(company));
                     suggestionsList.appendChild(item);
                 });
@@ -2056,17 +3013,55 @@
                 renderSuggestions(matches);
             });
 
-            button?.addEventListener('click', () => {
-                const matches = filterCompanies(input.value.trim());
-                renderSuggestions(matches);
+            function handleSearchTrigger() {
+                const term = input.value.trim();
+
+                if (handleIntentNavigation(term)) {
+                    return;
+                }
+
+                const matches = filterCompanies(term);
                 if (matches.length === 1) {
                     goToCompany(matches[0]);
+                    return;
                 }
+
+                 if (!matches.length) {
+                    window.location.href = "{{ route('companies.index') }}";
+                    return;
+                }
+
+                renderSuggestions(matches);
+            }
+
+            button?.addEventListener('click', () => {
+                handleSearchTrigger();
             });
+
+            form.addEventListener('mouseenter', () => {
+                const matches = filterCompanies(input.value.trim());
+                renderSuggestions(matches);
+            });
+
+            function handleHoverExit() {
+                requestAnimationFrame(() => {
+                    const hoveringForm = form.matches(':hover');
+                    const hoveringSuggestions = suggestions.matches(':hover');
+                    if (!hoveringForm && !hoveringSuggestions) {
+                        hideSuggestions();
+                    }
+                });
+            }
+
+            form.addEventListener('mouseleave', handleHoverExit);
+            suggestions.addEventListener('mouseleave', handleHoverExit);
 
             form.addEventListener('submit', (event) => {
                 event.preventDefault();
+                handleSearchTrigger();
             });
+
+            overlay?.addEventListener('click', hideSuggestions);
 
             document.addEventListener('click', (event) => {
                 if (!suggestions.contains(event.target) && !form.contains(event.target)) {
@@ -2126,6 +3121,68 @@
                 }
             });
         }
+
+
+   
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("autoScrollCards");
+            const card = container.querySelector(".bank-card");
+
+            if (!container || !card) return;
+
+            const cardWidth = card.offsetWidth + 20; // 20 = gap
+            let autoScroll;
+
+            function startAutoScroll() {
+                autoScroll = setInterval(() => {
+                    // If reached end → go back to start
+                    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 5) {
+                        container.scrollTo({ left: 0, behavior: "smooth" });
+                    } else {
+                        container.scrollBy({ left: cardWidth, behavior: "smooth" });
+                    }
+                }, 84000); // 🔥
+            }
+
+            function stopAutoScroll() {
+                clearInterval(autoScroll);
+            }
+
+            // Start auto scroll
+            startAutoScroll();
+
+            // Pause on user interaction
+            container.addEventListener("mouseenter", stopAutoScroll);
+            container.addEventListener("mouseleave", startAutoScroll);
+            container.addEventListener("touchstart", stopAutoScroll);
+            container.addEventListener("touchend", startAutoScroll);
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.querySelector('.reviews-scroll');
+            const prevBtn = document.querySelector('.nav-btn.prev');
+            const nextBtn = document.querySelector('.nav-btn.next');
+
+            if (!container) return;
+
+            const scrollAmount = 360; // ek card + gap
+
+            prevBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+
+            nextBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
     </script>
 
     @include('components.frontend.chatbot-widget')

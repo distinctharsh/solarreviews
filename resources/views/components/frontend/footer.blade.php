@@ -90,7 +90,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background-color: #374151;
+        background-color: #11411a;
         color: white;
         transition: background-color 0.3s ease;
     }
@@ -100,10 +100,11 @@
     }
 
     .footer-logo {
-        height: 60px;
+        height: 70px;
         width: auto;
         margin: 0;
         display: block;
+        margin-top: -9px;
     }
 
     @media (max-width: 575px) {
@@ -143,6 +144,17 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
+        
+        .footer-links{
+            margin-left: 0px !important;
+        }
+        
+        
+             .main-gg{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
 
     @media (min-width: 576px) {
@@ -153,19 +165,62 @@
         .footer-toggle .toggle-icon {
             display: none;
         }
+        
+        
+   
     }
+    
+    .text-set{
+            font-weight: 400 !important;
+    font-size: 15px;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    .footer-about {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* center mat karo */
+    gap: 0.85rem;
+    max-width: 200px; /* ya logo width ke hisaab se */
+}
+
+.footer-about a.footer-logo {
+    height: 76px;
+    width: auto;
+    margin-bottom: 0.75rem;
+}
+
+.footer-about p.text-set {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.footer-links{
+    margin-left: 54px;
+}
+
+
+
 </style>
 
 <footer class="footer py-5">
     <div class="container-custom">
         <div class="row g-4 mb-4">
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-6 col-lg-3 main-gg">
                 <div class="footer-about">
                     <a href="/" class="d-inline-block mb-3">
-                        <img src="{{ asset('images/2.png') }}" alt="SolarReviews Logo" class="footer-logo">
+                        <img src="{{ asset('images/logo-b.png') }}" alt="SolarReviews Logo" class="footer-logo">
                     </a>
-                    <p class="mb-3">Helping homeowners find the best solar solutions since 2023. Compare, review, and connect with top solar installers in your area.</p>
-                    <div class="d-flex gap-2">
+                    <p class="mb-3 text-set">Find, compare, and review the best solar installers in your area since 2023.</p>
+                    <div class="d-flex gap-0">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
@@ -181,11 +236,11 @@
                     </button>
                     <div class="footer-collapse is-open">
                         <ul>
-                            <li class="mb-2"><a href="#">How It Works</a></li>
-                            <li class="mb-2"><a href="#">Solar Companies</a></li>
-                            <li class="mb-2"><a href="#">Reviews</a></li>
-                            <li class="mb-2"><a href="#">Blog</a></li>
-                            <li class="mb-2"><a href="#">Contact Us</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">How It Works</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Solar Companies</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Reviews</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Blog</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -198,11 +253,11 @@
                     </button>
                     <div class="footer-collapse is-open">
                         <ul>
-                            <li class="mb-2"><a href="#">Solar Guides</a></li>
-                            <li class="mb-2"><a href="#">Solar Calculator</a></li>
-                            <li class="mb-2"><a href="#">Solar Incentives</a></li>
-                            <li class="mb-2"><a href="#">Financing Options</a></li>
-                            <li class="mb-2"><a href="#">FAQ</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Solar Guides</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Solar Calculator</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Solar Incentives</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Financing Options</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">FAQ</a></li>
                         </ul>
                     </div>
                 </div>
@@ -215,10 +270,10 @@
                     </button>
                     <div class="footer-collapse is-open">
                         <ul>
-                            <li class="mb-2"><a href="#">Privacy Policy</a></li>
-                            <li class="mb-2"><a href="#">Terms of Service</a></li>
-                            <li class="mb-2"><a href="#">Cookie Policy</a></li>
-                            <li class="mb-2"><a href="#">Sitemap</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Privacy Policy</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Terms of Service</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Cookie Policy</a></li>
+                            <li class="mb-2"><a href="#" class="text-set">Sitemap</a></li>
                         </ul>
                     </div>
                 </div>

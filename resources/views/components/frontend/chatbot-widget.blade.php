@@ -17,8 +17,8 @@
             </span>
         </button>
         <div class="chatbot-helper" x-show="!isOpen" x-transition x-cloak>
-            <p class="mb-0 fw-semibold">Hi, I am SolarBOT.</p>
-            <small>How can I help you?</small>
+            <p class="mb-0  h-iam">Hi, I am SolarBOT.</p>
+            <p class="how-can">How can I help you?</p>
         </div>
     </div>
 
@@ -147,7 +147,7 @@
     position: absolute;
     right: 80px;
     bottom: 20px;
-    background: #FFC93A;
+    background: #f2fff7;
     color: #0b1724;
     padding: 12px 22px;
     border-radius: 24px;
@@ -161,8 +161,8 @@
 .chatbot-helper small {
     display: block;
     margin-top: 0.25rem;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 12px;
+    /*font-weight: 500;*/
 }
 
 .chatbot-helper::after {
@@ -172,7 +172,7 @@
     bottom: 18px;
     width: 24px;
     height: 24px;
-    background: #FFC93A;
+    background: #f2fff7;
     transform: rotate(45deg);
     box-shadow: 3px 3px 8px rgba(0,0,0,0.08);
 }
@@ -331,6 +331,40 @@
     }
 }
 
+
+
+.h-iam{
+    font-size: 14px;
+    font-weight: 400;
+}
+.how-can{
+    font-size: 12px;
+      font-weight: 200;
+}
+
+/* Mobile tooltip behavior */
+@media (max-width: 640px) {
+
+    .chatbot-helper {
+        display: none;
+        position: absolute;
+        bottom: calc(100% + 12px);
+        right: 0;
+        z-index: 9999;
+    }
+
+    /* Show tooltip on tap */
+    .chatbot-launcher:focus + .chatbot-helper,
+    .chatbot-launcher:active + .chatbot-helper {
+        display: block;
+    }
+
+    /* Tooltip arrow fix */
+    .chatbot-helper::after {
+        right: 20px;
+        bottom: -6px;
+    }
+}
 
 
 </style>

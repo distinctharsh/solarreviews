@@ -314,11 +314,12 @@
             display: inline-block;
             background-color: var(--primary-color);
             color: #fff;
-            font-weight: 600;
+            font-weight: 400;
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             border-radius: 8px;
             transition: all 0.3s ease;
+            font-size: 15px;
         }
 
         .hero-btn:hover {
@@ -521,7 +522,7 @@
         }
 
         .article-title {
-            font-size: 1.2rem;
+            font-size: 1rem;
             line-height: 1.4;
         }
 
@@ -609,7 +610,7 @@
             gap: 0.85rem;
             background: #fff;
             border: 1px solid rgba(15, 23, 42, 0.06);
-            border-radius: 8px 8px 0 0;
+            border-radius: 18px;
             box-shadow: 0 22px 45px rgba(15, 23, 42, 0.1);
         }
 
@@ -629,7 +630,7 @@
             border: none;
             background: transparent;
             padding: 0.65rem 0.5rem;
-            font-size: 16px;
+            font-size: 14px;
             color: #0f172a;
         }
 
@@ -674,7 +675,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.4rem 1.25rem;
-            font-size: 0.85rem;
+            font-size: 12px;
             color: #475569;
             border-bottom: 1px solid rgba(15, 23, 42, 0.05);
         }
@@ -688,35 +689,41 @@
         }
 
         .hero-suggestion-item {
-            padding: 0.25rem 0.9rem;
+            padding: 0.25rem 1.4rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: normal;
+            gap: 10px;
             align-items: center;
             cursor: pointer;
             transition: background 0.15s ease;
-        }
-
-        .hero-suggestion-item:not(:last-child) {
-            border-bottom: 1px solid rgba(15, 23, 42, 0.04);
         }
 
         .hero-suggestion-item:hover {
             background: rgba(59, 161, 76, 0.08);
         }
 
+          .hero-suggestion-item:not(:last-child) {
+            border-bottom: 1px solid rgba(15, 23, 42, 0.04);
+        }
+
         .hero-suggestion-name {
             /* font-weight: 600;
             color: #0f172a;
             font-size: 0.9rem; */
-            font-size: 0.85rem;
+            font-size: 12px;
             color: #475569;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
         }
 
         .hero-suggestion-meta {
             font-size: 0.85rem;
             color: #6b7280;
             text-align:left;
+        }
+
+        .hero-suggestion-icon-2 i {
+            font-size: 0.85rem;
+            color: #475569;
+            color: #475569c7;
         }
 
         .hero-suggestion-pill {
@@ -901,6 +908,13 @@
                 gap: 0.3rem;
             }
 
+            .hero-search-suggestions {
+                width: 88vw;
+                max-width: 88vw;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
             .hero-search-icon {
                 width: 32px;
                 height: 32px;
@@ -959,6 +973,13 @@
                 padding: 0.4rem;
                 gap: 0.25rem;
                 border-radius: 12px;
+            }
+
+            .hero-search-suggestions {
+                width: calc(100% - 1.25rem);
+                max-width: calc(100% - 1.25rem);
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .hero-search-icon {
@@ -1507,21 +1528,29 @@
         }
 
         /* Title */
+        /*.solarHero-title {*/
+        /*    font-size: clamp(1.85rem, 3.6vw, 2.9rem);*/
+        /*    font-weight: 700;*/
+        /*    color: #222;*/
+        /*    line-height: 1.1;*/
+        /*}*/
+        
+        
         .solarHero-title {
-            font-size: clamp(1.85rem, 3.6vw, 2.9rem);
+            font-size: 48px;
             font-weight: 700;
             color: #222;
-            line-height: 1.1;
+            line-height: 1.3;
         }
 
-        .solarHero-title .solarHero-title-line {
-            display: block;
-            white-space: nowrap;
-        }
+        /*.solarHero-title .solarHero-title-line {*/
+        /*    display: block;*/
+        /*    white-space: nowrap;*/
+        /*}*/
 
         .solarHero-title .solarHero-title-line.secondary {
             color: #2fa83f;
-            font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+            /*font-size: clamp(1.7rem, 3.2vw, 2.6rem);*/
         }
 
         /* Subtitle */
@@ -1529,6 +1558,7 @@
             margin-top: 10px;
             font-size: clamp(0.85rem, 2.5vw, 1.125rem);
             color: #444;
+            font-size: 16px !important;
         }
 
         /* Search Box */
@@ -1665,8 +1695,8 @@
 
         .stat-value {
             font-weight: 700;
-            font-size: clamp(18px, 2.5vw, 28px);
-            margin-bottom: 6px;
+            font-size: clamp(18px, 2.5vw, 23px);
+            margin-bottom: 4px;
         }
 
         .stat-label {
@@ -1685,7 +1715,7 @@
 
 
         .stats-section {
-            padding: 70px 0;
+            padding: 70px 0 16px 0;
             margin: 60px 0;
             background: #fff;
         }
@@ -1729,7 +1759,7 @@
             position: relative;
             background: #47a458;
             border-radius: 28px;
-            padding: 32px 40px;
+            padding: 26px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1740,7 +1770,7 @@
         /* CONTENT */
         /* ========================= */
         .cta-content h3 {
-            margin: 0 0 8px;
+            margin: 0 0 7px;
             font-size: 22px;
             font-weight: 600;
             color: #fff;
@@ -1767,8 +1797,9 @@
             color: #000;
             border: none;
             padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 14px;
+            padding: 0.5rem 1.25rem;
+            border-radius:8px;
+            font-size: 16px;
             cursor: pointer;
             white-space: nowrap;
         }
@@ -1788,7 +1819,8 @@
 
         .cta-bars span {
             width: 50px;
-            background: #ffc93a;
+            /*background: #ffc93a;*/
+            background: #ffc94661;
             border-radius: 10px 10px 0 0;
         }
 
@@ -1860,7 +1892,7 @@
             margin-bottom: 24px;
         }
 
-        .bank-header h2 {
+        .bank-header h2, .heading-3 {
             font-size: 24px;
             font-weight: 600;
         }
@@ -1868,10 +1900,10 @@
         .see-more {
             border: 1px solid #4b5cff;
             color: #4b5cff;
-            padding: 8px 16px;
+            padding: 5px 12px;
             border-radius: 24px;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         /* ================= CARDS CONTAINER ================= */
@@ -1930,22 +1962,23 @@
         }
 
         .bank-card h3 {
-            margin: 0 0 6px;
-            font-size: 18px;
+            margin: 0 0 4px;
+            font-size: 16px;
+            /*font-weight: 200;*/
         }
 
         .domain {
             font-size: 14px;
             color: #666;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
         }
 
         .site-link {
             display: inline-block;
-            font-size: 14px;
+            font-size: 12px;
             color: #4b5cff;
             text-decoration: none;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
         }
 
         .site-link:hover {
@@ -2021,11 +2054,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    /*margin-bottom: 24px;*/
 }
 
 .reviews-header h2 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
     color: #111;
 }
@@ -2038,8 +2071,8 @@
 }
 
 .nav-btn {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     border: 1px solid #ddd;
     background: #fff;
@@ -2100,7 +2133,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 .avatar {
@@ -2140,10 +2173,10 @@
 
 /* ================= TEXT ================= */
 .review-text {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.55;
     color: #333;
-    margin-bottom: 18px;
+    margin-bottom: 8px;
 }
 
 /* ================= FOOTER ================= */
@@ -2232,13 +2265,34 @@
         max-width: min(77vw, 292px);
     }
 
-    .hero-search-form{
-        border-radius: 12px 12px 0 0;
+
+    .stat-box span {
+        font-size: 14px !important;
     }
+    
+ 
+}
+
+.hero-search-form:hover {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.hero-search-suggestions:not([hidden]) ~ .hero-search-form {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 
-    </style>
+.as-cited-by{
+    font-size 16px !important;
+}
+
+
+.stat-box span{
+    font-size: 16px;
+}
+</style>
 </head>
 <body style="background-color: #fff;">
     <!-- Navigation -->
@@ -2250,11 +2304,15 @@
 	<!-- New Hero Section -->
     <section class="solarHero-wrap">
         <div class="solarHero-inner">
-
             <div class="solarHero-content">
-                <h1 class="solarHero-title">
-                    <span class="solarHero-title-line">India's most trusted</span>
-                    <span class="solarHero-title-line secondary">Solar EPC Reviews</span>
+                <!--<h1 class="solarHero-title">-->
+                <!--    <span class="solarHero-title-line">India's most trusted</span>-->
+                <!--    <span class="solarHero-title-line secondary">Solar EPC Reviews</span>-->
+                <!--</h1>-->
+                
+                 <h1 class="reviews-title">
+                    India's most trusted <br>
+                    <span>Solar EPC Reviews</span>
                 </h1>
 
                 <p class="solarHero-subtitle">
@@ -2272,16 +2330,13 @@
                         data-hero-company-input
                     >
                 </form>
-                    
-                    
-                    <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
-                        <div class="hero-suggestions-header">
-                            <span>Suggested searches</span>
-                            <!-- <span class="suggestion-count" data-hero-suggestions-count>0 results</span> -->
-                        </div>
-                        <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
-                        <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
+                <div class="hero-search-suggestions" data-hero-company-suggestions hidden>
+                    <div class="hero-suggestions-header">
+                        <span>Suggested searches</span>
                     </div>
+                    <ul class="hero-suggestions-list" data-hero-suggestions-list></ul>
+                    <div class="hero-suggestions-empty" data-hero-suggestions-empty>No companies found. Try another name.</div>
+                </div>
             </div>
 
             <div class="solarHero-pillBox">
@@ -2300,7 +2355,7 @@
         <div class="container-custom"  >
             <div class="stats-container">
                 <div class="stat-box">
-                    <div class="stat-value yellow">1.3 million</div>
+                    <div class="stat-value yellow">1,500+</div>
                     <span>No. Of listed EPC</span>
                 </div>
 
@@ -2321,7 +2376,7 @@
         <div class="cta-wrapper mb-4">
             <div class="cta-content">
                 <h3>Looking to grow your business?</h3>
-                <p>Strengthen your reputation with reviews on Trustpilot.</p>
+                <p>Strengthen your reputation with reviews on Solar Reviews.</p>
             </div>
 
             <div class="cta-action">
@@ -2340,44 +2395,50 @@
 
 
         <!-- As Seen In Section -->
-    <section class="as-seen-in-section section-spacing " style="padding: 80px 0px; ">
+    <section class="as-seen-in-section section-spacing mb-4 " style="padding: 80px 0px; ">
         <div class="container-custom">
             <div class="text-center mb-4">
-                <h5 class="fw-semibold text-muted" style="letter-spacing: 1px;">As cited by</h5>
+                <span class="fw-semibold text-muted as-cited-by" style="letter-spacing: 1px;">As cited by</span>
             </div>
 
-            <div class="row justify-content-center align-items-center g-4 text-center">
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">
-                </div>
+            <div class="row justify-content-between align-items-center g-4 text-center">
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
-                    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
-                </div>
+                <!--<div class="col-6 col-md-3 col-lg-3">-->
+                <!--    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">-->
+                <!--</div>-->
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
                 </div>
 
-                <div class="col-6 col-md-3 col-lg-3">
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
                 </div>
-
-                <div class="col-6 col-md-3 col-lg-3">
+                
+                <div class="col-6 col-md-3 col-lg-2">
+                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
+                </div>
+                
+                <div class="col-6 col-md-3 col-lg-2">
                     <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
                 </div>
+                
+               
             </div>
         </div>
     </section>
@@ -2388,7 +2449,7 @@
     <section class="bank-section">
         <div class="container-custom">
             <div class="bank-header">
-                <h2>Trending Companies on Solar Review</h2>
+                <h2>Trending Companies on Solar Reviews</h2>
                 <a href="{{ route('companies.index') }}" class="see-more">See more</a>
             </div>
 
@@ -2435,8 +2496,8 @@
             <div class="container-custom">
                 <div class="hero-content">
                     <p class="small-heading mb-2">Real People, Real Reviews</p>
-                    <h1 class="text-white fw-bold mb-4" style="font-size: 2.3rem; line-height: 1.3;">Unbiased consumer reviews of almost all solar companies in India</h1>
-                    <p class="text-white mb-4" style="font-size: 1rem; line-height: 1.6; opacity: 0.9;">
+                    <h1 class="text-white  mb-3" style="font-size: 2.3rem; line-height: 1.3; font-weight:600;">Unbiased consumer reviews of almost all solar companies in India</h1>
+                    <p class="text-white mb-3" style="font-size: 16px; line-height: 1.6; opacity: 0.9;">
                         SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
                         to help you identify the best solar panel installation companies in your area.
                     </p>
@@ -2461,8 +2522,8 @@
     <section class="map-viewport">
         <div class="container-custom">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mb-3" style="font-size: 2.25rem; color: var(--primary-color);">Find Solar Solutions in Your State</h2>
-                <p class="text-muted mx-auto" style="max-width: 600px;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
+                <h2 class=" mb-2" style="font-size: 2.3rem; line-height: 1.3; color: var(--primary-color); font-weight:600;">Find Solar Solutions in Your State</h2>
+                <p class="text-muted mx-auto" style="max-width: 600px; font-size:16px;">Select your state to discover top-rated solar providers and get free quotes tailored to your location.</p>
             </div>
             @include('components.india-map')
         </div>
@@ -2523,10 +2584,10 @@
     <section class="reviews-section">
         <div class="container-custom">
 
-            <div class="reviews-header">
-                <h2>Recent reviews</h2>
+            <div class="reviews-header ">
+                <h2 class="heading-3 mb-3">Recent reviews</h2>
 
-                <div class="reviews-nav">
+                <div class="reviews-nav mb-3">
                     <button class="nav-btn prev" aria-label="Previous">
                         ‹
                     </button>
@@ -2647,7 +2708,7 @@
     <section class="latest-articles section-spacing py-5">
         <div class="container-custom">
 
-            <h3 class="fw-bold mb-4" style="font-size: 1.75rem;">Latest articles</h3>
+            <h3 class=" mb-3 heading-3" >Latest articles</h3>
 
             <div class="row g-4">
 
@@ -2832,11 +2893,24 @@
             function hideSuggestions() {
                 suggestions.hidden = true;
                 toggleOverlay(false);
+                form.style.borderBottomLeftRadius = '';
+                form.style.borderBottomRightRadius = '';
+            
+                input.style.borderBottomLeftRadius = '';
+                input.style.borderBottomRightRadius = '';
             }
 
             function showSuggestions() {
                 suggestions.hidden = false;
                 toggleOverlay(true);
+                console.log("jjj");
+                 // 👇 bottom radius remove
+                form.style.borderBottomLeftRadius = '0px';
+                form.style.borderBottomRightRadius = '0px';
+            
+                // agar radius input pe hai
+                input.style.borderBottomLeftRadius = '0px';
+                input.style.borderBottomRightRadius = '0px';
             }
 
             function goToCompany(company) {
@@ -2892,7 +2966,13 @@
                 curatedSuggestions.forEach(text => {
                     const item = document.createElement('li');
                     item.className = 'hero-suggestion-item';
-                    item.innerHTML = `<div class="hero-suggestion-name">${text}</div>`;
+                   item.innerHTML = `
+                        <span class="hero-suggestion-icon-2 mr-5">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <div class="hero-suggestion-name">${text}</div>
+                    `;
+
                     item.addEventListener('click', () => {
                         if (handleIntentNavigation(text)) {
                             return;
@@ -2927,9 +3007,13 @@
                 matches.slice(0, MAX_RESULTS).forEach(company => {
                     const item = document.createElement('li');
                     item.className = 'hero-suggestion-item';
-                    item.innerHTML = `
-                        <div class="hero-suggestion-name">${company.name}</div>
-                    `;
+                   item.innerHTML = `
+    <span class="hero-suggestion-icon-2 mr-5">
+        <i class="fas fa-search"></i>
+    </span>
+    <div class="hero-suggestion-name">${company.name}</div>
+`;
+
                     item.addEventListener('click', () => goToCompany(company));
                     suggestionsList.appendChild(item);
                 });
@@ -3104,29 +3188,67 @@
         });
 
 
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const container = document.querySelector('.reviews-scroll');
+        //     const prevBtn = document.querySelector('.nav-btn.prev');
+        //     const nextBtn = document.querySelector('.nav-btn.next');
+
+        //     if (!container) return;
+
+        //     const scrollAmount = 360; // ek card + gap
+
+        //     prevBtn.addEventListener('click', () => {
+        //         container.scrollBy({
+        //             left: -scrollAmount,
+        //             behavior: 'smooth'
+        //         });
+        //     });
+
+        //     nextBtn.addEventListener('click', () => {
+        //         container.scrollBy({
+        //             left: scrollAmount,
+        //             behavior: 'smooth'
+        //         });
+        //     });
+        // });
+        
+        
+        
         document.addEventListener('DOMContentLoaded', function () {
-            const container = document.querySelector('.reviews-scroll');
-            const prevBtn = document.querySelector('.nav-btn.prev');
-            const nextBtn = document.querySelector('.nav-btn.next');
+    const container = document.querySelector('.reviews-scroll');
+    const prevBtn = document.querySelector('.nav-btn.prev');
+    const nextBtn = document.querySelector('.nav-btn.next');
 
-            if (!container) return;
+    if (!container) return;
 
-            const scrollAmount = 360; // ek card + gap
+    const scrollAmount = 360; // ek card + gap
 
-            prevBtn.addEventListener('click', () => {
-                container.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
+    function updateNavButtons() {
+        // Left end
+        prevBtn.disabled = container.scrollLeft <= 0;
 
-            nextBtn.addEventListener('click', () => {
-                container.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-        });
+        // Right end (small tolerance for floating point)
+        nextBtn.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
+    }
+
+    // Initial button state
+    updateNavButtons();
+
+    // Update buttons on scroll
+    container.addEventListener('scroll', updateNavButtons);
+
+    prevBtn.addEventListener('click', () => {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        // Scroll ke thoda delay ke baad update
+        setTimeout(updateNavButtons, 300);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        setTimeout(updateNavButtons, 300);
+    });
+});
+
 
     </script>
 

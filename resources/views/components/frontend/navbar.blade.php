@@ -201,7 +201,7 @@
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: #94a3b8;
-        font-weight: 600;
+        font-weight: 400;
         margin-bottom: 0.35rem;
     }
 
@@ -447,6 +447,16 @@
     margin-right: 0;
 }
 
+
+.nav-link{
+    font-weight: 400 !important;
+    font-size: 15px;
+}
+
+
+.navbar-logo {
+    height: 76px;    
+}
 </style>
 
 <script>

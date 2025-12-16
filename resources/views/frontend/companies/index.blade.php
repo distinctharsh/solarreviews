@@ -359,6 +359,18 @@
             .search-input {
                 width: 100%;
             }
+            
+            .directory-list-section {
+                width: 100%;
+                overflow-x: hidden;
+            }
+        
+            .directory-list-section > .container-custom {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                box-sizing: border-box;
+            }
+
         }
 
         @media (max-width: 576px) {
@@ -382,6 +394,18 @@
             .rating-chip {
                 font-size: 0.85rem;
             }
+            
+           .directory-list-section {
+                width: 100%;
+                overflow-x: hidden;
+            }
+        
+            .directory-list-section > .container-custom {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                box-sizing: border-box;
+            }
+
         }
     </style>
 </head>
@@ -389,33 +413,33 @@
 <div class="page-wrapper">
     @include('components.frontend.navbar')
 
-    <section class="directory-hero">
-        <div class="container-custom">
-            <p class="text-uppercase text-white-50 mb-2">Solar Companies</p>
-            <h1 class="directory-title">Discover Trusted Solar Companies Across India</h1>
-            <p class="directory-subtitle">Browse our curated directory of vetted solar installers, EPCs, and manufacturers. Compare expert review data and jump straight into detailed company profiles.</p>
+    <!--<section class="directory-hero">-->
+    <!--    <div class="container-custom">-->
+    <!--        <p class="text-uppercase text-white-50 mb-2">Solar Companies</p>-->
+    <!--        <h1 class="directory-title">Discover Trusted Solar Companies Across India</h1>-->
+    <!--        <p class="directory-subtitle">Browse our curated directory of vetted solar installers, EPCs, and manufacturers. Compare expert review data and jump straight into detailed company profiles.</p>-->
 
-            <div class="directory-stats">
-                <div class="stat-card">
-                    <span>Total companies</span>
-                    <strong>{{ number_format($totalCompanies) }}</strong>
-                </div>
-                <div class="stat-card">
-                    <span>Average rating</span>
-                    <strong>
-                        {{ number_format($companies->avg('avg_rating'), 1) }}
-                        <small style="font-size: 1rem; font-weight: 500;">/ 5</small>
-                    </strong>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!--        <div class="directory-stats">-->
+    <!--            <div class="stat-card">-->
+    <!--                <span>Total companies</span>-->
+    <!--                <strong>{{ number_format($totalCompanies) }}</strong>-->
+    <!--            </div>-->
+    <!--            <div class="stat-card">-->
+    <!--                <span>Average rating</span>-->
+    <!--                <strong>-->
+    <!--                    {{ number_format($companies->avg('avg_rating'), 1) }}-->
+    <!--                    <small style="font-size: 1rem; font-weight: 500;">/ 5</small>-->
+    <!--                </strong>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</section>-->
 
     <section class="top-reviews-section">
         <div class="container-custom">
-            <div class="section-label">Consumer Reviews</div>
+            <!--<div class="section-label">Consumer Reviews</div>-->
             <h2 class="page-title">Top Solar Installers Ranked by Reviews</h2>
-            <p class="lede">SolarReviews publishes the largest volume of verified installer feedback. These highlights from our Top Reviews page make it easy to compare expert ratings and homeowner sentiment before you dive into the full directory.</p>
+            <p class="lede">Solar Reviews publishes the largest volume of verified installer feedback. These highlights from our Top Reviews page make it easy to compare expert ratings and homeowner sentiment before you dive into the full directory.</p>
 
             <div class="content-grid">
                 <aside class="sidebar-card">
