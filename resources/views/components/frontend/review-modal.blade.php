@@ -13,6 +13,7 @@
     $resolvedStateId = $defaultStateId ?? data_get($state ?? null, 'id');
     $resolvedStateName = $defaultStateName ?? data_get($state ?? null, 'name');
     $categoryOptions = collect($categories ?? []);
+    $reviewProfile = session('review_profile');
 @endphp
 
 @once
@@ -30,6 +31,35 @@
             justify-content: center;
             padding: calc(80px + 1rem) 1rem 1.5rem;
             overflow-y: auto;
+        }
+
+        .identity-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            background: rgba(59, 161, 76, 0.07);
+            border: 1px solid rgba(59, 161, 76, 0.25);
+            margin-bottom: 1rem;
+        }
+
+        .identity-status span {
+            font-weight: 600;
+            color: var(--text-primary, #0f172a);
+        }
+
+        .identity-status button {
+            background: transparent;
+            border: none;
+            color: #2563eb;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .identity-status button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .modal-container {
@@ -268,6 +298,110 @@
             transform: rotate(180deg);
         }
 
+        .identity-options {
+            margin-top: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .identity-option {
+            width: 100%;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            cursor: pointer;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .identity-option:hover {
+            border-color: var(--primary, #3ba14c);
+            box-shadow: 0 8px 20px rgba(59, 161, 76, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .identity-option-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .identity-option-google .identity-option-icon {
+            background: rgba(251, 188, 5, 0.15);
+            color: #ea4335;
+        }
+
+        .identity-option.connected {
+            border-color: var(--primary, #3ba14c);
+            box-shadow: 0 8px 24px rgba(59, 161, 76, 0.15);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .identity-option strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-primary, #0f172a);
+        }
+
+        .identity-option small {
+            color: var(--text-muted, #94a3b8);
+        }
+
+        .identity-option-status {
+            margin-left: auto;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted, #94a3b8);
+        }
+
+        .identity-option.connected .identity-option-status {
+            color: var(--primary, #3ba14c);
+        }
+
+        .identity-readonly {
+            background: #f8fafc;
+            cursor: not-allowed;
+        }
+
+        .identity-divider {
+            position: relative;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--text-muted, #94a3b8);
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .identity-divider::before,
+        .identity-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border, #e2e8f0);
+        }
+
+        .identity-divider::before {
+            left: 0;
+        }
+
+        .identity-divider::after {
+            right: 0;
+        }
+
+        .manual-identity {
+            margin-top: 0.5rem;
+        }
+
         .modal-footer {
             padding: 1rem 1.5rem;
             background: var(--surface-elevated, #f8fafc);
@@ -475,14 +609,72 @@
 
                 <div class="subtle-card mt-4">
                     <h5 class="fw-semibold mb-3">How should we display your review?</h5>
-                    <div class="row g-3">
+
+                    @if($reviewProfile)
+                        <div class="identity-status">
+                            <div>
+                                <span>Signed in as {{ $reviewProfile['name'] ?? 'Google User' }}</span>
+                                <p class="mb-0 text-muted small">{{ $reviewProfile['email'] ?? '' }}</p>
+                            </div>
+                            <button
+                                type="button"
+                                data-google-disconnect
+                                data-google-disconnect-url="{{ route('oauth.google.disconnect') }}"
+                            >
+                                Disconnect
+                            </button>
+                        </div>
+                    @endif
+
+                    <div class="identity-options">
+                        <button
+                            type="button"
+                            class="identity-option identity-option-google {{ $reviewProfile ? 'connected' : '' }}"
+                            data-google-login
+                            data-google-redirect="{{ route('oauth.google.redirect') }}"
+                            {{ $reviewProfile ? 'disabled' : '' }}
+                        >
+                            <div class="identity-option-icon">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            <div>
+                                <strong>{{ $reviewProfile ? 'Google connected' : 'Continue with Google' }}</strong>
+                                <small>
+                                    {{ $reviewProfile ? 'We\'ll use your Google details below' : 'Use your Google account to auto-fill details' }}
+                                </small>
+                            </div>
+                            <span class="identity-option-status">
+                                {{ $reviewProfile ? 'Connected' : 'Connect' }}
+                            </span>
+                        </button>
+                    </div>
+                    <div class="identity-divider">or continue manually</div>
+                    <div class="row g-3 manual-identity">
                         <div class="col-md-6">
                             <label class="form-label">Choose a display name *</label>
-                            <input type="text" class="form-control" name="reviewer_name" placeholder="e.g., Priya M." required>
+                            <input
+                                type="text"
+                                class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
+                                name="reviewer_name"
+                                placeholder="e.g., Priya M."
+                                value="{{ old('reviewer_name', $reviewProfile['name'] ?? '') }}"
+                                {{ $reviewProfile ? 'readonly' : '' }}
+                                data-identity-name
+                                required
+                            >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Add email address *</label>
-                            <input type="email" class="form-control" name="email" placeholder="name@email.com" required>
+                            <input
+                                type="email"
+                                class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
+                                name="email"
+                                placeholder="name@email.com"
+                                value="{{ old('email', $reviewProfile['email'] ?? '') }}"
+                                {{ $reviewProfile ? 'readonly' : '' }}
+                                data-identity-email
+                                required
+                            >
                             <small class="text-muted d-block mt-1">We only email you about this review.</small>
                         </div>
                         <div class="col-md-6">
@@ -499,9 +691,6 @@
                             <input type="text" class="form-control" name="user_city" placeholder="City" required>
                         </div>
                     </div>
-                    <!-- <p class="info-note mt-3 mb-0">
-                        We only use your email for verification and anti-spam checks. No marketing emails—ever.
-                    </p> -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -543,6 +732,8 @@
         const systemToggle = modal.querySelector('[data-system-toggle]');
         const systemToggleIcon = systemToggle ? systemToggle.querySelector('span i') : null;
         const systemDetails = modal.querySelector('[data-system-details]');
+        const googleLoginBtn = modal.querySelector('[data-google-login]');
+        const googleDisconnectBtn = modal.querySelector('[data-google-disconnect]');
 
         const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -677,6 +868,39 @@
                 openModal(trigger);
             });
         });
+
+        if (googleLoginBtn) {
+            googleLoginBtn.addEventListener('click', () => {
+                const redirectUrl = googleLoginBtn.getAttribute('data-google-redirect');
+                if (!redirectUrl) return;
+
+                const currentUrl = window.location.href;
+                const separator = redirectUrl.includes('?') ? '&' : '?';
+                const target = `${redirectUrl}${separator}return_url=${encodeURIComponent(currentUrl)}`;
+                window.location.href = target;
+            });
+        }
+
+        if (googleDisconnectBtn) {
+            googleDisconnectBtn.addEventListener('click', () => {
+                const disconnectUrl = googleDisconnectBtn.getAttribute('data-google-disconnect-url');
+                if (!disconnectUrl || !csrfToken) return;
+
+                googleDisconnectBtn.disabled = true;
+                fetch(disconnectUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                })
+                    .then(() => window.location.reload())
+                    .catch(() => {
+                        googleDisconnectBtn.disabled = false;
+                        Swal.fire('Error', 'Could not disconnect Google right now.', 'error');
+                    });
+            });
+        }
 
         ratingStars.forEach(star => {
             star.addEventListener('click', function () {

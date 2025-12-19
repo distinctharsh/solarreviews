@@ -19,6 +19,9 @@ use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Models\Company;
 use App\Models\CompanyReview;
 use App\Models\State;
@@ -318,6 +321,11 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
     Route::post('/send-otp', [FrontendReviewController::class, 'sendOtp'])->name('send-otp');
     Route::post('/verify-otp', [FrontendReviewController::class, 'verifyOtp'])->name('verify-otp');
 });
+
+// OAuth for review modal/profile
+Route::get('/auth/google/redirect', [SocialLoginController::class, 'redirectToGoogle'])->name('oauth.google.redirect');
+Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
+Route::post('/auth/google/disconnect', [SocialLoginController::class, 'disconnect'])->name('oauth.google.disconnect');
 
 // Admin Routes
 Route::prefix('admin')
