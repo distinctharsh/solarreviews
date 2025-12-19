@@ -6,6 +6,8 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -467,6 +469,51 @@
         .as-seen-logo:hover {
             opacity: 1;
             transform: scale(1.05);
+        }
+
+        .as-seen-slider-wrapper {
+            position: relative;
+        }
+
+        .as-seen-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .as-seen-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .as-seen-nav button {
+            pointer-events: all;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.08);
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            transition: background 0.2s ease;
+        }
+
+        .as-seen-nav button:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .as-seen-nav {
+                display: none;
+            }
         }
 
         .experts-section {
@@ -2401,44 +2448,38 @@
                 <span class="fw-semibold text-muted as-cited-by" style="letter-spacing: 1px;">As cited by</span>
             </div>
 
-            <div class="row justify-content-between align-items-center g-4 text-center">
-                <!--<div class="col-6 col-md-3 col-lg-3">-->
-                <!--    <img src="/images/usnews.png" alt="US News" class="as-seen-logo">-->
+            <div class="as-seen-slider-wrapper">
+                <div class="swiper as-seen-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="as-seen-nav">-->
+                <!--    <button class="as-seen-prev" aria-label="Previous">-->
+                <!--        <span>&lsaquo;</span>-->
+                <!--    </button>-->
+                <!--    <button class="as-seen-next" aria-label="Next">-->
+                <!--        <span>&rsaquo;</span>-->
+                <!--    </button>-->
                 <!--</div>-->
-
-                <!--<div class="col-6 col-md-3 col-lg-3">-->
-                <!--    <img src="/images/cnbc.png" alt="CNBC" class="as-seen-logo">-->
-                <!--</div>-->
-
-                <!--<div class="col-6 col-md-3 col-lg-3">-->
-                <!--    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">-->
-                <!--</div>-->
-
-                <!--<div class="col-6 col-md-3 col-lg-3">-->
-                <!--    <img src="/images/cnn.png" alt="CNN" class="as-seen-logo">-->
-                <!--</div>-->
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/investopedia.png" alt="Investopedia" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/nerdwallet.png" alt="NerdWallet" class="as-seen-logo">
-                </div>
-
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/bloomberg.png" alt="Bloomberg" class="as-seen-logo">
-                </div>
-                
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/npr.png" alt="NPR" class="as-seen-logo">
-                </div>
-                
-                <div class="col-6 col-md-3 col-lg-2">
-                    <img src="/images/cbsnews.png" alt="CBS News" class="as-seen-logo">
-                </div>
-                
-               
             </div>
         </div>
     </section>
@@ -2757,7 +2798,38 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        new Swiper('.as-seen-swiper', {
+            slidesPerView: 5,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: '.as-seen-next',
+                prevEl: '.as-seen-prev',
+            },
+            breakpoints: {
+                0: {
+                    slidesPerView: 2.2,
+                    spaceBetween: 16,
+                },
+                576: {
+                    slidesPerView: 3,
+                },
+                768: {
+                    slidesPerView: 4,
+                },
+                992: {
+                    slidesPerView: 5,
+                },
+            },
+        });
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

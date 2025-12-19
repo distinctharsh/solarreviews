@@ -47,7 +47,7 @@
         }
 
         .hero-area {
-            padding: 7rem 1.5rem 4rem;
+            padding: 17rem 1.5rem 4rem;
             text-align: center;
         }
 

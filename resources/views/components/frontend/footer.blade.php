@@ -155,6 +155,57 @@
             justify-content: center;
             align-items: center;
         }
+        
+        
+         .footer-about {
+            max-width: 100% !important; /* ya logo width ke hisaab se */
+        }
+        
+           .footer-about a {
+            max-width: 100% !important; /* ya logo width ke hisaab se */
+            display: flex !important;
+            justify-content: center;
+
+        }
+
+
+
+
+
+
+
+            
+             .main-gg {
+                    display: flex;
+                    justify-content: center;
+                }
+            
+                .footer-about {
+                    align-items: center !important;
+                    text-align: center;
+                    max-width: 100% !important;
+                }
+            
+                .footer-about a {
+                    display: flex !important;
+                    justify-content: center;
+                    width: 100%;
+                    margin-bottom: 0px !important;
+                }
+                .footer-about p{
+                    margin-bottom: 0px !important;
+                }
+            
+                .footer-logo {
+                    margin-left: auto;
+                    margin-right: auto;
+                    display: block;
+                }
+
+
+         .footer-about .d-flex {
+                gap: 12px !important;
+            }
     }
 
     @media (min-width: 576px) {
