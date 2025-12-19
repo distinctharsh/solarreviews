@@ -47,7 +47,8 @@
         }
 
         .hero-area {
-            padding: 17rem 1.5rem 4rem;
+            padding: 1.7rem 1.5rem 4rem;
+            padding-top: 120px;
             text-align: center;
         }
 
@@ -66,10 +67,10 @@
         .hero-area p {
             font-size: 1.1rem;
             color: var(--muted);
-            margin-bottom: 2.5rem;
+            margin-bottom: 30px;
         }
 
-        .write-search-form {
+        .hero-search-form {
             max-width: var(--write-hero-width);
             margin: 0 auto;
             background: #fff;
@@ -79,49 +80,49 @@
             border: 1px solid rgba(15, 23, 42, 0.08);
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.85rem;
         }
 
-        .write-search-form .icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            /* background: rgba(15,23,42,0.05); */
+        .hero-search-icon {
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.1rem;
-            color: var(--dark);
+            color: #111827;
+            border-right: 1px solid rgba(15, 23, 42, 0.08);
         }
 
-        .write-search-form input {
+        .hero-search-input {
             flex: 1;
             border: none;
-            outline: none;
             background: transparent;
-            font-size: 1rem;
-            color: var(--dark);
-            padding: 0.9rem 0;
+            padding: 0.65rem 0.5rem;
+            font-size: 14px;
+            color: #0f172a;
         }
 
-        .write-search-form input::placeholder {
-            color: #94a3b8;
+        .hero-search-input::placeholder {
+            color: #9ca3af;
         }
 
-        .write-search-form button {
+        .hero-search-button {
             border: none;
-            background: #f8d648;
-            color: #1e293b;
+            border-radius: 8px;
+            padding: 0.85rem 2.6rem;
+            background: #24a048;
+            color: #fff;
             font-weight: 600;
-            padding: 0.85rem 1.75rem;
-            border-radius: 12px;
+            font-size: 14px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            min-width: 120px;
         }
 
-        .write-search-form button:hover {
+        .hero-search-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(248, 214, 72, 0.35);
+            box-shadow: 0 22px 36px rgba(36, 160, 72, 0.4);
         }
 
         .company-suggestions {
@@ -237,22 +238,21 @@
                 padding-top: 5.5rem;
             }
 
-            .write-search-form {
+            .hero-search-form {
                 flex-direction: column;
                 padding: 0.45rem;
             }
 
-            .write-search-form .icon {
+            .hero-search-icon {
                 width: 52px;
                 height: 52px;
             }
 
-            .write-search-form button {
+            .hero-search-button {
                 width: 100%;
             }
 
-         
-            .write-search-form input {
+            .hero-search-input {
                 font-size: 14px;
                 width: 75%;
             }
@@ -267,17 +267,19 @@
     border: none;
 }
 
-.trustpilot-empty h4 {
+.trustpilot-empty h2 {
     font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 500;
     color: #1a1a1a;
     margin-bottom: 10px;
 }
 
 .trustpilot-empty p {
     font-size: clamp(0.85rem, 2vw, 1rem);
+    font-size: 16px;
     color: #666;
-    margin: 0 auto 25px;
+    margin: 0 auto 23px;
     white-space: nowrap;
     display: inline-block;
     
@@ -299,8 +301,8 @@
     border: 1px solid #d0d7de;
     padding: 10px 28px;
     border-radius: 100px;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 14px;
+   
     color: #1a1a1a;
     transition: 0.2s ease;
 }
@@ -315,7 +317,7 @@
 
 
   @media (max-width: 768px) {
-    .write-search-form{
+    .hero-search-form{
         flex-wrap: nowrap;
         flex-direction: row;
     }
@@ -530,7 +532,22 @@
   
   
   
-  
+   .reviews-title {
+            font-size: 52px;
+            font-weight: 400;
+            color: #0b1724;
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+            visibility: hidden;
+        }
+
+        .reviews-title span {
+            display: block;
+        visibility: visible;
+            font-weight: 600;
+            font-size: 44px;
+            line-height: 1.1;
+        }
   
   
   
@@ -548,15 +565,29 @@
     <main class="write-review-page">
         <section class="hero-area">
             <div class="container-custom">
-                <span style="font-size: 44px; font-weight: 600;">Share your experience</span>
+                <h1 class="reviews-title">
+                  India's most trusted <br>
+                   <span >Share your experience</span>
+              </h1>
+
                 <p>Help others make the right choice.</p>
 
-                <form class="write-search-form" data-company-search-form>
-                    <div class="icon">
+                <form class="hero-search-form" data-company-search-form>
+                    <span class="hero-search-icon">
                         <i class="fas fa-search" aria-hidden="true"></i>
-                    </div>
-                    <input  type="text" name="company" placeholder="Find a company to review" aria-label="Find a company to review" data-company-search-input autocomplete="off">
-                  
+                    </span>
+                    <input
+                        type="text"
+                        class="hero-search-input"
+                        name="company"
+                        placeholder="Find a company to review"
+                        aria-label="Find a company to review"
+                        data-company-search-input
+                        autocomplete="off"
+                    >
+                    <!-- <button type="button" class="hero-search-button" data-company-search-button>
+                        Search
+                    </button> -->
                 </form>
 
                 <div class="company-suggestions" data-company-suggestions hidden>
@@ -571,7 +602,7 @@
             </div>
         </section>
     <div class="add-company-card trustpilot-empty">
-        <h4>Can't find a company?</h4>
+        <h2>Can't find a company?</h2>
         <p>It might not be listed on Solar Reviews yet. Add it and be the first to write a review.</p>
         <a href="#" class="add-btn">Add company</a>
     </div>

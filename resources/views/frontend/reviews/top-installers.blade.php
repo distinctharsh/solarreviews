@@ -39,16 +39,21 @@
             font-size: clamp(2rem, 4vw, 2.6rem);
             font-weight: 700;
             color: var(--primary);
+                font-size: 36px;
+    font-weight: 600;
+        color: #0f172a;
         }
         .lede {
             color: #475569;
             max-width: 720px;
+            font-size: 16px;
         }
         .content-grid {
             display: grid;
             grid-template-columns: 260px 1fr;
             gap: 1.5rem;
             margin-top: 2rem;
+            align-items: start;
         }
         .sidebar-card {
             background: white;
@@ -58,16 +63,16 @@
             box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
         }
         .sidebar-card h5 {
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            margin-bottom: 0.75rem;
+           font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
         }
         .sidebar-card p {
-            font-size: 0.95rem;
-            color: #475569;
-            line-height: 1.5;
+         color: #475569;
+    line-height: 1.6;
+    font-size: 16px;
         }
         .state-list {
             list-style: none;
@@ -82,7 +87,8 @@
         .state-list a {
             color: var(--accent);
             text-decoration: none;
-            font-weight: 500;
+                font-weight: 400;
+            font-size: 14px;
         }
         .state-list a.active,
         .state-list a:hover {
@@ -106,6 +112,7 @@
         .table tbody td {
             vertical-align: middle;
             border-color: #eef2ff;
+            font-size: 14px;
         }
         .expert-dots span {
             display: inline-block;
@@ -120,7 +127,7 @@
         }
         .rating-stars {
             color: #fbbf24;
-            font-size: 0.95rem;
+            font-size: 14px;
             margin-right: 6px;
         }
         .btn-quote {
@@ -128,8 +135,8 @@
             border: 1px solid var(--accent);
             color: var(--accent);
             padding: 0.35rem 1.1rem;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 400;
+            font-size: 12px;
         }
         .btn-quote:hover {
             background: var(--accent);
@@ -140,15 +147,57 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        .main-p{
+            font-size: 14px;
+        }
+        
+        .table thead th:first-child,
+.table tbody td:first-child {
+    padding-left: 1.5rem; /* same as px-4 */
+}
+
+
+.company-logo {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;      /* 🔥 important */
+    flex-shrink: 0;       /* 🔥 important */
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-logo img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+
+.company-info {
+    line-height: 1.3;
+}
+
+.table thead th {
+    vertical-align: top;   /* 🔥 important */
+}
+
+
+
     </style>
 </head>
 <body>
     @include('components.frontend.navbar')
 
     <div class="page-wrapper container-custom">
-        <p class="text-uppercase text-muted fw-semibold mb-2" style="letter-spacing: 1.5px;">Consumer Reviews</p>
+        <p class="text-uppercase text-muted fw-semibold mb-2 main-p" style="letter-spacing: 1.5px;">Consumer Reviews</p>
         <h1 class="page-title">Top 100 Solar Installers Ranked by Consumer Reviews</h1>
-        <p class="lede mt-3">SolarReviews is the leading American website for solar panel reviews and solar panel installation companies. Our independent expert rating keeps things unbiased so you can hire with confidence.</p>
+        <p class="lede mt-3">Solar Reviews is the leading Indian website for solar panel reviews and solar panel installation companies. Our independent expert rating keeps things unbiased so you can hire with confidence.</p>
 
         <div class="content-grid">
             <aside class="sidebar-card">
@@ -191,7 +240,11 @@
                         <thead>
                             <tr>
                                 <th style="width:30%;">Company</th>
-                                <th style="width:25%;">SolarReviews expert rating</th>
+                                <th style="width:25%;">
+    SolarReviews expert<br>
+    rating
+</th>
+
                                 <th style="width:25%;">Consumer rating</th>
                                 <th style="width:20%;" class="text-center">View</th>
                             </tr>
@@ -201,11 +254,11 @@
                             <tr>
                                 <td class="fw-semibold">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div style="width:48px;height:48px;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;background:#fff;">
-                                            <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo" style="width:100%;height:100%;object-fit:contain;">
+                                        <div class="company-logo">
+                                            <img src="{{ $company['logo'] }}" alt="{{ $company['name'] }} logo" >
                                         </div>
                                         <div>
-                                            <a href="{{ route('companies.show', $company['slug']) }}" class="text-decoration-none text-dark fw-semibold">
+                                            <a href="{{ route('companies.show', $company['slug']) }}" class="text-decoration-none text-dark fw-semibold" style="font-weight: 600 !important;">
                                                 {{ $company['name'] }}
                                             </a>
                                             <div class="text-muted small">

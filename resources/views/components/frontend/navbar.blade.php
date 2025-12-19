@@ -173,7 +173,8 @@
         border-radius: 16px;
         padding: 24px 32px;
         display: grid;
-        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        /*grid-template-columns: repeat(2, minmax(180px, 1fr));*/
+         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 32px;
         /* min-width: 520px; */
         border: 1px solid rgba(30,41,59,0.08);
@@ -197,19 +198,21 @@
     }
 
     .mega-heading {
-        font-size: 0.85rem;
+        font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: #94a3b8;
-        font-weight: 400;
+        color: #8d96a3;
+        /*font-weight: 400;*/
         margin-bottom: 0.35rem;
     }
 
     .mega-link {
+        font-size: 15px;
         color: #0f172a;
-        font-weight: 500;
+        font-weight: 400;
         text-decoration: none;
-        padding: 6px 0;
+        padding: 1px 0;
         border-bottom: 1px solid transparent;
         transition: color 0.2s ease, border-color 0.2s ease;
     }

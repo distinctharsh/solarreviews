@@ -111,29 +111,40 @@
         }
 
         .top-reviews-section {
-            padding: 4rem 0 1rem;
+            padding: 0px 0 1rem;
             background: #f1f5f9;
         }
 
         .section-label {
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            font-size: 0.85rem;
+            font-size: 14px;
             color: #94a3b8;
             margin-bottom: 0.75rem;
+            font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
         }
 
         .page-title {
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            font-weight: 700;
+            /*font-size: clamp(2rem, 4vw, 2.5rem);*/
+            font-size: 24px;
+            font-weight: 600;
             color: #0f172a;
             margin-bottom: 0.5rem;
+        }
+        
+        
+        .page-title-top{
+            margin-top: 5%;
+             font-size: 36px;
         }
 
         .lede {
             color: #475569;
             max-width: 720px;
             line-height: 1.6;
+            font-size: 16px;
         }
 
         .content-grid {
@@ -159,7 +170,7 @@
         }
 
         .sidebar-card h5 {
-            font-size: 0.9rem;
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: #94a3b8;
@@ -169,6 +180,7 @@
         .sidebar-card p {
             color: #475569;
             line-height: 1.6;
+            font-size: 16px;
         }
 
         .state-list {
@@ -184,9 +196,10 @@
         }
 
         .state-list a {
+            font-size: 14px;
             color: #0891b2;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 400;
         }
 
         .state-list a:hover {
@@ -206,6 +219,7 @@
             color: #64748b;
             font-weight: 600;
             border-bottom: none;
+            font-size:14px;
         }
 
         .table-card .table td {
@@ -249,7 +263,7 @@
         }
 
         .directory-list-section {
-            padding-top: 2rem;
+            /*padding-top: 2rem;*/
             padding-bottom: 4rem;
         }
 
@@ -267,6 +281,7 @@
             border-radius: 30px;
             padding: 0.65rem 1.25rem;
             border: 1px solid #d1d5db;
+            font-size: 16px;
         }
 
         .company-table thead {
@@ -290,8 +305,9 @@
         }
 
         .company-name {
-            font-weight: 600;
+            font-weight: 500;
             color: #0f172a;
+            font-size: 16px;
         }
 
         .rating-chip {
@@ -313,6 +329,7 @@
             font-weight: 600;
             color: #1d4ed8;
             text-decoration: none;
+            font-size: 14px;
         }
 
         .view-link:hover {
@@ -407,6 +424,34 @@
             }
 
         }
+        
+        
+        .text-16{
+            font-size: 16px;
+        }
+        
+        
+        .search-box {
+  position: relative;
+  width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px 8px 35px; /* icon ke liye space */
+  font-size: 14px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 14px;
+  pointer-events: none;
+}
+
     </style>
 </head>
 <body>
@@ -438,14 +483,14 @@
     <section class="top-reviews-section">
         <div class="container-custom">
             <!--<div class="section-label">Consumer Reviews</div>-->
-            <h2 class="page-title">Top Solar Installers Ranked by Reviews</h2>
+            <h2 class="page-title page-title-top">Top Solar Installers Ranked by Reviews</h2>
             <p class="lede">Solar Reviews publishes the largest volume of verified installer feedback. These highlights from our Top Reviews page make it easy to compare expert ratings and homeowner sentiment before you dive into the full directory.</p>
 
             <div class="content-grid">
                 <aside class="sidebar-card">
                     <h5>About this list</h5>
                     <p class="mb-3">Every score below is earned from verified reviewers. No installer can pay to influence these ratings.</p>
-                    <a href="{{ route('reviews.top') }}" class="fw-semibold text-decoration-none" style="color:#16a34a;">View full top reviews →</a>
+                    <a href="{{ route('reviews.top') }}" class="fw-semibold text-decoration-none" style="color:#16a34a; font-size:14px;">View full top reviews →</a>
 
                     <hr class="my-4">
                     <h5>Solar in your state</h5>
@@ -466,10 +511,21 @@
                             <div class="table-card-header">
                                 <div>
                                     <div class="section-label mb-1">Directory</div>
-                                    <h2 class="page-title" style="font-size:1.8rem; margin-bottom:0;">Company Directory</h2>
-                                    <p class="text-muted mb-0">Click any company name to view the full profile.</p>
+                                    <h2 class="page-title mb-1" style="">Company Directory</h2>
+                                    <p class="text-muted mb-0 text-16">Click any company name to view the full profile.</p>
                                 </div>
-                                <input type="text" class="search-input" placeholder="Search companies" oninput="filterCompanies(this.value)">
+                                
+                                    <div class="search-box">
+  <i class="fas fa-search search-icon ml-1"></i>
+  <input 
+    type="text" 
+    class="search-input" 
+    placeholder="Search companies"
+    oninput="filterCompanies(this.value)"
+  >
+</div>
+
+                                <!--<input type="text" class="search-input" placeholder="Search companies" oninput="filterCompanies(this.value)">-->
                             </div>
 
                             <div class="table-responsive">
