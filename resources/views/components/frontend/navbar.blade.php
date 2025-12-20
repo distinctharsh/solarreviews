@@ -43,12 +43,12 @@
                         @endif
                     </div>
                     <div class="normal-user-meta">
-                        <small>Logged in</small>
-                        <strong>{{ $normalUserName }}</strong>
+                        <!--<small>Logged in</small>-->
+                        <!--<strong>{{ $normalUserName }}</strong>-->
                     </div>
                     <form method="POST" action="{{ route('reviews.session.logout') }}">
                         @csrf
-                        <button type="submit" class="normal-user-logout">Logout</button>
+                        <!--<button type="submit" class="normal-user-logout">Logout</button>-->
                     </form>
                 </div>
             @else
@@ -128,12 +128,12 @@
                             @endif
                         </div>
                         <div class="normal-user-meta">
-                            <small>Logged in</small>
-                            <strong>{{ $normalUserName }}</strong>
+                            <!--<small>Logged in</small>-->
+                            <!--<strong>{{ $normalUserName }}</strong>-->
                         </div>
                         <form method="POST" action="{{ route('reviews.session.logout') }}">
                             @csrf
-                            <button type="submit" class="normal-user-logout">Logout</button>
+                            <!--<button type="submit" class="normal-user-logout">Logout</button>-->
                         </form>
                     </div>
                 </li>
@@ -514,6 +514,13 @@
 
 .navbar-logo {
     height: 76px;    
+}
+
+
+.normal-user-avatar img{
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
 }
 </style>
 

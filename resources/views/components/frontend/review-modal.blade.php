@@ -404,6 +404,36 @@
             right: 0;
         }
 
+        .draft-notice {
+            display: none;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: #fef9c3;
+            border: 1px solid #fcd34d;
+            color: #854d0e;
+            font-size: 0.85rem;
+            font-weight: 600;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .draft-notice button {
+            border: none;
+            background: #fb923c;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 0.2rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.78rem;
+        }
+
+        .draft-notice button:hover {
+            background: #f97316;
+        }
+
         .identity-divider[hidden] {
             display: none;
         }
@@ -660,6 +690,10 @@
                 <input type="hidden" name="state_id" id="{{ $modalId }}StateId" value="">
             @endif
             <div class="modal-body">
+                <div class="draft-notice" data-draft-notice hidden>
+                    <span data-draft-message>We restored your review draft.</span>
+                    <button type="button" data-draft-clear>Clear draft</button>
+                </div>
                 @if($allowCompanySelection)
                     <div class="form-group" data-company-select-wrapper style="display: none;">
                         <label class="form-label" for="{{ $modalId }}CompanySelect">Select Company *</label>
@@ -920,6 +954,49 @@
         const manualDivider = modal.querySelector('[data-manual-divider]');
         const manualControls = modal.querySelector('[data-manual-controls]');
         const manualHideBtn = modal.querySelector('[data-hide-manual-identity]');
+        const draftNotice = modal.querySelector('[data-draft-notice]');
+        const draftMessage = draftNotice ? draftNotice.querySelector('[data-draft-message]') : null;
+        const draftClearBtn = draftNotice ? draftNotice.querySelector('[data-draft-clear]') : null;
+        const draftStorageKey = `review_modal_draft_${modalId}`;
+        const reopenStorageKey = `review_modal_reopen_${modalId}`;
+        const DRAFT_VERSION = 1;
+        const DRAFT_MAX_AGE = 1000 * 60 * 60 * 12; // 12 hours
+        const storageSupported = (() => {
+            try {
+                const testKey = '__reviewDraftTest__';
+                localStorage.setItem(testKey, '1');
+                localStorage.removeItem(testKey);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        })();
+
+        const draftStorage = {
+            save(payload) {
+                if (!storageSupported || !payload) return;
+                localStorage.setItem(draftStorageKey, JSON.stringify(payload));
+            },
+            load() {
+                if (!storageSupported) return null;
+                const raw = localStorage.getItem(draftStorageKey);
+                if (!raw) return null;
+                try {
+                    return JSON.parse(raw);
+                } catch (error) {
+                    localStorage.removeItem(draftStorageKey);
+                    return null;
+                }
+            },
+            clear() {
+                if (!storageSupported) return;
+                localStorage.removeItem(draftStorageKey);
+            }
+        };
+
+        let draftSaveTimeout = null;
+        let draftApplied = false;
+        let isApplyingDraft = false;
 
         const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -1001,6 +1078,7 @@
             if (firstManualInput) {
                 requestAnimationFrame(() => firstManualInput.focus());
             }
+            scheduleDraftSave();
         }
 
         function resetManualIdentity() {
@@ -1012,6 +1090,7 @@
             if (manualIdentityToggle) {
                 manualIdentityToggle.style.display = '';
             }
+            scheduleDraftSave();
         }
 
         function resetForm() {
@@ -1044,6 +1123,8 @@
             setCompanyContext('', 'this company');
             if (stateIdInput) stateIdInput.value = '';
             resetManualIdentity();
+            hideDraftNotice();
+            draftApplied = false;
         }
 
         function openModal(trigger) {
@@ -1074,6 +1155,7 @@
             }
 
             modal.style.display = 'flex';
+            restoreDraftIfAvailable();
         }
 
         triggers.forEach(trigger => {
@@ -1085,6 +1167,13 @@
 
         if (googleLoginBtn) {
             googleLoginBtn.addEventListener('click', () => {
+                persistDraftNow(true);
+                try {
+                    sessionStorage.setItem(reopenStorageKey, '1');
+                } catch (error) {
+                    // ignore storage errors
+                }
+
                 const redirectUrl = googleLoginBtn.getAttribute('data-google-redirect');
                 if (!redirectUrl) return;
 
@@ -1154,6 +1243,7 @@
                             starIcon.classList.add('far');
                         }
                     });
+                    scheduleDraftSave();
                 });
             });
         });
@@ -1181,6 +1271,8 @@
                 .then(async response => {
                     const data = await response.json().catch(() => ({}));
                     if (response.ok && data.success) {
+                        draftStorage.clear();
+                        hideDraftNotice();
                         Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
                         modal.style.display = 'none';
                         setTimeout(() => window.location.reload(), 1500);
@@ -1220,8 +1312,247 @@
         }
 
         if (manualHideBtn) {
-            manualHideBtn.addEventListener('click', resetManualIdentity);
+            manualHideBtn.addEventListener('click', () => {
+                resetManualIdentity();
+                scheduleDraftSave();
+            });
         }
+
+        if (draftClearBtn) {
+            draftClearBtn.addEventListener('click', () => {
+                draftStorage.clear();
+                hideDraftNotice();
+                resetForm();
+            });
+        }
+
+        if (form) {
+            const handleFormMutation = () => scheduleDraftSave();
+            form.addEventListener('input', handleFormMutation);
+            form.addEventListener('change', handleFormMutation);
+        }
+
+        const shouldReopenModal = (() => {
+            try {
+                if (sessionStorage.getItem(reopenStorageKey) === '1') {
+                    sessionStorage.removeItem(reopenStorageKey);
+                    return true;
+                }
+            } catch (error) {
+                // ignore
+            }
+            return false;
+        })();
+
+        if (shouldReopenModal) {
+            resetForm();
+            if (restoreDraftIfAvailable()) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        function collectFormFields() {
+            if (!form) return {};
+            const data = {};
+            Array.from(form.elements).forEach(element => {
+                if (!element.name || element.disabled) return;
+                if (element.type === 'file') return;
+                if (element.type === 'hidden' && element !== ratingInput) return;
+                if (element.name === '_token') return;
+
+                if (element.type === 'checkbox') {
+                    data[element.name] = element.checked;
+                } else if (element.type === 'radio') {
+                    if (element.checked) {
+                        data[element.name] = element.value;
+                    } else if (!(element.name in data)) {
+                        data[element.name] = null;
+                    }
+                } else {
+                    data[element.name] = element.value;
+                }
+            });
+            return data;
+        }
+
+        function hasMeaningfulData(fields) {
+            return Object.entries(fields).some(([name, value]) => {
+                if (value === null || value === undefined) return false;
+                if (typeof value === 'boolean') return value;
+                return String(value).trim() !== '';
+            });
+        }
+
+        function buildDraftPayload() {
+            const fields = collectFormFields();
+            if (!hasMeaningfulData(fields)) return null;
+
+            return {
+                version: DRAFT_VERSION,
+                savedAt: Date.now(),
+                fields,
+                meta: {
+                    manualIdentityVisible: manualIdentity ? !manualIdentity.hidden : false,
+                    systemDetailsVisible: systemDetails ? systemDetails.style.display !== 'none' : false,
+                },
+                context: {
+                    companyId: companyIdInput ? companyIdInput.value : '',
+                    companyName: companyNameDisplay ? companyNameDisplay.textContent : '',
+                    stateId: stateIdInput ? stateIdInput.value : '',
+                    categoryId: categoryInput ? categoryInput.value : '',
+                }
+            };
+        }
+
+        function persistDraftNow(force = false) {
+            const payload = buildDraftPayload();
+            if (payload) {
+                draftStorage.save(payload);
+                if (force && draftNotice && draftNotice.hidden === true) {
+                    showDraftNotice();
+                }
+            } else if (force) {
+                draftStorage.clear();
+            }
+        }
+
+        function scheduleDraftSave() {
+            if (isApplyingDraft) return;
+            clearTimeout(draftSaveTimeout);
+            draftSaveTimeout = setTimeout(() => {
+                const payload = buildDraftPayload();
+                if (payload) {
+                    draftStorage.save(payload);
+                } else {
+                    draftStorage.clear();
+                    hideDraftNotice();
+                }
+            }, 600);
+        }
+
+        function restoreDraftIfAvailable(options = {}) {
+            if (draftApplied) return false;
+            const payload = draftStorage.load();
+            if (!payload) return false;
+
+            if (payload.version !== DRAFT_VERSION || (payload.savedAt && Date.now() - payload.savedAt > DRAFT_MAX_AGE)) {
+                draftStorage.clear();
+                return false;
+            }
+
+            isApplyingDraft = true;
+            if (payload.context) {
+                applyDraftContext(payload.context);
+            }
+            if (payload.fields) {
+                applyDraftFields(payload.fields);
+            }
+            if (payload.meta) {
+                applyDraftMeta(payload.meta);
+            }
+            isApplyingDraft = false;
+            draftApplied = true;
+
+            showDraftNotice();
+            return true;
+        }
+
+        function applyDraftContext(context = {}) {
+            if (context.companyId || context.companyName) {
+                setCompanyContext(context.companyId, context.companyName);
+            }
+            if (context.stateId) {
+                setStateDisplay(context.stateId);
+            }
+            if (context.categoryId && categoryInput) {
+                categoryInput.value = context.categoryId;
+            }
+        }
+
+        function applyDraftFields(fields = {}) {
+            Object.entries(fields).forEach(([name, value]) => {
+                if (!name) return;
+                const control = form?.elements?.namedItem(name);
+                if (!control) return;
+
+                if (control instanceof RadioNodeList || (control.length && control[0]?.type === 'radio')) {
+                    const radios = control.length ? Array.from(control) : [control];
+                    radios.forEach(radio => {
+                        radio.checked = value !== null && radio.value === String(value);
+                    });
+                } else if (control.type === 'checkbox') {
+                    control.checked = !!value;
+                } else {
+                    control.value = value ?? '';
+                }
+            });
+
+            refreshRatingVisual();
+            refreshMetricVisuals();
+        }
+
+        function applyDraftMeta(meta = {}) {
+            if (meta.manualIdentityVisible) {
+                showManualIdentityFields();
+            }
+            if (meta.systemDetailsVisible) {
+                toggleSystemDetails(true);
+            }
+        }
+
+        function refreshRatingVisual() {
+            if (!ratingInput) return;
+            const currentRating = parseInt(ratingInput.value || '0', 10);
+            ratingStars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.classList.add('active', 'fas');
+                    star.classList.remove('far');
+                } else {
+                    star.classList.remove('active', 'fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function refreshMetricVisuals() {
+            metricGroups.forEach(group => {
+                const buttons = group.querySelectorAll('[data-metric-star]');
+                const hiddenInput = group.querySelector('[data-metric-input]');
+                const value = hiddenInput ? parseInt(hiddenInput.value || '0', 10) : 0;
+
+                buttons.forEach(btn => {
+                    const starIcon = btn.querySelector('i');
+                    if (!starIcon) return;
+
+                    const btnValue = parseInt(btn.getAttribute('data-value'), 10);
+                    if (btnValue <= value) {
+                        starIcon.classList.add('active', 'fas');
+                        starIcon.classList.remove('far');
+                    } else {
+                        starIcon.classList.remove('active', 'fas');
+                        starIcon.classList.add('far');
+                    }
+                });
+            });
+        }
+
+        function showDraftNotice(message = 'We restored your review draft.') {
+            if (!draftNotice) return;
+            draftNotice.hidden = false;
+            draftNotice.style.display = 'flex';
+            if (draftMessage) {
+                draftMessage.textContent = message;
+            }
+        }
+
+        function hideDraftNotice() {
+            if (!draftNotice) return;
+            draftNotice.hidden = true;
+            draftNotice.style.display = 'none';
+        }
+
+        refreshRatingVisual();
+        refreshMetricVisuals();
 
         }
 
