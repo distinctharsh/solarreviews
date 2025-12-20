@@ -696,14 +696,22 @@
             }
 
             function filterCompanies(term) {
-                if (!term) {
-                    return [...companies];
-                }
-
                 const normalized = term.toLowerCase();
                 return companies.filter(company =>
                     company.name.toLowerCase().includes(normalized)
                 );
+            }
+
+            function updateSuggestions(rawTerm) {
+                const term = rawTerm.trim();
+
+                if (!term) {
+                    hideSuggestions();
+                    return;
+                }
+
+                const matches = filterCompanies(term);
+                renderSuggestions(matches);
             }
 
             function openReviewModal(company) {
@@ -720,18 +728,17 @@
             }
 
             input.addEventListener('input', (event) => {
-                const matches = filterCompanies(event.target.value.trim());
-                renderSuggestions(matches);
+                updateSuggestions(event.target.value);
             });
 
             input.addEventListener('focus', () => {
-                const matches = filterCompanies(input.value.trim());
-                renderSuggestions(matches);
+                if (input.value.trim()) {
+                    updateSuggestions(input.value);
+                }
             });
 
             searchBtn?.addEventListener('click', () => {
-                const matches = filterCompanies(input.value.trim());
-                renderSuggestions(matches);
+                updateSuggestions(input.value);
             });
 
             document.addEventListener('click', (event) => {

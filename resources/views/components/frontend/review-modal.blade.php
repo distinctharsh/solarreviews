@@ -305,64 +305,70 @@
 
         .identity-option {
             width: 100%;
-            border: 1px solid rgba(15, 23, 42, 0.1);
-            border-radius: 12px;
-            padding: 0.9rem 1rem;
+            border: 1px solid #dadce0;
+            border-radius: 999px;
+            padding: 0.45rem 0.7rem;
             display: flex;
             align-items: center;
-            gap: 0.85rem;
+            gap: 0.65rem;
             cursor: pointer;
             background: #fff;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            min-height: 56px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
         }
 
         .identity-option:hover {
-            border-color: var(--primary, #3ba14c);
-            box-shadow: 0 8px 20px rgba(59, 161, 76, 0.12);
+            border-color: #9aa0a6;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
             transform: translateY(-1px);
         }
 
         .identity-option-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #dadce0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            background: #fff;
         }
 
-        .identity-option-google .identity-option-icon {
-            background: rgba(251, 188, 5, 0.15);
-            color: #ea4335;
+        .identity-option-icon img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .identity-option-google {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .identity-option-label {
+            flex: 1;
+            text-align: center;
+            font-size: 0.95rem;
         }
 
         .identity-option.connected {
-            border-color: var(--primary, #3ba14c);
-            box-shadow: 0 8px 24px rgba(59, 161, 76, 0.15);
-            cursor: default;
-            pointer-events: none;
+            border-color: #34a853;
+            box-shadow: 0 8px 24px rgba(52, 168, 83, 0.2);
         }
 
-        .identity-option strong {
-            display: block;
-            font-size: 0.95rem;
-            color: var(--text-primary, #0f172a);
-        }
-
-        .identity-option small {
-            color: var(--text-muted, #94a3b8);
+        .identity-option.connected .identity-option-icon {
+            border-color: #34a853;
         }
 
         .identity-option-status {
-            margin-left: auto;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--text-muted, #94a3b8);
+            color: #34a853;
         }
 
-        .identity-option.connected .identity-option-status {
-            color: var(--primary, #3ba14c);
+        .identity-option:not(.connected) .identity-option-status {
+            display: none;
         }
 
         .identity-readonly {
@@ -463,6 +469,125 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+
+
+
+
+        .google-btn {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    background: #ffffff;
+    color: #3c4043;
+
+    border: 1px solid #dadce0;
+    border-radius: 999px;
+
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Roboto", Arial, sans-serif;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.google-btn:hover {
+    background-color: #f7f8f8;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3),
+                0 1px 3px rgba(60,64,67,.15);
+}
+
+.google-btn:active {
+    background-color: #eeeeee;
+}
+
+.google-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Connected state */
+.google-btn.connected {
+    border-color: #34a853;
+    color: #34a853;
+    font-weight: 600;
+}
+
+
+
+.google-btn {
+    width: 100%;
+    height: 56px;
+   max-width: 360px; 
+    display: flex;
+    align-items: center;
+
+    padding: 0 16px;
+
+    background: #ffffff;
+    color: #3c4043;
+
+    border: 1px solid #dadce0;
+    border-radius: 999px;
+
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Roboto", Arial, sans-serif;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Google logo – LEFT SIDE */
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+/* Text center jaisa feel kare */
+.google-btn span {
+    flex: 1;
+    text-align: center;
+    margin-right: 20px; /* logo ke balance ke liye */
+}
+
+.google-btn:hover {
+    background-color: #f7f8f8;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3),
+                0 1px 3px rgba(60,64,67,.15);
+}
+
+.google-btn:active {
+    background-color: #eeeeee;
+}
+
+.google-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Connected state */
+.google-btn.connected {
+    border-color: #34a853;
+    color: #34a853;
+    font-weight: 600;
+}
+
+.google-center {
+    display: flex;
+    justify-content: center;
+}
     </style>
 @endonce
 
@@ -626,28 +751,23 @@
                         </div>
                     @endif
 
-                    <div class="identity-options">
+                    <div class="identity-options google-center">
                         <button
                             type="button"
-                            class="identity-option identity-option-google {{ $reviewProfile ? 'connected' : '' }}"
+                            class="google-btn {{ $reviewProfile ? 'connected' : '' }}"
                             data-google-login
                             data-google-redirect="{{ route('oauth.google.redirect') }}"
                             {{ $reviewProfile ? 'disabled' : '' }}
                         >
-                            <div class="identity-option-icon">
-                                <i class="fab fa-google"></i>
-                            </div>
-                            <div>
-                                <strong>{{ $reviewProfile ? 'Google connected' : 'Continue with Google' }}</strong>
-                                <small>
-                                    {{ $reviewProfile ? 'We\'ll use your Google details below' : 'Use your Google account to auto-fill details' }}
-                                </small>
-                            </div>
-                            <span class="identity-option-status">
-                                {{ $reviewProfile ? 'Connected' : 'Connect' }}
+                            <img src="{{ asset('images/company/google.svg') }}" alt="Google logo">
+                            <span>
+                                {{ $reviewProfile ? 'Google connected' : 'Continue with Google' }}
                             </span>
                         </button>
                     </div>
+
+
+
                     <div class="identity-divider">or continue manually</div>
                     <div class="row g-3 manual-identity">
                         <div class="col-md-6">
