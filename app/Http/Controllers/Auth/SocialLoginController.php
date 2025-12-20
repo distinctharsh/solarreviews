@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\NormalUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -34,6 +35,20 @@ class SocialLoginController extends Controller
                 ->with('google_oauth_error', 'Unable to sign in with Google. Please try again.');
         }
 
+        $normalUser = NormalUser::updateOrCreate(
+            ['email' => $googleUser->getEmail()],
+            [
+                'name' => $googleUser->getName(),
+                'provider' => 'google',
+                'provider_id' => $googleUser->getId(),
+                'avatar_url' => $googleUser->getAvatar(),
+                'last_login_at' => now(),
+                'last_activity_at' => now(),
+            ]
+        );
+
+        Session::put('normal_user_id', $normalUser->id);
+
         Session::put('review_profile', [
             'name' => $googleUser->getName(),
             'email' => $googleUser->getEmail(),
@@ -49,6 +64,7 @@ class SocialLoginController extends Controller
     public function disconnect(Request $request)
     {
         Session::forget('review_profile');
+        Session::forget('normal_user_id');
 
         if ($request->expectsJson()) {
             return response()->json(['success' => true]);

@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100; border-bottom: 4px solid #e6b800; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
     <div class="container" style="max-width: 1200px;">
+        @php($normalUserSession = $normalUserSession ?? null)
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
             <img src="{{ asset('images/1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
         </a>
@@ -31,7 +32,33 @@
                 </div>
             </div>
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
-            <a class="nav-link fw-medium py-3" href="#">Login</a>
+            @if($normalUserSession)
+                @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
+                <div class="normal-user-pill">
+                    <div class="normal-user-avatar">
+                        @if($normalUserSession->avatar_url)
+                            <img src="{{ $normalUserSession->avatar_url }}" alt="{{ $normalUserName }}">
+                        @else
+                            <span>{{ strtoupper(substr($normalUserName, 0, 1)) }}</span>
+                        @endif
+                    </div>
+                    <div class="normal-user-meta">
+                        <small>Logged in</small>
+                        <strong>{{ $normalUserName }}</strong>
+                    </div>
+                    <form method="POST" action="{{ route('reviews.session.logout') }}">
+                        @csrf
+                        <button type="submit" class="normal-user-logout">Logout</button>
+                    </form>
+                </div>
+            @else
+                <a
+                    class="nav-link fw-medium py-3 nav-normal-login"
+                    href="{{ route('oauth.google.redirect', ['return_url' => request()->fullUrl()]) }}"
+                >
+                    Login
+                </a>
+            @endif
             @auth
                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                     @csrf
@@ -89,9 +116,37 @@
                 <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             </li>
 
-             <li class="nav-item">
-                <a class="nav-link fw-medium py-3" href="#">Login</a>
-            </li>
+            @if($normalUserSession)
+                @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
+                <li class="nav-item">
+                    <div class="normal-user-pill w-100">
+                        <div class="normal-user-avatar">
+                            @if($normalUserSession->avatar_url)
+                                <img src="{{ $normalUserSession->avatar_url }}" alt="{{ $normalUserName }}">
+                            @else
+                                <span>{{ strtoupper(substr($normalUserName, 0, 1)) }}</span>
+                            @endif
+                        </div>
+                        <div class="normal-user-meta">
+                            <small>Logged in</small>
+                            <strong>{{ $normalUserName }}</strong>
+                        </div>
+                        <form method="POST" action="{{ route('reviews.session.logout') }}">
+                            @csrf
+                            <button type="submit" class="normal-user-logout">Logout</button>
+                        </form>
+                    </div>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a
+                        class="nav-link fw-medium py-3 nav-normal-login w-100 text-start"
+                        href="{{ route('oauth.google.redirect', ['return_url' => request()->fullUrl()]) }}"
+                    >
+                        Login
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </div>
@@ -116,7 +171,7 @@
     }
 
     .navbar-logo {
-        height: 72px;
+        height: 76px;
         padding: 10px 0px;
         width: auto;
         transition: transform 0.3s ease;
@@ -245,7 +300,7 @@
         background: #ffdb4d;
     }
 
-        .nav-search {
+    .nav-search {
         background: #fff;
         border: 1px solid #e2e8f0;
         border-radius: 999px;

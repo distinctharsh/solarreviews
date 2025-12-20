@@ -322,10 +322,11 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
     Route::post('/verify-otp', [FrontendReviewController::class, 'verifyOtp'])->name('verify-otp');
 });
 
-// OAuth for review modal/profile
+// OAuth for review modal/profile + normal reviewer sessions
 Route::get('/auth/google/redirect', [SocialLoginController::class, 'redirectToGoogle'])->name('oauth.google.redirect');
 Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 Route::post('/auth/google/disconnect', [SocialLoginController::class, 'disconnect'])->name('oauth.google.disconnect');
+Route::post('/reviews/session/logout', [SocialLoginController::class, 'disconnect'])->name('reviews.session.logout');
 
 // Admin Routes
 Route::prefix('admin')
