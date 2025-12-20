@@ -34,23 +34,9 @@
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             @if($normalUserSession)
                 @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
-                <div class="normal-user-pill">
-                    <div class="normal-user-avatar">
-                        @if($normalUserSession->avatar_url)
-                            <img src="{{ $normalUserSession->avatar_url }}" alt="{{ $normalUserName }}">
-                        @else
-                            <span>{{ strtoupper(substr($normalUserName, 0, 1)) }}</span>
-                        @endif
-                    </div>
-                    <div class="normal-user-meta">
-                        <!--<small>Logged in</small>-->
-                        <!--<strong>{{ $normalUserName }}</strong>-->
-                    </div>
-                    <form method="POST" action="{{ route('reviews.session.logout') }}">
-                        @csrf
-                        <!--<button type="submit" class="normal-user-logout">Logout</button>-->
-                    </form>
-                </div>
+                <a class="nav-link fw-medium py-3 nav-normal-login" href="{{ route('normal-user.reviews.index') }}">
+                    My profile
+                </a>
             @else
                 <a
                     class="nav-link fw-medium py-3 nav-normal-login"
@@ -117,25 +103,10 @@
             </li>
 
             @if($normalUserSession)
-                @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
                 <li class="nav-item">
-                    <div class="normal-user-pill w-100">
-                        <div class="normal-user-avatar">
-                            @if($normalUserSession->avatar_url)
-                                <img src="{{ $normalUserSession->avatar_url }}" alt="{{ $normalUserName }}">
-                            @else
-                                <span>{{ strtoupper(substr($normalUserName, 0, 1)) }}</span>
-                            @endif
-                        </div>
-                        <div class="normal-user-meta">
-                            <!--<small>Logged in</small>-->
-                            <!--<strong>{{ $normalUserName }}</strong>-->
-                        </div>
-                        <form method="POST" action="{{ route('reviews.session.logout') }}">
-                            @csrf
-                            <!--<button type="submit" class="normal-user-logout">Logout</button>-->
-                        </form>
-                    </div>
+                    <a class="nav-link fw-medium py-3 nav-normal-login w-100 text-start" href="{{ route('normal-user.reviews.index') }}">
+                        My profile
+                    </a>
                 </li>
             @else
                 <li class="nav-item">

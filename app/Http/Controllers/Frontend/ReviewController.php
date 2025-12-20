@@ -137,6 +137,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
+        $requiresManualIdentity = $this->shouldRequireManualIdentity($request);
         // Validate the request
         $validated = $request->validate([
             'company_id' => 'required|exists:companies,id',
@@ -155,13 +156,15 @@ class ReviewController extends Controller
             'year_installed' => 'nullable|integer|min:2000|max:' . now()->year,
             'panel_brand' => 'nullable|string|max:255',
             'inverter_brand' => 'nullable|string|max:255',
-            'user_state' => 'required|exists:states,id',
-            'user_city' => 'required|string|max:255',
+            'user_state' => ($requiresManualIdentity ? 'required' : 'nullable') . '|exists:states,id',
+            'user_city' => ($requiresManualIdentity ? 'required' : 'nullable') . '|string|max:255',
         ]);
 
         try {
             // Start database transaction
             DB::beginTransaction();
+
+            $normalUserId = $this->resolveNormalUserId($validated);
 
             // Create the review
             $review = new CompanyReview();
@@ -170,8 +173,9 @@ class ReviewController extends Controller
             $review->category_id = $validated['category_id'];
             $review->reviewer_name = $validated['reviewer_name'];
             $review->email = $validated['email'];
-            $review->reviewer_state_id = $validated['user_state'];
-            $review->reviewer_city = $validated['user_city'];
+            $review->normal_user_id = $normalUserId;
+            $review->reviewer_state_id = $validated['user_state'] ?? null;
+            $review->reviewer_city = $validated['user_city'] ?? null;
             $review->rating = $validated['rating'];
             $review->experience_metrics = collect($request->input('metrics', []))
                 ->filter(fn ($value) => filled($value))
@@ -263,10 +267,71 @@ class ReviewController extends Controller
             ->filter()
             ->values();
 
+        $paths = $storedPaths;
+        $primaryMedia = $storedPaths->first();
+
         return [
-            'paths' => $storedPaths,
-            'primary' => $storedPaths->first(),
+            'paths' => $paths,
+            'primary' => $primaryMedia,
         ];
+    }
+
+    protected function shouldRequireManualIdentity(Request $request): bool
+    {
+        if ($request->boolean('manual_identity_optional')) {
+            return false;
+        }
+
+        $normalUserId = Session::get('normal_user_id');
+        if ($normalUserId) {
+            $normalUser = NormalUser::find($normalUserId);
+            if ($normalUser && $normalUser->provider === 'google') {
+                return false;
+            }
+        }
+
+        $profile = Session::get('review_profile');
+        if ($profile && ($profile['provider'] ?? null) === 'google') {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function resolveNormalUserId(array $validated): ?int
+    {
+        $sessionUserId = Session::get('normal_user_id');
+        if ($sessionUserId && NormalUser::find($sessionUserId)) {
+            return $sessionUserId;
+        }
+
+        $email = $validated['email'] ?? null;
+        if (!$email) {
+            return null;
+        }
+
+        $normalUser = NormalUser::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $validated['reviewer_name'] ?? null,
+                'provider' => 'manual',
+                'provider_id' => null,
+                'avatar_url' => null,
+                'last_login_at' => now(),
+                'last_activity_at' => now(),
+            ]
+        );
+
+        Session::put('normal_user_id', $normalUser->id);
+        Session::put('review_profile', [
+            'name' => $normalUser->name,
+            'email' => $normalUser->email,
+            'provider' => 'manual',
+            'provider_id' => null,
+            'avatar' => null,
+        ]);
+
+        return $normalUser->id;
     }
 
     /**
@@ -298,7 +363,7 @@ class ReviewController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'OTP ready for use.'
+            'message' => 'Verification code sent. Please check your inbox.',
         ]);
     }
 
@@ -307,9 +372,10 @@ class ReviewController extends Controller
      */
     public function verifyOtp(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email',
             'otp' => 'required|string|size:6',
+            'reviewer_name' => 'nullable|string|max:255',
         ]);
 
         $savedOtp = session('otp');
@@ -373,10 +439,19 @@ class ReviewController extends Controller
             'email_verified_email' => $request->email,
         ]);
 
+        $normalUserId = $this->resolveNormalUserId([
+            'email' => $validated['email'],
+            'reviewer_name' => $validated['reviewer_name'] ?? null,
+        ]);
+
+        $profile = session('review_profile');
+
         \Log::info('OTP verified successfully');
         return response()->json([
             'success' => true,
-            'message' => 'OTP verified successfully.'
+            'message' => 'OTP verified successfully.',
+            'profile' => $profile,
+            'normal_user_id' => $normalUserId,
         ]);
     }
 

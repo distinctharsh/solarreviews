@@ -185,6 +185,32 @@
             flex: 1;
         }
 
+        .otp-field-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-otp {
+            border: none;
+            background: rgba(37, 99, 235, 0.12);
+            color: #1d4ed8;
+            font-weight: 600;
+            padding: 0.65rem 1.1rem;
+            border-radius: 999px;
+            min-width: 130px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-otp:hover:not(:disabled) {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-otp:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .btn-outline {
             background: var(--surface, #ffffff);
             color: var(--primary, #3ba14c);
@@ -819,21 +845,23 @@
                 <div class="subtle-card mt-4">
                     <h5 class="fw-semibold mb-3">How should we display your review?</h5>
 
-                    <!-- @if($reviewProfile)
-                        <div class="identity-status">
-                            <div>
-                                <span>Signed in as {{ $reviewProfile['name'] ?? 'Google User' }}</span>
-                                <p class="mb-0 text-muted small">{{ $reviewProfile['email'] ?? '' }}</p>
-                            </div>
-                            <button
-                                type="button"
-                                data-google-disconnect
-                                data-google-disconnect-url="{{ route('oauth.google.disconnect') }}"
-                            >
-                                Disconnect
-                            </button>
+                    <div
+                        class="identity-status {{ $reviewProfile ? '' : 'd-none' }}"
+                        data-identity-status
+                        @unless($reviewProfile) hidden @endunless
+                    >
+                        <div>
+                            <span data-identity-status-name>{{ $reviewProfile['name'] ?? 'Connected reviewer' }}</span>
+                            <p class="mb-0 text-muted small" data-identity-status-email>{{ $reviewProfile['email'] ?? '' }}</p>
                         </div>
-                    @endif -->
+                        <button
+                            type="button"
+                            data-google-disconnect
+                            data-google-disconnect-url="{{ route('reviews.session.logout') }}"
+                        >
+                            Disconnect
+                        </button>
+                    </div>
 
                     <div class="identity-options google-center">
                         <button
@@ -852,10 +880,18 @@
 
 
 
-                    <button type="button" class="identity-email-toggle" data-show-manual-identity>
+                    <button
+                        type="button"
+                        class="identity-email-toggle"
+                        data-show-manual-identity
+                        @if($reviewProfile) hidden @endif
+                    >
                         <i class="far fa-envelope"></i>
                         Continue with email
                     </button>
+                    @if($reviewProfile)
+                        <input type="hidden" name="manual_identity_optional" value="1">
+                    @endif
                     <div class="identity-divider" data-manual-divider hidden>or continue manually</div>
                     <div class="manual-identity-controls" data-manual-controls hidden>
                         <span>Continuing with email</span>
@@ -875,7 +911,7 @@
                                 value="{{ old('reviewer_name', $reviewProfile['name'] ?? '') }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-name
-                                required
+                                @unless($reviewProfile) required @endunless
                             >
                         </div>
                         <div class="col-md-6">
@@ -888,13 +924,13 @@
                                 value="{{ old('email', $reviewProfile['email'] ?? '') }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-email
-                                required
+                                @unless($reviewProfile) required @endunless
                             >
                             <small class="text-muted d-block mt-1">We only email you about this review.</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your state *</label>
-                            <select class="form-select" name="user_state" required>
+                            <select class="form-select" name="user_state" @unless($reviewProfile) required @endunless>
                                 <option value="" selected disabled>Select state</option>
                                 @foreach($states as $state)
                                     <option value="{{ $state->id }}">{{ $state->name }}</option>
@@ -903,7 +939,27 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your city *</label>
-                            <input type="text" class="form-control" name="user_city" placeholder="City" required>
+                            <input type="text" class="form-control" name="user_city" placeholder="City" @unless($reviewProfile) required @endunless>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Verification code *</label>
+                            <div class="otp-field-group" data-otp-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Enter 6-digit code"
+                                    maxlength="6"
+                                    data-otp-input
+                                    @unless($reviewProfile) required @endunless
+                                >
+                                <button type="button" class="btn-otp" data-send-otp-btn>Send code</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end" data-otp-verify-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
+                            <button type="button" class="btn-otp w-100" data-verify-otp-btn>Verify OTP</button>
+                        </div>
+                        <div class="col-12" data-otp-status-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
+                            <small class="text-muted d-block" data-otp-status hidden>We’ll send a verification code to your email.</small>
                         </div>
                     </div>
                 </div>

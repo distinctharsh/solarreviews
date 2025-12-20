@@ -18,6 +18,7 @@ class CompanyReview extends Model
         'reviewer_city',
         'reviewer_name',
         'email',
+        'normal_user_id',
         'rating',
         'experience_metrics',
         'system_size_kw',
@@ -69,5 +70,10 @@ class CompanyReview extends Model
     public function state(): BelongsTo
     {
         return $this->belongsTo(State::class);
+    }
+
+    public function normalUser(): BelongsTo
+    {
+        return $this->belongsTo(NormalUser::class);
     }
 }

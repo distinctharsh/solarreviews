@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ChatbotReportController;
 use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController;
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
+use App\Http\Controllers\Frontend\NormalUserProfileController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -320,6 +321,12 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
     Route::post('/', [FrontendReviewController::class, 'store'])->name('store');
     Route::post('/send-otp', [FrontendReviewController::class, 'sendOtp'])->name('send-otp');
     Route::post('/verify-otp', [FrontendReviewController::class, 'verifyOtp'])->name('verify-otp');
+});
+
+Route::prefix('profile/reviews')->name('normal-user.reviews.')->group(function () {
+    Route::get('/', [NormalUserProfileController::class, 'index'])->name('index');
+    Route::put('/{companyReview}', [NormalUserProfileController::class, 'update'])->name('update');
+    Route::delete('/{companyReview}', [NormalUserProfileController::class, 'destroy'])->name('destroy');
 });
 
 // OAuth for review modal/profile + normal reviewer sessions
