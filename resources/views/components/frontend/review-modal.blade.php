@@ -404,8 +404,58 @@
             right: 0;
         }
 
+        .identity-divider[hidden] {
+            display: none;
+        }
+
         .manual-identity {
             margin-top: 0.5rem;
+        }
+
+        .manual-identity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.25rem;
+            padding: 0.5rem 0.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .manual-identity-close {
+            border: none;
+            background: none;
+            color: #ef4444;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        .manual-identity-close:hover {
+            color: #b91c1c;
+        }
+
+        .identity-email-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            margin: 0 auto 0;
+            padding: 0.35rem 0.75rem;
+            border: none;
+            background: none;
+            color: #2563eb;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+                width: 100%;
+        }
+
+        .identity-email-toggle:hover {
+            color: #1e3a8a;
         }
 
         .modal-footer {
@@ -476,7 +526,7 @@
 
         .google-btn {
     width: 100%;
-    height: 56px;
+    height: 39px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -527,8 +577,8 @@
 
 .google-btn {
     width: 100%;
-    height: 56px;
-   max-width: 360px; 
+    height: 39px;
+      max-width: 252px;
     display: flex;
     align-items: center;
 
@@ -768,8 +818,19 @@
 
 
 
-                    <div class="identity-divider">or continue manually</div>
-                    <div class="row g-3 manual-identity">
+                    <button type="button" class="identity-email-toggle" data-show-manual-identity>
+                        <i class="far fa-envelope"></i>
+                        Continue with email
+                    </button>
+                    <div class="identity-divider" data-manual-divider hidden>or continue manually</div>
+                    <div class="manual-identity-controls" data-manual-controls hidden>
+                        <span>Continuing with email</span>
+                        <!-- <button type="button" class="manual-identity-close" data-hide-manual-identity>
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button> -->
+                    </div>
+                    <div class="row g-3 manual-identity" data-manual-identity hidden>
                         <div class="col-md-6">
                             <label class="form-label">Choose a display name *</label>
                             <input
@@ -854,6 +915,11 @@
         const systemDetails = modal.querySelector('[data-system-details]');
         const googleLoginBtn = modal.querySelector('[data-google-login]');
         const googleDisconnectBtn = modal.querySelector('[data-google-disconnect]');
+        const manualIdentityToggle = modal.querySelector('[data-show-manual-identity]');
+        const manualIdentity = modal.querySelector('[data-manual-identity]');
+        const manualDivider = modal.querySelector('[data-manual-divider]');
+        const manualControls = modal.querySelector('[data-manual-controls]');
+        const manualHideBtn = modal.querySelector('[data-hide-manual-identity]');
 
         const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -921,6 +987,33 @@
             });
         }
 
+        function showManualIdentityFields() {
+            if (!manualIdentity) return;
+
+            manualIdentity.hidden = false;
+            manualDivider?.removeAttribute('hidden');
+            manualControls?.removeAttribute('hidden');
+            if (manualIdentityToggle) {
+                manualIdentityToggle.style.display = 'none';
+            }
+
+            const firstManualInput = manualIdentity.querySelector('input, select, textarea');
+            if (firstManualInput) {
+                requestAnimationFrame(() => firstManualInput.focus());
+            }
+        }
+
+        function resetManualIdentity() {
+            if (!manualIdentity) return;
+
+            manualIdentity.hidden = true;
+            manualDivider?.setAttribute('hidden', '');
+            manualControls?.setAttribute('hidden', '');
+            if (manualIdentityToggle) {
+                manualIdentityToggle.style.display = '';
+            }
+        }
+
         function resetForm() {
             if (form) form.reset();
             if (ratingInput) ratingInput.value = '';
@@ -950,6 +1043,7 @@
             }
             setCompanyContext('', 'this company');
             if (stateIdInput) stateIdInput.value = '';
+            resetManualIdentity();
         }
 
         function openModal(trigger) {
@@ -1120,6 +1214,15 @@
                 closeModal();
             }
         });
+
+        if (manualIdentityToggle) {
+            manualIdentityToggle.addEventListener('click', showManualIdentityFields);
+        }
+
+        if (manualHideBtn) {
+            manualHideBtn.addEventListener('click', resetManualIdentity);
+        }
+
         }
 
         if (document.readyState === 'loading') {
