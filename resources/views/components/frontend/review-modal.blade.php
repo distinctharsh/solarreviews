@@ -819,7 +819,7 @@
                 <div class="subtle-card mt-4">
                     <h5 class="fw-semibold mb-3">How should we display your review?</h5>
 
-                    @if($reviewProfile)
+                    <!-- @if($reviewProfile)
                         <div class="identity-status">
                             <div>
                                 <span>Signed in as {{ $reviewProfile['name'] ?? 'Google User' }}</span>
@@ -833,7 +833,7 @@
                                 Disconnect
                             </button>
                         </div>
-                    @endif
+                    @endif -->
 
                     <div class="identity-options google-center">
                         <button
@@ -1155,7 +1155,15 @@
             }
 
             modal.style.display = 'flex';
-            restoreDraftIfAvailable();
+            const primaryCategoryId = categoryInput ? categoryInput.value : '';
+            restoreDraftIfAvailable({
+                expectedContext: {
+                    companyId: companyId || '',
+                    companyName: companyName || '',
+                    stateId: stateId || '',
+                    categoryId: primaryCategoryId || '',
+                },
+            });
         }
 
         triggers.forEach(trigger => {
@@ -1354,11 +1362,24 @@
         function collectFormFields() {
             if (!form) return {};
             const data = {};
+            const appendValue = (target, name, value) => {
+                if (name === '_token') return;
+                if (value instanceof File) return;
+                if (target[name] === undefined) {
+                    target[name] = value;
+                } else if (Array.isArray(target[name])) {
+                    target[name].push(value);
+                } else {
+                    target[name] = [target[name], value];
+                }
+            };
+
+            const formData = new FormData(form);
+            formData.forEach((value, key) => appendValue(data, key, value));
+
             Array.from(form.elements).forEach(element => {
                 if (!element.name || element.disabled) return;
                 if (element.type === 'file') return;
-                if (element.type === 'hidden' && element !== ratingInput) return;
-                if (element.name === '_token') return;
 
                 if (element.type === 'checkbox') {
                     data[element.name] = element.checked;
@@ -1368,17 +1389,19 @@
                     } else if (!(element.name in data)) {
                         data[element.name] = null;
                     }
-                } else {
-                    data[element.name] = element.value;
                 }
             });
+
             return data;
         }
 
         function hasMeaningfulData(fields) {
-            return Object.entries(fields).some(([name, value]) => {
+            return Object.values(fields).some(value => {
                 if (value === null || value === undefined) return false;
                 if (typeof value === 'boolean') return value;
+                if (Array.isArray(value)) {
+                    return value.some(entry => entry !== null && entry !== undefined && String(entry).trim() !== '');
+                }
                 return String(value).trim() !== '';
             });
         }
@@ -1430,13 +1453,33 @@
             }, 600);
         }
 
+        function contextMatches(draftContext = {}, expectedContext = {}) {
+            if (!expectedContext) return true;
+            const normalized = (value) => {
+                if (value === null || value === undefined) return '';
+                return String(value).trim();
+            };
+            const keys = ['companyId', 'companyName', 'stateId', 'categoryId'];
+            return keys.every(key => {
+                const expected = normalized(expectedContext[key]);
+                if (!expected) return true;
+                const draftValue = normalized(draftContext[key]);
+                return draftValue === expected;
+            });
+        }
+
         function restoreDraftIfAvailable(options = {}) {
+            const { expectedContext = null } = options;
             if (draftApplied) return false;
             const payload = draftStorage.load();
             if (!payload) return false;
 
             if (payload.version !== DRAFT_VERSION || (payload.savedAt && Date.now() - payload.savedAt > DRAFT_MAX_AGE)) {
                 draftStorage.clear();
+                return false;
+            }
+
+            if (expectedContext && !contextMatches(payload.context, expectedContext)) {
                 return false;
             }
 
@@ -1470,20 +1513,41 @@
         }
 
         function applyDraftFields(fields = {}) {
+            const isControlCollection = (control) => {
+                return control instanceof RadioNodeList || control instanceof HTMLCollection || Array.isArray(control);
+            };
+
             Object.entries(fields).forEach(([name, value]) => {
                 if (!name) return;
                 const control = form?.elements?.namedItem(name);
                 if (!control) return;
 
-                if (control instanceof RadioNodeList || (control.length && control[0]?.type === 'radio')) {
-                    const radios = control.length ? Array.from(control) : [control];
-                    radios.forEach(radio => {
-                        radio.checked = value !== null && radio.value === String(value);
-                    });
-                } else if (control.type === 'checkbox') {
-                    control.checked = !!value;
+                const handleSingleControl = (element, val) => {
+                    if (!element) return;
+                    if (element.type === 'checkbox') {
+                        element.checked = Array.isArray(val)
+                            ? val.some(item => item === element.value || item === true)
+                            : !!val;
+                        return;
+                    }
+                    if (element.type === 'radio') {
+                        element.checked = val !== null && val !== undefined && element.value === String(val);
+                        return;
+                    }
+                    if (element.tagName === 'SELECT' && element.multiple && Array.isArray(val)) {
+                        Array.from(element.options).forEach(option => {
+                            option.selected = val.includes(option.value);
+                        });
+                        return;
+                    }
+                    element.value = Array.isArray(val) ? (val[0] ?? '') : (val ?? '');
+                };
+
+                if (isControlCollection(control)) {
+                    const controls = Array.from(control);
+                    controls.forEach(ctrl => handleSingleControl(ctrl, value));
                 } else {
-                    control.value = value ?? '';
+                    handleSingleControl(control, value);
                 }
             });
 
