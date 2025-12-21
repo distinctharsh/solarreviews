@@ -4,32 +4,47 @@
 
 @php
     use App\Models\UserProfileSubmission;
+    use Illuminate\Support\Str;
 @endphp
 
 @section('content')
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="card-title mb-0">Profile Submissions</h2>
-                <p class="text-muted small mb-0">Review distributor / supplier onboarding forms.</p>
-            </div>
-            <form method="GET" class="d-flex gap-2 flex-wrap">
-                <select name="status" class="form-select">
-                    <option value="">All statuses</option>
-                    @foreach($statuses as $status)
-                        <option value="{{ $status }}" @selected($filters['status'] === $status)>{{ Str::title(str_replace('_', ' ', $status)) }}</option>
-                    @endforeach
-                </select>
-                <select name="form_type" class="form-select">
-                    <option value="">All form types</option>
-                    <option value="{{ UserProfileSubmission::FORM_DISTRIBUTOR }}" @selected($filters['form_type'] === UserProfileSubmission::FORM_DISTRIBUTOR)>Distributor</option>
-                    <option value="{{ UserProfileSubmission::FORM_SUPPLIER }}" @selected($filters['form_type'] === UserProfileSubmission::FORM_SUPPLIER)>Supplier</option>
-                </select>
-                <div class="input-group">
-                    <input type="search" name="search" class="form-control" placeholder="Search user" value="{{ $filters['search'] }}">
-                    <button class="btn btn-primary" type="submit">Filter</button>
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h2 class="card-title mb-1">Profile Submissions</h2>
+                    <p class="text-muted small mb-0">Review distributor / supplier onboarding forms.</p>
                 </div>
-            </form>
+                <form method="GET" class="profile-filters">
+                    <div class="filter-field">
+                        <label class="filter-label" for="status-filter">Status</label>
+                        <select id="status-filter" name="status" class="form-select">
+                            <option value="">All statuses</option>
+                            @foreach($statuses as $status)
+                                <option value="{{ $status }}" @selected($filters['status'] === $status)>{{ Str::title(str_replace('_', ' ', $status)) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label class="filter-label" for="form-filter">Form type</label>
+                        <select id="form-filter" name="form_type" class="form-select">
+                            <option value="">All form types</option>
+                            <option value="{{ UserProfileSubmission::FORM_DISTRIBUTOR }}" @selected($filters['form_type'] === UserProfileSubmission::FORM_DISTRIBUTOR)>Distributor</option>
+                            <option value="{{ UserProfileSubmission::FORM_SUPPLIER }}" @selected($filters['form_type'] === UserProfileSubmission::FORM_SUPPLIER)>Supplier</option>
+                        </select>
+                    </div>
+                    <div class="filter-field filter-search">
+                        <label class="filter-label" for="search-filter">Search</label>
+                        <div class="filter-search-input">
+                            <input id="search-filter" type="search" name="search" class="form-control" placeholder="Name or email" value="{{ $filters['search'] }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-filter me-1"></i>
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="card-body p-0">

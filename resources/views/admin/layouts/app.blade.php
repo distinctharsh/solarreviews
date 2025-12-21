@@ -30,22 +30,22 @@
                 
                 <div class="sidebar-section-title">Master Data</div>
                 
-                <a href="{{ route('admin.categories.index') }}" class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <!-- <a href="{{ route('admin.categories.index') }}" class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <i class="fas fa-layer-group"></i>
                     Categories
                 </a>
                 <a href="{{ route('admin.brands.index') }}" class="sidebar-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     Brands
-                </a>
+                </a> -->
                 <a href="{{ route('admin.companies.index') }}" class="sidebar-link {{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">
                     <i class="fas fa-building"></i>
                     Companies
                 </a>
-                <a href="{{ route('admin.products.index') }}" class="sidebar-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                <!-- <a href="{{ route('admin.products.index') }}" class="sidebar-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                     <i class="fas fa-box"></i>
                     Products
-                </a>
+                </a> -->
                 
                 <div class="sidebar-section-title">Reviews</div>
                 

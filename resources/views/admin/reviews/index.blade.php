@@ -144,7 +144,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $companyReviews->links() }}
+                {{ $companyReviews->onEachSide(1)->links('components.admin.pagination') }}
             </div>
         </div>
     </div>
@@ -221,7 +221,7 @@
             </div>
 
             <div class="mt-3">
-                {{ $reviews->links() }}
+                {{ $reviews->onEachSide(1)->links('components.admin.pagination') }}
             </div>
         </div>
     </div>
