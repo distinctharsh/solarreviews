@@ -916,17 +916,31 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Add email address *</label>
-                            <input
-                                type="email"
-                                class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
-                                name="email"
-                                placeholder="name@email.com"
-                                value="{{ old('email', $reviewProfile['email'] ?? '') }}"
-                                {{ $reviewProfile ? 'readonly' : '' }}
-                                data-identity-email
-                                @unless($reviewProfile) required @endunless
-                            >
-                            <small class="text-muted d-block mt-1">We only email you about this review.</small>
+                            <div class="otp-email-group" data-otp-email-group>
+                                <input
+                                    type="email"
+                                    class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
+                                    name="email"
+                                    placeholder="name@email.com"
+                                    value="{{ old('email', $reviewProfile['email'] ?? '') }}"
+                                    {{ $reviewProfile ? 'readonly' : '' }}
+                                    data-identity-email
+                                    data-otp-email-input
+                                    @unless($reviewProfile) required @endunless
+                                >
+                                <button
+                                    type="button"
+                                    class="btn-otp"
+                                    data-send-otp-btn
+                                    {{ $reviewProfile ? 'disabled' : '' }}
+                                >
+                                    Send OTP
+                                </button>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                We only email you about this review.
+                                <span class="text-secondary d-block">Testing fallback OTP: <strong>123456</strong></span>
+                            </small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your state *</label>
@@ -952,14 +966,11 @@
                                     data-otp-input
                                     @unless($reviewProfile) required @endunless
                                 >
-                                <button type="button" class="btn-otp" data-send-otp-btn>Send code</button>
+                                <button type="button" class="btn-otp" data-verify-otp-btn>Verify OTP</button>
                             </div>
-                        </div>
-                        <div class="col-md-6 d-flex align-items-end" data-otp-verify-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
-                            <button type="button" class="btn-otp w-100" data-verify-otp-btn>Verify OTP</button>
-                        </div>
-                        <div class="col-12" data-otp-status-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
-                            <small class="text-muted d-block" data-otp-status hidden>We’ll send a verification code to your email.</small>
+                            <small class="text-muted d-block mt-1" data-otp-status hidden>
+                                We’ll send a verification code to your email.
+                            </small>
                         </div>
                     </div>
                 </div>
@@ -987,6 +998,7 @@
         };
 
         const form = modal.querySelector('form');
+        const hasConnectedProfile = @json((bool) $reviewProfile);
         const companyIdInput = document.getElementById(`${modalId}CompanyId`);
         const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
         const companySelectWrapper = modal.querySelector('[data-company-select-wrapper]');
@@ -1062,6 +1074,13 @@
             ? config.triggerSelector
             : '';
 
+        const otpEmailInput = modal.querySelector('[data-otp-email-input]');
+        const otpSendBtn = modal.querySelector('[data-send-otp-btn]');
+        const otpInput = modal.querySelector('[data-otp-input]');
+        const otpVerifyBtn = modal.querySelector('[data-verify-otp-btn]');
+        const otpStatus = modal.querySelector('[data-otp-status]');
+        const reviewerNameInput = modal.querySelector('[data-identity-name]');
+
         const triggerCandidates = [
             ...document.querySelectorAll(`[data-review-modal-trigger="${modalId}"]`)
         ];
@@ -1120,6 +1139,190 @@
             });
         }
 
+        const otpRoutes = {
+            send: '{{ route('reviews.send-otp') }}',
+            verify: '{{ route('reviews.verify-otp') }}',
+        };
+
+        let otpVerified = hasConnectedProfile;
+        let otpSending = false;
+        let otpVerifying = false;
+        let otpAutoSendTimeout = null;
+        let lastOtpEmail = '';
+
+        const isValidEmail = (value = '') => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+        const shouldRequireOtp = () => !!manualIdentity && !manualIdentity.hidden && !hasConnectedProfile;
+
+        function updateSubmitState() {
+            if (!submitReviewBtn) return;
+            if (shouldRequireOtp() && !otpVerified) {
+                submitReviewBtn.setAttribute('disabled', 'disabled');
+            } else {
+                submitReviewBtn.removeAttribute('disabled');
+            }
+        }
+
+        function setOtpStatus(message, intent = 'info') {
+            if (!otpStatus) return;
+            otpStatus.hidden = false;
+            otpStatus.classList.remove('text-success', 'text-danger', 'text-muted');
+            const classMap = {
+                success: 'text-success',
+                danger: 'text-danger',
+                info: 'text-muted',
+            };
+            otpStatus.classList.add(classMap[intent] || 'text-muted');
+            otpStatus.textContent = message;
+        }
+
+        function clearOtpStatus() {
+            if (!otpStatus) return;
+            otpStatus.hidden = true;
+            otpStatus.classList.remove('text-success', 'text-danger', 'text-muted');
+            otpStatus.textContent = '';
+        }
+
+        function resetOtpFlow(options = { clearEmail: false }) {
+            if (options.clearEmail && otpEmailInput && !otpEmailInput.readOnly) {
+                otpEmailInput.value = '';
+            }
+            if (otpInput) {
+                otpInput.value = '';
+            }
+            otpVerified = hasConnectedProfile;
+            lastOtpEmail = options.clearEmail ? '' : lastOtpEmail;
+            clearOtpStatus();
+            updateSubmitState();
+        }
+
+        async function sendOtp(mode = 'manual') {
+            if (!otpEmailInput || !otpSendBtn || !shouldRequireOtp() || otpSending) {
+                return;
+            }
+
+            const emailValue = otpEmailInput.value.trim();
+            if (!isValidEmail(emailValue)) {
+                setOtpStatus('Please enter a valid email before requesting an OTP.', 'danger');
+                return;
+            }
+
+            if (mode === 'auto' && emailValue === lastOtpEmail) {
+                return;
+            }
+
+            otpSending = true;
+            const initialText = otpSendBtn.textContent;
+            otpSendBtn.textContent = mode === 'manual' ? 'Sending…' : initialText;
+            otpSendBtn.setAttribute('disabled', 'disabled');
+            setOtpStatus('Sending verification code…', 'info');
+
+            try {
+                const response = await fetch(otpRoutes.send, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({ email: emailValue }),
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Unable to send OTP.');
+                }
+
+                lastOtpEmail = emailValue;
+                setOtpStatus(data.message || 'OTP sent successfully. Use 123456 if email does not arrive.', 'success');
+            } catch (error) {
+                setOtpStatus(error.message || 'Unable to send OTP. Please try again.', 'danger');
+            } finally {
+                otpSending = false;
+                otpSendBtn.removeAttribute('disabled');
+                otpSendBtn.textContent = lastOtpEmail ? 'Resend OTP' : 'Send OTP';
+            }
+        }
+
+        async function verifyOtp() {
+            if (!shouldRequireOtp() || !otpVerifyBtn || otpVerifying) {
+                return;
+            }
+            const emailValue = otpEmailInput ? otpEmailInput.value.trim() : '';
+            const otpValue = otpInput ? otpInput.value.trim() : '';
+
+            if (!isValidEmail(emailValue) || otpValue.length !== 6) {
+                setOtpStatus('Enter both email and 6-digit code before verifying.', 'danger');
+                return;
+            }
+
+            otpVerifying = true;
+            const initialText = otpVerifyBtn.textContent;
+            otpVerifyBtn.textContent = 'Verifying…';
+            otpVerifyBtn.setAttribute('disabled', 'disabled');
+
+            try {
+                const response = await fetch(otpRoutes.verify, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        email: emailValue,
+                        otp: otpValue,
+                        reviewer_name: reviewerNameInput ? reviewerNameInput.value : null,
+                    }),
+                });
+
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'OTP verification failed.');
+                }
+
+                otpVerified = true;
+                setOtpStatus(data.message || 'OTP verified successfully.', 'success');
+            } catch (error) {
+                otpVerified = false;
+                setOtpStatus(error.message || 'Unable to verify OTP. Please try again.', 'danger');
+            } finally {
+                otpVerifying = false;
+                otpVerifyBtn.textContent = initialText;
+                otpVerifyBtn.removeAttribute('disabled');
+                updateSubmitState();
+            }
+        }
+
+        if (otpSendBtn && !otpSendBtn.disabled) {
+            otpSendBtn.addEventListener('click', () => sendOtp('manual'));
+        }
+
+        if (otpVerifyBtn) {
+            otpVerifyBtn.addEventListener('click', verifyOtp);
+        }
+
+        if (otpEmailInput && !otpEmailInput.readOnly) {
+            otpEmailInput.addEventListener('input', () => {
+                otpVerified = false;
+                clearOtpStatus();
+                if (otpAutoSendTimeout) {
+                    clearTimeout(otpAutoSendTimeout);
+                }
+                if (!isValidEmail(otpEmailInput.value.trim())) {
+                    updateSubmitState();
+                    return;
+                }
+                otpAutoSendTimeout = setTimeout(() => sendOtp('auto'), 900);
+                updateSubmitState();
+            });
+        }
+
+        if (otpInput) {
+            otpInput.addEventListener('input', () => {
+                otpVerified = false;
+                updateSubmitState();
+            });
+        }
+
         function showManualIdentityFields() {
             if (!manualIdentity) return;
 
@@ -1135,6 +1338,10 @@
                 requestAnimationFrame(() => firstManualInput.focus());
             }
             scheduleDraftSave();
+            if (!hasConnectedProfile) {
+                setOtpStatus('We’ll send a verification code to your email.', 'info');
+            }
+            updateSubmitState();
         }
 
         function resetManualIdentity() {
@@ -1147,6 +1354,8 @@
                 manualIdentityToggle.style.display = '';
             }
             scheduleDraftSave();
+            resetOtpFlow();
+            updateSubmitState();
         }
 
         function resetForm() {
@@ -1318,6 +1527,13 @@
 
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+                if (shouldRequireOtp() && !otpVerified) {
+                    Swal.fire('Verification needed', 'Please verify the OTP sent to your email before submitting.', 'warning');
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = 'Submit Review';
+                    return;
+                }
 
                 const formData = new FormData(form);
                 if (emailInput && emailInput.value) {
@@ -1607,7 +1823,8 @@
                 }
             });
 
-            refreshRatingVisual();
+            updateSubmitState();
+        refreshRatingVisual();
             refreshMetricVisuals();
         }
 

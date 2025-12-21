@@ -34,9 +34,32 @@
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             @if($normalUserSession)
                 @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
-                <a class="nav-link fw-medium py-3 nav-normal-login" href="{{ route('normal-user.reviews.index') }}">
-                    My profile
-                </a>
+                <div class="mega-nav-item position-relative">
+                    <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1"
+                            data-profile-trigger>
+                        My profile
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.5"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                
+                    <div class="mega-dropdown shadow" style="min-width: 180px; padding: 16px 20px;">
+                        <div class="mega-column">
+                            <a class="nav-link fw-medium py-3 nav-normal-login" href="{{ route('normal-user.reviews.index') }}">
+                                My profile
+                            </a>
+                            <form method="POST" action="{{ route('reviews.session.logout') }}">
+                                @csrf
+                                <button type="submit" class="mega-link text-start"
+                                        style="background:none;border:none;padding:0;">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             @else
                 <a
                     class="nav-link fw-medium py-3 nav-normal-login"
@@ -107,6 +130,12 @@
                     <a class="nav-link fw-medium py-3 nav-normal-login w-100 text-start" href="{{ route('normal-user.reviews.index') }}">
                         My profile
                     </a>
+                </li>
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('reviews.session.logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-link fw-medium py-3 nav-btn-outline w-100 text-start">Logout</button>
+                    </form>
                 </li>
             @else
                 <li class="nav-item">
@@ -495,42 +524,82 @@
 }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const megaItem = document.querySelector('.mega-nav-item');
-        const trigger = megaItem?.querySelector('[data-mega-trigger]');
-        const dropdown = megaItem?.querySelector('.mega-dropdown');
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', () => {-->
+<!--        const megaItem = document.querySelector('.mega-nav-item');-->
+<!--        const trigger = megaItem?.querySelector('[data-mega-trigger]');-->
+<!--        const dropdown = megaItem?.querySelector('.mega-dropdown');-->
 
-        if (!megaItem || !trigger || !dropdown) return;
+<!--        if (!megaItem || !trigger || !dropdown) return;-->
+
+<!--        let hideTimeout = null;-->
+
+<!--        const openDropdown = () => {-->
+<!--            clearTimeout(hideTimeout);-->
+<!--            megaItem.classList.add('show');-->
+<!--            trigger.setAttribute('aria-expanded', 'true');-->
+<!--        };-->
+
+<!--        const scheduleClose = () => {-->
+<!--            hideTimeout = setTimeout(() => {-->
+<!--                megaItem.classList.remove('show');-->
+<!--                trigger.setAttribute('aria-expanded', 'false');-->
+<!--            }, 120);-->
+<!--        };-->
+
+<!--        trigger.addEventListener('mouseenter', openDropdown);-->
+<!--        trigger.addEventListener('focus', openDropdown);-->
+<!--        dropdown.addEventListener('mouseenter', openDropdown);-->
+
+<!--        trigger.addEventListener('mouseleave', scheduleClose);-->
+<!--        dropdown.addEventListener('mouseleave', scheduleClose);-->
+
+<!--        trigger.addEventListener('click', (e) => {-->
+<!--            e.preventDefault();-->
+<!--            clearTimeout(hideTimeout);-->
+<!--            const isOpen = megaItem.classList.toggle('show');-->
+<!--            trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.mega-nav-item').forEach(item => {
+        const trigger = item.querySelector('.mega-trigger');
+        const dropdown = item.querySelector('.mega-dropdown');
+        if (!trigger || !dropdown) return;
 
         let hideTimeout = null;
 
-        const openDropdown = () => {
+        const open = () => {
             clearTimeout(hideTimeout);
-            megaItem.classList.add('show');
+            item.classList.add('show');
             trigger.setAttribute('aria-expanded', 'true');
         };
 
-        const scheduleClose = () => {
+        const close = () => {
             hideTimeout = setTimeout(() => {
-                megaItem.classList.remove('show');
+                item.classList.remove('show');
                 trigger.setAttribute('aria-expanded', 'false');
             }, 120);
         };
 
-        trigger.addEventListener('mouseenter', openDropdown);
-        trigger.addEventListener('focus', openDropdown);
-        dropdown.addEventListener('mouseenter', openDropdown);
+        trigger.addEventListener('mouseenter', open);
+        trigger.addEventListener('focus', open);
+        dropdown.addEventListener('mouseenter', open);
 
-        trigger.addEventListener('mouseleave', scheduleClose);
-        dropdown.addEventListener('mouseleave', scheduleClose);
+        trigger.addEventListener('mouseleave', close);
+        dropdown.addEventListener('mouseleave', close);
 
-        trigger.addEventListener('click', (e) => {
+        trigger.addEventListener('click', e => {
             e.preventDefault();
-            clearTimeout(hideTimeout);
-            const isOpen = megaItem.classList.toggle('show');
+            const isOpen = item.classList.toggle('show');
             trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
     });
+});
 </script>
 
