@@ -10,7 +10,7 @@
     </div>
 
     <div class="dashboard-stats">
-        <a href="{{ route('admin.categories.index') }}" class="stat-card">
+        <!-- <a href="{{ route('admin.categories.index') }}" class="stat-card">
             <div class="stat-icon" style="background:#dcfce7; color:#16a34a;">
                 <i class="fas fa-layer-group"></i>
             </div>
@@ -28,7 +28,7 @@
                 <div class="stat-info-value">{{ $stats['total_brands'] ?? 0 }}</div>
                 <div class="stat-info-title">Brands</div>
             </div>
-        </a>
+        </a> -->
 
         <a href="{{ route('admin.companies.index') }}" class="stat-card">
             <div class="stat-icon" style="background:#dbeafe; color:#2563eb;">
@@ -40,7 +40,7 @@
             </div>
         </a>
 
-        <a href="{{ route('admin.products.index') }}" class="stat-card">
+        <!-- <a href="{{ route('admin.products.index') }}" class="stat-card">
             <div class="stat-icon" style="background:#ede9fe; color:#7c3aed;">
                 <i class="fas fa-box"></i>
             </div>
@@ -48,7 +48,7 @@
                 <div class="stat-info-value">{{ $stats['total_products'] ?? 0 }}</div>
                 <div class="stat-info-title">Products</div>
             </div>
-        </a>
+        </a> -->
 
         <a href="{{ route('admin.reviews.index') }}" class="stat-card">
             <div class="stat-icon" style="background:#fce7f3; color:#db2777;">
@@ -72,7 +72,7 @@
     </div>
 
     <div class="dashboard-grid">
-        <div class="card">
+        <!-- <div class="card">
             <div class="card-header">
                 <h3><i class="fas fa-rocket"></i> Quick Actions</h3>
             </div>
@@ -94,7 +94,7 @@
                     Add Product
                 </a>
             </div>
-        </div>
+        </div> -->
 
         <div class="card">
             <div class="card-header">
@@ -130,7 +130,7 @@
         </div>
     </div>
 
-    <div class="setup-guide card">
+    <!-- <div class="setup-guide card">
         <div class="card-header">
             <h3><i class="fas fa-info-circle"></i> Setup Guide</h3>
         </div>
@@ -170,7 +170,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <style>

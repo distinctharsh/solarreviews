@@ -23,7 +23,13 @@ class UserProfileSubmissionController extends Controller
 
         $submission = UserProfileSubmission::updateOrCreate(
             ['user_id' => $user->id, 'form_type' => UserProfileSubmission::FORM_DISTRIBUTOR],
-            ['payload' => $payload]
+            [
+                'payload' => $payload,
+                'status' => UserProfileSubmission::STATUS_PENDING,
+                'review_notes' => null,
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+            ]
         );
 
         $this->notifyAdmins($submission);
@@ -35,13 +41,19 @@ class UserProfileSubmissionController extends Controller
     {
         $user = $request->user();
 
-        abort_unless($user?->isManufacturer(), 403);
+        abort_unless($user?->isManufacturer() || $user?->isSupplier(), 403);
 
         $payload = $this->preparePayload($request, UserProfileSubmission::FORM_SUPPLIER);
 
         $submission = UserProfileSubmission::updateOrCreate(
             ['user_id' => $user->id, 'form_type' => UserProfileSubmission::FORM_SUPPLIER],
-            ['payload' => $payload]
+            [
+                'payload' => $payload,
+                'status' => UserProfileSubmission::STATUS_PENDING,
+                'review_notes' => null,
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+            ]
         );
 
         $this->notifyAdmins($submission);

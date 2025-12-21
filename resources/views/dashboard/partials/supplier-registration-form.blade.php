@@ -308,7 +308,7 @@
 
         <div class="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
             <p class="text-sm text-slate-500">Your data is securely stored and reviewed within 2 business days.</p>
-            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-amber-500 rounded-xl hover:bg-amber-600">Submit Supplier Details</button>
+            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-amber-500 rounded-xl hover:bg-amber-600" style="background-color: #42c058;">Submit Supplier Details</button>
         </div>
     </form>
 </section>

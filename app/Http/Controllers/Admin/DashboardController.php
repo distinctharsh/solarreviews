@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\User;
-
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\Review;
 class DashboardController extends Controller
 {
     /**
@@ -18,9 +20,9 @@ class DashboardController extends Controller
         $stats = [
             'total_categories' => Category::count(),
             'total_brands' => Brand::count(),
-            'total_companies' => 0, // Will update when Company model is created  
-            'total_products' => 0, // Will update when Product model is created
-            'total_reviews' => 0, // Will update when Review model is created
+            'total_companies' => Company::count(),
+            'total_products' => Product::count(), // Will update when Product model is created
+            'total_reviews' => Review::count(), // Will update when Review model is created
             'total_users' => User::count(),
         ];
 

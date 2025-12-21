@@ -297,7 +297,7 @@
 
         <div class="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
             <p class="text-sm text-slate-500">Submissions are reviewed within 72 hours.</p>
-            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-dark bg-emerald-600 rounded-xl hover:bg-emerald-700">Submit Distributor Profile</button>
+            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-dark bg-emerald-600 rounded-xl hover:bg-emerald-700" style="background-color: #42c058;">Submit Distributor Profile</button>
         </div>
     </form>
 </section>

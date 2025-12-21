@@ -61,9 +61,9 @@
                     <input type="text" id="search" name="search" class="form-control"
                            value="{{ $filters['search'] }}" placeholder="Title or comment keywords">
                 </div>
-                <div class="form-group align-self-end">
+                <div class="form-group align-self-end mt-5">
                     <button class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
-                    <a href="{{ route('admin.reviews.index') }}" class="btn btn-link">Reset</a>
+                    <a href="{{ route('admin.reviews.index') }}" class="btn btn-link" style="margin-top: 25px;">Reset</a>
                 </div>
             </div>
         </form>
