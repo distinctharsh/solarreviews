@@ -14,7 +14,7 @@ use Illuminate\View\View;
 
 class NormalUserProfileController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $normalUserId = Session::get('normal_user_id');
 

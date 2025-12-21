@@ -854,13 +854,13 @@
                             <span data-identity-status-name>{{ $reviewProfile['name'] ?? 'Connected reviewer' }}</span>
                             <p class="mb-0 text-muted small" data-identity-status-email>{{ $reviewProfile['email'] ?? '' }}</p>
                         </div>
-                        <button
+                        <!-- <button
                             type="button"
                             data-google-disconnect
                             data-google-disconnect-url="{{ route('reviews.session.logout') }}"
                         >
                             Disconnect
-                        </button>
+                        </button> -->
                     </div>
 
                     <div class="identity-options google-center">
@@ -911,6 +911,7 @@
                                 value="{{ old('reviewer_name', $reviewProfile['name'] ?? '') }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-name
+                                data-profile-default="{{ $reviewProfile['name'] ?? '' }}"
                                 @unless($reviewProfile) required @endunless
                             >
                         </div>
@@ -925,6 +926,7 @@
                                     value="{{ old('email', $reviewProfile['email'] ?? '') }}"
                                     {{ $reviewProfile ? 'readonly' : '' }}
                                     data-identity-email
+                                    data-profile-default="{{ $reviewProfile['email'] ?? '' }}"
                                     data-otp-email-input
                                     @unless($reviewProfile) required @endunless
                                 >
@@ -1080,6 +1082,10 @@
         const otpVerifyBtn = modal.querySelector('[data-verify-otp-btn]');
         const otpStatus = modal.querySelector('[data-otp-status]');
         const reviewerNameInput = modal.querySelector('[data-identity-name]');
+        const profileDefaults = {
+            name: reviewerNameInput?.dataset.profileDefault ?? '',
+            email: otpEmailInput?.dataset.profileDefault ?? ''
+        };
 
         const triggerCandidates = [
             ...document.querySelectorAll(`[data-review-modal-trigger="${modalId}"]`)
@@ -1323,8 +1329,39 @@
             });
         }
 
+        function enforceConnectedProfileState() {
+            if (!hasConnectedProfile) return;
+
+            if (reviewerNameInput) {
+                reviewerNameInput.value = profileDefaults.name || reviewerNameInput.value || '';
+                reviewerNameInput.removeAttribute('required');
+            }
+            if (otpEmailInput) {
+                otpEmailInput.value = profileDefaults.email || otpEmailInput.value || '';
+                otpEmailInput.removeAttribute('required');
+            }
+            if (otpInput) {
+                otpInput.value = '';
+                otpInput.removeAttribute('required');
+            }
+            manualIdentity?.setAttribute('hidden', '');
+            if (manualIdentity) {
+                manualIdentity.hidden = true;
+            }
+            manualDivider?.setAttribute('hidden', '');
+            manualControls?.setAttribute('hidden', '');
+            if (manualIdentityToggle) {
+                manualIdentityToggle.style.display = 'none';
+            }
+            if (otpSendBtn) otpSendBtn.disabled = true;
+            if (otpVerifyBtn) otpVerifyBtn.disabled = true;
+            clearOtpStatus();
+            otpVerified = true;
+            updateSubmitState();
+        }
+
         function showManualIdentityFields() {
-            if (!manualIdentity) return;
+            if (!manualIdentity || hasConnectedProfile) return;
 
             manualIdentity.hidden = false;
             manualDivider?.removeAttribute('hidden');
@@ -1351,7 +1388,7 @@
             manualDivider?.setAttribute('hidden', '');
             manualControls?.setAttribute('hidden', '');
             if (manualIdentityToggle) {
-                manualIdentityToggle.style.display = '';
+                manualIdentityToggle.style.display = hasConnectedProfile ? 'none' : '';
             }
             scheduleDraftSave();
             resetOtpFlow();
@@ -1388,6 +1425,7 @@
             setCompanyContext('', 'this company');
             if (stateIdInput) stateIdInput.value = '';
             resetManualIdentity();
+            enforceConnectedProfileState();
             hideDraftNotice();
             draftApplied = false;
         }
@@ -1429,6 +1467,7 @@
                     categoryId: primaryCategoryId || '',
                 },
             });
+            enforceConnectedProfileState();
         }
 
         triggers.forEach(trigger => {
@@ -1626,6 +1665,7 @@
 
         if (shouldReopenModal) {
             resetForm();
+            enforceConnectedProfileState();
             if (restoreDraftIfAvailable()) {
                 modal.style.display = 'flex';
             }
@@ -1769,6 +1809,7 @@
             draftApplied = true;
 
             showDraftNotice();
+            enforceConnectedProfileState();
             return true;
         }
 
@@ -1829,7 +1870,7 @@
         }
 
         function applyDraftMeta(meta = {}) {
-            if (meta.manualIdentityVisible) {
+            if (meta.manualIdentityVisible && !hasConnectedProfile) {
                 showManualIdentityFields();
             }
             if (meta.systemDetailsVisible) {
@@ -1890,6 +1931,7 @@
 
         refreshRatingVisual();
         refreshMetricVisuals();
+        enforceConnectedProfileState();
 
         }
 
