@@ -16,6 +16,7 @@ use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use App\Http\Controllers\Frontend\NormalUserProfileController;
+use App\Http\Controllers\Frontend\GetQuoteController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -322,6 +323,8 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
     Route::post('/send-otp', [FrontendReviewController::class, 'sendOtp'])->name('send-otp');
     Route::post('/verify-otp', [FrontendReviewController::class, 'verifyOtp'])->name('verify-otp');
 });
+
+Route::post('/get-quote', [GetQuoteController::class, 'store'])->name('get-quote.store');
 
 Route::prefix('profile/reviews')->name('normal-user.reviews.')->group(function () {
     Route::get('/', [NormalUserProfileController::class, 'index'])->name('index');
