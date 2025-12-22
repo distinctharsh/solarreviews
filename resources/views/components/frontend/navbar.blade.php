@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" style="z-index: 1100; border-bottom: 4px solid #e6b800; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
     <div class="container" style="max-width: 1200px;">
         @php($normalUserSession = $normalUserSession ?? null)
+        @php($isBusinessUser = auth()->check())
         <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
             <img src="{{ asset('images/1.png') }}" alt="SolarReviews Logo" class="navbar-logo">
         </a>
@@ -63,7 +64,7 @@
                     </div>
                 </div>
 
-            @else
+            @elseif(!$isBusinessUser)
                 <a
                     class="nav-link fw-medium py-3 nav-normal-login"
                     href="{{ route('oauth.google.redirect', ['return_url' => request()->fullUrl()]) }}"
@@ -71,16 +72,18 @@
                     Login
                 </a>
             @endif
-            @auth
-                <form method="POST" action="{{ route('logout') }}" class="m-0">
-                    @csrf
-                    <button type="submit" class="nav-link fw-medium nav-btn-primary" style="border:none; background:none;">
-                        Logout
-                    </button>
-                </form>
-            @else
-                <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">For Business</a>
-            @endauth
+            @if(!$normalUserSession)
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit" class="nav-link fw-medium nav-btn-primary" style="border:none; background:none;">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">For Business</a>
+                @endauth
+            @endif
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -107,7 +110,7 @@
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" >Learn About Solar</a>
             </li>
-            @if (Route::has('login'))
+            @if(!$normalUserSession && Route::has('login'))
                 @auth
                     <li class="nav-item">
                         <a class="nav-link fw-medium py-3" href="{{ url('/dashboard') }}">Dashboard</a>
@@ -140,7 +143,7 @@
                         <button type="submit" class="nav-link fw-medium py-3 nav-btn-outline w-100 text-start">Logout</button>
                     </form>
                 </li>
-            @else
+            @elseif(!$isBusinessUser)
                 <li class="nav-item">
                     <a
                         class="nav-link fw-medium py-3 nav-normal-login w-100 text-start"
