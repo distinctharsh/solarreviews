@@ -13,6 +13,7 @@ class NormalUser extends Model
     protected $fillable = [
         'name',
         'email',
+        'phone_number',
         'provider',
         'provider_id',
         'avatar_url',

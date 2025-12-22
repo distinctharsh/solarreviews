@@ -900,6 +900,25 @@
                             Cancel
                         </button> -->
                     </div>
+                    <!-- Phone number field - always visible -->
+                    <div class="row g-3 mt-3">
+                        <div class="col-12">
+                            <label class="form-label">Phone Number *</label>
+                            <input
+                                type="tel"
+                                class="form-control"
+                                name="phone_number"
+                                placeholder="Enter your phone number"
+                                required
+                                pattern="[0-9]{10,15}"
+                                title="Please enter a valid phone number (10-15 digits)"
+                                data-phone-input
+                            >
+                            <small class="text-muted d-block mt-1">
+                                We'll only use this to verify your identity if needed.
+                            </small>
+                        </div>
+                    </div>
                     <div class="row g-3 manual-identity" data-manual-identity hidden>
                         <div class="col-md-6">
                             <label class="form-label">Choose a display name *</label>
@@ -1587,25 +1606,21 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(async response => {
-                    const data = await response.json().catch(() => ({}));
-                    if (response.ok && data.success) {
-                        draftStorage.clear();
-                        hideDraftNotice();
-                        Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
-                        modal.style.display = 'none';
-                        setTimeout(() => window.location.reload(), 1500);
-                        return;
+                .then(response => response.json())
+                .then(data => {
+                    if (data.redirect) {
+                        // Store the success message in the session before redirecting
+                        sessionStorage.setItem('showSuccessMessage', data.message);
+                        window.location.href = data.redirect;
+                    } else {
+                        // Redirect to profile reviews page after successful submission
+                        sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
+                        window.location.href = '{{ route("normal-user.reviews.index") }}';
                     }
-
-                    const errorMessage = data.message || (response.status === 422
-                        ? 'Please check required fields and try again.'
-                        : 'Failed to submit review. Please try again.');
-                    throw new Error(errorMessage);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    Swal.fire('Error', error.message || 'Failed to submit review. Please try again.', 'error');
+                    Swal.fire('Error', 'Failed to submit review. Please try again.', 'error');
                     submitReviewBtn.disabled = false;
                     submitReviewBtn.innerHTML = 'Submit Review';
                 });

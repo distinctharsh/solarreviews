@@ -226,8 +226,10 @@ class ReviewController extends Controller
 
             session()->forget(['email_verified', 'email_verified_email']);
 
+           // In ReviewController.php - update the store method's success response
             return response()->json([
                 'success' => true,
+                'redirect' => route('normal-user.reviews.index'),
                 'message' => 'Thank you for your review! It will be visible after approval.'
             ]);
 
@@ -314,6 +316,7 @@ class ReviewController extends Controller
             ['email' => $email],
             [
                 'name' => $validated['reviewer_name'] ?? null,
+                'phone_number' => $validated['phone_number'] ?? null, // Add this line
                 'provider' => 'manual',
                 'provider_id' => null,
                 'avatar_url' => null,
@@ -321,6 +324,11 @@ class ReviewController extends Controller
                 'last_activity_at' => now(),
             ]
         );
+
+         // Update phone number if it's provided but not yet saved
+        if (isset($validated['phone_number']) && empty($normalUser->phone_number)) {
+            $normalUser->update(['phone_number' => $validated['phone_number']]);
+        }
 
         Session::put('normal_user_id', $normalUser->id);
         Session::put('review_profile', [

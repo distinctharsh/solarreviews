@@ -35,10 +35,13 @@
             @if($normalUserSession)
                 @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
                 <div class="mega-nav-item position-relative">
-                    <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1"
+                    <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1 mt-2"
                             data-profile-trigger>
-                        My profile
-                        <svg width="12" height="12" viewBox="0 0 20 20" fill="none">
+                       
+                            <img src="{{ $normalUserSession->avatar_url }}" alt="{{ $normalUserSession->name ?? 'User' }}" style="width: 30px; border-radius: 50%;" >
+                            {{$normalUserSession->name}}
+           
+                        <svg width="12" height="12" viewBox="0 0 20 20" fill="none" >
                             <path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.5"
                                   stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -563,6 +566,7 @@
 <!--    });-->
 <!--</script>-->
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <script>
