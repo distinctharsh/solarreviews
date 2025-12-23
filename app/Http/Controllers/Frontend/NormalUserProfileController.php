@@ -28,8 +28,21 @@ class NormalUserProfileController extends Controller
         $reviews = CompanyReview::query()
             ->where('normal_user_id', $normalUserId)
             ->with([
-                'company:id,owner_name,slug,logo_url',
+                'company:id,owner_name,slug,logo_url,website_url',
                 'state:id,name',
+            ])
+            ->select([
+                '*',
+                'manual_company_name',
+                'company_url',
+                'company_id',
+                'normal_user_id',
+                'rating',
+                'review_title',
+                'review_text',
+                'is_approved',
+                'created_at',
+                'state_id'
             ])
             ->orderByDesc('created_at')
             ->get();

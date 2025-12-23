@@ -409,6 +409,36 @@
 }
 
 
+
+
+
+.company-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-top: 1px solid #e4dfd6;
+    background-color: #f7f5f0;
+}
+
+.company-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.company-website {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.company-website a {
+    color: #5325c7;
+    text-decoration: none;
+}
+
+.company-website a:hover {
+    text-decoration: underline;
+}
+
+
     </style>
 </head>
 <body>
@@ -455,6 +485,14 @@
             @forelse($draftReviews as $draft)
 
             @php
+            
+                $companyName = $draft->company_id ? $draft->company->owner_name : $draft->manual_company_name;
+                $companyUrl = $draft->company_id ? $draft->company->website_url : $draft->company_url;
+                $companySlug = $draft->company?->slug;
+                $companyLink = $companySlug ? route('companies.show', $companySlug) : $companyUrl;
+
+
+
                 $draftPayload = [
                     'id' => $draft->id,
                     'company_id' => $draft->company_id,
@@ -476,57 +514,94 @@
                     'update_url' => route('normal-user.reviews.update', $draft),
                 ];
             @endphp
-
-            <article class="tp-review-card">
-                <div class="tp-review-header">
-                    <div class="tp-user">
-                        <div class="tp-avatar">
-                            <img src="{{ $normalUser->avatar_url ?? 'https://ui-avatars.com/api/?name='.$normalUser->name }}" alt="">
-                        </div>
-
-                        <div>
-                            <div class="tp-name">{{ $normalUser->name }}</div>
-                            <div class="tp-meta">
-                                {{ $stats['reviews'] }} reviews · {{ $location }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tp-date">
-                        {{ optional($draft->created_at)->format('F d, Y') }}
-                    </div>
+<article class="tp-review-card">
+    <div class="tp-review-header">
+        <div class="tp-user">
+            <div class="tp-avatar">
+                <img src="{{ $normalUser->avatar_url ?? 'https://ui-avatars.com/api/?name='.$normalUser->name }}" alt="">
+            </div>
+            <div>
+                <div class="tp-name">{{ $normalUser->name }}</div>
+                <div class="tp-meta">
+                    {{ $stats['reviews'] }} reviews · {{ $location }}
                 </div>
+            </div>
+        </div>
+        <div class="tp-date">
+            {{ optional($draft->created_at)->format('F d, Y') }}
+        </div>
+    </div>
 
-                <div class="tp-stars">
-                    @for($i = 1; $i <= 5; $i++)
-                        <i class="fa{{ $i <= $draft->rating ? 's' : 'r' }} fa-star"></i>
-                    @endfor
+
+    <div class="tp-stars">
+        @for($i = 1; $i <= 5; $i++)
+            <i class="fa{{ $i <= $draft->rating ? 's' : 'r' }} fa-star"></i>
+        @endfor
+    </div>
+
+    <div class="tp-title">
+        {{ $draft->review_title ?? 'Untitled review' }}
+    </div>
+
+    <div class="tp-text">
+        {{ Str::limit(strip_tags($draft->review_text), 180) }}
+    </div>
+    
+    
+    
+    
+    <!-- Company and URL Section -->
+    @if($draft->company_id && $draft->company)
+        <!-- Show company details from companies table -->
+        <div class="company-info">
+            <div class="company-name">
+                <strong>{{ $draft->company->owner_name }}</strong>
+            </div>
+            @if($draft->company->website_url)
+                <div class="company-website text-muted small mt-1">
+                    <i class="fas fa-globe me-1"></i>
+                    <a href="{{ route('companies.show', $draft->company->slug) }}" class="text-decoration-none">
+                        <strong>{{ $draft->company->owner_name }}</strong>
+                    </a>
                 </div>
-
-                <div class="tp-title">
-                    {{ $draft->review_title ?? 'Untitled review' }}
+            @endif
+        </div>
+    @elseif($draft->manual_company_name)
+        <!-- Show manual company details -->
+        <div class="company-info">
+            <div class="company-name">
+                <strong>{{ $draft->manual_company_name }}</strong>
+                <span class="badge bg-warning text-dark ms-2">Pending</span>
+            </div>
+            @if($draft->company_url)
+                <div class="company-website text-muted small mt-1">
+                    <i class="fas fa-globe me-1"></i>
+                    @if(filter_var($draft->company_url, FILTER_VALIDATE_URL))
+                        <a target="_blank" rel="noopener">
+                            {{ parse_url($draft->company_url, PHP_URL_HOST) }}
+                        </a>
+                    @else
+                        {{ $draft->company_url }}
+                    @endif
                 </div>
+            @endif
+        </div>
+    @endif
 
-                <div class="tp-text">
-                    {{ Str::limit(strip_tags($draft->review_text), 180) }}
-                </div>
+    <div class="tp-actions">
+        <form method="POST" action="{{ route('normal-user.reviews.destroy', $draft) }}">
+            @csrf
+            @method('DELETE')
+            <!--<button type="submit" class="tp-action delete">-->
+            <!--    <i class="far fa-trash-alt"></i> Delete-->
+            <!--</button>-->
+        </form>
 
-                <div class="tp-actions">
-                    <form method="POST" action="{{ route('normal-user.reviews.destroy', $draft) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="tp-action delete">
-                            <i class="far fa-trash-alt"></i> Delete
-                        </button>
-                    </form>
-
-                    <button
-                        class="tp-action finish"
-                        data-profile-edit='@json($draftPayload, JSON_HEX_APOS | JSON_HEX_QUOT)'>
-                        <i class="far fa-edit"></i> Finish review
-                    </button>
-                </div>
-            </article>
+        <button class="tp-action finish" data-profile-edit='@json($draftPayload, JSON_HEX_APOS | JSON_HEX_QUOT)'>
+            <i class="far fa-edit"></i> Edit
+        </button>
+    </div>
+</article>
 
             @empty
                 <div class="empty-state">
@@ -542,10 +617,40 @@
             <div class="section-description">Published reviews visible to the community.</div>
 
             @forelse($publishedReviews as $review)
+                @php
+                    $companyName = $review->company_id ? $review->company->owner_name : $review->manual_company_name;
+                    $companyUrl = $review->company_id ? $review->company->website_url : $review->company_url;
+                    $companySlug = $review->company?->slug;
+                    $companyLink = $companySlug ? route('companies.show', $companySlug) : $companyUrl;
+                @endphp
                 <article class="review-card">
                     <div class="review-card-header">
                         <div>
-                            <div class="review-company">Review of <a href="{{ route('companies.show', $review->company?->slug ?? '#') }}">{{ $review->company->owner_name ?? 'Company' }}</a></div>
+                            <div class="review-company">
+                                Review of
+                                @if($companyLink)
+                                    <a href="{{ $companyLink }}" {{ $companySlug ? '' : 'target=_blank rel=noopener' }}>
+                                        {{ $companyName }}
+                                    </a>
+                                @else
+                                    {{ $companyName }}
+                                @endif
+                                @if(!$review->company_id)
+                                    <span class="review-tag ms-2">Pending listing</span>
+                                @endif
+                                @if($companyUrl)
+                                    <div class="company-website text-muted small mt-1">
+                                        <i class="fas fa-globe me-1"></i>
+                                        @if(strpos($companyUrl, 'http') !== 0)
+                                            {{ $companyUrl }}
+                                        @else
+                                            <a href="{{ $companyUrl }}" target="_blank" rel="noopener">
+                                                {{ parse_url($companyUrl, PHP_URL_HOST) }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
                             <small class="text-muted">{{ optional($review->review_date ?? $review->created_at)->diffForHumans() }}</small>
                         </div>
                         <div class="text-muted small">{{ optional($review->review_date ?? $review->created_at)->format('F d, Y') }}</div>
@@ -571,8 +676,10 @@
                     @php
                         $reviewPayload = [
                             'id' => $review->id,
-                            'company_id' => $review->company_id,
-                            'company_name' => $review->company->owner_name ?? 'Company',
+                            'company_id' => $review->company_id ?? 0,
+                            'company_name' => $resolvedCompanyName,
+                            'manual_company_name' => $review->manual_company_name,
+                            'company_url' => $review->company_url,
                             'state_id' => $review->state_id,
                             'category_id' => $review->category_id,
                             'rating' => $review->rating,

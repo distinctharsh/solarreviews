@@ -138,9 +138,38 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $requiresManualIdentity = $this->shouldRequireManualIdentity($request);
+
+        // Handle manual company case
+        $companyId = $request->input('company_id');
+        $isManualCompany = $companyId === '0' || $companyId === 0 || empty($companyId);
+        
+        // Set company_id to null for manual companies
+        if ($isManualCompany) {
+            $request->merge(['company_id' => null]);
+        }
+        
         // Validate the request
         $validated = $request->validate([
-            'company_id' => 'required|exists:companies,id',
+            'company_id' => [
+                'nullable',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    // Only validate if it's not a manual company
+                    if ($value && !\App\Models\Company::where('id', $value)->exists()) {
+                        $fail('The selected company is invalid.');
+                    }
+                },
+            ],
+            'manual_company_name' => [
+                $isManualCompany ? 'required' : 'nullable',
+                'string',
+                'max:255'
+            ],
+            'company_url' => [
+                $isManualCompany ? 'required' : 'nullable',
+                'url',
+                'max:255'
+            ],
             'state_id' => 'nullable|exists:states,id',
             'category_id' => 'nullable|exists:categories,id',
             'reviewer_name' => 'required|string|max:255',
@@ -168,7 +197,9 @@ class ReviewController extends Controller
 
             // Create the review
             $review = new CompanyReview();
-            $review->company_id = $validated['company_id'];
+            $review->company_id = $isManualCompany ? null : $validated['company_id'] ?? null;
+            $review->manual_company_name = $validated['manual_company_name'] ?? null;
+            $review->company_url = $validated['company_url'] ?? null;
             $review->state_id = $validated['state_id'];
             $review->category_id = $validated['category_id'];
             $review->reviewer_name = $validated['reviewer_name'];
@@ -209,14 +240,16 @@ class ReviewController extends Controller
             $review->save();
 
             // Update company's average rating and total reviews
-            $company = Company::findOrFail($validated['company_id']);
-            $totalReviews = $company->reviews()->count();
-            $averageRating = $company->reviews()->avg('rating');
-            
-            $company->update([
-                'total_reviews' => $totalReviews,
-                'average_rating' => round($averageRating, 1)
-            ]);
+            if (!empty($validated['company_id'])) {
+                $company = Company::findOrFail($validated['company_id']);
+                $totalReviews = $company->reviews()->count();
+                $averageRating = $company->reviews()->avg('rating');
+                
+                $company->update([
+                    'total_reviews' => $totalReviews,
+                    'average_rating' => round($averageRating, 1)
+                ]);
+            }
 
             // Commit transaction
             DB::commit();

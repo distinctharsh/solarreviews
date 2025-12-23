@@ -185,32 +185,6 @@
             flex: 1;
         }
 
-        .otp-field-group {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .btn-otp {
-            border: none;
-            background: rgba(37, 99, 235, 0.12);
-            color: #1d4ed8;
-            font-weight: 600;
-            padding: 0.65rem 1.1rem;
-            border-radius: 999px;
-            min-width: 130px;
-            transition: background 0.2s ease;
-        }
-
-        .btn-otp:hover:not(:disabled) {
-            background: rgba(37, 99, 235, 0.2);
-        }
-
-        .btn-otp:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         .btn-outline {
             background: var(--surface, #ffffff);
             color: var(--primary, #3ba14c);
@@ -428,36 +402,6 @@
 
         .identity-divider::after {
             right: 0;
-        }
-
-        .draft-notice {
-            display: none;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            background: #fef9c3;
-            border: 1px solid #fcd34d;
-            color: #854d0e;
-            font-size: 0.85rem;
-            font-weight: 600;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .draft-notice button {
-            border: none;
-            background: #fb923c;
-            color: #fff;
-            font-weight: 600;
-            border-radius: 999px;
-            padding: 0.2rem 0.8rem;
-            cursor: pointer;
-            font-size: 0.78rem;
-        }
-
-        .draft-notice button:hover {
-            background: #f97316;
         }
 
         .identity-divider[hidden] {
@@ -710,18 +654,12 @@
         <form id="{{ $modalId }}Form" method="POST" action="{{ route('reviews.store') }}">
             @csrf
             <input type="hidden" name="company_id" id="{{ $modalId }}CompanyId">
-            <input type="hidden" name="company_url" id="{{ $modalId }}CompanyUrl">
-            <input type="hidden" name="manual_company_name" id="{{ $modalId }}ManualCompanyName">
             @if($resolvedStateId)
                 <input type="hidden" name="state_id" id="{{ $modalId }}StateId" value="{{ $resolvedStateId }}">
             @else
                 <input type="hidden" name="state_id" id="{{ $modalId }}StateId" value="">
             @endif
             <div class="modal-body">
-                <div class="draft-notice" data-draft-notice hidden>
-                    <span data-draft-message>We restored your review draft.</span>
-                    <button type="button" data-draft-clear>Clear draft</button>
-                </div>
                 @if($allowCompanySelection)
                     <div class="form-group" data-company-select-wrapper style="display: none;">
                         <label class="form-label" for="{{ $modalId }}CompanySelect">Select Company *</label>
@@ -815,21 +753,21 @@
                 <div class="subtle-card mt-3" data-system-details style="display: none;">
                     <h5 class="fw-semibold mb-3">Your solar system details</h5>
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">System size (kW)</label>
                             <div class="input-group">
                                 <input type="number" step="0.1" min="0" class="form-control" name="system_size" placeholder="e.g., 6.5">
                                 <span class="input-group-text">kW</span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">System price <span>(optional)</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">₹</span>
                                 <input type="number" min="0" class="form-control" name="system_price" placeholder="Total cost">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Year installed</label>
                             <input type="number" class="form-control" name="year_installed" min="2000" max="{{ now()->year }}" value="{{ now()->year }}">
                         </div>
@@ -847,23 +785,21 @@
                 <div class="subtle-card mt-4">
                     <h5 class="fw-semibold mb-3">How should we display your review?</h5>
 
-                    <div
-                        class="identity-status {{ $reviewProfile ? '' : 'd-none' }}"
-                        data-identity-status
-                        @unless($reviewProfile) hidden @endunless
-                    >
-                        <div>
-                            <span data-identity-status-name>{{ $reviewProfile['name'] ?? 'Connected reviewer' }}</span>
-                            <p class="mb-0 text-muted small" data-identity-status-email>{{ $reviewProfile['email'] ?? '' }}</p>
+                    @if($reviewProfile)
+                        <div class="identity-status">
+                            <div>
+                                <span>Signed in as {{ $reviewProfile['name'] ?? 'Google User' }}</span>
+                                <p class="mb-0 text-muted small">{{ $reviewProfile['email'] ?? '' }}</p>
+                            </div>
+                            <button
+                                type="button"
+                                data-google-disconnect
+                                data-google-disconnect-url="{{ route('oauth.google.disconnect') }}"
+                            >
+                                Disconnect
+                            </button>
                         </div>
-                        <!-- <button
-                            type="button"
-                            data-google-disconnect
-                            data-google-disconnect-url="{{ route('reviews.session.logout') }}"
-                        >
-                            Disconnect
-                        </button> -->
-                    </div>
+                    @endif
 
                     <div class="identity-options google-center">
                         <button
@@ -882,18 +818,10 @@
 
 
 
-                    <button
-                        type="button"
-                        class="identity-email-toggle"
-                        data-show-manual-identity
-                        @if($reviewProfile) hidden @endif
-                    >
+                    <button type="button" class="identity-email-toggle" data-show-manual-identity>
                         <i class="far fa-envelope"></i>
                         Continue with email
                     </button>
-                    @if($reviewProfile)
-                        <input type="hidden" name="manual_identity_optional" value="1">
-                    @endif
                     <div class="identity-divider" data-manual-divider hidden>or continue manually</div>
                     <div class="manual-identity-controls" data-manual-controls hidden>
                         <span>Continuing with email</span>
@@ -902,27 +830,6 @@
                             Cancel
                         </button> -->
                     </div>
-                    @unless($reviewProfile)
-                    <!-- Phone number field - only show when no review profile exists -->
-                    <div class="row g-3 mt-3">
-                        <div class="col-12">
-                            <label class="form-label">Phone Number *</label>
-                            <input
-                                type="tel"
-                                class="form-control"
-                                name="phone_number"
-                                placeholder="Enter your phone number"
-                                required
-                                pattern="[0-9]{10,15}"
-                                title="Please enter a valid phone number (10-15 digits)"
-                                data-phone-input
-                            >
-                            <small class="text-muted d-block mt-1">
-                                We'll only use this to verify your identity if needed.
-                            </small>
-                        </div>
-                    </div>
-                    @endunless
                     <div class="row g-3 manual-identity" data-manual-identity hidden>
                         <div class="col-md-6">
                             <label class="form-label">Choose a display name *</label>
@@ -934,42 +841,26 @@
                                 value="{{ old('reviewer_name', $reviewProfile['name'] ?? '') }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-name
-                                data-profile-default="{{ $reviewProfile['name'] ?? '' }}"
-                                @unless($reviewProfile) required @endunless
+                                required
                             >
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Add email address *</label>
-                            <div class="otp-email-group" data-otp-email-group>
-                                <input
-                                    type="email"
-                                    class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
-                                    name="email"
-                                    placeholder="name@email.com"
-                                    value="{{ old('email', $reviewProfile['email'] ?? '') }}"
-                                    {{ $reviewProfile ? 'readonly' : '' }}
-                                    data-identity-email
-                                    data-profile-default="{{ $reviewProfile['email'] ?? '' }}"
-                                    data-otp-email-input
-                                    @unless($reviewProfile) required @endunless
-                                >
-                                <button
-                                    type="button"
-                                    class="btn-otp"
-                                    data-send-otp-btn
-                                    {{ $reviewProfile ? 'disabled' : '' }}
-                                >
-                                    Send OTP
-                                </button>
-                            </div>
-                            <small class="text-muted d-block mt-1">
-                                We only email you about this review.
-                                <span class="text-secondary d-block">Testing fallback OTP: <strong>123456</strong></span>
-                            </small>
+                            <input
+                                type="email"
+                                class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
+                                name="email"
+                                placeholder="name@email.com"
+                                value="{{ old('email', $reviewProfile['email'] ?? '') }}"
+                                {{ $reviewProfile ? 'readonly' : '' }}
+                                data-identity-email
+                                required
+                            >
+                            <small class="text-muted d-block mt-1">We only email you about this review.</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your state *</label>
-                            <select class="form-select" name="user_state" @unless($reviewProfile) required @endunless>
+                            <select class="form-select" name="user_state" required>
                                 <option value="" selected disabled>Select state</option>
                                 @foreach($states as $state)
                                     <option value="{{ $state->id }}">{{ $state->name }}</option>
@@ -978,24 +869,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your city *</label>
-                            <input type="text" class="form-control" name="user_city" placeholder="City" @unless($reviewProfile) required @endunless>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Verification code *</label>
-                            <div class="otp-field-group" data-otp-wrapper {{ $reviewProfile ? 'hidden' : '' }}>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="Enter 6-digit code"
-                                    maxlength="6"
-                                    data-otp-input
-                                    @unless($reviewProfile) required @endunless
-                                >
-                                <button type="button" class="btn-otp" data-verify-otp-btn>Verify OTP</button>
-                            </div>
-                            <small class="text-muted d-block mt-1" data-otp-status hidden>
-                                We’ll send a verification code to your email.
-                            </small>
+                            <input type="text" class="form-control" name="user_city" placeholder="City" required>
                         </div>
                     </div>
                 </div>
@@ -1023,7 +897,6 @@
         };
 
         const form = modal.querySelector('form');
-        const hasConnectedProfile = @json((bool) $reviewProfile);
         const companyIdInput = document.getElementById(`${modalId}CompanyId`);
         const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
         const companySelectWrapper = modal.querySelector('[data-company-select-wrapper]');
@@ -1047,49 +920,6 @@
         const manualDivider = modal.querySelector('[data-manual-divider]');
         const manualControls = modal.querySelector('[data-manual-controls]');
         const manualHideBtn = modal.querySelector('[data-hide-manual-identity]');
-        const draftNotice = modal.querySelector('[data-draft-notice]');
-        const draftMessage = draftNotice ? draftNotice.querySelector('[data-draft-message]') : null;
-        const draftClearBtn = draftNotice ? draftNotice.querySelector('[data-draft-clear]') : null;
-        const draftStorageKey = `review_modal_draft_${modalId}`;
-        const reopenStorageKey = `review_modal_reopen_${modalId}`;
-        const DRAFT_VERSION = 1;
-        const DRAFT_MAX_AGE = 1000 * 60 * 60 * 12; // 12 hours
-        const storageSupported = (() => {
-            try {
-                const testKey = '__reviewDraftTest__';
-                localStorage.setItem(testKey, '1');
-                localStorage.removeItem(testKey);
-                return true;
-            } catch (error) {
-                return false;
-            }
-        })();
-
-        const draftStorage = {
-            save(payload) {
-                if (!storageSupported || !payload) return;
-                localStorage.setItem(draftStorageKey, JSON.stringify(payload));
-            },
-            load() {
-                if (!storageSupported) return null;
-                const raw = localStorage.getItem(draftStorageKey);
-                if (!raw) return null;
-                try {
-                    return JSON.parse(raw);
-                } catch (error) {
-                    localStorage.removeItem(draftStorageKey);
-                    return null;
-                }
-            },
-            clear() {
-                if (!storageSupported) return;
-                localStorage.removeItem(draftStorageKey);
-            }
-        };
-
-        let draftSaveTimeout = null;
-        let draftApplied = false;
-        let isApplyingDraft = false;
 
         const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -1098,17 +928,6 @@
         const triggerSelector = config.triggerSelector && config.triggerSelector !== 'null'
             ? config.triggerSelector
             : '';
-
-        const otpEmailInput = modal.querySelector('[data-otp-email-input]');
-        const otpSendBtn = modal.querySelector('[data-send-otp-btn]');
-        const otpInput = modal.querySelector('[data-otp-input]');
-        const otpVerifyBtn = modal.querySelector('[data-verify-otp-btn]');
-        const otpStatus = modal.querySelector('[data-otp-status]');
-        const reviewerNameInput = modal.querySelector('[data-identity-name]');
-        const profileDefaults = {
-            name: reviewerNameInput?.dataset.profileDefault ?? '',
-            email: otpEmailInput?.dataset.profileDefault ?? ''
-        };
 
         const triggerCandidates = [
             ...document.querySelectorAll(`[data-review-modal-trigger="${modalId}"]`)
@@ -1120,19 +939,9 @@
 
         const triggers = triggerCandidates.filter((element, index, self) => self.indexOf(element) === index);
 
-        const companyUrlInput = document.getElementById(`${modalId}CompanyUrl`);
-        const manualCompanyNameInput = document.getElementById(`${modalId}ManualCompanyName`);
-
-        function setCompanyContext(companyId, companyName, companyUrl = '') {
-            const normalizedCompanyId = companyId && companyId !== '0' ? companyId : '0';
-            if (companyIdInput) companyIdInput.value = normalizedCompanyId;
+        function setCompanyContext(companyId, companyName) {
+            if (companyIdInput) companyIdInput.value = companyId || '';
             if (companyNameDisplay) companyNameDisplay.textContent = companyName || 'this company';
-            if (companyUrlInput) companyUrlInput.value = companyUrl || '';
-            if (manualCompanyNameInput) {
-                manualCompanyNameInput.value = normalizedCompanyId === '0'
-                    ? (companyName || '')
-                    : '';
-            }
         }
 
         function setCategoryContext(categoryIdsCsv) {
@@ -1178,227 +987,8 @@
             });
         }
 
-        const otpRoutes = {
-            send: '{{ route('reviews.send-otp') }}',
-            verify: '{{ route('reviews.verify-otp') }}',
-        };
-
-        let otpVerified = hasConnectedProfile;
-        let otpSending = false;
-        let otpVerifying = false;
-        let otpAutoSendTimeout = null;
-        let lastOtpEmail = '';
-
-        const isValidEmail = (value = '') => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-
-        const shouldRequireOtp = () => !!manualIdentity && !manualIdentity.hidden && !hasConnectedProfile;
-
-        function updateSubmitState() {
-            if (!submitReviewBtn) return;
-            if (shouldRequireOtp() && !otpVerified) {
-                submitReviewBtn.setAttribute('disabled', 'disabled');
-            } else {
-                submitReviewBtn.removeAttribute('disabled');
-            }
-        }
-
-        function setOtpStatus(message, intent = 'info') {
-            if (!otpStatus) return;
-            otpStatus.hidden = false;
-            otpStatus.classList.remove('text-success', 'text-danger', 'text-muted');
-            const classMap = {
-                success: 'text-success',
-                danger: 'text-danger',
-                info: 'text-muted',
-            };
-            otpStatus.classList.add(classMap[intent] || 'text-muted');
-            otpStatus.textContent = message;
-        }
-
-        function clearOtpStatus() {
-            if (!otpStatus) return;
-            otpStatus.hidden = true;
-            otpStatus.classList.remove('text-success', 'text-danger', 'text-muted');
-            otpStatus.textContent = '';
-        }
-
-        function resetOtpFlow(options = { clearEmail: false }) {
-            if (options.clearEmail && otpEmailInput && !otpEmailInput.readOnly) {
-                otpEmailInput.value = '';
-            }
-            if (otpInput) {
-                otpInput.value = '';
-            }
-            otpVerified = hasConnectedProfile;
-            lastOtpEmail = options.clearEmail ? '' : lastOtpEmail;
-            clearOtpStatus();
-            updateSubmitState();
-        }
-
-        async function sendOtp(mode = 'manual') {
-            if (!otpEmailInput || !otpSendBtn || !shouldRequireOtp() || otpSending) {
-                return;
-            }
-
-            const emailValue = otpEmailInput.value.trim();
-            if (!isValidEmail(emailValue)) {
-                setOtpStatus('Please enter a valid email before requesting an OTP.', 'danger');
-                return;
-            }
-
-            if (mode === 'auto' && emailValue === lastOtpEmail) {
-                return;
-            }
-
-            otpSending = true;
-            const initialText = otpSendBtn.textContent;
-            otpSendBtn.textContent = mode === 'manual' ? 'Sending…' : initialText;
-            otpSendBtn.setAttribute('disabled', 'disabled');
-            setOtpStatus('Sending verification code…', 'info');
-
-            try {
-                const response = await fetch(otpRoutes.send, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                    },
-                    credentials: 'same-origin',
-                    body: JSON.stringify({ email: emailValue }),
-                });
-
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'Unable to send OTP.');
-                }
-
-                lastOtpEmail = emailValue;
-                setOtpStatus(data.message || 'OTP sent successfully. Use 123456 if email does not arrive.', 'success');
-            } catch (error) {
-                setOtpStatus(error.message || 'Unable to send OTP. Please try again.', 'danger');
-            } finally {
-                otpSending = false;
-                otpSendBtn.removeAttribute('disabled');
-                otpSendBtn.textContent = lastOtpEmail ? 'Resend OTP' : 'Send OTP';
-            }
-        }
-
-        async function verifyOtp() {
-            if (!shouldRequireOtp() || !otpVerifyBtn || otpVerifying) {
-                return;
-            }
-            const emailValue = otpEmailInput ? otpEmailInput.value.trim() : '';
-            const otpValue = otpInput ? otpInput.value.trim() : '';
-
-            if (!isValidEmail(emailValue) || otpValue.length !== 6) {
-                setOtpStatus('Enter both email and 6-digit code before verifying.', 'danger');
-                return;
-            }
-
-            otpVerifying = true;
-            const initialText = otpVerifyBtn.textContent;
-            otpVerifyBtn.textContent = 'Verifying…';
-            otpVerifyBtn.setAttribute('disabled', 'disabled');
-
-            try {
-                const response = await fetch(otpRoutes.verify, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json',
-                    },
-                    credentials: 'same-origin',
-                    body: JSON.stringify({
-                        email: emailValue,
-                        otp: otpValue,
-                        reviewer_name: reviewerNameInput ? reviewerNameInput.value : null,
-                    }),
-                });
-
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'OTP verification failed.');
-                }
-
-                otpVerified = true;
-                setOtpStatus(data.message || 'OTP verified successfully.', 'success');
-            } catch (error) {
-                otpVerified = false;
-                setOtpStatus(error.message || 'Unable to verify OTP. Please try again.', 'danger');
-            } finally {
-                otpVerifying = false;
-                otpVerifyBtn.textContent = initialText;
-                otpVerifyBtn.removeAttribute('disabled');
-                updateSubmitState();
-            }
-        }
-
-        if (otpSendBtn && !otpSendBtn.disabled) {
-            otpSendBtn.addEventListener('click', () => sendOtp('manual'));
-        }
-
-        if (otpVerifyBtn) {
-            otpVerifyBtn.addEventListener('click', verifyOtp);
-        }
-
-        if (otpEmailInput && !otpEmailInput.readOnly) {
-            otpEmailInput.addEventListener('input', () => {
-                otpVerified = false;
-                clearOtpStatus();
-                if (otpAutoSendTimeout) {
-                    clearTimeout(otpAutoSendTimeout);
-                }
-                if (!isValidEmail(otpEmailInput.value.trim())) {
-                    updateSubmitState();
-                    return;
-                }
-                otpAutoSendTimeout = setTimeout(() => sendOtp('auto'), 900);
-                updateSubmitState();
-            });
-        }
-
-        if (otpInput) {
-            otpInput.addEventListener('input', () => {
-                otpVerified = false;
-                updateSubmitState();
-            });
-        }
-
-        function enforceConnectedProfileState() {
-            if (!hasConnectedProfile) return;
-
-            if (reviewerNameInput) {
-                reviewerNameInput.value = profileDefaults.name || reviewerNameInput.value || '';
-                reviewerNameInput.removeAttribute('required');
-            }
-            if (otpEmailInput) {
-                otpEmailInput.value = profileDefaults.email || otpEmailInput.value || '';
-                otpEmailInput.removeAttribute('required');
-            }
-            if (otpInput) {
-                otpInput.value = '';
-                otpInput.removeAttribute('required');
-            }
-            manualIdentity?.setAttribute('hidden', '');
-            if (manualIdentity) {
-                manualIdentity.hidden = true;
-            }
-            manualDivider?.setAttribute('hidden', '');
-            manualControls?.setAttribute('hidden', '');
-            if (manualIdentityToggle) {
-                manualIdentityToggle.style.display = 'none';
-            }
-            if (otpSendBtn) otpSendBtn.disabled = true;
-            if (otpVerifyBtn) otpVerifyBtn.disabled = true;
-            clearOtpStatus();
-            otpVerified = true;
-            updateSubmitState();
-        }
-
         function showManualIdentityFields() {
-            if (!manualIdentity || hasConnectedProfile) return;
+            if (!manualIdentity) return;
 
             manualIdentity.hidden = false;
             manualDivider?.removeAttribute('hidden');
@@ -1411,11 +1001,6 @@
             if (firstManualInput) {
                 requestAnimationFrame(() => firstManualInput.focus());
             }
-            scheduleDraftSave();
-            if (!hasConnectedProfile) {
-                setOtpStatus('We’ll send a verification code to your email.', 'info');
-            }
-            updateSubmitState();
         }
 
         function resetManualIdentity() {
@@ -1425,11 +1010,8 @@
             manualDivider?.setAttribute('hidden', '');
             manualControls?.setAttribute('hidden', '');
             if (manualIdentityToggle) {
-                manualIdentityToggle.style.display = hasConnectedProfile ? 'none' : '';
+                manualIdentityToggle.style.display = '';
             }
-            scheduleDraftSave();
-            resetOtpFlow();
-            updateSubmitState();
         }
 
         function resetForm() {
@@ -1459,12 +1041,9 @@
             if (manualCompanySelectionEnabled) {
                 toggleCompanySelect(true);
             }
-            setCompanyContext('', 'this company', '');
+            setCompanyContext('', 'this company');
             if (stateIdInput) stateIdInput.value = '';
             resetManualIdentity();
-            enforceConnectedProfileState();
-            hideDraftNotice();
-            draftApplied = false;
         }
 
         function openModal(trigger) {
@@ -1478,36 +1057,23 @@
             const categoryIds = dataset.categoryIds || '';
             const stateId = dataset.stateId || config.defaultStateId || '';
             const stateName = dataset.stateName || config.defaultStateName || 'State';
-            const companyUrl = dataset.companyUrl || '';
 
             setCategoryContext(categoryIds);
             setStateDisplay(stateId);
 
-            const hasLinkedCompany = companyId && companyId !== '0';
-
             if (manualCompanySelectionEnabled) {
-                if (hasLinkedCompany) {
+                if (companyId) {
                     toggleCompanySelect(false);
-                    setCompanyContext(companyId, companyName, companyUrl);
+                    setCompanyContext(companyId, companyName);
                 } else {
                     toggleCompanySelect(true);
-                    setCompanyContext('', 'this company', companyUrl);
+                    setCompanyContext('', 'this company');
                 }
             } else {
-                setCompanyContext(hasLinkedCompany ? companyId : '0', companyName, companyUrl);
+                setCompanyContext(companyId, companyName);
             }
 
             modal.style.display = 'flex';
-            const primaryCategoryId = categoryInput ? categoryInput.value : '';
-            restoreDraftIfAvailable({
-                expectedContext: {
-                    companyId: companyId || '',
-                    companyName: companyName || '',
-                    stateId: stateId || '',
-                    categoryId: primaryCategoryId || '',
-                },
-            });
-            enforceConnectedProfileState();
         }
 
         triggers.forEach(trigger => {
@@ -1519,13 +1085,6 @@
 
         if (googleLoginBtn) {
             googleLoginBtn.addEventListener('click', () => {
-                persistDraftNow(true);
-                try {
-                    sessionStorage.setItem(reopenStorageKey, '1');
-                } catch (error) {
-                    // ignore storage errors
-                }
-
                 const redirectUrl = googleLoginBtn.getAttribute('data-google-redirect');
                 if (!redirectUrl) return;
 
@@ -1595,7 +1154,6 @@
                             starIcon.classList.add('far');
                         }
                     });
-                    scheduleDraftSave();
                 });
             });
         });
@@ -1606,13 +1164,6 @@
 
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.innerHTML = '<span class="spinner"></span> Submitting...';
-
-                if (shouldRequireOtp() && !otpVerified) {
-                    Swal.fire('Verification needed', 'Please verify the OTP sent to your email before submitting.', 'warning');
-                    submitReviewBtn.disabled = false;
-                    submitReviewBtn.innerHTML = 'Submit Review';
-                    return;
-                }
 
                 const formData = new FormData(form);
                 if (emailInput && emailInput.value) {
@@ -1627,21 +1178,23 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.redirect) {
-                        // Store the success message in the session before redirecting
-                        sessionStorage.setItem('showSuccessMessage', data.message);
-                        window.location.href = data.redirect;
-                    } else {
-                        // Redirect to profile reviews page after successful submission
-                        sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
-                        window.location.href = '{{ route("normal-user.reviews.index") }}';
+                .then(async response => {
+                    const data = await response.json().catch(() => ({}));
+                    if (response.ok && data.success) {
+                        Swal.fire('Success', 'Thank you for your review! It will be visible after approval.', 'success');
+                        modal.style.display = 'none';
+                        setTimeout(() => window.location.reload(), 1500);
+                        return;
                     }
+
+                    const errorMessage = data.message || (response.status === 422
+                        ? 'Please check required fields and try again.'
+                        : 'Failed to submit review. Please try again.');
+                    throw new Error(errorMessage);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    Swal.fire('Error', 'Failed to submit review. Please try again.', 'error');
+                    Swal.fire('Error', error.message || 'Failed to submit review. Please try again.', 'error');
                     submitReviewBtn.disabled = false;
                     submitReviewBtn.innerHTML = 'Submit Review';
                 });
@@ -1667,307 +1220,8 @@
         }
 
         if (manualHideBtn) {
-            manualHideBtn.addEventListener('click', () => {
-                resetManualIdentity();
-                scheduleDraftSave();
-            });
+            manualHideBtn.addEventListener('click', resetManualIdentity);
         }
-
-        if (draftClearBtn) {
-            draftClearBtn.addEventListener('click', () => {
-                draftStorage.clear();
-                hideDraftNotice();
-                resetForm();
-            });
-        }
-
-        if (form) {
-            const handleFormMutation = () => scheduleDraftSave();
-            form.addEventListener('input', handleFormMutation);
-            form.addEventListener('change', handleFormMutation);
-        }
-
-        const shouldReopenModal = (() => {
-            try {
-                if (sessionStorage.getItem(reopenStorageKey) === '1') {
-                    sessionStorage.removeItem(reopenStorageKey);
-                    return true;
-                }
-            } catch (error) {
-                // ignore
-            }
-            return false;
-        })();
-
-        if (shouldReopenModal) {
-            resetForm();
-            enforceConnectedProfileState();
-            if (restoreDraftIfAvailable()) {
-                modal.style.display = 'flex';
-            }
-        }
-
-        function collectFormFields() {
-            if (!form) return {};
-            const data = {};
-            const appendValue = (target, name, value) => {
-                if (name === '_token') return;
-                if (value instanceof File) return;
-                if (target[name] === undefined) {
-                    target[name] = value;
-                } else if (Array.isArray(target[name])) {
-                    target[name].push(value);
-                } else {
-                    target[name] = [target[name], value];
-                }
-            };
-
-            const formData = new FormData(form);
-            formData.forEach((value, key) => appendValue(data, key, value));
-
-            Array.from(form.elements).forEach(element => {
-                if (!element.name || element.disabled) return;
-                if (element.type === 'file') return;
-
-                if (element.type === 'checkbox') {
-                    data[element.name] = element.checked;
-                } else if (element.type === 'radio') {
-                    if (element.checked) {
-                        data[element.name] = element.value;
-                    } else if (!(element.name in data)) {
-                        data[element.name] = null;
-                    }
-                }
-            });
-
-            return data;
-        }
-
-        function hasMeaningfulData(fields) {
-            return Object.values(fields).some(value => {
-                if (value === null || value === undefined) return false;
-                if (typeof value === 'boolean') return value;
-                if (Array.isArray(value)) {
-                    return value.some(entry => entry !== null && entry !== undefined && String(entry).trim() !== '');
-                }
-                return String(value).trim() !== '';
-            });
-        }
-
-        function buildDraftPayload() {
-            const fields = collectFormFields();
-            if (!hasMeaningfulData(fields)) return null;
-
-            return {
-                version: DRAFT_VERSION,
-                savedAt: Date.now(),
-                fields,
-                meta: {
-                    manualIdentityVisible: manualIdentity ? !manualIdentity.hidden : false,
-                    systemDetailsVisible: systemDetails ? systemDetails.style.display !== 'none' : false,
-                },
-                context: {
-                    companyId: companyIdInput ? companyIdInput.value : '',
-                    companyName: companyNameDisplay ? companyNameDisplay.textContent : '',
-                    stateId: stateIdInput ? stateIdInput.value : '',
-                    categoryId: categoryInput ? categoryInput.value : '',
-                }
-            };
-        }
-
-        function persistDraftNow(force = false) {
-            const payload = buildDraftPayload();
-            if (payload) {
-                draftStorage.save(payload);
-                if (force && draftNotice && draftNotice.hidden === true) {
-                    showDraftNotice();
-                }
-            } else if (force) {
-                draftStorage.clear();
-            }
-        }
-
-        function scheduleDraftSave() {
-            if (isApplyingDraft) return;
-            clearTimeout(draftSaveTimeout);
-            draftSaveTimeout = setTimeout(() => {
-                const payload = buildDraftPayload();
-                if (payload) {
-                    draftStorage.save(payload);
-                } else {
-                    draftStorage.clear();
-                    hideDraftNotice();
-                }
-            }, 600);
-        }
-
-        function contextMatches(draftContext = {}, expectedContext = {}) {
-            if (!expectedContext) return true;
-            const normalized = (value) => {
-                if (value === null || value === undefined) return '';
-                return String(value).trim();
-            };
-            const keys = ['companyId', 'companyName', 'stateId', 'categoryId'];
-            return keys.every(key => {
-                const expected = normalized(expectedContext[key]);
-                if (!expected) return true;
-                const draftValue = normalized(draftContext[key]);
-                return draftValue === expected;
-            });
-        }
-
-        function restoreDraftIfAvailable(options = {}) {
-            const { expectedContext = null } = options;
-            if (draftApplied) return false;
-            const payload = draftStorage.load();
-            if (!payload) return false;
-
-            if (payload.version !== DRAFT_VERSION || (payload.savedAt && Date.now() - payload.savedAt > DRAFT_MAX_AGE)) {
-                draftStorage.clear();
-                return false;
-            }
-
-            if (expectedContext && !contextMatches(payload.context, expectedContext)) {
-                return false;
-            }
-
-            isApplyingDraft = true;
-            if (payload.context) {
-                applyDraftContext(payload.context);
-            }
-            if (payload.fields) {
-                applyDraftFields(payload.fields);
-            }
-            if (payload.meta) {
-                applyDraftMeta(payload.meta);
-            }
-            isApplyingDraft = false;
-            draftApplied = true;
-
-            showDraftNotice();
-            enforceConnectedProfileState();
-            return true;
-        }
-
-        function applyDraftContext(context = {}) {
-            if (context.companyId || context.companyName) {
-                setCompanyContext(context.companyId, context.companyName);
-            }
-            if (context.stateId) {
-                setStateDisplay(context.stateId);
-            }
-            if (context.categoryId && categoryInput) {
-                categoryInput.value = context.categoryId;
-            }
-        }
-
-        function applyDraftFields(fields = {}) {
-            const isControlCollection = (control) => {
-                return control instanceof RadioNodeList || control instanceof HTMLCollection || Array.isArray(control);
-            };
-
-            Object.entries(fields).forEach(([name, value]) => {
-                if (!name) return;
-                const control = form?.elements?.namedItem(name);
-                if (!control) return;
-
-                const handleSingleControl = (element, val) => {
-                    if (!element) return;
-                    if (element.type === 'checkbox') {
-                        element.checked = Array.isArray(val)
-                            ? val.some(item => item === element.value || item === true)
-                            : !!val;
-                        return;
-                    }
-                    if (element.type === 'radio') {
-                        element.checked = val !== null && val !== undefined && element.value === String(val);
-                        return;
-                    }
-                    if (element.tagName === 'SELECT' && element.multiple && Array.isArray(val)) {
-                        Array.from(element.options).forEach(option => {
-                            option.selected = val.includes(option.value);
-                        });
-                        return;
-                    }
-                    element.value = Array.isArray(val) ? (val[0] ?? '') : (val ?? '');
-                };
-
-                if (isControlCollection(control)) {
-                    const controls = Array.from(control);
-                    controls.forEach(ctrl => handleSingleControl(ctrl, value));
-                } else {
-                    handleSingleControl(control, value);
-                }
-            });
-
-            updateSubmitState();
-        refreshRatingVisual();
-            refreshMetricVisuals();
-        }
-
-        function applyDraftMeta(meta = {}) {
-            if (meta.manualIdentityVisible && !hasConnectedProfile) {
-                showManualIdentityFields();
-            }
-            if (meta.systemDetailsVisible) {
-                toggleSystemDetails(true);
-            }
-        }
-
-        function refreshRatingVisual() {
-            if (!ratingInput) return;
-            const currentRating = parseInt(ratingInput.value || '0', 10);
-            ratingStars.forEach((star, index) => {
-                if (index < currentRating) {
-                    star.classList.add('active', 'fas');
-                    star.classList.remove('far');
-                } else {
-                    star.classList.remove('active', 'fas');
-                    star.classList.add('far');
-                }
-            });
-        }
-
-        function refreshMetricVisuals() {
-            metricGroups.forEach(group => {
-                const buttons = group.querySelectorAll('[data-metric-star]');
-                const hiddenInput = group.querySelector('[data-metric-input]');
-                const value = hiddenInput ? parseInt(hiddenInput.value || '0', 10) : 0;
-
-                buttons.forEach(btn => {
-                    const starIcon = btn.querySelector('i');
-                    if (!starIcon) return;
-
-                    const btnValue = parseInt(btn.getAttribute('data-value'), 10);
-                    if (btnValue <= value) {
-                        starIcon.classList.add('active', 'fas');
-                        starIcon.classList.remove('far');
-                    } else {
-                        starIcon.classList.remove('active', 'fas');
-                        starIcon.classList.add('far');
-                    }
-                });
-            });
-        }
-
-        function showDraftNotice(message = 'We restored your review draft.') {
-            if (!draftNotice) return;
-            draftNotice.hidden = false;
-            draftNotice.style.display = 'flex';
-            if (draftMessage) {
-                draftMessage.textContent = message;
-            }
-        }
-
-        function hideDraftNotice() {
-            if (!draftNotice) return;
-            draftNotice.hidden = true;
-            draftNotice.style.display = 'none';
-        }
-
-        refreshRatingVisual();
-        refreshMetricVisuals();
-        enforceConnectedProfileState();
 
         }
 

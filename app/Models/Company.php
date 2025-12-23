@@ -73,7 +73,7 @@ class Company extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function companyReviews(): HasMany
+    public function companyReviews(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CompanyReview::class);
     }

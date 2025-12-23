@@ -233,63 +233,6 @@ class CompanyController extends Controller
             'stars' => round($expertScoreRaw / 20, 1),
         ];
 
-        // Get approved company reviews with pagination
-        $reviews = $company->companyReviews()
-            ->with('normalUser') // Eager load the normalUser relationship
-            ->select([
-                'id', 'reviewer_name', 'normal_user_id', 'rating', 'review_text as review', 'review_title',
-                'created_at', 'sales_process_rating', 'price_charged_as_quoted_rating',
-                'on_schedule_rating', 'installation_quality_rating', 'after_sales_support_rating',
-                'system_size_kw', 'system_price', 'year_installed', 'panel_brand', 'inverter_brand',
-                'review_date', 'is_featured', 'is_approved'
-            ])
-            ->where('is_approved', true)
-            ->orderBy('is_featured', 'desc') // Show featured reviews first
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($review) use ($company) {
-                // Calculate average of all ratings if available
-                $ratings = [
-                    $review->sales_process_rating,
-                    $review->price_charged_as_quoted_rating,
-                    $review->on_schedule_rating,
-                    $review->installation_quality_rating,
-                    $review->after_sales_support_rating
-                ];
-                
-                $validRatings = array_filter($ratings, function($rating) {
-                    return !is_null($rating) && $rating > 0;
-                });
-                
-                $averageRating = !empty($validRatings) ? array_sum($validRatings) / count($validRatings) : $review->rating;
-                
-                return [
-                    'id' => $review->id,
-                    'reviewer' => $review->reviewer_name ?: ($review->normalUser ? $review->normalUser->name : 'Anonymous'),
-                    'avatar' => $review->reviewer_name ? strtoupper(substr($review->reviewer_name, 0, 2)) : ($review->normalUser ? strtoupper(substr($review->normalUser->name, 0, 2)) : 'SR'),
-                    'rating' => (int) round($averageRating),
-                    'title' => $review->review_title,
-                    'text' => $review->review,
-                    'date' => $review->review_date ? $review->review_date->format('M j, Y') : $review->created_at->format('M j, Y'),
-                    'is_featured' => (bool) $review->is_featured,
-                    'system_details' => [
-                        'size_kw' => $review->system_size_kw,
-                        'price' => $review->system_price,
-                        'year_installed' => $review->year_installed,
-                        'panel_brand' => $review->panel_brand,
-                        'inverter_brand' => $review->inverter_brand
-                    ],
-                    'ratings' => [
-                        'overall' => (int) $review->rating,
-                        'sales_process' => $review->sales_process_rating,
-                        'pricing' => $review->price_charged_as_quoted_rating,
-                        'timing' => $review->on_schedule_rating,
-                        'installation' => $review->installation_quality_rating,
-                        'after_sales' => $review->after_sales_support_rating
-                    ]
-                ];
-            });
-
         return view('frontend.companies.show', [
             'company' => $company,
             'logoUrl' => $this->companyLogoUrl($company),
@@ -305,7 +248,6 @@ class CompanyController extends Controller
             'ratingDistribution' => $ratingDistribution,
             'ratingBreakdown' => $ratingBreakdown,
             'expertScore' => $expertScore,
-            'reviews' => $reviews,
         ]);
     }
 

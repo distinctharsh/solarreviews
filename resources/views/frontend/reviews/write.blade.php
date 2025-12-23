@@ -212,6 +212,7 @@
             margin-right: auto;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
             border: 1px solid rgba(15, 23, 42, 0.06);
+            text-align: center;
         }
 
         .add-company-card h4 {
@@ -309,6 +310,85 @@
 
 .trustpilot-empty .add-btn:hover {
     background: #f5f5f5;
+}
+
+.add-company-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 1300;
+}
+
+.add-company-modal[hidden] {
+    display: none;
+}
+
+.add-company-modal__dialog {
+    background: #fff;
+    border-radius: 20px;
+    width: min(420px, 100%);
+    padding: 2rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.25);
+}
+
+.add-company-modal__dialog h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.35rem;
+    color: #0f172a;
+}
+
+.add-company-modal__dialog p {
+    color: #475569;
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+}
+
+.add-company-modal__input {
+    width: 100%;
+    border: 1px solid #d7dde7;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+}
+
+.add-company-modal__error {
+    font-size: 0.8rem;
+    color: #dc2626;
+    margin-top: 0.4rem;
+    display: none;
+}
+
+.add-company-modal__error.is-visible {
+    display: block;
+}
+
+.add-company-modal__actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.add-company-modal__actions button {
+    flex: 1;
+    border: none;
+    border-radius: 999px;
+    padding: 0.85rem 1rem;
+    font-weight: 600;
+}
+
+.add-company-modal__actions .btn-secondary {
+    background: #eceff5;
+    color: #0f172a;
+}
+
+.add-company-modal__actions .btn-primary {
+    background: #24a048;
+    color: #fff;
 }
 
 .container-custom p{
@@ -604,10 +684,31 @@
     <div class="add-company-card trustpilot-empty">
         <h2>Can't find a company?</h2>
         <p>It might not be listed on Solar Reviews yet. Add it and be the first to write a review.</p>
-        <a href="#" class="add-btn">Add company</a>
+        <a href="#" class="add-btn" data-add-company-btn>Add company</a>
     </div>
 
     </main>
+    
+    <div class="add-company-modal" data-add-company-modal hidden aria-hidden="true">
+        <div class="add-company-modal__dialog">
+            <h3>Add a company</h3>
+            <p>Paste the company's website link so we can create a new listing for your review.</p>
+            <form data-add-company-form>
+                <input
+                    type="text"
+                    class="add-company-modal__input"
+                    placeholder="https://example-solar.com"
+                    data-add-company-input
+                    autocomplete="off"
+                >
+                <div class="add-company-modal__error" data-add-company-error>Please enter a valid website URL.</div>
+                <div class="add-company-modal__actions">
+                    <button type="button" class="btn-secondary" data-add-company-close>Cancel</button>
+                    <button type="submit" class="btn-primary">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <div style="background: #11411a; width: 100%">
         <div class="hero-content" >
@@ -641,6 +742,12 @@
             const countLabel = document.querySelector('[data-suggestions-count]');
             const hiddenTrigger = document.getElementById('landingReviewModalTrigger');
             const MAX_RESULTS = companies.length;
+            const addCompanyBtn = document.querySelector('[data-add-company-btn]');
+            const addCompanyModal = document.querySelector('[data-add-company-modal]');
+            const addCompanyForm = document.querySelector('[data-add-company-form]');
+            const addCompanyInput = document.querySelector('[data-add-company-input]');
+            const addCompanyError = document.querySelector('[data-add-company-error]');
+            const addCompanyClose = document.querySelector('[data-add-company-close]');
 
             if (!form || !input || !suggestions || !suggestionsList || !hiddenTrigger) {
                 return;
@@ -663,6 +770,70 @@
                 suggestions.hidden = false;
                  form.style.borderBottomLeftRadius = '0px';
     form.style.borderBottomRightRadius = '0px';
+            }
+
+            function ensureAbsoluteUrl(rawValue) {
+                if (!rawValue) return '';
+                let value = rawValue.trim();
+                if (!value) return '';
+                if (!/^https?:\/\//i.test(value)) {
+                    value = `https://${value}`;
+                }
+                return value;
+            }
+
+            function isValidHttpUrl(value) {
+                try {
+                    const parsed = new URL(value);
+                    return ['http:', 'https:'].includes(parsed.protocol);
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            function formatCompanyNameFromUrl(urlValue) {
+                try {
+                    const parsed = new URL(urlValue);
+                    let host = parsed.hostname.replace(/^www\./i, '');
+                    const hostParts = host.split('.');
+                    if (hostParts.length > 2) {
+                        host = hostParts.slice(0, -1).join(' ');
+                    } else {
+                        host = hostParts[0];
+                    }
+                    const cleaned = host.replace(/[-_]/g, ' ').trim();
+                    if (!cleaned) return 'New solar installer';
+                    return cleaned.replace(/\b\w/g, (char) => char.toUpperCase());
+                } catch (error) {
+                    return 'New solar installer';
+                }
+            }
+
+            function showAddCompanyModal() {
+                if (!addCompanyModal) return;
+                addCompanyModal.hidden = false;
+                addCompanyModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                if (addCompanyInput) {
+                    addCompanyInput.value = '';
+                    setTimeout(() => addCompanyInput.focus(), 50);
+                }
+                if (addCompanyError) {
+                    addCompanyError.classList.remove('is-visible');
+                }
+            }
+
+            function hideAddCompanyModal() {
+                if (!addCompanyModal) return;
+                addCompanyModal.hidden = true;
+                addCompanyModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                if (addCompanyInput) {
+                    addCompanyInput.value = '';
+                }
+                if (addCompanyError) {
+                    addCompanyError.classList.remove('is-visible');
+                }
             }
 
             function renderSuggestions(matches) {
@@ -723,6 +894,19 @@
                 hiddenTrigger.dataset.stateId = company.state_id ?? '';
                 hiddenTrigger.dataset.stateName = company.state_name ?? '';
                 hiddenTrigger.dataset.categoryIds = (company.category_ids || []).join(',');
+                hiddenTrigger.dataset.companyUrl = '';
+
+                hiddenTrigger.click();
+            }
+
+            function openManualCompanyReview(urlValue) {
+                const derivedName = formatCompanyNameFromUrl(urlValue);
+                hiddenTrigger.dataset.companyId = '0';
+                hiddenTrigger.dataset.companyName = derivedName;
+                hiddenTrigger.dataset.stateId = '';
+                hiddenTrigger.dataset.stateName = '';
+                hiddenTrigger.dataset.categoryIds = '';
+                hiddenTrigger.dataset.companyUrl = urlValue;
 
                 hiddenTrigger.click();
             }
@@ -745,6 +929,41 @@
                 if (!suggestions.contains(event.target) && !form.contains(event.target)) {
                     hideSuggestions();
                 }
+            });
+
+            addCompanyBtn?.addEventListener('click', (event) => {
+                event.preventDefault();
+                showAddCompanyModal();
+            });
+
+            addCompanyClose?.addEventListener('click', (event) => {
+                event.preventDefault();
+                hideAddCompanyModal();
+            });
+
+            addCompanyModal?.addEventListener('click', (event) => {
+                if (event.target === addCompanyModal) {
+                    hideAddCompanyModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && addCompanyModal && !addCompanyModal.hidden) {
+                    hideAddCompanyModal();
+                }
+            });
+
+            addCompanyForm?.addEventListener('submit', (event) => {
+                event.preventDefault();
+                if (!addCompanyInput) return;
+                const normalizedUrl = ensureAbsoluteUrl(addCompanyInput.value);
+                if (!normalizedUrl || !isValidHttpUrl(normalizedUrl)) {
+                    addCompanyError?.classList.add('is-visible');
+                    return;
+                }
+                addCompanyError?.classList.remove('is-visible');
+                hideAddCompanyModal();
+                openManualCompanyReview(normalizedUrl);
             });
         });
     </script>
