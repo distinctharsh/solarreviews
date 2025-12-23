@@ -13,12 +13,16 @@ class SendEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public string $otp;
+    public string $email;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(string $otp, string $email)
     {
-        //
+        $this->otp = $otp;
+        $this->email = $email;
     }
 
     /**
@@ -27,7 +31,7 @@ class SendEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Send Email',
+            subject: 'Your Solar Reviews Verification Code',
         );
     }
 
@@ -37,7 +41,11 @@ class SendEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.otp-verification',
+            with: [
+                'otp' => $this->otp,
+                'email' => $this->email,
+            ],
         );
     }
 

@@ -189,19 +189,50 @@ document.addEventListener('DOMContentLoaded', function() {
         sendOtpBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
 
         try {
+            // Try to get CSRF token from meta tag first
+            let csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            
+            // If not found in meta tag, try to get from any form input
+            if (!csrfToken) {
+                const tokenInput = document.querySelector('input[name="_token"]');
+                csrfToken = tokenInput?.value;
+            }
+            
+            if (!csrfToken) {
+                emailError.textContent = 'CSRF token not found. Please refresh the page and try again.';
+                emailError.style.display = 'block';
+                console.error('CSRF token not found. Please ensure the page has a CSRF token meta tag.');
+                return;
+            }
+
             const response = await fetch('{{ route("normal-user.login.send-otp") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-CSRF-TOKEN': csrfToken,
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({ email: email })
             });
 
-            const data = await response.json();
+            console.log('Response status:', response.status);
+            console.log('Response ok:', response.ok);
 
-            if (data.success) {
+            let data;
+            try {
+                const text = await response.text();
+                console.log('Response text:', text);
+                data = JSON.parse(text);
+            } catch (jsonError) {
+                console.error('JSON parse error:', jsonError);
+                emailError.textContent = 'Server error. Please check the console for details.';
+                emailError.style.display = 'block';
+                return;
+            }
+
+            console.log('Response data:', data);
+
+            if (response.ok && data.success) {
                 currentEmail = email;
                 otpEmailDisplay.textContent = email;
                 emailInputStep.style.display = 'none';
@@ -212,7 +243,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 emailError.style.display = 'block';
             }
         } catch (error) {
-            emailError.textContent = 'Something went wrong. Please try again.';
+            console.error('Error sending OTP:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack
+            });
+            emailError.textContent = 'Network error. Please check your connection and try again. Error: ' + error.message;
             emailError.style.display = 'block';
         } finally {
             sendOtpBtn.disabled = false;

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendEmail;
 use App\Models\NormalUser;
-use App\Services\OtpMailer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -68,46 +69,73 @@ class SocialLoginController extends Controller
      */
     public function sendOtp(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email|max:255',
-        ]);
-
-        $email = $validated['email'];
-        
-        // Generate 6-digit OTP
-        $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        
-        // Save OTP to session for verification
-        Session::put('login_otp', $otp);
-        Session::put('login_otp_email', $email);
-        Session::put('login_otp_expires_at', now()->addMinutes(10));
-
-        // Send OTP via email
         try {
-            $mailer = new OtpMailer();
-            $sent = $mailer->send($email, $otp);
+            $validated = $request->validate([
+                'email' => 'required|email|max:255',
+            ]);
 
-            if (!$sent) {
-                Log::warning('Failed to send OTP email', ['email' => $email]);
-                // Still return success for development, but log the issue
-                // In production, you might want to return an error
+            $email = $validated['email'];
+            
+            // Generate 6-digit OTP
+            $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            
+            // Save OTP to session for verification
+            Session::put('login_otp', $otp);
+            Session::put('login_otp_email', $email);
+            Session::put('login_otp_expires_at', now()->addMinutes(10));
+
+            // Send OTP via email using SendEmail Mailable
+            try {
+                Mail::to($email)->send(new SendEmail($otp, $email));
+                Log::info("OTP email sent successfully to {$email}");
+            } catch (\Exception $e) {
+                Log::error('Error sending OTP email', [
+                    'email' => $email,
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                
+                // In development, still allow OTP to work (it's logged)
+                if (app()->environment('local')) {
+                    Log::info("Login OTP for {$email} (email failed, but OTP logged): {$otp}");
+                    // Continue - OTP is saved in session and logged
+                } else {
+                    // In production, return error if email sending fails
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Failed to send verification code. Please check your email settings or try again later.',
+                    ], 500);
+                }
             }
 
-            // Log OTP for development/testing
+            // Log OTP for development/testing (always log for debugging)
             if (app()->environment('local')) {
                 Log::info("Login OTP for {$email}: {$otp}");
             }
-        } catch (\Exception $e) {
-            Log::error('Error sending OTP email', [
-                'email' => $email,
-                'error' => $e->getMessage(),
-            ]);
-        }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Verification code sent to your email.',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Verification code sent to your email.',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in sendOtp', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again.',
+            ], 500);
+        }
     }
 
     /**

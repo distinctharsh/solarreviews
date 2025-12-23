@@ -9,6 +9,7 @@
     'locale' => str_replace('_', '-', app()->getLocale()),
 ])
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <title>{{ $title }}</title>
 <meta name="description" content="{{ $description }}">
 <meta name="keywords" content="{{ $keywords }}">
