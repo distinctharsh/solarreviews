@@ -338,6 +338,12 @@ Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogle
 Route::post('/auth/google/disconnect', [SocialLoginController::class, 'disconnect'])->name('oauth.google.disconnect');
 Route::post('/reviews/session/logout', [SocialLoginController::class, 'disconnect'])->name('reviews.session.logout');
 
+// Normal user email login
+Route::prefix('auth/normal-user')->name('normal-user.login.')->group(function () {
+    Route::post('/send-otp', [SocialLoginController::class, 'sendOtp'])->name('send-otp');
+    Route::post('/verify-otp', [SocialLoginController::class, 'verifyOtp'])->name('verify-otp');
+});
+
 // Admin Routes
 Route::prefix('admin')
     ->name('admin.')

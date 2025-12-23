@@ -67,7 +67,8 @@
             @elseif(!$isBusinessUser)
                 <a
                     class="nav-link fw-medium py-3 nav-normal-login"
-                    href="{{ route('oauth.google.redirect', ['return_url' => request()->fullUrl()]) }}"
+                    href="javascript:void(0)"
+                    onclick="window.openNormalUserLoginModal && window.openNormalUserLoginModal()"
                 >
                     Login
                 </a>
@@ -147,7 +148,8 @@
                 <li class="nav-item">
                     <a
                         class="nav-link fw-medium py-3 nav-normal-login w-100 text-start"
-                        href="{{ route('oauth.google.redirect', ['return_url' => request()->fullUrl()]) }}"
+                        href="javascript:void(0)"
+                        onclick="window.openNormalUserLoginModal && window.openNormalUserLoginModal()"
                     >
                         Login
                     </a>
@@ -570,6 +572,8 @@
 <!--</script>-->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+@include('components.frontend.login-choice-modal')
 
 
 <script>
