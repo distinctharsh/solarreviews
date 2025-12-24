@@ -22,6 +22,16 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    // Business OAuth routes
+    Route::get('/auth/business/google/redirect', [\App\Http\Controllers\Auth\BusinessAuthController::class, 'redirectToGoogle'])->name('business.oauth.google.redirect');
+    Route::get('/auth/business/google/callback', [\App\Http\Controllers\Auth\BusinessAuthController::class, 'handleGoogleCallback'])->name('business.oauth.google.callback');
+    
+    // Business email OTP routes
+    Route::prefix('auth/business')->name('business.login.')->group(function () {
+        Route::post('/send-otp', [\App\Http\Controllers\Auth\BusinessAuthController::class, 'sendOtp'])->name('send-otp');
+        Route::post('/verify-otp', [\App\Http\Controllers\Auth\BusinessAuthController::class, 'verifyOtp'])->name('verify-otp');
+    });
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Solar Panel Management System - Login & Registration</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -1230,10 +1231,31 @@
         </div>
         <span>Start your solar journey with us</span>
         
+        @php
+            $googleData = session('business_google_data');
+            $emailVerified = session('business_email_verified', false);
+            $verifiedEmail = session('business_verified_email');
+            $prefilledEmail = request()->query('email') ?? $googleData['email'] ?? $verifiedEmail ?? old('email');
+            $otpVerified = request()->query('otp_verified') ?? $emailVerified;
+        @endphp
+
+        @if(isset($googleData) || isset($otpVerified))
+            <div style="background: #d1fae5; color: #065f46; padding: 10px; border-radius: 8px; margin: 15px 0; font-size: 13px;">
+                <i class="fas fa-check-circle"></i> 
+                @if(isset($googleData))
+                    Google account connected. Please complete registration.
+                @elseif(isset($otpVerified))
+                    Email verified. Please complete registration.
+                @endif
+            </div>
+        @endif
+
+        
         <!-- Progress Steps -->
         <div class="progress-steps">
             <div class="step active" data-step="1">1</div>
             <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
         </div>
 
         @if($errors->any())
@@ -1249,7 +1271,7 @@
             $defaultUserTypeId = old('user_type_id', optional($roleOptions->first())->id);
         @endphp
 
-        <!-- Step 1: Basic info -->
+        <!-- Step 1: User Type Selection (Required First) -->
         <div class="form-step active" id="step1">
             <div class="role-selection" style="width:100%; text-align:left; margin-top:5px;">
                 <h4>Are you registering as</h4>
@@ -1276,34 +1298,89 @@
                 </div>
                 <span class="error-msg"></span>
             </div>
-            <h3>Basic details</h3>
-            <div class="input-group">
-                <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required>
-                <span class="error-msg"></span>
-            </div>
-            <div class="input-group">
-                <input type="email" name="email" placeholder="Work Email" value="{{ old('email') }}" required>
-                <span class="error-msg"></span>
-            </div>
-            <div class="input-group">
-                <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
-                <span class="error-msg"></span>
-            </div>
 
             <div class="form-navigation">
                 <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- Step 2: Account Setup -->
+        <!-- Step 2: Basic Details - Google or Manual -->
         <div class="form-step" id="step2">
+            <h3>Basic details</h3>
+            
+            @if(!isset($googleData) && !isset($otpVerified))
+                <!-- Choice: Google or Manual -->
+                <div style="margin: 20px 0;">
+                    <button type="button" class="btn btn-outline-primary btn-lg" 
+                            onclick="window.location.href='{{ route('business.oauth.google.redirect', ['return_url' => route('register')]) }}'"
+                            style="width: 100%; border-radius: 12px; padding: 0.875rem; border: 2px solid #4285f4; background: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span style="font-weight: 500;">Continue with Google</span>
+                    </button>
+                </div>
+
+                <div style="text-align: center; margin: 20px 0; position: relative;">
+                    <span style="background: white; padding: 0 15px; position: relative; z-index: 1; color: #666;">OR</span>
+                    <hr style="position: absolute; top: 50%; left: 0; right: 0; margin: 0; z-index: 0; border: none; border-top: 1px solid #e5e7eb;">
+                </div>
+            @endif
+
+            <!-- Manual Form Button (Show if not from Google) -->
+            @if(!isset($googleData) && !isset($otpVerified))
+                <button type="button" id="showManualFormBtn" 
+                        style="width: 100%; border-radius: 12px; padding: 0.875rem; border: 2px solid #6b7280; background: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;">
+                    <i class="fas fa-edit" style="font-size: 1.1rem;"></i>
+                    <span style="font-weight: 500;">Fill manually</span>
+                </button>
+            @endif
+
+            <!-- Manual Form Fields -->
+            <div id="manualBasicDetails" style="{{ isset($googleData) || isset($otpVerified) ? '' : 'display: none;' }}">
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Full Name" value="{{ old('name', $googleData['name'] ?? '') }}" required>
+                    <span class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" id="registrationEmailInput" placeholder="Work Email" 
+                           value="{{ old('email', $prefilledEmail ?? '') }}" 
+                           {{ isset($prefilledEmail) ? 'readonly' : '' }} required>
+                    @if(isset($prefilledEmail))
+                        <p style="font-size: 11px; color: #666; margin-top: 5px;">Email verified via {{ isset($googleData) ? 'Google' : 'OTP' }}</p>
+                    @endif
+                    <span class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <input type="tel" name="phone" id="phone" placeholder="Phone Number" value="{{ old('phone') }}" required>
+                    <span class="error-msg"></span>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="prev-step"><i class="fas fa-arrow-left"></i> Previous</button>
+                <button type="button" class="next-step">Next <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Step 3: Account Setup -->
+        <div class="form-step" id="step3">
             <h3>Account Setup</h3>
+            @php
+                $passwordOptional = (isset($googleData) || isset($otpVerified));
+            @endphp
+            @if($passwordOptional)
+                <p style="font-size: 12px; color: #666; margin-bottom: 10px; text-align: left;">Password is optional - You can login with {{ isset($googleData) ? 'Google' : 'email OTP' }} instead</p>
+            @endif
             <div class="input-group">
-                <input type="password" name="password" placeholder="Create Password (min 8 characters)" minlength="8" required>
+                <input type="password" name="password" placeholder="Create Password (min 8 characters)" minlength="8" {{ $passwordOptional ? '' : 'required' }}>
                 <span class="error-msg"></span>
             </div>
             <div class="input-group">
-                <input type="password" name="password_confirmation" placeholder="Confirm Password" minlength="8" required>
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" minlength="8" {{ $passwordOptional ? '' : 'required' }}>
                 <span class="error-msg"></span>
             </div>
             <div class="form-checkbox">
@@ -1335,43 +1412,88 @@
                     </div>
                 @endif
 
-                <input id="email" type="email" 
-                       class="@error('email') is-invalid @enderror" 
-                       name="email" 
-                       value="{{ old('email') }}" 
-                       required 
-                       autocomplete="email" 
-                       autofocus
-                       placeholder="Email Address" />
-                
-                <input id="password" 
-                       type="password" 
-                       class="@error('password') is-invalid @enderror" 
-                       name="password" 
-                       required 
-                       autocomplete="current-password"
-                       placeholder="Your Password" />
-                
-                <div style="margin: 10px 0 0 0; width: 100%; text-align: left;">
-                    <label style="display: flex; align-items: center; cursor: pointer;">
-                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} 
-                               style="margin-right: 8px; width: auto;">
-                        <span style="font-size: 14px; color: #666;">{{ __('Remember Me') }}</span>
-                    </label>
-                </div>
+                @if(session('success'))
+                    <div style="color: #10B981; margin-bottom: 15px; font-size: 14px;">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-                <div class="auth-actions">
-                    @if (Route::has('password.request'))
-                        <a class="forgot-password" href="{{ route('password.request') }}">
-                            {{ __('Forgot Your Password?') }}
-                        </a>
-                    @endif
-                    <button type="button" class="mobile-register-btn" id="mobileRegisterBtn">
-                        {{ __('Register') }}
+                @if(session('error'))
+                    <div style="color: #EF4444; margin-bottom: 15px; font-size: 14px;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <!-- Google Login Button -->
+                <div style="margin: 20px 0;">
+                    <button type="button" class="btn btn-outline-primary btn-lg" 
+                            onclick="window.location.href='{{ route('business.oauth.google.redirect', ['return_url' => url()->current()]) }}'"
+                            style="width: 100%; border-radius: 12px; padding: 0.875rem; border: 2px solid #4285f4; background: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span style="font-weight: 500;">Continue with Google</span>
                     </button>
                 </div>
 
-                <button type="submit">Login to Dashboard</button>
+                <div style="text-align: center; margin: 20px 0; position: relative;">
+                    <span style="background: white; padding: 0 15px; position: relative; z-index: 1; color: #666;">OR</span>
+                    <hr style="position: absolute; top: 50%; left: 0; right: 0; margin: 0; z-index: 0; border: none; border-top: 1px solid #e5e7eb;">
+                </div>
+
+                <!-- Traditional Password Login (Hidden by default) -->
+                <div id="passwordLoginForm" style="display: none;">
+                    <input id="email" type="email" 
+                           class="@error('email') is-invalid @enderror" 
+                           name="email" 
+                           value="{{ old('email') }}" 
+                           required 
+                           autocomplete="email" 
+                           placeholder="Email Address" />
+                    
+                    <input id="password" 
+                           type="password" 
+                           class="@error('password') is-invalid @enderror" 
+                           name="password" 
+                           required 
+                           autocomplete="current-password"
+                           placeholder="Your Password" />
+                    
+                    <div style="margin: 10px 0 0 0; width: 100%; text-align: left;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} 
+                                   style="margin-right: 8px; width: auto;">
+                            <span style="font-size: 14px; color: #666;">{{ __('Remember Me') }}</span>
+                        </label>
+                    </div>
+
+                    <div class="auth-actions">
+                        @if (Route::has('password.request'))
+                            <a class="forgot-password" href="{{ route('password.request') }}">
+                                {{ __('Forgot Your Password?') }}
+                            </a>
+                        @endif
+                        <button type="button" class="mobile-register-btn" id="mobileRegisterBtn">
+                            {{ __('Register') }}
+                        </button>
+                    </div>
+
+                    <button type="submit">Login to Dashboard</button>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <button type="button" id="backToLoginChoice" style="background: none; border: none; color: #666; font-size: 12px; cursor: pointer;">
+                            ← Back to login options
+                        </button>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" id="togglePasswordLogin" style="background: none; border: none; color: #5325c7; font-size: 12px; cursor: pointer;">
+                        Login with Password instead
+                    </button>
+                </div>
             </form>
         </div>
         <!-- Overlay container is hidden on mobile -->
@@ -1903,6 +2025,210 @@
             });
         });
     });
-</script>
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                             document.querySelector('input[name="_token"]')?.value;
+
+            // ========== LOGIN FORM HANDLERS ==========
+            const businessEmailLoginBtn = document.getElementById('businessEmailLoginBtn');
+            const emailOtpLoginForm = document.getElementById('emailOtpLoginForm');
+            const passwordLoginForm = document.getElementById('passwordLoginForm');
+            const togglePasswordLogin = document.getElementById('togglePasswordLogin');
+            const backToLoginChoice = document.getElementById('backToLoginChoice');
+            
+            const loginEmail = document.getElementById('loginEmail');
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            const otpInput = document.getElementById('otpInput');
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            const resendOtpBtn = document.getElementById('resendOtpBtn');
+            const otpVerificationSection = document.getElementById('otpVerificationSection');
+            const otpEmailDisplay = document.getElementById('otpEmailDisplay');
+            const emailOtpError = document.getElementById('emailOtpError');
+            const otpError = document.getElementById('otpError');
+            const otpSuccess = document.getElementById('otpSuccess');
+
+            let currentLoginEmail = '';
+
+            // Show email OTP form
+            if (businessEmailLoginBtn) {
+                businessEmailLoginBtn.addEventListener('click', function() {
+                    emailOtpLoginForm.style.display = 'block';
+                    passwordLoginForm.style.display = 'none';
+                    if (togglePasswordLogin) togglePasswordLogin.style.display = 'none';
+                });
+            }
+
+            // Toggle password login
+            if (togglePasswordLogin) {
+                togglePasswordLogin.addEventListener('click', function() {
+                    if (passwordLoginForm.style.display === 'none') {
+                        passwordLoginForm.style.display = 'block';
+                        emailOtpLoginForm.style.display = 'none';
+                        togglePasswordLogin.textContent = 'Hide Password Login';
+                    } else {
+                        passwordLoginForm.style.display = 'none';
+                        emailOtpLoginForm.style.display = 'none';
+                        togglePasswordLogin.textContent = 'Login with Password instead';
+                    }
+                });
+            }
+
+            // Back to login choice
+            if (backToLoginChoice) {
+                backToLoginChoice.addEventListener('click', function() {
+                    emailOtpLoginForm.style.display = 'none';
+                    passwordLoginForm.style.display = 'none';
+                    if (otpVerificationSection) otpVerificationSection.style.display = 'none';
+                    if (togglePasswordLogin) togglePasswordLogin.style.display = 'block';
+                });
+            }
+
+            // Send OTP for login
+            if (sendOtpBtn && loginEmail) {
+                sendOtpBtn.addEventListener('click', async function() {
+                    const email = loginEmail.value.trim();
+                    if (!email || !email.includes('@')) {
+                        if (emailOtpError) {
+                            emailOtpError.textContent = 'Please enter a valid email';
+                            emailOtpError.style.display = 'block';
+                        }
+                        return;
+                    }
+
+                    if (emailOtpError) emailOtpError.style.display = 'none';
+                    sendOtpBtn.disabled = true;
+                    sendOtpBtn.innerHTML = 'Sending...';
+
+                    try {
+                        const response = await fetch('{{ route("business.login.send-otp") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ email: email })
+                        });
+
+                        const data = await response.json();
+                        if (response.ok && data.success) {
+                            currentLoginEmail = email;
+                            if (otpEmailDisplay) otpEmailDisplay.textContent = email;
+                            if (otpVerificationSection) otpVerificationSection.style.display = 'block';
+                            if (otpInput) otpInput.focus();
+                        } else {
+                            if (emailOtpError) {
+                                emailOtpError.textContent = data.message || 'Failed to send code';
+                                emailOtpError.style.display = 'block';
+                            }
+                        }
+                    } catch (error) {
+                        if (emailOtpError) {
+                            emailOtpError.textContent = 'Network error. Please try again.';
+                            emailOtpError.style.display = 'block';
+                        }
+                    } finally {
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.innerHTML = 'Send Verification Code';
+                    }
+                });
+            }
+
+            // Verify OTP for login
+            if (verifyOtpBtn && otpInput) {
+                verifyOtpBtn.addEventListener('click', async function() {
+                    const otp = otpInput.value.trim();
+                    if (!otp || otp.length !== 6) {
+                        if (otpError) {
+                            otpError.textContent = 'Please enter 6-digit code';
+                            otpError.style.display = 'block';
+                        }
+                        return;
+                    }
+
+                    if (otpError) otpError.style.display = 'none';
+                    verifyOtpBtn.disabled = true;
+                    verifyOtpBtn.innerHTML = 'Verifying...';
+
+                    try {
+                        const response = await fetch('{{ route("business.login.verify-otp") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({ email: currentLoginEmail, otp: otp })
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            if (otpSuccess) {
+                                otpSuccess.textContent = 'Verification successful! Redirecting...';
+                                otpSuccess.style.display = 'block';
+                            }
+                            setTimeout(() => {
+                                window.location.href = data.redirect || (data.requires_registration ? data.redirect : '{{ route("dashboard") }}');
+                            }, 500);
+                        } else {
+                            if (otpError) {
+                                otpError.textContent = data.message || 'Invalid code';
+                                otpError.style.display = 'block';
+                            }
+                        }
+                    } catch (error) {
+                        if (otpError) {
+                            otpError.textContent = 'Something went wrong';
+                            otpError.style.display = 'block';
+                        }
+                    } finally {
+                        verifyOtpBtn.disabled = false;
+                        verifyOtpBtn.innerHTML = 'Verify Code';
+                    }
+                });
+            }
+
+            // Resend OTP for login
+            if (resendOtpBtn) {
+                resendOtpBtn.addEventListener('click', function() {
+                    if (sendOtpBtn) sendOtpBtn.click();
+                });
+            }
+
+            // Auto-format OTP input
+            if (otpInput) {
+                otpInput.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.replace(/\D/g, '');
+                });
+            }
+
+            // ========== REGISTRATION FORM HANDLERS ==========
+            // Show manual form when user clicks "Fill manually" or if Google data exists
+            const manualBasicDetails = document.getElementById('manualBasicDetails');
+            const showManualFormBtn = document.getElementById('showManualFormBtn');
+
+            // Show manual form
+            if (showManualFormBtn) {
+                showManualFormBtn.addEventListener('click', function() {
+                    if (manualBasicDetails) {
+                        manualBasicDetails.style.display = 'block';
+                        showManualFormBtn.style.display = 'none';
+                    }
+                });
+            }
+
+            // If Google data exists, show manual form automatically
+            @if(isset($googleData) || isset($otpVerified))
+                if (manualBasicDetails) {
+                    manualBasicDetails.style.display = 'block';
+                    if (showManualFormBtn) showManualFormBtn.style.display = 'none';
+                }
+            @endif
+        });
+    </script>
 </body>
 </html>
