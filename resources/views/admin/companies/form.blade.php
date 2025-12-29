@@ -300,37 +300,34 @@
                         @error('pincode')<p class="error-message">{{ $message }}</p>@enderror
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Company Logo</label>
-                        <div class="logo-upload">
-                            @if($company->logo_url)
-                                <div class="logo-preview">
-                                    <img src="{{ asset($company->logo_url) }}" 
-                                         alt="{{ $company->owner_name }} logo"
-                                         style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                                <div style="flex: 1; margin-left: 20px;">
-                                    <input type="file" id="logo" name="logo" accept="image/*" class="form-input" style="padding:5px; margin-bottom:10px;">
-                                    <div style="font-size:12px; color:#666;">Uploading a new image will replace the current logo.</div>
-                                </div>
-                            @else
-                                <label class="logo-preview" style="cursor: pointer;">
-                                    <div class="logo-placeholder">
-                                        <div>Logo</div>
-                                        <div>+</div>
-                                    </div>
-                                    <input type="file" id="logo" name="logo" accept="image/*" style="display:none;">
-                                </label>
-                                <div>
-                                    <div style="font-size:14px; margin-bottom:4px;">Click to upload logo</div>
-                                    <div style="font-size:12px; color:#a0aec0;">PNG / JPG up to 2MB</div>
-                                </div>
-                            @endif
-                        </div>
-                        @error('logo')
-                            <p class="error-message">{{ $message }}</p>
-                        @enderror
-                    </div>
+                  <div class="form-group">
+    <label class="form-label">Company Logo</label>
+    <div class="logo-upload">
+        @if($company->logo_url)
+            <div class="logo-preview">
+                <img src="{{ asset('storage/' . $company->logo_url) }}" 
+                     alt="{{ $company->owner_name }} logo"
+                     style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div style="flex: 1; margin-left: 20px;">
+                <input type="file" id="logo" name="logo" accept="image/*" class="form-control">
+                <div style="font-size:12px; color:#666;">Uploading a new image will replace the current logo.</div>
+            </div>
+        @else
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <label for="logo" style="cursor: pointer; border: 2px dashed #ddd; padding: 20px; text-align: center; border-radius: 5px;">
+                    <div>+</div>
+                    <div>Click to upload logo</div>
+                    <div style="font-size: 12px; color: #999;">PNG / JPG up to 2MB</div>
+                </label>
+                <input type="file" id="logo" name="logo" accept="image/*" style="display: none;">
+            </div>
+        @endif
+    </div>
+    @error('logo')
+        <p class="error-message">{{ $message }}</p>
+    @enderror
+</div>
                 </div>
             </div>
 

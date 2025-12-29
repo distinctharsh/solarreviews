@@ -962,7 +962,10 @@
                                     Send OTP
                                 </button>
                             </div>
-                           
+                            <small class="text-muted d-block mt-1">
+                                We only email you about this review.
+                                <span class="text-secondary d-block">Testing fallback OTP: <strong>123456</strong></span>
+                            </small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Your state *</label>
@@ -1020,8 +1023,6 @@
         };
 
         const form = modal.querySelector('form');
-        
-        
         const hasConnectedProfile = @json((bool) $reviewProfile);
         const companyIdInput = document.getElementById(`${modalId}CompanyId`);
         const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
@@ -1233,172 +1234,130 @@
             clearOtpStatus();
             updateSubmitState();
         }
-        
-        
-        function setOtpButtonLoading(loading = true) {
-    if (!otpSendBtn) return;
 
-    if (loading) {
-        otpSendBtn.disabled = true;
-        otpSendBtn.dataset.originalText = otpSendBtn.innerHTML;
-        otpSendBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
-    } else {
-        otpSendBtn.disabled = false;
-        otpSendBtn.innerHTML = otpSendBtn.dataset.originalText || 'Send OTP';
-    }
-}
-
-
-
-
-      // In your review-modal.blade.js or within <script> tags
-        async function sendOtp() {
-            if (otpSending) return; // 🛑 duplicate click protection
-            otpSending = true;
-        
-            const email = otpEmailInput ? otpEmailInput.value.trim() : '';
-        
-            if (!isValidEmail(email)) {
-                setOtpStatus('Please enter a valid email address.', 'danger');
-                otpSending = false;
+        async function sendOtp(mode = 'manual') {
+            if (!otpEmailInput || !otpSendBtn || !shouldRequireOtp() || otpSending) {
                 return;
             }
-        
-            setOtpButtonLoading(true);
-            setOtpStatus('Sending verification code...', 'info');
-        
+
+            const emailValue = otpEmailInput.value.trim();
+            if (!isValidEmail(emailValue)) {
+                setOtpStatus('Please enter a valid email before requesting an OTP.', 'danger');
+                return;
+            }
+
+            if (mode === 'auto' && emailValue === lastOtpEmail) {
+                return;
+            }
+
+            otpSending = true;
+            const initialText = otpSendBtn.textContent;
+            otpSendBtn.textContent = mode === 'manual' ? 'Sending…' : initialText;
+            otpSendBtn.setAttribute('disabled', 'disabled');
+            setOtpStatus('Sending verification code…', 'info');
+
             try {
                 const response = await fetch(otpRoutes.send, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ email })
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ email: emailValue }),
                 });
-        
-                const data = await response.json();
-        
+
+                const data = await response.json().catch(() => ({}));
                 if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'Failed to send OTP');
+                    throw new Error(data.message || 'Unable to send OTP.');
                 }
-        
-                lastOtpEmail = email;
-                setOtpStatus('OTP sent successfully. Please check your email.', 'success');
+
+                lastOtpEmail = emailValue;
+                setOtpStatus(data.message || 'OTP sent successfully. Use 123456 if email does not arrive.', 'success');
             } catch (error) {
-                console.error(error);
-                setOtpStatus(error.message || 'Could not send OTP. Try again.', 'danger');
+                setOtpStatus(error.message || 'Unable to send OTP. Please try again.', 'danger');
             } finally {
                 otpSending = false;
-                setOtpButtonLoading(false);
+                otpSendBtn.removeAttribute('disabled');
+                otpSendBtn.textContent = lastOtpEmail ? 'Resend OTP' : 'Send OTP';
             }
         }
 
+        async function verifyOtp() {
+            if (!shouldRequireOtp() || !otpVerifyBtn || otpVerifying) {
+                return;
+            }
+            const emailValue = otpEmailInput ? otpEmailInput.value.trim() : '';
+            const otpValue = otpInput ? otpInput.value.trim() : '';
 
-        // async function verifyOtp(email, otp) {
-        //     try {
-        //         const response = await fetch('{{ route("reviews.verify-otp") }}', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-        //                 'Accept': 'application/json'
-        //             },
-        //             body: JSON.stringify({ 
-        //                 email: email,
-        //                 otp: otp,
-        //                 reviewer_name: document.querySelector('input[name="reviewer_name"]')?.value || ''
-        //             })
-        //         });
-        //         return await response.json();
-        //     } catch (error) {
-        //         console.error('Error verifying OTP:', error);
-        //         return { success: false, message: 'Network error. Please try again.' };
-        //     }
-        // }
-        
-        
-        async function handleVerifyOtp(email, otp) {
-            if (otpVerifying) return;
+            if (!isValidEmail(emailValue) || otpValue.length !== 6) {
+                setOtpStatus('Enter both email and 6-digit code before verifying.', 'danger');
+                return;
+            }
+
             otpVerifying = true;
-        
-            setOtpStatus('Verifying code...', 'info');
-        
+            const initialText = otpVerifyBtn.textContent;
+            otpVerifyBtn.textContent = 'Verifying…';
+            otpVerifyBtn.setAttribute('disabled', 'disabled');
+
             try {
                 const response = await fetch(otpRoutes.verify, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({
-                        email: email,
-                        otp: otp,
-                        reviewer_name: reviewerNameInput?.value || ''
-                    })
+                        email: emailValue,
+                        otp: otpValue,
+                        reviewer_name: reviewerNameInput ? reviewerNameInput.value : null,
+                    }),
                 });
-        
-                const data = await response.json();
-        
+
+                const data = await response.json().catch(() => ({}));
                 if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'OTP verification failed');
+                    throw new Error(data.message || 'OTP verification failed.');
                 }
-        
+
                 otpVerified = true;
-                setOtpStatus('Email verified successfully ✔', 'success');
-                updateSubmitState();
-        
-                // UX polish
-                otpInput.disabled = true;
-                otpVerifyBtn.disabled = true;
-                otpSendBtn.disabled = true;
+                setOtpStatus(data.message || 'OTP verified successfully.', 'success');
             } catch (error) {
-                console.error(error);
-                setOtpStatus(error.message || 'Invalid OTP. Please try again.', 'danger');
                 otpVerified = false;
-                updateSubmitState();
+                setOtpStatus(error.message || 'Unable to verify OTP. Please try again.', 'danger');
             } finally {
                 otpVerifying = false;
+                otpVerifyBtn.textContent = initialText;
+                otpVerifyBtn.removeAttribute('disabled');
+                updateSubmitState();
             }
         }
 
-
         if (otpSendBtn && !otpSendBtn.disabled) {
-            otpSendBtn.addEventListener('click', async () => {
-                await sendOtp();   // 🔥 only manual
-            });
+            otpSendBtn.addEventListener('click', () => sendOtp('manual'));
         }
 
-    if (otpVerifyBtn) {
-    otpVerifyBtn.addEventListener('click', async () => {
-        const email = otpEmailInput.value.trim();
-        const otp = otpInput.value.trim();
-
-        if (!isValidEmail(email)) {
-            setOtpStatus('Please enter a valid email address.', 'danger');
-            return;
+        if (otpVerifyBtn) {
+            otpVerifyBtn.addEventListener('click', verifyOtp);
         }
 
-        if (!otp || otp.length !== 6) {
-            setOtpStatus('Please enter the 6-digit OTP.', 'danger');
-            return;
-        }
-
-        await handleVerifyOtp(email, otp);
-    });
-}
-
-
-       if (otpEmailInput && !otpEmailInput.readOnly) {
+        if (otpEmailInput && !otpEmailInput.readOnly) {
             otpEmailInput.addEventListener('input', () => {
                 otpVerified = false;
                 clearOtpStatus();
+                if (otpAutoSendTimeout) {
+                    clearTimeout(otpAutoSendTimeout);
+                }
+                if (!isValidEmail(otpEmailInput.value.trim())) {
+                    updateSubmitState();
+                    return;
+                }
+                otpAutoSendTimeout = setTimeout(() => sendOtp('auto'), 900);
                 updateSubmitState();
             });
         }
-
 
         if (otpInput) {
             otpInput.addEventListener('input', () => {
@@ -1670,21 +1629,22 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                if (data.redirect) {
-                    // Store the success message and company name in session storage
-                    sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
-                    if (data.company_name) {
-                        sessionStorage.setItem('reviewCompanyName', data.company_name);
+                    if (data.redirect) {
+                        // Store the success message in the session before redirecting
+                        sessionStorage.setItem('showSuccessMessage', data.message);
+                        window.location.href = data.redirect;
+                    } else {
+                        // Redirect to profile reviews page after successful submission
+                        sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
+                        window.location.href = '{{ route("normal-user.reviews.index") }}';
                     }
-                    window.location.href = data.redirect;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Failed to submit review. Please try again.', 'error');
-                submitReviewBtn.disabled = false;
-                submitReviewBtn.innerHTML = 'Submit Review';
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Failed to submit review. Please try again.', 'error');
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = 'Submit Review';
+                });
             });
         }
 

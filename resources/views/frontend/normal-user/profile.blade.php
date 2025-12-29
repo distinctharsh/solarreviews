@@ -439,6 +439,121 @@
 }
 
 
+
+
+
+
+
+
+
+
+.review-card,
+.tp-review-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.review-card:hover,
+.tp-review-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 55px rgba(17, 24, 39, 0.08);
+}
+
+
+
+
+
+
+.company-info {
+    margin-top: 1.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    background: #f9fafb;
+    border: 1px dashed #e5e7eb;
+}
+
+.company-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.company-name a {
+    color: #5325c7;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.company-name a:hover {
+    text-decoration: underline;
+}
+
+.company-website {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+}
+
+
+
+.badge.bg-warning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.25rem 0.55rem;
+}
+
+
+
+.review-company {
+    line-height: 1.4;
+}
+
+.review-company a {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.review-company a:hover {
+    text-decoration: underline;
+}
+.rating-stars,
+.tp-stars {
+    letter-spacing: 0.05rem;
+}
+
+
+.review-actions button,
+.review-actions a,
+.tp-action {
+    padding: 0.25rem 0.4rem;
+    border-radius: 6px;
+}
+
+.review-actions button:hover,
+.review-actions a:hover,
+.tp-action:hover {
+    background: #f3f4f6;
+}
+
+
+
+#drafts .tp-review-card {
+    border-style: dashed;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+}
+
+
+.section-title {
+    letter-spacing: -0.01em;
+}
+
+.section-description {
+    font-weight: 500;
+}
+
+
     </style>
 </head>
 <body>
@@ -623,6 +738,7 @@
                     $companySlug = $review->company?->slug;
                     $companyLink = $companySlug ? route('companies.show', $companySlug) : $companyUrl;
                 @endphp
+
                 <article class="review-card">
                     <div class="review-card-header">
                         <div>
@@ -644,7 +760,7 @@
                                         @if(strpos($companyUrl, 'http') !== 0)
                                             {{ $companyUrl }}
                                         @else
-                                            <a href="{{ $companyUrl }}" target="_blank" rel="noopener">
+                                            <a href="{{ $companyLink }}" target="_blank" rel="noopener">
                                                 {{ parse_url($companyUrl, PHP_URL_HOST) }}
                                             </a>
                                         @endif
@@ -677,7 +793,6 @@
                         $reviewPayload = [
                             'id' => $review->id,
                             'company_id' => $review->company_id ?? 0,
-                            'company_name' => $resolvedCompanyName,
                             'manual_company_name' => $review->manual_company_name,
                             'company_url' => $review->company_url,
                             'state_id' => $review->state_id,
@@ -702,11 +817,11 @@
                             data-profile-edit='@json($reviewPayload, JSON_HEX_APOS | JSON_HEX_QUOT)'>
                             <i class="far fa-edit"></i> Edit
                         </button>
-                        <form method="POST" action="{{ route('normal-user.reviews.destroy', $review) }}" onsubmit="return confirm('Delete this review?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"><i class="far fa-trash-alt"></i> Delete</button>
-                        </form>
+                        <!--<form method="POST" action="{{ route('normal-user.reviews.destroy', $review) }}" onsubmit="return confirm('Delete this review?')">-->
+                        <!--    @csrf-->
+                        <!--    @method('DELETE')-->
+                        <!--    <button type="submit"><i class="far fa-trash-alt"></i> Delete</button>-->
+                        <!--</form>-->
                         <a href="{{ route('companies.show', $review->company?->slug ?? '#') }}" target="_blank"><i class="far fa-share-square"></i> Share</a>
                     </div>
                 </article>

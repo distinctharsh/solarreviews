@@ -6,7 +6,7 @@
 <div class="content-header">
     <div class="content-header-left">
         <h1>Reviews</h1>
-        <p class="text-muted">Monitor every review submitted for companies</p>
+        <p class="text-muted">Monitor every review submitted for companies, brands, and products</p>
     </div>
 </div>
 
@@ -18,14 +18,12 @@
         </div>
     </div>
     @foreach($reviewableTypes as $key => $meta)
-        @if($key === 'company')  <!-- Only show 'companies' stats -->
-            <div class="col">
-                <div class="stat-card">
-                    <div class="stat-label">{{ __('Total Companies') }}</div>
-                    <div class="stat-value">{{ number_format($stats['company_count']) }}</div>
-                </div>
+        <div class="col">
+            <div class="stat-card">
+                <div class="stat-label">{{ $meta['label_plural'] }}</div>
+                <div class="stat-value">{{ number_format($stats['by_type'][$key] ?? 0) }}</div>
             </div>
-        @endif
+        </div>
     @endforeach
 </div>
 
@@ -39,20 +37,18 @@
                 <div class="form-group">
                     <label for="type">Review Type</label>
                     <select id="type" name="type" class="form-control">
-                        
+                        <option value="">All Types</option>
                         @foreach($reviewableTypes as $key => $meta)
-                            @if($key === 'company')  <!-- Only show 'company' type -->
-                                <option value="{{ $key }}" @selected($filters['type'] === $key)>
-                                    {{ $meta['label_plural'] }}
-                                </option>
-                            @endif
+                            <option value="{{ $key }}" @selected($filters['type'] === $key)>
+                                {{ $meta['label_plural'] }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="rating">Rating</label>
                     <select id="rating" name="rating" class="form-control">
-                        
+                        <option value="">All Ratings</option>
                         @for($i = 5; $i >= 1; $i--)
                             <option value="{{ $i }}" @selected((string)$filters['rating'] === (string)$i)>
                                 {{ $i }} Stars

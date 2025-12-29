@@ -106,4 +106,19 @@ class User extends Authenticatable
             ->where('form_type', $formType)
             ->exists();
     }
+    
+    
+    
+    public function getProfileStatus(string $formType): ?string
+    {
+        return $this->profileSubmissions()
+            ->where('form_type', $formType)
+            ->latest()
+            ->value('status');
+    }
+
+    public function hasApprovedProfile(string $formType): bool
+    {
+        return $this->getProfileStatus($formType) === UserProfileSubmission::STATUS_APPROVED;
+    }
 }

@@ -10,7 +10,8 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div class="d-flex align-items-start flex-wrap gap-3">
+
                 <div>
                     <h2 class="card-title mb-1">Profile Submissions</h2>
                     <p class="text-muted small mb-0">Review distributor / supplier onboarding forms.</p>
@@ -97,3 +98,129 @@
         </div>
     </div>
 @endsection
+
+
+
+
+@push('styles')
+<style>
+/* ===============================
+   PROFILE SUBMISSIONS FILTER UI
+   =============================== */
+
+.profile-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+}
+
+.filter-search {
+    flex: 1;
+    min-width: 260px;
+}
+
+.filter-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.form-select,
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99,102,241,.15);
+}
+
+.filter-search-input {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-search-input .btn {
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* Card header spacing fix */
+.card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Table polish */
+.table thead th {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Badge polish */
+.badge {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+
+
+/* Header layout fix */
+.card-header .d-flex {
+    gap: 24px !important;
+}
+
+/* Left title block */
+.card-header h2 {
+    margin-bottom: 4px;
+}
+
+/* Filters container ko right side push karo */
+.profile-filters {
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+/* Ensure filters don't squeeze */
+.profile-filters .filter-field {
+    min-width: 180px;
+}
+
+</style>
+@endpush
+

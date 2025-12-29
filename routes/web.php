@@ -29,7 +29,19 @@ use App\Models\CompanyReview;
 use App\Models\State;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
+use Illuminate\Support\Facades\Artisan;
 
+
+Route::get('/create-symlink', function () {
+    Artisan::call('storage:link');
+    return 'Symbolic link created successfully!';
+});
+
+
+Route::get('/optimize-clear', function () {
+    Artisan::call('optimize:clear');
+    return 'Optimize cleared successfully!';
+});
 
 
 // Frontend Routes
@@ -203,6 +215,10 @@ Route::get('/', function () {
 });
 
 Route::get('/write-review', [FrontendReviewController::class, 'landing'])->name('reviews.write');
+
+// In routes/web.php
+Route::post('/reviews/send-otp', [\App\Http\Controllers\Frontend\ReviewController::class, 'sendOtp'])
+    ->name('reviews.send-otp');
 
 Route::view('/faq', 'frontend.faq')->name('faq');
 

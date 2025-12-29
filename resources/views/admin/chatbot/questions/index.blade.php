@@ -60,9 +60,9 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="{{ route('admin.chatbot.questions.show', $question) }}" class="btn btn-sm btn-info" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        <!--<a href="{{ route('admin.chatbot.questions.show', $question) }}" class="btn btn-sm btn-info" title="View">-->
+                                        <!--    <i class="fas fa-eye"></i>-->
+                                        <!--</a>-->
                                         <a href="{{ route('admin.chatbot.questions.edit', $question) }}" class="btn btn-sm btn-primary" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>

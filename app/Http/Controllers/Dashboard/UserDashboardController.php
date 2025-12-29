@@ -19,7 +19,20 @@ class UserDashboardController extends Controller
         $requiresSupplierIntake = $user?->isSupplier() &&
             !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_SUPPLIER);
 
+
+            $distributorStatus = $user?->isDistributor() 
+    ? $user->getProfileStatus(UserProfileSubmission::FORM_DISTRIBUTOR)
+    : null;
+    
+$supplierStatus = $user?->isSupplier() 
+    ? $user->getProfileStatus(UserProfileSubmission::FORM_SUPPLIER)
+    : null;
+
+
+
         return view('dashboard', [
+             'distributorStatus' => $distributorStatus,
+             'supplierStatus' => $supplierStatus,
             'requiresDistributorIntake' => $requiresDistributorIntake,
             'requiresSupplierIntake' => $requiresSupplierIntake,
         ]);

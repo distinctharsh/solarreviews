@@ -55,16 +55,14 @@ class BusinessAuthController extends Controller
         $user = User::where('email', $email)->first();
 
         if ($user) {
-            // Existing user - login directly
+            // Existing user - login directly and send to dashboard (admins to admin dashboard)
             Auth::login($user);
-            $returnUrl = Session::pull('business_google_return_url', route('dashboard'));
-            
-            // Check if admin and redirect accordingly
-            if ($user->is_admin) {
-                return redirect($returnUrl)->with('success', 'Welcome back!');
-            }
 
-            return redirect($returnUrl)->with('success', 'Welcome back!');
+            $redirectUrl = $user->is_admin
+                ? route('admin.dashboard')
+                : route('dashboard');
+
+            return redirect($redirectUrl)->with('success', 'Welcome back!');
         } else {
             // New user - check context
             $context = Session::get('business_google_context', 'login');
@@ -81,11 +79,11 @@ class BusinessAuthController extends Controller
                 return redirect()->route('register')
                     ->with('google_data', true)
                     ->with('success', 'Google account connected. Please complete registration.');
-            } else {
-                // Login context - redirect back to login with message
-                return redirect()->route('login')
-                    ->with('error', 'Account not found. Please register first.');
             }
+
+            // Login context - stay on login page and prompt registration
+            return redirect()->route('login')
+                ->with('error', 'Account not found. Please register first by using the Create Account form.');
         }
     }
 

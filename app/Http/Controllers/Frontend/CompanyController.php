@@ -382,18 +382,30 @@ class CompanyController extends Controller
         };
     }
 
-    private function companyLogoUrl(Company $company): string
-    {
-        $logo = $company->logo ?? $company->logo_url;
+   private function companyLogoUrl(Company $company): string
+{
+    $logo = $company->logo_url;
 
-        if ($logo) {
-            if (Str::startsWith($logo, ['http://', 'https://'])) {
-                return $logo;
-            }
-
-            return asset('storage/' . ltrim($logo, '/'));
+    if ($logo) {
+        // If it's already a full URL, return as is
+        if (Str::startsWith($logo, ['http://', 'https://'])) {
+            return $logo;
         }
 
+        // Check if file exists in the public directory
+        if (file_exists(public_path($logo))) {
+            return asset($logo);
+        }
+
+        // If logo is a full URL but missing scheme, add https://
+        if (Str::startsWith($logo, '//')) {
+            return 'https:' . $logo;
+        }
+
+        // Default fallback
         return asset('images/company/cmp.png');
     }
+
+    return asset('images/company/cmp.png');
+}
 }

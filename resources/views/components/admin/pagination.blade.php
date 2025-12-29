@@ -76,3 +76,78 @@
         </nav>
     </div>
 @endif
+
+
+
+
+@push('styles')
+<style>
+/* Admin Pagination Container */
+.admin-pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 16px;
+}
+
+.admin-pagination__info {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.admin-pagination__nav {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-pagination__list {
+    list-style: none;
+    display: flex;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-pagination__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.admin-pagination__button:hover {
+    background: #f1f5f9;
+    border-color: #cbd5f5;
+}
+
+.admin-pagination__button.is-active {
+    background: #0f172a;
+    color: #fff;
+    border-color: #0f172a;
+}
+
+.admin-pagination__button.is-disabled {
+    color: #94a3b8;
+    background: #f8fafc;
+    cursor: not-allowed;
+}
+
+.admin-pagination__button.is-dots {
+    border: none;
+    background: transparent;
+    cursor: default;
+}
+</style>
+@endpush
+

@@ -1111,7 +1111,7 @@
                         @foreach($displayBrands as $index => $brand)
                             @php
                                 $rating = (float) $brand->avg_rating;
-                                $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
+                                $logo = $brand->logo_url ? asset('storage/' . $brand->logo_url) : asset('images/company/cmp.png');
                             @endphp
                             <article class="brand-card-modern">
                                 <div class="brand-head">
@@ -1263,7 +1263,7 @@
                     <div class="brand-grid">
                         @foreach($topEfficiencyBrands as $index => $brand)
                             @php
-                                $logo = $brand->logo_url ? asset($brand->logo_url) : asset('images/company/cmp.png');
+                                $logo = $brand->logo_url ? asset('storage/' . $brand->logo_url) : asset('images/company/cmp.png');
                             @endphp
                             <article class="brand-card-modern">
                                 <div class="brand-head">

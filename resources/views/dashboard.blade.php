@@ -448,26 +448,60 @@
                             Important actions now surface with our signature SolarReviews green accents so you know where to focus.
                         </p>
                         <div class="hero-actions">
-                            <button class="btn-primary">
+                            <!-- <button class="btn-primary">
                                 Finish profile
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                                 </svg>
-                            </button>
-                            <button class="btn-outline">Invite teammates</button>
+                            </button> -->
+                            <!-- <button class="btn-outline">Invite teammates</button> -->
                         </div>
                     </div>
                     <div class="hero-progress">
-                        <p class="progress-label">Profile completion</p>
-                        <p class="progress-value">20%</p>
-                        <div class="progress-meter">
-                            <span style="width: 20%"></span>
-                        </div>
-                        <p class="text-sm" style="color:#18562e;">Complete onboarding to unlock insights.</p>
-                    </div>
+    <p class="progress-label">Profile Status</p>
+    @if($distributorStatus === \App\Models\UserProfileSubmission::STATUS_APPROVED)
+        <p class="progress-value">100% Complete</p>
+        <div class="progress-meter">
+            <span style="width: 100%"></span>
+        </div>
+        <p class="text-success">Your profile is active and visible!</p>
+    @else
+        <p class="progress-value">{{ $distributorStatus ? 'In Review' : 'Not Started' }}</p>
+        <div class="progress-meter">
+            <span style="width: {{ $distributorStatus ? '50%' : '10%' }}"></span>
+        </div>
+        <p class="text-muted">
+            {{ $distributorStatus ? 'Your profile is under review' : 'Complete your profile to get started' }}
+        </p>
+    @endif
+</div>
                 </div>
             </div>
         </section>
+
+
+
+        @if($distributorStatus)
+    @if($distributorStatus === \App\Models\UserProfileSubmission::STATUS_APPROVED)
+        <div class="alert alert-success">
+            Your distributor profile is approved and visible to others.
+        </div>
+    @elseif($distributorStatus === \App\Models\UserProfileSubmission::STATUS_PENDING)
+        <div class="alert alert-info">
+            Your distributor profile is under review. We'll notify you once approved.
+        </div>
+    @elseif($distributorStatus === \App\Models\UserProfileSubmission::STATUS_NEEDS_CHANGES)
+        <div class="alert alert-warning">
+            Your distributor profile needs changes. Please update your information.
+            @if($user->profileSubmissions->first()?->review_notes)
+                <div class="mt-2">
+                    <strong>Admin Notes:</strong>
+                    {{ $user->profileSubmissions->first()->review_notes }}
+                </div>
+            @endif
+        </div>
+    @endif
+@endif
 
         @if($requiresDistributorIntake)
             <section class="section">
@@ -517,7 +551,7 @@
                             </div>
                             <button class="btn-primary mt-4">Finish profile</button>
                         </article>
-                        <article class="highlight-card">
+                        <!-- <article class="highlight-card">
                             <p class="chip">Quick actions</p>
                             <h3>Stay responsive</h3>
                             <div class="grid gap-3 mt-4">
@@ -525,7 +559,7 @@
                                 <button class="tag-button">Invite teammates</button>
                                 <button class="tag-button">Contact support</button>
                             </div>
-                        </article>
+                        </article> -->
                     </div>
                 </div>
             </section>
@@ -587,7 +621,7 @@
                                     <p class="text-sm text-muted uppercase tracking-[0.2em]">Activity feed</p>
                                     <h3 class="text-xl font-semibold">Latest nudges</h3>
                                 </div>
-                                <button class="link-green border-0 bg-transparent">View all</button>
+                                <!-- <button class="link-green border-0 bg-transparent">View all</button> -->
                             </div>
                             @foreach([
                                 ['01','Complete your company overview','Add address, certifications and a short bio so buyers can verify you.'],
@@ -612,7 +646,7 @@
                                 <p><span class="font-semibold">Phone:</span> +91-98765-43210</p>
                                 <p><span class="font-semibold">Hours:</span> Mon–Sat, 9am–7pm IST</p>
                             </div>
-                            <button>Open support ticket</button>
+                            <!-- <button>Open support ticket</button> -->
                         </div>
                     </div>
                 </div>

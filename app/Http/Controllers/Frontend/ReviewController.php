@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Services\OtpMailer;
 
+
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
+
+
 class ReviewController extends Controller
 {
     /**
@@ -259,12 +264,13 @@ class ReviewController extends Controller
 
             session()->forget(['email_verified', 'email_verified_email']);
 
-           // In ReviewController.php - update the store method's success response
-            return response()->json([
-                'success' => true,
-                'redirect' => route('normal-user.reviews.index'),
-                'message' => 'Thank you for your review! It will be visible after approval.'
-            ]);
+            $companyName = $review->company->name ?? 'the company';
+    return response()->json([
+        'success' => true,
+        'message' => 'Review submitted successfully!',
+        'redirect' => route('normal-user.reviews.index'),
+        'company_name' => $companyName
+    ]);
 
         } catch (\Exception $e) {
             // Rollback transaction on error
@@ -383,29 +389,35 @@ class ReviewController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
-
+    
         $email = $request->email;
-        $otp = '123456';
+        $otp = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT); // Generate 6-digit OTP
         
         // Save OTP to session for verification
-        session(['otp' => $otp, 'otp_email' => $email, 'otp_expires_at' => now()->addMinutes(10)]);
-        
-        // Log OTP to file for testing
-        $logMessage = "[" . now() . "] OTP for $email: $otp\n";
-        file_put_contents(storage_path('logs/otp.log'), $logMessage, FILE_APPEND);
-        
-        // Log to Laravel log
-        \Log::info("OTP for $email: $otp");
-        
-        // For local development, also log the OTP for easier testing
-        if (app()->environment('local')) {
-            Log::info("OTP for {$email}: {$otp}");
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Verification code sent. Please check your inbox.',
+        session([
+            'otp' => $otp,
+            'otp_email' => $email,
+            'otp_expires_at' => now()->addMinutes(30)
         ]);
+    
+        // Send OTP via email
+        try {
+            Mail::to($email)->send(new SendEmail($otp, $email));
+            
+            \Log::info("OTP sent to {$email}: {$otp}");
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Verification code sent. Please check your email.',
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Failed to send OTP to {$email}: " . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send verification code. Please try again later.',
+            ], 500);
+        }
     }
 
     /**
@@ -418,11 +430,11 @@ class ReviewController extends Controller
             'otp' => 'required|string|size:6',
             'reviewer_name' => 'nullable|string|max:255',
         ]);
-
+    
         $savedOtp = session('otp');
         $otpEmail = session('otp_email');
         $otpExpiresAt = session('otp_expires_at');
-
+    
         // Debug log
         \Log::info('OTP Verification Attempt', [
             'email' => $request->email,
@@ -431,7 +443,7 @@ class ReviewController extends Controller
             'otp_email' => $otpEmail,
             'otp_expires_at' => $otpExpiresAt
         ]);
-
+    
         // Check if OTP exists and not expired
         if (!$savedOtp || !$otpEmail || !$otpExpiresAt) {
             \Log::warning('OTP not found or expired in session');
@@ -440,7 +452,7 @@ class ReviewController extends Controller
                 'message' => 'No OTP found or OTP expired. Please request a new one.'
             ], 400);
         }
-
+    
         if (now()->gt($otpExpiresAt)) {
             \Log::warning('OTP has expired');
             return response()->json([
@@ -448,51 +460,29 @@ class ReviewController extends Controller
                 'message' => 'OTP has expired. Please request a new one.'
             ], 400);
         }
-
-        if ($otpEmail !== $request->email) {
-            \Log::warning('Email does not match', [
-                'expected' => $otpEmail,
-                'actual' => $request->email
+    
+        // Verify OTP
+        if ($request->otp !== $savedOtp || $request->email !== $otpEmail) {
+            \Log::warning('Invalid OTP or email mismatch', [
+                'provided_otp' => $request->otp,
+                'provided_email' => $request->email
             ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Email does not match the one OTP was sent to.'
+                'message' => 'Invalid verification code. Please try again.'
             ], 400);
         }
-
-        if ($savedOtp !== $request->otp || $request->otp !== '123456') {
-            \Log::warning('Invalid OTP', [
-                'expected' => $savedOtp,
-                'actual' => $request->otp
-            ]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid OTP. Please try again.'
-            ], 400);
-        }
-
-        // Clear the OTP after successful verification
+    
+        // OTP verified successfully
+        // Store verification in session
+        session(['email_verified' => true]);
+        
+        // Clear OTP from session
         session()->forget(['otp', 'otp_email', 'otp_expires_at']);
-
-        // Mark email as verified in session
-        session([
-            'email_verified' => true,
-            'email_verified_email' => $request->email,
-        ]);
-
-        $normalUserId = $this->resolveNormalUserId([
-            'email' => $validated['email'],
-            'reviewer_name' => $validated['reviewer_name'] ?? null,
-        ]);
-
-        $profile = session('review_profile');
-
-        \Log::info('OTP verified successfully');
+    
         return response()->json([
             'success' => true,
-            'message' => 'OTP verified successfully.',
-            'profile' => $profile,
-            'normal_user_id' => $normalUserId,
+            'message' => 'Email verified successfully!'
         ]);
     }
 

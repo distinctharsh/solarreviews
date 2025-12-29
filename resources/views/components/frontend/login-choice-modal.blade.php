@@ -1,9 +1,11 @@
 <div class="modal fade" id="normalUserLoginModal" tabindex="-1" aria-labelledby="normalUserLoginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
-            <div class="modal-header" style="border-bottom: none; padding: 2rem 2rem 1rem;">
-                <h5 class="modal-title" id="normalUserLoginModalLabel" style="font-weight: 600; font-size: 1.5rem;">Login to Continue</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header" style="border-bottom: none; padding: 2rem 2rem 1rem; background-color: #259b39;">
+                <h5 class="modal-title" id="normalUserLoginModalLabel" style="font-weight: 600; font-size: 1.5rem; color: #fff;">Login to Continue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                     <i class="fas fa-times" style="color: #fff;"></i>
+                </button>
             </div>
             <div class="modal-body" style="padding: 1rem 2rem 2rem;">
                 <!-- Step 1: Choose Login Method -->
