@@ -51,7 +51,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
    <style>
-       body { font-family: Inter, sans-serif; background:#f9fafb; color:#111; }
+       body { font-family: 'Trustpilot Sans', 'Poppins', sans-serif; background:#f9fafb; color:#111; }
         .layout {
             max-width:1200px; margin:auto; padding:2rem 1rem;
             display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:2rem;
@@ -70,11 +70,246 @@
             .right{position:static; order:-1;}
         }
         
-          .container-custom {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 1.5rem;
-            }
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .trust-card{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px;
+            max-width:900px;
+        }
+
+        .left{
+            display:flex;
+            gap:16px;
+            align-items:flex-start;
+        }
+
+        .logo{
+            width:64px;
+            height:64px;
+            border-radius:12px;
+            border:1px solid #e5e7eb;
+            object-fit:contain;
+        }
+
+        .info h1{
+            margin:4px 0;
+            font-size:26px;
+            font-weight:700;
+        }
+
+        .claimed{
+            font-size:13px;
+            color:#00b67a;
+            font-weight:600;
+        }
+
+        .category{
+            color:#2563eb;
+            font-size:14px;
+            text-decoration:none;
+        }
+
+        .rating{
+            display:flex;
+            align-items:center;
+            gap:6px;
+            margin-top:6px;
+        }
+
+        .reviews{
+            font-size:14px;
+            color:#111;
+        }
+
+        .stars{
+            color:#00b67a;
+            letter-spacing:1px;
+            font-size:16px;
+        }
+
+        .score{
+            font-size:14px;
+            color:#6b7280;
+        }
+
+        .actions{
+            display:flex;
+            gap:12px;
+        }
+
+        .btn{
+            padding:10px 16px;
+            border-radius:999px;
+            font-size:14px;
+            cursor:pointer;
+        }
+
+        .primary{
+            background:#1d4ed8;
+            color:white;
+            border:none;
+        }
+
+        .outline{
+            border:1px solid #1d4ed8;
+            color:#1d4ed8;
+            text-decoration:none;
+            background:white;
+        }
+
+        .styles_card__0_wXo {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #fcfbf3;
+        
+        }
+
+        .CDS_Card_borderRadius-l__485220 {
+            border-radius: 16px;
+        }
+        .CDS_Card_appearance-default__485220 {
+            border: 1px solid #dcd6d1;
+        }
+
+
+
+        .review-summary-wrapper{
+            max-width:720px;
+        }
+
+        .review-summary-title{
+            font-size:22px;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
+
+        .ai-badge{
+            color:#7c3aed;
+        }
+
+        .review-summary-subtext{
+            color:#6b7280;
+            font-size:14px;
+            margin-bottom:12px;
+        }
+
+        .review-summary-description{
+            font-size:15px;
+            line-height:1.6;
+            color:#111827;
+        }
+
+        .review-summary-description .extra-text{
+            display:none;
+        }
+
+        .review-summary-description.expanded .extra-text{
+            display:inline;
+        }
+
+        .review-summary-link{
+            background:none;
+            border:none;
+            padding:0;
+            margin-top:6px;
+            color:#2563eb;
+            font-size:14px;
+            cursor:pointer;
+        }
+
+
+
+
+
+.company-details-grid {
+  display: grid;
+  grid-template-columns: max-content auto;
+  column-gap: 55px;
+  row-gap: 72px;
+  max-width: 950px;
+  margin: 40px auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+/* LEFT COLUMN */
+.left-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* RIGHT COLUMN */
+.right-content {
+  max-width: 720px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.category-tag {
+  border: 1px solid #c7c7ff;
+  color: #4f46e5;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.info-icon {
+  font-size: 14px;
+  color: #6c6c85;
+}
+
+.subheading {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #222;
+}
+
+.see-more {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* CONTACT LIST */
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-list li {
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+
+.contact-list a {
+  color: #111;
+  text-decoration: underline;
+}
+
 
    </style>
 </head>
@@ -85,62 +320,97 @@
         <div class="layout">
         <!-- ================= LEFT ================= -->
             <main>
-                <!-- HEADER -->
-                <section class="card">
-                    <div style="display:flex; gap:1rem; align-items:flex-start;">
-                        <img src="{{ $logoUrl }}" style="width:64px;height:64px;border-radius:12px;border:1px solid #e5e7eb;">
-                        <div>
-                            <!--<small style="color:#00b67a;font-weight:600;">✔ Claimed profile</small>-->
-                            <h1 style="margin:0">{{ $company->owner_name }}</h1>
-                            <p style="color:#6b7280;margin:.25rem 0">{{ $companyTypeLabel }} · {{ $location }}</p>
-                            
-                            <!--{{ dump($location) }}-->
 
-                
-                            <div style="display:flex;gap:.5rem;align-items:center">
-                                <strong>{{ number_format($ratingSummary['average'],1) }}</strong>
-                                <span class="stars">★★★★★</span>
-                                <span style="color:#6b7280">
-                                    {{ number_format($ratingSummary['total']) }} reviews
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- AI SUMMARY -->
-                <section class="card">
-                    <h3>Review summary ✨</h3>
-                    <p style="color:#6b7280;font-size:.9rem">
-                        Based on {{ number_format($ratingSummary['total']) }} verified reviews
-                    </p>
-                    <p>
-                        Customers generally report positive experiences with {{ $company->name }},
-                        praising service quality, transparency, and overall professionalism.
-                    </p>
-                </section>
+
+            <section class="trust-card">
+    <div class="left">
+        <img src="{{ $logoUrl }}" class="logo">
+
+        <div class="info">
+            <span class="claimed">✔ Claimed profile</span>
+
+            <h1>{{ $company->owner_name }}</h1>
             
-                <!-- BREAKDOWN PREVIEW -->
-                <section class="card">
-                    <h3>Expert rating breakdown</h3>
-                
-                    @foreach($ratingBreakdown as $metric)
-                        <div style="margin-bottom:.75rem">
-                            <div style="display:flex;justify-content:space-between;font-size:.9rem">
-                                <span>{{ $metric['label'] }}</span>
-                                <strong>{{ $metric['score'] }}%</strong>
-                            </div>
-                            <div class="bar">
-                                <span style="width:{{ $metric['score'] }}%"></span>
-                            </div>
+                        <div class="rating mb-2">
+                            <span class="reviews">
+                                Reviews {{ number_format($ratingSummary['total']) }}
+                            </span>
+            
+                            <span class="stars">
+                                <img src="{{ asset('images/company/stars-5.svg') }}" alt="Rating" style="height:20px;">
+                            </span>
+            
+                            <span class="score">
+                                {{ number_format($ratingSummary['average'],1) }} <i class="fas fa-info-circle" title="Average rating from {{ $ratingSummary['total'] }} reviews"></i>
+                            </span>
                         </div>
+
+            @if($company->categories->isNotEmpty())
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @foreach($company->categories as $category)
+                        <a href="{{ route('companies.category', $category->slug) }}" class="category-tag">
+                            {{ $category->name }}
+                        </a>
                     @endforeach
-                </section>
-            
+                </div>
+            @endif
+            <div class="actions">
+                <a class="nav-link fw-medium nav-btn-primary primary text-white"  style="color: white !important; background: #29983d;" href="{{ route('login') }}"> <i class="fas fa-pen"></i> Write a Review</a>
+                <a class="nav-link fw-medium nav-btn-primary bg-white text-dark" style="border: 1px solid #1d4ed8;" href="{{ $company->website }}" target="_blank">Visit website <i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<hr style="margin: 2rem 0; ">
+
+
+
+<div class="CDS_Card_card__485220 CDS_Card_appearance-default__485220 CDS_Card_borderRadius-l__485220 styles_card__0_wXo" 
+><span class="styles_trustShieldLogo__WGwe_">
+    <img alt="" src="https://businessunitprofile-cdn.trustpilot.net/businessunitprofile-consumersite/public/trustpilot-shield.svg" width="25" height="30" class="styles_trustShieldImg__z4P_B"><span class="styles_animation__QNRFp"></span></span><p class="CDS_Typography_appearance-default__dd9b51 CDS_Typography_prettyStyle__dd9b51 CDS_Typography_body-m__dd9b51" style="margin-left:10px;">Companies on Trustpilot aren't allowed to offer incentives or pay to hide reviews.</p></div>
+
+
+
+<section id="ai-review-summary-section" class="review-summary-wrapper">
+
+    <h2 id="review-summary-heading" class="review-summary-title mt-4">
+        Review summary <span class="ai-badge">✨</span>
+    </h2>
+
+    <p id="review-summary-subtitle" class="review-summary-subtext">
+        Based on reviews, created with AI
+    </p>
+
+    <p id="review-summary-content" class="review-summary-description collapsed">
+        Reviewers overwhelmingly had a great experience with this company.
+        Customers consistently praise the quality of the products, noting they
+        are well-made and meet expectations. Consumers also appreciate the
+        efficient and timely delivery service.
+
+        <span class="extra-text">
+            People highlight the positive attitude and helpfulness of the staff,
+            especially the delivery drivers. Reviewers often mention specific
+            employees by name and appreciate the overall professionalism.
+        </span>
+    </p>
+
+    <button
+        id="review-summary-toggle"
+        class="review-summary-link"
+        onclick="toggleReviewSummary()"
+    >
+        See more
+    </button>
+
+</section>
+
 <!-- Reviews Section -->
-<section class="card" style="margin-top: 2rem;">
+<section class="" style="margin-top: 2rem;">
     <div class="reviews-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="margin: 0;">Customer Reviews</h3>
+        <h3 style="margin: 0;">Based on these reviews  <i class="fas fa-info-circle"></i> </h3>
         <div class="reviews-nav" style="display: flex; gap: 0.5rem;">
             <button class="nav-btn prev" aria-label="Previous" style="background: #f3f4f6; border: none; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer;">‹</button>
             <button class="nav-btn next" aria-label="Next" style="background: #f3f4f6; border: none; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer;">›</button>
@@ -180,6 +450,80 @@
         @endforelse
     </div>
 </section>
+
+
+<section class="company-details-grid">
+
+  <!-- ROW 1 -->
+  <h2 class="left-title">Company details</h2>
+
+  <div class="right-content">
+    @if($company->categories->isNotEmpty())
+    <div class="category-row">
+      @foreach($company->categories as $category)
+        <a href="{{ route('companies.category', $category->slug) }}" class="category-tag">
+          {{ $category->name }}
+        </a>
+      @endforeach
+      <span class="info-icon" title="Company categories">ⓘ</span>
+    </div>
+    @endif
+
+    @if($company->description)
+    <h4 class="subheading">About {{ $company->name }}</h4>
+    <p class="description">
+      {{ Str::limit($company->description, 400) }}
+      @if(strlen($company->description) > 400)
+        <a href="#" class="see-more" onclick="toggleFullDescription(event, this)">See more</a>
+        <span class="full-description" style="display: none;">{{ $company->description }}</span>
+      @endif
+    </p>
+    @endif
+
+    @if($company->years_in_business)
+    <div class="mt-3">
+      <h4 class="subheading">Years in Business</h4>
+      <p>{{ $company->years_in_business }}+ years of experience</p>
+    </div>
+    @endif
+  </div>
+
+  <!-- ROW 2 -->
+  <h2 class="left-title">Contact info</h2>
+
+  <ul class="right-content contact-list">
+    @if($company->address || $company->city || $company->state || $company->pincode)
+    <li>📍 
+      @if($company->address){{ $company->address }}, @endif
+      @if($company->city){{ $company->city }}, @endif
+      @if(is_object($company->state)){{ $company->state->name }}, @elseif($company->state){{ $company->state }}, @endif
+      @if($company->pincode){{ $company->pincode }}@endif
+      @if($company->country), {{ $company->country }}@endif
+    </li>
+    @endif
+    
+    @if($company->phone)
+    <li>📞 <a href="tel:{{ $company->phone }}">{{ $company->phone }}</a></li>
+    @endif
+    
+    @if($company->email)
+    <li>✉️ <a href="mailto:{{ $company->email }}">{{ $company->email }}</a></li>
+    @endif
+    
+    @if($company->website)
+    <li>🌐 <a href="{{ $company->website }}" target="_blank" rel="noopener noreferrer">{{ parse_url($company->website, PHP_URL_HOST) }}</a></li>
+    @endif
+    
+    @if($company->gst_number)
+    <li>� <span>GST: {{ $company->gst_number }}</span></li>
+    @endif
+  </ul>
+
+</section>
+
+
+
+
                 
             </main>
             <!-- ================= RIGHT (STICKY) ================= -->
@@ -304,6 +648,37 @@
                
             });
         </script>
+
+
+<script>
+function toggleReviewSummary() {
+    const content = document.getElementById('review-summary-content');
+    const toggleBtn = document.getElementById('review-summary-toggle');
+
+    content.classList.toggle('expanded');
+
+    if (content.classList.contains('expanded')) {
+        toggleBtn.innerText = 'See less';
+    } else {
+        toggleBtn.innerText = 'See more';
+    }
+}
+
+function toggleFullDescription(event, element) {
+    event.preventDefault();
+    const description = element.parentElement;
+    const fullText = description.querySelector('.full-description');
+    
+    if (fullText.style.display === 'none') {
+        fullText.style.display = 'inline';
+        element.textContent = ' See less';
+    } else {
+        fullText.style.display = 'none';
+        element.textContent = ' See more';
+    }
+}
+</script>
+
 </body>
 </html>
 
