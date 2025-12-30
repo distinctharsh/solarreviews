@@ -2402,17 +2402,17 @@
         <div class="container-custom"  >
             <div class="stats-container">
                 <div class="stat-box">
-                    <div class="stat-value yellow">1,500+</div>
+                    <div class="stat-value yellow">{{ number_format($stats['listed_epc'] ?? 0) }}</div>
                     <span>No. Of listed EPC</span>
                 </div>
 
                 <div class="stat-box">
-                    <div class="stat-value green">350m+</div>
+                    <div class="stat-value green">{{ number_format($stats['total_reviews'] ?? 0) }}</div>
                     <span>Total Reviews</span>
                 </div>
 
                 <div class="stat-box">
-                    <div class="stat-value yellow">1,500+</div>
+                    <div class="stat-value yellow">{{ number_format($stats['active_users'] ?? 0) }}</div>
                     <span>Active Users</span>
                 </div>
             </div>

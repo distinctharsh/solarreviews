@@ -26,6 +26,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\SocialLoginController;
 use App\Models\Company;
 use App\Models\CompanyReview;
+use App\Models\NormalUser;
 use App\Models\State;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
@@ -207,10 +208,21 @@ Route::get('/', function () {
             ];
         });
 
+    $stats = [
+        'listed_epc' => Company::query()
+            ->where('is_active', true)
+            ->count(),
+        'total_reviews' => CompanyReview::query()
+            ->where('is_approved', true)
+            ->count(),
+        'active_users' => NormalUser::query()->count(),
+    ];
+
     return view('welcome', [
         'companies' => $companies,
         'trendingCompanies' => $trendingCompanies,
         'recentReviews' => $recentReviews,
+        'stats' => $stats,
     ]);
 });
 
