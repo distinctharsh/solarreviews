@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Company;
+use App\Models\CompanyReview;
+use App\Models\NormalUser;
 use App\Models\UserType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +24,17 @@ class AuthenticatedSessionController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('auth.login', compact('userTypes'));
+        $stats = [
+            'listed_epc' => Company::query()
+                ->where('is_active', true)
+                ->count(),
+            'total_reviews' => CompanyReview::query()
+                ->where('is_approved', true)
+                ->count(),
+            'active_users' => NormalUser::query()->count(),
+        ];
+
+        return view('auth.login', compact('userTypes', 'stats'));
     }
 
     /**
