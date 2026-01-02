@@ -370,7 +370,7 @@
 
 <div class="CDS_Card_card__485220 CDS_Card_appearance-default__485220 CDS_Card_borderRadius-l__485220 styles_card__0_wXo" 
 ><span class="styles_trustShieldLogo__WGwe_">
-    <img alt="" src="https://businessunitprofile-cdn.trustpilot.net/businessunitprofile-consumersite/public/trustpilot-shield.svg" width="25" height="30" class="styles_trustShieldImg__z4P_B"><span class="styles_animation__QNRFp"></span></span><p class="CDS_Typography_appearance-default__dd9b51 CDS_Typography_prettyStyle__dd9b51 CDS_Typography_body-m__dd9b51" style="margin-left:10px;">Companies on Trustpilot aren't allowed to offer incentives or pay to hide reviews.</p></div>
+    <img alt="" src="https://businessunitprofile-cdn.trustpilot.net/businessunitprofile-consumersite/public/trustpilot-shield.svg" width="25" height="30" class="styles_trustShieldImg__z4P_B"><span class="styles_animation__QNRFp"></span></span><p class="CDS_Typography_appearance-default__dd9b51 CDS_Typography_prettyStyle__dd9b51 CDS_Typography_body-m__dd9b51" style="margin-left:10px;">Companies on Solar Reviews aren't allowed to offer incentives or pay to hide reviews.</p></div>
 
 
 
