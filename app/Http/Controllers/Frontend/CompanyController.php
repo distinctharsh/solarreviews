@@ -43,7 +43,7 @@ class CompanyController extends Controller
             ->orderBy('companies.owner_name')
             ->get();
 
-        $states = State::select('name', 'slug')
+        $states = State::select('id', 'name', 'slug')
             ->where('is_active', true)
             ->orderBy('name')
             ->get();

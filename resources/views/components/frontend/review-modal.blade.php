@@ -865,6 +865,34 @@
                         </button> -->
                     </div>
 
+                    <!-- Phone number field - conditionally required -->
+                    <div class="mb-3" id="phone_number_container">
+                        <label class="form-label">
+                            Phone Number 
+                            @if(empty($reviewProfile['phone']))
+                                <span class="text-danger">*</span>
+                            @endif
+                        </label>
+                        <input
+                            type="tel"
+                            class="form-control"
+                            name="phone_number"
+                            id="phone_number_input"
+                            placeholder="Enter your phone number"
+                            {{ empty($reviewProfile['phone']) ? 'required' : '' }}
+                            value="{{ $reviewProfile['phone'] ?? '' }}"
+                            {{ !empty($reviewProfile['phone']) ? 'readonly' : '' }}
+                            pattern="[0-9]{10}"
+                            maxlength="10"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+                            title="Please enter a valid 10-digit phone number"
+                            data-phone-input
+                        >
+                        <small class="text-muted d-block mt-1">
+                            We'll only use this to verify your identity if needed.
+                        </small>
+                    </div>
+
                     <div class="identity-options google-center">
                         <button
                             type="button"
@@ -1538,7 +1566,13 @@
                 setCompanyContext(hasLinkedCompany ? companyId : '0', companyName, companyUrl);
             }
 
+            // Calculate scrollbar width BEFORE hiding overflow
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            
             modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollbarWidth + 'px';
             const primaryCategoryId = categoryInput ? categoryInput.value : '';
             restoreDraftIfAvailable({
                 expectedContext: {
@@ -1690,6 +1724,9 @@
 
         function closeModal() {
             modal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            document.body.style.paddingRight = '';
             resetForm();
         }
 

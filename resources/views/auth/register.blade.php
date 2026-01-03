@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar Reviews — Create account</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -18,22 +21,34 @@
             --card: #ffffff;
         }
 
-        * { box-sizing: border-box; }
-
         body {
-            margin: 0;
+            /* margin: 0; -> handled by Bootstrap */
             min-height: 100vh;
-            font-family: 'Inter', sans-serif;
+            font-family: 'DM Sans', sans-serif;
             background: radial-gradient(circle at top, rgba(255, 229, 143, 0.4), transparent 60%), var(--bg);
             color: var(--deep);
         }
 
+        .page-wrapper {
+            min-height: calc(100vh - 72px);
+            display: flex;
+            flex-direction: column;
+        }
+
         .register-page {
-            min-height: calc(100vh - 140px);
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.25rem 1rem 2.5rem;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            width: 100%;
         }
 
         .register-shell {
@@ -254,103 +269,109 @@
     </style>
 </head>
 <body>
-<main class="register-page">
-<div class="register-shell container-custom">
+<div class="page-wrapper">
+    @include('components.frontend.navbar')
 
-    <section class="register-form">
-        <h2>Create your account</h2>
-        <p>Multi-step onboarding keeps it simple and human.</p>
+    <main class="register-page">
+        <div class="register-shell">
 
-        @if ($errors->any())
-            <div class="notice">
-                {{ $errors->first() }}
-            </div>
-        @endif
+            <section class="register-form">
+                <h2>Create your account</h2>
+                <p>Multi-step onboarding keeps it simple and human.</p>
 
-        <div class="progress-steps" data-progress>
-            <div class="progress-step active" data-step="1">1</div>
-            <div class="progress-step" data-step="2">2</div>
-        </div>
-
-        <form id="registrationForm" method="POST" action="{{ route('register') }}" novalidate>
-            @csrf
-            <div class="form-section active" data-section="1">
-                <div class="input-group">
-                    <label>Registering as</label>
-                    <div class="role-grid">
-                        @forelse($userTypes as $type)
-                            @php($isSelected = (int) old('user_type_id', $userTypes->first()->id ?? null) === $type->id)
-                            <label class="role-card {{ $isSelected ? 'active' : '' }}">
-                                <input type="radio" name="user_type_id" value="{{ $type->id }}" {{ $isSelected ? 'checked' : '' }} required>
-                                <div class="role-icon">{{ strtoupper(substr($type->slug ?? $type->name, 0, 2)) }}</div>
-                                <div>
-                                    <strong>{{ $type->name }}</strong><br>
-                                    <!-- <span>Tailored workflows</span> -->
-                                </div>
-                            </label>
-                        @empty
-                            <p>No user types configured.</p>
-                        @endforelse
+                @if ($errors->any())
+                    <div class="notice">
+                        {{ $errors->first() }}
                     </div>
-                    <span class="error-msg" data-error="user_type_id"></span>
+                @endif
+
+                <div class="progress-steps" data-progress>
+                    <div class="progress-step active" data-step="1">1</div>
+                    <div class="progress-step" data-step="2">2</div>
                 </div>
 
-                <div class="input-group">
-                    <label for="name">Full name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-                    <span class="error-msg" data-error="name"></span>
+                <form id="registrationForm" method="POST" action="{{ route('register') }}" novalidate>
+                    @csrf
+                    <div class="form-section active" data-section="1">
+                        <div class="input-group">
+                            <label>Registering as</label>
+                            <div class="role-grid">
+                                @forelse($userTypes as $type)
+                                    @php($isSelected = (int) old('user_type_id', $userTypes->first()->id ?? null) === $type->id)
+                                    <label class="role-card {{ $isSelected ? 'active' : '' }}">
+                                        <input type="radio" name="user_type_id" value="{{ $type->id }}" {{ $isSelected ? 'checked' : '' }} required>
+                                        <div class="role-icon">{{ strtoupper(substr($type->slug ?? $type->name, 0, 2)) }}</div>
+                                        <div>
+                                            <strong>{{ $type->name }}</strong><br>
+                                            <!-- <span>Tailored workflows</span> -->
+                                        </div>
+                                    </label>
+                                @empty
+                                    <p>No user types configured.</p>
+                                @endforelse
+                            </div>
+                            <span class="error-msg" data-error="user_type_id"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="name">Full name</label>
+                            <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                            <span class="error-msg" data-error="name"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Work email</label>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                            <span class="error-msg" data-error="email"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="phone">Phone number</label>
+                            <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required>
+                            <span class="error-msg" data-error="phone"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-primary" data-next>Next step</button>
+                        </div>
+                    </div>
+
+                    <div class="form-section" data-section="2">
+                        <div class="input-group">
+                            <label for="password">Create password</label>
+                            <input type="password" id="password" name="password" minlength="8" required>
+                            <span class="error-msg" data-error="password"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password_confirmation">Confirm password</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" minlength="8" required>
+                            <span class="error-msg" data-error="password_confirmation"></span>
+                        </div>
+
+                        <label class="agreement">
+                            <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }} required>
+                            I agree to the <a href="#" target="_blank">Terms &amp; Conditions</a>
+                        </label>
+                        <span class="error-msg" data-error="terms"></span>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" data-prev>Back</button>
+                            <button type="submit" class="btn-primary">Create account</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="login-callout">
+                    Already have an account?
+                    <a href="{{ route('login') }}">Log in</a>
                 </div>
-
-                <div class="input-group">
-                    <label for="email">Work email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-                    <span class="error-msg" data-error="email"></span>
-                </div>
-
-                <div class="input-group">
-                    <label for="phone">Phone number</label>
-                    <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required>
-                    <span class="error-msg" data-error="phone"></span>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-primary" data-next>Next step</button>
-                </div>
-            </div>
-
-            <div class="form-section" data-section="2">
-                <div class="input-group">
-                    <label for="password">Create password</label>
-                    <input type="password" id="password" name="password" minlength="8" required>
-                    <span class="error-msg" data-error="password"></span>
-                </div>
-
-                <div class="input-group">
-                    <label for="password_confirmation">Confirm password</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" minlength="8" required>
-                    <span class="error-msg" data-error="password_confirmation"></span>
-                </div>
-
-                <label class="agreement">
-                    <input type="checkbox" name="terms" {{ old('terms') ? 'checked' : '' }} required>
-                    I agree to the <a href="#" target="_blank">Terms &amp; Conditions</a>
-                </label>
-                <span class="error-msg" data-error="terms"></span>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" data-prev>Back</button>
-                    <button type="submit" class="btn-primary">Create account</button>
-                </div>
-            </div>
-        </form>
-
-        <div class="login-callout">
-            Already have an account?
-            <a href="{{ route('login') }}">Log in</a>
+            </section>
         </div>
-    </section>
+    </main>
+
+    @include('components.frontend.footer')
 </div>
-</main>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>

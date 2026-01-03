@@ -17,7 +17,16 @@
 </head>
 <body>
     <div class="admin-shell">
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header d-lg-none">
+                <!-- <div class="sidebar-logo mb-0">
+                    <i class="fas fa-solar-panel"></i>
+                    <span>Admin</span>
+                </div> -->
+                <button class="btn-close-sidebar" onclick="toggleSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             <div class="sidebar-logo">
                 <i class="fas fa-solar-panel"></i>
                 <span>Admin</span>
@@ -82,6 +91,9 @@
 
         <div class="admin-content-area">
             <header class="admin-topbar">
+                <button class="btn-sidebar-toggle d-lg-none" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <div class="topbar-title">
                     @yield('page_title', 'Dashboard')
                 </div>
@@ -121,5 +133,11 @@
     </div>
 
     @stack('scripts')
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.admin-sidebar').classList.toggle('show');
+            document.querySelector('.admin-content-area').classList.toggle('blur');
+        }
+    </script>
 </body>
 </html>

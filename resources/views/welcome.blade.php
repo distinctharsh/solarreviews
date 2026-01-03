@@ -2539,7 +2539,7 @@
                     <p class="small-heading mb-2">Real People, Real Reviews</p>
                     <h1 class="text-white  mb-3" style="font-size: 2.3rem; line-height: 1.3; font-weight:600;">Unbiased consumer reviews of almost all solar companies in India</h1>
                     <p class="text-white mb-3" style="font-size: 16px; line-height: 1.6; opacity: 0.9;">
-                        SolarReviews has both an extensive collection of unbiased consumer reviews of U.S. solar companies and an expert ranking system 
+                        SolarReviews has both an extensive collection of unbiased consumer reviews of global companies and an expert ranking system 
                         to help you identify the best solar panel installation companies in your area.
                     </p>
                     <a href="{{ url('compare/companies') }}" class="hero-btn" rel="noopener">See Reviews of Companies Near You</a>

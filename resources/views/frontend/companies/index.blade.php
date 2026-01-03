@@ -341,8 +341,8 @@
             .content-grid {
                 grid-template-columns: 1fr;
                 grid-template-areas:
-                    "table"
-                    "sidebar";
+                    "sidebar"
+                    "table";
             }
 
             .sidebar-card {
@@ -494,10 +494,20 @@
 
                     <hr class="my-4">
                     <h5>Solar in your state</h5>
-                    <ul class="state-list">
+                    
+                    <!-- Mobile Dropdown -->
+                    <select class="form-select d-lg-none mb-3" id="stateSelect" onchange="filterGlobal()">
+                        <option value="">Select a state</option>
+                        @foreach($states as $state)
+                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Desktop List -->
+                    <ul class="state-list d-none d-lg-block">
                         @forelse($states as $state)
                             <li>
-                                <a href="{{ route('state.companies', $state->slug) }}">{{ $state->name }}</a>
+                                <a href="#" onclick="setStateFilter('{{ $state->id }}'); return false;">{{ $state->name }}</a>
                             </li>
                         @empty
                             <li class="text-muted">States coming soon.</li>
@@ -519,9 +529,10 @@
   <i class="fas fa-search search-icon ml-1"></i>
   <input 
     type="text" 
+    id="companySearchInput"
     class="search-input" 
     placeholder="Search companies"
-    oninput="filterCompanies(this.value)"
+    oninput="filterGlobal()"
   >
 </div>
 
@@ -541,7 +552,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($companies as $company)
-                                            <tr data-name="{{ \Illuminate\Support\Str::lower($company->owner_name ?? $company->name ?? '') }}">
+                                            <tr class="company-row" data-name="{{ \Illuminate\Support\Str::lower($company->owner_name ?? $company->name ?? '') }}" data-state-id="{{ $company->state_id }}">
                                                 <td>
                                                     <a href="{{ route('companies.show', $company->slug) }}" class="company-name text-decoration-none">
                                                         {{ $company->owner_name ?? $company->name ?? 'Company' }}
@@ -581,13 +592,36 @@
 </div>
 
 <script>
-    function filterCompanies(query) {
-        const rows = document.querySelectorAll('#companiesTable tbody tr');
-        const normalized = query.trim().toLowerCase();
+    function setStateFilter(stateId) {
+        const stateSelect = document.getElementById('stateSelect');
+        if (!stateSelect) return;
+
+        stateSelect.value = String(stateId ?? '');
+        filterGlobal();
+
+        const table = document.getElementById('companiesTable');
+        if (table) {
+            table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function filterGlobal() {
+        const searchText = document.getElementById('companySearchInput').value.trim().toLowerCase();
+        const stateId = document.getElementById('stateSelect').value;
+        const rows = document.querySelectorAll('#companiesTable tbody tr.company-row');
 
         rows.forEach(row => {
             const name = row.getAttribute('data-name');
-            row.style.display = name.includes(normalized) ? '' : 'none';
+            const rowStateId = row.getAttribute('data-state-id');
+
+            const matchesSearch = name.includes(searchText);
+            const matchesState = stateId === '' || rowStateId === stateId;
+
+            if (matchesSearch && matchesState) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
     }
 </script>

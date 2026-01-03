@@ -241,11 +241,21 @@
     color: #6b7280;
 }
 
-.dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
 }
 
 .card {

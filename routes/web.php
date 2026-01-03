@@ -361,6 +361,8 @@ Route::prefix('profile/reviews')->name('normal-user.reviews.')->group(function (
 });
 
 // OAuth for review modal/profile + normal reviewer sessions
+// Business Google login (used on auth login page)
+Route::get('/auth/google/business', [SocialLoginController::class, 'redirectToGoogle'])->name('login.google.business');
 Route::get('/auth/google/redirect', [SocialLoginController::class, 'redirectToGoogle'])->name('oauth.google.redirect');
 Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 Route::post('/auth/google/disconnect', [SocialLoginController::class, 'disconnect'])->name('oauth.google.disconnect');

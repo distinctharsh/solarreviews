@@ -615,11 +615,9 @@
                         button.addEventListener('click', function(e) {
                             e.preventDefault();
                             quoteModal.style.display = 'flex';
-                            // Calculate scrollbar width BEFORE hiding overflow
-                            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
                             document.body.style.overflow = 'hidden';
-                            document.documentElement.style.overflow = 'hidden';
-                            document.body.style.paddingRight = scrollbarWidth + 'px';
+                            document.body.style.position = 'fixed';
+                            document.body.style.width = '100%';
                         });
                     });
                     
@@ -627,8 +625,8 @@
                     const closeModal = function() {
                         quoteModal.style.display = 'none';
                         document.body.style.overflow = 'auto';
-                        document.documentElement.style.overflow = '';
-                        document.body.style.paddingRight = '';
+                        document.body.style.position = '';
+                        document.body.style.width = '';
                     };
                     
                     // Close on X button

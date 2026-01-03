@@ -1376,17 +1376,7 @@
                 <i class="fas fa-map-marker-alt"></i>
                 Solar in Your State
             </h3>
-            
-            <!-- Mobile Dropdown -->
-            <select class="form-select d-lg-none" onchange="if (this.value) window.location.href=this.value" style="width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; margin-bottom: 0;">
-                <option value="">Select state</option>
-                @foreach($states as $s)
-                    <option value="{{ url('state/'.$s->slug) }}" {{ (isset($state) && $state['slug'] == $s->slug) ? 'selected' : '' }}>{{ $s->name }}</option>
-                @endforeach
-            </select>
-
-            <!-- Desktop List -->
-            <ul class="state-list d-none d-lg-block">
+            <ul class="state-list">
                 @foreach($states as $s)
                     <li><a href="{{ url('state/'.$s->slug) }}">{{ $s->name }}</a></li>
                 @endforeach

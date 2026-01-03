@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solar Reviews — Sign in</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <style>
@@ -17,24 +20,56 @@
             --card: #ffffff;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            margin: 0;
+            /* Bootstrap handles margin/box-sizing */
             min-height: 100vh;
-            font-family: 'Inter', sans-serif;
+            font-family: 'DM Sans', sans-serif; /* Match site font */
             background: radial-gradient(circle at top, rgba(255, 229, 143, 0.45), transparent 55%), var(--bg);
             color: var(--text);
+            /* Navbar adds padding-top: 72px via its internal style */
+        }
+
+        .page-wrapper {
+            /* Subtract navbar height to avoid unnecessary scrollbar */
+            min-height: calc(100vh - 72px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fix button conflict with Bootstrap */
+        .btn-auth-submit {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: var(--primary);
+            color: #0f172a;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .btn-auth-submit:hover {
+            background-color: #e6ac00; /* Darken slightly on hover */
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(245, 184, 0, 0.35);
         }
 
         .auth-page {
-            min-height: calc(100vh - 140px);
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1.25rem 0.85rem 2rem;
+        }
+
+        .container-custom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            width: 100%;
         }
 
         .auth-shell {
@@ -44,6 +79,7 @@
             box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
             display: block;
             overflow: hidden;
+            margin: 0 auto; /* Ensure centering within flex container if needed */
         }
 
         .auth-hero {
@@ -174,22 +210,7 @@
             font-weight: 600;
         }
 
-        button[type="submit"] {
-            border: none;
-            border-radius: 10px;
-            padding: 0.75rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-            background: var(--primary);
-            color: #0f172a;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(245, 184, 0, 0.35);
-        }
+        /* Removed generic button styling to depend on class */
 
         .register-callout {
             margin-top: 0.85rem;
@@ -207,70 +228,77 @@
     </style>
 </head>
 <body>
-<main class="auth-page">
-<div class="auth-shell container-custom">
+<div class="page-wrapper">
+    @include('components.frontend.navbar')
 
-    <div class="auth-form">
-        <h2>Welcome back</h2>
-        <p>Enter your details to access the dashboard.</p>
+    <main class="auth-page">
+        <div class="auth-shell">
+            <div class="auth-form">
+                <h2>Welcome back</h2>
+                <p>Enter your details to access the dashboard.</p>
 
-        @if (session('status'))
-            <div style="padding:0.8rem 1rem;border-radius:12px;background:#ecfccb;color:#3f6212;margin-bottom:1rem;">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div style="padding:0.8rem 1rem;border-radius:12px;background:#fee2e2;color:#b91c1c;margin-bottom:1rem;">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    required
-                    autocomplete="email"
-                    autofocus
-                >
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    required
-                    autocomplete="current-password"
-                >
-            </div>
-
-            <div class="actions">
-                <label>
-                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    Remember me
-                </label>
-
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}">Forgot password?</a>
+                @if (session('status'))
+                    <div style="padding:0.8rem 1rem;border-radius:12px;background:#ecfccb;color:#3f6212;margin-bottom:1rem;">
+                        {{ session('status') }}
+                    </div>
                 @endif
+
+                @if ($errors->any())
+                    <div style="padding:0.8rem 1rem;border-radius:12px;background:#fee2e2;color:#b91c1c;margin-bottom:1rem;">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autocomplete="email"
+                            autofocus
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+
+                    <div class="actions">
+                        <label>
+                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                            Remember me
+                        </label>
+
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}">Forgot password?</a>
+                        @endif
+                    </div>
+
+                    <button type="submit" class="btn-auth-submit">Login to dashboard</button>
+                </form>
+
+                <div class="register-callout">
+                    New to Solar Reviews? <a href="{{ route('register') }}">Create an account</a>
+                </div>
+           
+               
             </div>
-
-            <button type="submit">Login to dashboard</button>
-        </form>
-
-        <div class="register-callout">
-            New to Solar Reviews? <a href="{{ route('register') }}">Create an account</a>
         </div>
-    </div>
+    </main>
+
+    @include('components.frontend.footer')
 </div>
-</main>
 
 </body>
 </html>
