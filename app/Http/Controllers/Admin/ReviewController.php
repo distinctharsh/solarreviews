@@ -42,7 +42,7 @@ class ReviewController extends Controller
     // Set default filters if not provided
     $filters = array_merge([
         'type' => 'company',  // Default to 'company' type
-        'rating' => 5,        // Default to 5 stars rating
+        'rating' => null,     // Default to no rating filter
         'search' => '',       // Default to empty search
     ], $request->validate([
         'type' => ['nullable', Rule::in(array_keys($reviewableTypes))],
@@ -70,8 +70,7 @@ class ReviewController extends Controller
                     ->orWhere('review_text', 'like', $searchTerm)
                     ->orWhere('reviewer_name', 'like', $searchTerm)
                     ->orWhereHas('company', function ($companyQuery) use ($searchTerm) {
-                        $companyQuery->where('name', 'like', $searchTerm)
-                            ->orWhere('owner_name', 'like', $searchTerm);
+                        $companyQuery->where('owner_name', 'like', $searchTerm);
                     });
             });
         }

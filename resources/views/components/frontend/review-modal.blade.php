@@ -844,29 +844,8 @@
                     </div>
                 </div>
 
-                <div class="subtle-card mt-4">
-                    <h5 class="fw-semibold mb-3">How should we display your review?</h5>
-
-                    <div
-                        class="identity-status {{ $reviewProfile ? '' : 'd-none' }}"
-                        data-identity-status
-                        @unless($reviewProfile) hidden @endunless
-                    >
-                        <div>
-                            <span data-identity-status-name>{{ $reviewProfile['name'] ?? 'Connected reviewer' }}</span>
-                            <p class="mb-0 text-muted small" data-identity-status-email>{{ $reviewProfile['email'] ?? '' }}</p>
-                        </div>
-                        <!-- <button
-                            type="button"
-                            data-google-disconnect
-                            data-google-disconnect-url="{{ route('reviews.session.logout') }}"
-                        >
-                            Disconnect
-                        </button> -->
-                    </div>
-
-                    <!-- Phone number field - conditionally required -->
-                    <div class="mb-3" id="phone_number_container">
+    <!-- Phone number field - conditionally required -->
+                    <div class="my-3" id="phone_number_container">
                         <label class="form-label">
                             Phone Number 
                             @if(empty($reviewProfile['phone']))
@@ -892,6 +871,31 @@
                             We'll only use this to verify your identity if needed.
                         </small>
                     </div>
+
+
+                @unless($reviewProfile)
+                <div class="subtle-card mt-4">
+                    <h5 class="fw-semibold mb-3">How should we display your review?</h5>
+
+                    <div
+                        class="identity-status {{ $reviewProfile ? '' : 'd-none' }}"
+                        data-identity-status
+                        @unless($reviewProfile) hidden @endunless
+                    >
+                        <div>
+                            <span data-identity-status-name>{{ $reviewProfile['name'] ?? 'Connected reviewer' }}</span>
+                            <p class="mb-0 text-muted small" data-identity-status-email>{{ $reviewProfile['email'] ?? '' }}</p>
+                        </div>
+                        <!-- <button
+                            type="button"
+                            data-google-disconnect
+                            data-google-disconnect-url="{{ route('reviews.session.logout') }}"
+                        >
+                            Disconnect
+                        </button> -->
+                    </div>
+
+                
 
                     <div class="identity-options google-center">
                         <button
@@ -931,25 +935,7 @@
                         </button> -->
                     </div>
                     @unless($reviewProfile)
-                    <!-- Phone number field - only show when no review profile exists -->
-                    <div class="row g-3 mt-3">
-                        <div class="col-12">
-                            <label class="form-label">Phone Number *</label>
-                            <input
-                                type="tel"
-                                class="form-control"
-                                name="phone_number"
-                                placeholder="Enter your phone number"
-                                required
-                                pattern="[0-9]{10,15}"
-                                title="Please enter a valid phone number (10-15 digits)"
-                                data-phone-input
-                            >
-                            <small class="text-muted d-block mt-1">
-                                We'll only use this to verify your identity if needed.
-                            </small>
-                        </div>
-                    </div>
+                    
                     @endunless
                     <div class="row g-3 manual-identity" data-manual-identity hidden>
                         <div class="col-md-6">
@@ -1024,6 +1010,7 @@
                         </div>
                     </div>
                 </div>
+                @endunless
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel cancel-btn">Cancel</button>

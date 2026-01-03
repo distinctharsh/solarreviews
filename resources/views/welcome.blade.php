@@ -1928,7 +1928,7 @@
 
         /* ================= SECTION ================= */
         .bank-section {
-            padding-bottom: 80px;
+            padding: 70px 0 70px 0;
         }
 
         /* ================= HEADER ================= */
@@ -2426,9 +2426,11 @@
                 <p>Strengthen your reputation with reviews on Solar Reviews.</p>
             </div>
 
+            @if(!auth()->check() && !session('normal_user_id'))
             <div class="cta-action">
                 <button class="cta-btn" onclick="window.location.href='{{ route('login') }}'">Get started</button>
             </div>
+            @endif
 
             <!-- decorative bars -->
             <div class="cta-bars">
@@ -2442,7 +2444,7 @@
 
 
         <!-- As Seen In Section -->
-    <section class="as-seen-in-section section-spacing mb-4 " style="padding: 80px 0px; ">
+    {{-- <section class="as-seen-in-section section-spacing mb-4 " style="padding: 80px 0px; ">
         <div class="container-custom">
             <div class="text-center mb-4">
                 <span class="fw-semibold text-muted as-cited-by" style="letter-spacing: 1px;">As cited by</span>
@@ -2482,7 +2484,7 @@
                 <!--</div>-->
             </div>
         </div>
-    </section>
+    </section> --}}
 
 
 

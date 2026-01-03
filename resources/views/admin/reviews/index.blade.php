@@ -52,7 +52,7 @@
                 <div class="form-group">
                     <label for="rating">Rating</label>
                     <select id="rating" name="rating" class="form-control">
-                        
+                        <option value="" @selected(!$filters['rating'])>All Ratings</option>
                         @for($i = 5; $i >= 1; $i--)
                             <option value="{{ $i }}" @selected((string)$filters['rating'] === (string)$i)>
                                 {{ $i }} Stars
