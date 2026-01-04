@@ -481,6 +481,7 @@
             gap: 40px;
             max-width: 1300px;
             margin: 40px auto;
+            padding: 0 16px;
         }
 
         /* LEFT PANEL */
@@ -572,6 +573,7 @@
             justify-content: space-between;
             gap: 20px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         #review-search {
@@ -579,6 +581,13 @@
             padding: 10px 14px;
             border-radius: 20px;
             border: 1px solid #ddd;
+            min-width: 220px;
+        }
+
+        #review-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .filter-btn {
@@ -599,6 +608,76 @@
             display: flex;
             justify-content: space-between;
             font-size: 14px;
+            gap: 10px;
+        }
+
+        .review-header strong,
+        .review-header .review-time {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 992px) {
+            #all-reviews-wrapper {
+                flex-direction: column;
+                gap: 24px;
+                margin: 24px auto;
+            }
+
+            #all-reviews-left {
+                width: 100%;
+                position: static;
+                top: auto;
+            }
+
+            #all-reviews-right {
+                max-height: none;
+                overflow-y: visible;
+                padding-right: 0;
+            }
+
+            #reviews-top-bar {
+                gap: 12px;
+            }
+
+            #review-search {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .filter-btn {
+                width: 100%;
+            }
+
+            .rating-row label {
+                width: 56px;
+            }
+
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .review-header strong,
+            .review-header .review-time {
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #rating-score {
+                font-size: 26px;
+            }
+
+            .rating-percent {
+                width: 36px;
+            }
+
+            .rating-row {
+                gap: 8px;
+                padding: 6px 6px;
+            }
         }
 
         .review-stars {
@@ -621,6 +700,137 @@
             font-size: 14px;
             color: #444;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+        .tp-card {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 420px;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
+
+.tp-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tp-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #6b6b6b;
+  margin-top: 2px;
+}
+
+.tp-text {
+  line-height: 1.3;
+}
+
+.tp-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #191919;
+}
+
+.tp-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
+.tp-divider {
+  margin: 14px 0;
+  border-top: 1px solid #e6e6e6;
+}
+
+.tp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #191919;
+  text-decoration: none;
+}
+
+.tp-link svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.tp-link:hover {
+  text-decoration: underline;
+}
+
+
+
+
+.tp-review-cta {
+  margin-top: 16px;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+.tp-review-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px; /* full pill */
+  background: #e8edff;  /* Trustpilot light blue */
+  color: #1d4ed8;       /* blue text */
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tp-review-btn:hover {
+  background: #dde4ff;
+}
+
+.tp-arrow {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.tp-info {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.tp-info-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -811,6 +1021,26 @@
                                 </div>
                             @endforelse
                         </div>
+
+                    <div class="tp-review-cta">
+                        <a
+                            href="#all-reviews-wrapper"
+                            class="tp-review-btn"
+                            onclick="(function(e){
+                            const el=document.getElementById('all-reviews-wrapper');
+                            if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
+                            })(event)"
+                        >
+                            See all {{ number_format($ratingSummary['total'] ?? 0) }} reviews
+                            <span class="tp-arrow"><i class="fa-solid fa-arrow-down"></i></span>
+                        </a>
+
+                        <div class="tp-info">
+                            We perform checks on reviews
+                            <span class="tp-info-icon">i</span>
+                        </div>
+                    </div>
+
                     </section>
 
 
@@ -936,8 +1166,37 @@
                     <p style="margin-top:1rem;font-size:.85rem;color:#6b7280">
                         Profile updated {{ $updatedDate ?? 'recently' }}
                     </p>
+
+
+
+                    
+                    
                 </section>
-            
+                <div class="tp-card">
+                    <div class="tp-top">
+                        <div class="tp-icon">
+                        <!-- chat/reply icon -->
+                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.5 1.5a5.5 5.5 0 1 0 0 11v3.068l3.462-2.885H10.5a5.5 5.5 0 0 0 0-11h-5Z" />
+                        </svg>
+                        </div>
+
+                        <div class="tp-text">
+                        <p class="tp-title">Replied to 16% of negative reviews</p>
+                        <p class="tp-subtitle">Typically replies within 1 week</p>
+                        </div>
+                    </div>
+
+                    <div class="tp-divider"></div>
+
+                    <a href="#" class="tp-link" >
+                        How this company uses Solar Reviews
+                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 2H2v12h12V8h-1v5H3V3h5V2Zm2 1h2.293L7.646 7.646l.708.708L13 3.707V6h1V2h-4v1Z"/>
+                        </svg>
+                    </a>
+                </div>
+
             </aside>
 
 
@@ -949,179 +1208,179 @@
 
     <div id="all-reviews-wrapper">
 
-    <!-- LEFT SIDE (STICKY) -->
-    <div id="all-reviews-left">
-        <div id="rating-summary">
-            <div id="rating-score">
-                <span id="rating-star">★</span>
-                <span id="rating-value">4.8</span>
+            <!-- LEFT SIDE (STICKY) -->
+            <div id="all-reviews-left">
+                <div id="rating-summary">
+                    <div id="rating-score">
+                        <span id="rating-star">★</span>
+                        <span id="rating-value">4.8</span>
+                    </div>
+
+                    <p id="total-reviews">
+                        All reviews<br>
+                        <span>{{ number_format($ratingSummary['total'] ?? 0) }} total · <a href="{{ route('reviews.write') }}">Write a review</a></span>
+                    </p>
+
+                    <div id="rating-bars">
+                        @php
+                            $allReviewsTotal = (int) ($ratingSummary['total'] ?? 0);
+                        @endphp
+
+                        <div class="rating-row" data-star="5" style="cursor:pointer;">
+                            <input class="rating-select" type="checkbox" aria-label="Filter 5 star reviews" tabindex="-1" />
+                            <label>5-star</label>
+                            <div class="rating-bar">
+                                @php
+                                    $count5 = (int) ($ratingDistribution[5] ?? 0);
+                                    $percent5 = $allReviewsTotal > 0 ? (($count5 / $allReviewsTotal) * 100) : 0;
+                                    $percent5Label = ($percent5 > 0 && $percent5 < 1) ? '<1' : (string) round($percent5);
+                                @endphp
+                                <span style="width:{{ $percent5 }}%"></span>
+                            </div>
+                            <span class="rating-percent">{{ $percent5Label }}%</span>
+                            <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count5 }})</span>
+                        </div>
+
+                        <div class="rating-row" data-star="4" style="cursor:pointer;">
+                            <input class="rating-select" type="checkbox" aria-label="Filter 4 star reviews" tabindex="-1" />
+                            <label>4-star</label>
+                            <div class="rating-bar">
+                                @php
+                                    $count4 = (int) ($ratingDistribution[4] ?? 0);
+                                    $percent4 = $allReviewsTotal > 0 ? (($count4 / $allReviewsTotal) * 100) : 0;
+                                    $percent4Label = ($percent4 > 0 && $percent4 < 1) ? '<1' : (string) round($percent4);
+                                @endphp
+                                <span style="width:{{ $percent4 }}%"></span>
+                            </div>
+                            <span class="rating-percent">{{ $percent4Label }}%</span>
+                            <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count4 }})</span>
+                        </div>
+
+                        <div class="rating-row" data-star="3" style="cursor:pointer;">
+                            <input class="rating-select" type="checkbox" aria-label="Filter 3 star reviews" tabindex="-1" />
+                            <label>3-star</label>
+                            <div class="rating-bar">
+                                @php
+                                    $count3 = (int) ($ratingDistribution[3] ?? 0);
+                                    $percent3 = $allReviewsTotal > 0 ? (($count3 / $allReviewsTotal) * 100) : 0;
+                                    $percent3Label = ($percent3 > 0 && $percent3 < 1) ? '<1' : (string) round($percent3);
+                                @endphp
+                                <span style="width:{{ $percent3 }}%"></span>
+                            </div>
+                            <span class="rating-percent">{{ $percent3Label }}%</span>
+                            <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count3 }})</span>
+                        </div>
+
+                        <div class="rating-row" data-star="2" style="cursor:pointer;">
+                            <input class="rating-select" type="checkbox" aria-label="Filter 2 star reviews" tabindex="-1" />
+                            <label>2-star</label>
+                            <div class="rating-bar">
+                                @php
+                                    $count2 = (int) ($ratingDistribution[2] ?? 0);
+                                    $percent2 = $allReviewsTotal > 0 ? (($count2 / $allReviewsTotal) * 100) : 0;
+                                    $percent2Label = ($percent2 > 0 && $percent2 < 1) ? '<1' : (string) round($percent2);
+                                @endphp
+                                <span style="width:{{ $percent2 }}%"></span>
+                            </div>
+                            <span class="rating-percent">{{ $percent2Label }}%</span>
+                            <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count2 }})</span>
+                        </div>
+
+                        <div class="rating-row" data-star="1" style="cursor:pointer;">
+                            <input class="rating-select" type="checkbox" aria-label="Filter 1 star reviews" tabindex="-1" />
+                            <label>1-star</label>
+                            <div class="rating-bar">
+                                @php
+                                    $count1 = (int) ($ratingDistribution[1] ?? 0);
+                                    $percent1 = $allReviewsTotal > 0 ? (($count1 / $allReviewsTotal) * 100) : 0;
+                                    $percent1Label = ($percent1 > 0 && $percent1 < 1) ? '<1' : (string) round($percent1);
+                                @endphp
+                                <span style="width:{{ $percent1 }}%"></span>
+                            </div>
+                            <span class="rating-percent">{{ $percent1Label }}%</span>
+                            <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count1 }})</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <p id="total-reviews">
-                All reviews<br>
-                <span>{{ number_format($ratingSummary['total'] ?? 0) }} total · <a href="{{ route('reviews.write') }}">Write a review</a></span>
-            </p>
+            <!-- RIGHT SIDE (SCROLLABLE) -->
+            <div id="all-reviews-right">
 
-            <div id="rating-bars">
-                @php
-                    $allReviewsTotal = (int) ($ratingSummary['total'] ?? 0);
-                @endphp
+                <!-- SEARCH + FILTERS -->
+                <div id="reviews-top-bar">
+                    <input
+                        type="text"
+                        id="review-search"
+                        placeholder="Search by keyword..."
+                    />
 
-                <div class="rating-row" data-star="5" style="cursor:pointer;">
-                    <input class="rating-select" type="checkbox" aria-label="Filter 5 star reviews" tabindex="-1" />
-                    <label>5-star</label>
-                    <div class="rating-bar">
-                        @php
-                            $count5 = (int) ($ratingDistribution[5] ?? 0);
-                            $percent5 = $allReviewsTotal > 0 ? (($count5 / $allReviewsTotal) * 100) : 0;
-                            $percent5Label = ($percent5 > 0 && $percent5 < 1) ? '<1' : (string) round($percent5);
-                        @endphp
-                        <span style="width:{{ $percent5 }}%"></span>
+                    <div id="review-filters">
+                        <select class="filter-btn" id="reviewDateFilter" style="appearance: auto;">
+                            <option value="">All time</option>
+                            <option value="30d">Last 30 days</option>
+                            <option value="3m">Last 3 months</option>
+                            <option value="6m">Last 6 months</option>
+                        </select>
+                        <button class="filter-btn" id="reviewMostRecentBtn" type="button">Most recent</button>
                     </div>
-                    <span class="rating-percent">{{ $percent5Label }}%</span>
-                    <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count5 }})</span>
                 </div>
 
-                <div class="rating-row" data-star="4" style="cursor:pointer;">
-                    <input class="rating-select" type="checkbox" aria-label="Filter 4 star reviews" tabindex="-1" />
-                    <label>4-star</label>
-                    <div class="rating-bar">
-                        @php
-                            $count4 = (int) ($ratingDistribution[4] ?? 0);
-                            $percent4 = $allReviewsTotal > 0 ? (($count4 / $allReviewsTotal) * 100) : 0;
-                            $percent4Label = ($percent4 > 0 && $percent4 < 1) ? '<1' : (string) round($percent4);
-                        @endphp
-                        <span style="width:{{ $percent4 }}%"></span>
-                    </div>
-                    <span class="rating-percent">{{ $percent4Label }}%</span>
-                    <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count4 }})</span>
-                </div>
+                <div id="active-star-summary" style="margin:10px 0;color:#555;font-size:14px"></div>
 
-                <div class="rating-row" data-star="3" style="cursor:pointer;">
-                    <input class="rating-select" type="checkbox" aria-label="Filter 3 star reviews" tabindex="-1" />
-                    <label>3-star</label>
-                    <div class="rating-bar">
-                        @php
-                            $count3 = (int) ($ratingDistribution[3] ?? 0);
-                            $percent3 = $allReviewsTotal > 0 ? (($count3 / $allReviewsTotal) * 100) : 0;
-                            $percent3Label = ($percent3 > 0 && $percent3 < 1) ? '<1' : (string) round($percent3);
-                        @endphp
-                        <span style="width:{{ $percent3 }}%"></span>
-                    </div>
-                    <span class="rating-percent">{{ $percent3Label }}%</span>
-                    <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count3 }})</span>
-                </div>
+                <!-- REVIEWS LIST -->
+                <div id="reviews-list">
 
-                <div class="rating-row" data-star="2" style="cursor:pointer;">
-                    <input class="rating-select" type="checkbox" aria-label="Filter 2 star reviews" tabindex="-1" />
-                    <label>2-star</label>
-                    <div class="rating-bar">
+                    @forelse($reviews as $review)
                         @php
-                            $count2 = (int) ($ratingDistribution[2] ?? 0);
-                            $percent2 = $allReviewsTotal > 0 ? (($count2 / $allReviewsTotal) * 100) : 0;
-                            $percent2Label = ($percent2 > 0 && $percent2 < 1) ? '<1' : (string) round($percent2);
+                            $reviewRating = (int) ($review['rating'] ?? 0);
+                            $reviewTitle = (string) ($review['title'] ?? '');
+                            $reviewText = (string) ($review['text'] ?? '');
+                            $reviewReviewer = (string) ($review['reviewer'] ?? '');
+                            $reviewTimestamp = (int) ($review['created_at_timestamp'] ?? 0);
+                            $reviewSearch = strtolower(trim(($reviewReviewer . ' ' . $reviewTitle . ' ' . $reviewText)));
                         @endphp
-                        <span style="width:{{ $percent2 }}%"></span>
-                    </div>
-                    <span class="rating-percent">{{ $percent2Label }}%</span>
-                    <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count2 }})</span>
-                </div>
+                        <div class="single-review"
+                            data-rating="{{ $reviewRating }}"
+                            data-ts="{{ $reviewTimestamp }}"
+                            data-search="{{ $reviewSearch }}">
+                            <div class="review-header">
+                                <strong>{{ $review['reviewer'] ?? 'Anonymous' }}</strong>
+                                <span class="review-time">{{ $review['created_at_human'] ?? ($review['date'] ?? '') }}</span>
+                            </div>
 
-                <div class="rating-row" data-star="1" style="cursor:pointer;">
-                    <input class="rating-select" type="checkbox" aria-label="Filter 1 star reviews" tabindex="-1" />
-                    <label>1-star</label>
-                    <div class="rating-bar">
-                        @php
-                            $count1 = (int) ($ratingDistribution[1] ?? 0);
-                            $percent1 = $allReviewsTotal > 0 ? (($count1 / $allReviewsTotal) * 100) : 0;
-                            $percent1Label = ($percent1 > 0 && $percent1 < 1) ? '<1' : (string) round($percent1);
-                        @endphp
-                        <span style="width:{{ $percent1 }}%"></span>
+                            <div class="review-stars">
+                                @for($i = 1; $i <= 5; $i++)
+                                    {{ $i <= $reviewRating ? '★' : '☆' }}
+                                @endfor
+                                @if(!empty($review['is_featured']))
+                                    <span class="verified">Verified</span>
+                                @endif
+                            </div>
+
+                            @if($reviewTitle)
+                                <h4 class="review-title">{{ $reviewTitle }}</h4>
+                            @endif
+                            <p class="review-text">{{ $reviewText }}</p>
+                        </div>
+                    @empty
+                        <div class="single-review">
+                            <div class="review-header">
+                                <strong>No reviews yet</strong>
+                            </div>
+                            <p class="review-text">Be the first to review this company.</p>
+                        </div>
+                    @endforelse
+
+                    <div id="no-matching-reviews" class="single-review" style="display:none">
+                        <div class="review-header">
+                            <strong>No matching reviews</strong>
+                        </div>
+                        <p class="review-text">Try removing filters or searching something else.</p>
                     </div>
-                    <span class="rating-percent">{{ $percent1Label }}%</span>
-                    <span class="rating-count" style="width:48px;font-size:13px;color:#555">({{ $count1 }})</span>
+
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- RIGHT SIDE (SCROLLABLE) -->
-    <div id="all-reviews-right">
-
-        <!-- SEARCH + FILTERS -->
-        <div id="reviews-top-bar">
-            <input
-                type="text"
-                id="review-search"
-                placeholder="Search by keyword..."
-            />
-
-            <div id="review-filters">
-                <select class="filter-btn" id="reviewDateFilter" style="appearance: auto;">
-                    <option value="">All time</option>
-                    <option value="30d">Last 30 days</option>
-                    <option value="3m">Last 3 months</option>
-                    <option value="6m">Last 6 months</option>
-                </select>
-                <button class="filter-btn" id="reviewMostRecentBtn" type="button">Most recent</button>
-            </div>
-        </div>
-
-        <div id="active-star-summary" style="margin:10px 0;color:#555;font-size:14px"></div>
-
-        <!-- REVIEWS LIST -->
-        <div id="reviews-list">
-
-            @forelse($reviews as $review)
-                @php
-                    $reviewRating = (int) ($review['rating'] ?? 0);
-                    $reviewTitle = (string) ($review['title'] ?? '');
-                    $reviewText = (string) ($review['text'] ?? '');
-                    $reviewReviewer = (string) ($review['reviewer'] ?? '');
-                    $reviewTimestamp = (int) ($review['created_at_timestamp'] ?? 0);
-                    $reviewSearch = strtolower(trim(($reviewReviewer . ' ' . $reviewTitle . ' ' . $reviewText)));
-                @endphp
-                <div class="single-review"
-                    data-rating="{{ $reviewRating }}"
-                    data-ts="{{ $reviewTimestamp }}"
-                    data-search="{{ $reviewSearch }}">
-                    <div class="review-header">
-                        <strong>{{ $review['reviewer'] ?? 'Anonymous' }}</strong>
-                        <span class="review-time">{{ $review['created_at_human'] ?? ($review['date'] ?? '') }}</span>
-                    </div>
-
-                    <div class="review-stars">
-                        @for($i = 1; $i <= 5; $i++)
-                            {{ $i <= $reviewRating ? '★' : '☆' }}
-                        @endfor
-                        @if(!empty($review['is_featured']))
-                            <span class="verified">Verified</span>
-                        @endif
-                    </div>
-
-                    @if($reviewTitle)
-                        <h4 class="review-title">{{ $reviewTitle }}</h4>
-                    @endif
-                    <p class="review-text">{{ $reviewText }}</p>
-                </div>
-            @empty
-                <div class="single-review">
-                    <div class="review-header">
-                        <strong>No reviews yet</strong>
-                    </div>
-                    <p class="review-text">Be the first to review this company.</p>
-                </div>
-            @endforelse
-
-            <div id="no-matching-reviews" class="single-review" style="display:none">
-                <div class="review-header">
-                    <strong>No matching reviews</strong>
-                </div>
-                <p class="review-text">Try removing filters or searching something else.</p>
-            </div>
-
-        </div>
-    </div>
         </div>
 
             </div>

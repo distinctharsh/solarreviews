@@ -93,6 +93,21 @@
         transition: none;
     }
 }
+
+@media (max-width: 480px) {
+    .social-proof-toast__text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 13px;
+    }
+
+    .social-proof-toast__content {
+        padding: 12px 16px;
+        max-width: 92vw;
+    }
+}
+
 </style>
 
 <script>

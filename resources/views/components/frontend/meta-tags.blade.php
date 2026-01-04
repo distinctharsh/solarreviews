@@ -16,6 +16,10 @@
 <meta name="robots" content="{{ $robots }}">
 <link rel="canonical" href="{{ $canonical }}">
 
+<link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
+
 <!-- Open Graph -->
 <meta property="og:title" content="{{ $title }}">
 <meta property="og:description" content="{{ $description }}">
