@@ -19,19 +19,43 @@ class ChatbotFlowService
             ->first();
     }
 
-    public function logBotPrompt(ChatbotUserSession $session, ChatbotQuestion $question): ChatbotUserMessage
+    public function logBotPrompt(ChatbotUserSession $session, ChatbotQuestion $question): void
     {
-        $lastMessage = $session->messages()->latest('sequence')->first();
+        $context = $session->context ?? [];
+        $transcript = $context['transcript'] ?? [];
+        $lastEntry = ! empty($transcript) ? end($transcript) : null;
 
-        if ($lastMessage && $lastMessage->sender === 'bot' && $lastMessage->question_id === $question->id) {
-            return $lastMessage;
+        if (
+            is_array($lastEntry)
+            && ($lastEntry['sender'] ?? null) === 'bot'
+            && (data_get($lastEntry, 'payload.question.id') === $question->id)
+        ) {
+            return;
         }
 
-        return $session->messages()->create([
-            'question_id' => $question->id,
+        $entry = [
             'sender' => 'bot',
-            'sequence' => $this->nextSequence($session),
-        ]);
+            'at' => Carbon::now()->toIso8601String(),
+            'payload' => [
+                'question' => [
+                    'id' => $question->id,
+                    'title' => $question->title,
+                    'prompt' => $question->prompt,
+                    'type' => $question->type,
+                ],
+                'options' => $question->relationLoaded('options')
+                    ? $question->options->map(fn (ChatbotOption $option) => [
+                        'id' => $option->id,
+                        'label' => $option->label,
+                        'value' => $option->value,
+                    ])->values()->all()
+                    : [],
+            ],
+        ];
+
+        $transcript[] = $entry;
+        $context['transcript'] = $transcript;
+        $session->update(['context' => $context]);
     }
 
     public function logUserMessage(
@@ -40,15 +64,33 @@ class ChatbotFlowService
         ?ChatbotOption $option,
         ?string $inputValue,
         array $payload = []
-    ): ChatbotUserMessage {
-        return $session->messages()->create([
-            'question_id' => $question->id,
-            'option_id' => $option?->id,
+    ): void {
+        $serverPayload = [
+            'question' => [
+                'id' => $question->id,
+                'title' => $question->title,
+                'prompt' => $question->prompt,
+                'type' => $question->type,
+            ],
+            'answer' => [
+                'option_id' => $option?->id,
+                'option_label' => $option?->label,
+                'option_value' => $option?->value,
+                'input_value' => $inputValue,
+            ],
+        ];
+
+        $finalPayload = array_merge($serverPayload, $payload);
+
+        $context = $session->context ?? [];
+        $transcript = $context['transcript'] ?? [];
+        $transcript[] = [
             'sender' => 'user',
-            'input_value' => $inputValue,
-            'payload' => $payload ?: null,
-            'sequence' => $this->nextSequence($session),
-        ]);
+            'at' => Carbon::now()->toIso8601String(),
+            'payload' => $finalPayload,
+        ];
+        $context['transcript'] = $transcript;
+        $session->update(['context' => $context]);
     }
 
     public function determineNextQuestion(ChatbotQuestion $question, ?ChatbotOption $option): ?ChatbotQuestion
@@ -66,6 +108,20 @@ class ChatbotFlowService
 
     public function markSessionCompleted(ChatbotUserSession $session): void
     {
+        $context = $session->context ?? [];
+        $transcript = $context['transcript'] ?? [];
+
+        if (! empty($transcript)) {
+            ChatbotUserMessage::create([
+                'session_id' => $session->id,
+                'sender' => 'system',
+                'payload' => [
+                    'transcript' => $transcript,
+                ],
+                'sequence' => 1,
+            ]);
+        }
+
         $session->update([
             'status' => 'completed',
             'ended_at' => Carbon::now(),
@@ -85,8 +141,12 @@ class ChatbotFlowService
 
     protected function nextSequence(ChatbotUserSession $session): int
     {
-        $lastSequence = $session->messages()->max('sequence');
+        $context = $session->context ?? [];
+        $lastSequence = (int) ($context['sequence'] ?? 0);
+        $next = $lastSequence + 1;
+        $context['sequence'] = $next;
+        $session->update(['context' => $context]);
 
-        return $lastSequence ? $lastSequence + 1 : 1;
+        return $next;
     }
 }

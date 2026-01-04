@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\State;
 use App\Models\UserProfileSubmission;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -12,6 +13,10 @@ class UserDashboardController extends Controller
     public function __invoke(Request $request): View
     {
         $user = $request->user();
+
+        $states = State::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
         $requiresDistributorIntake = $user?->isDistributor() &&
             !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_DISTRIBUTOR);
@@ -35,6 +40,7 @@ $supplierStatus = $user?->isSupplier()
              'supplierStatus' => $supplierStatus,
             'requiresDistributorIntake' => $requiresDistributorIntake,
             'requiresSupplierIntake' => $requiresSupplierIntake,
+            'states' => $states,
         ]);
     }
 }

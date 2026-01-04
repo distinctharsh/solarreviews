@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\State;
 use App\Models\User;
 use App\Models\UserProfileSubmission;
 use App\Notifications\NewProfileSubmissionNotification;
@@ -18,6 +19,10 @@ class UserProfileSubmissionController extends Controller
         $user = $request->user();
 
         abort_unless($user?->isDistributor(), 403);
+
+        $request->validate([
+            'state_id' => ['required', 'exists:states,id'],
+        ]);
 
         $payload = $this->preparePayload($request, UserProfileSubmission::FORM_DISTRIBUTOR);
 
@@ -42,6 +47,10 @@ class UserProfileSubmissionController extends Controller
         $user = $request->user();
 
         abort_unless($user?->isManufacturer() || $user?->isSupplier(), 403);
+
+        $request->validate([
+            'state_id' => ['required', 'exists:states,id'],
+        ]);
 
         $payload = $this->preparePayload($request, UserProfileSubmission::FORM_SUPPLIER);
 
@@ -68,6 +77,10 @@ class UserProfileSubmissionController extends Controller
     {
         $data = $request->except('_token');
         $files = $request->allFiles();
+
+        if (!empty($data['state_id']) && empty($data['state_name'])) {
+            $data['state_name'] = State::query()->whereKey($data['state_id'])->value('name');
+        }
 
         if (empty($files)) {
             return $data;

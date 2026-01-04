@@ -793,11 +793,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Add photos of your system <span>(optional, jpg/png, max 5MB)</span></label>
+                    <label class="form-label">Add photos of your system <span>(optional, jpg/png/svg, max 5MB)</span></label>
                     <div class="upload-box" data-upload-box>
                         <p class="mb-2 fw-semibold text-dark">Add or drop a file here</p>
                         <p class="small text-muted mb-3">Images help your review stand out.</p>
-                        <input type="file" class="form-control" name="photos[]" accept="image/png,image/jpeg" multiple data-photo-input>
+                        <input type="file" class="form-control" name="photos[]" accept="image/png,image/jpeg,image/svg+xml" multiple data-photo-input>
                         <div class="form-check mt-3">
                             <input class="form-check-input" type="checkbox" name="media_terms" id="{{ $modalId }}MediaTerms">
                             <label class="form-check-label" for="{{ $modalId }}MediaTerms">I agree to media upload terms</label>
@@ -873,8 +873,8 @@
                     </div>
 
 
-                @unless($reviewProfile)
-                <div class="subtle-card mt-4">
+                @if(!$reviewProfile)
+                <div class="subtle-card mt-4 subtle-card-main">
                     <h5 class="fw-semibold mb-3">How should we display your review?</h5>
 
                     <div
@@ -945,10 +945,10 @@
                                 class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
                                 name="reviewer_name"
                                 placeholder="e.g., Priya M."
-                                value="{{ old('reviewer_name', $reviewProfile['name'] ?? '') }}"
+                                value="{{ old('reviewer_name', $reviewProfile['name'] ?? (optional(auth()->user())->name ?? '')) }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-name
-                                data-profile-default="{{ $reviewProfile['name'] ?? '' }}"
+                                data-profile-default="{{ $reviewProfile['name'] ?? (optional(auth()->user())->name ?? '') }}"
                                 @unless($reviewProfile) required @endunless
                             >
                         </div>
@@ -960,10 +960,10 @@
                                     class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
                                     name="email"
                                     placeholder="name@email.com"
-                                    value="{{ old('email', $reviewProfile['email'] ?? '') }}"
+                                    value="{{ old('email', $reviewProfile['email'] ?? (optional(auth()->user())->email ?? '')) }}"
                                     {{ $reviewProfile ? 'readonly' : '' }}
                                     data-identity-email
-                                    data-profile-default="{{ $reviewProfile['email'] ?? '' }}"
+                                    data-profile-default="{{ $reviewProfile['email'] ?? (optional(auth()->user())->email ?? '') }}"
                                     data-otp-email-input
                                     @unless($reviewProfile) required @endunless
                                 >
@@ -1010,7 +1010,10 @@
                         </div>
                     </div>
                 </div>
-                @endunless
+                @else
+                    <input type="hidden" name="reviewer_name" value="{{ $reviewProfile['name'] }}">
+                    <input type="hidden" name="email" value="{{ $reviewProfile['email'] }}">
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-cancel cancel-btn">Cancel</button>
@@ -1689,23 +1692,62 @@
                         'Accept': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                if (data.redirect) {
-                    // Store the success message and company name in session storage
-                    sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
-                    if (data.company_name) {
-                        sessionStorage.setItem('reviewCompanyName', data.company_name);
+                .then(async response => {
+                    const contentType = response.headers.get('content-type') || '';
+                    const payload = contentType.includes('application/json')
+                        ? await response.json()
+                        : await response.text();
+
+                    if (!response.ok) {
+                        const error = new Error('Review submission failed');
+                        error.status = response.status;
+                        error.payload = payload;
+                        throw error;
                     }
-                    window.location.href = data.redirect;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error', 'Failed to submit review. Please try again.', 'error');
-                submitReviewBtn.disabled = false;
-                submitReviewBtn.innerHTML = 'Submit Review';
-            });
+
+                    return payload;
+                })
+                .then(data => {
+                    if (data && data.redirect) {
+                        // Store the success message and company name in session storage
+                        sessionStorage.setItem('showSuccessMessage', data.message || 'Review submitted successfully!');
+                        if (data.company_name) {
+                            sessionStorage.setItem('reviewCompanyName', data.company_name);
+                        }
+                        window.location.href = data.redirect;
+                        return;
+                    }
+
+                    const fallbackMessage = (data && data.message) ? data.message : 'Failed to submit review. Please try again.';
+                    Swal.fire('Error', fallbackMessage, 'error');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+
+                    const payload = error && error.payload ? error.payload : null;
+                    let message = 'Failed to submit review. Please try again.';
+
+                    if (payload && typeof payload === 'object') {
+                        if (payload.errors && typeof payload.errors === 'object') {
+                            const messages = Object.values(payload.errors).flat().filter(Boolean);
+                            if (messages.length) {
+                                message = messages.join('<br>');
+                            }
+                        } else if (payload.message) {
+                            message = payload.message;
+                        }
+                    }
+
+                    Swal.fire({
+                        title: 'Error',
+                        html: message,
+                        icon: 'error'
+                    });
+                })
+                .finally(() => {
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = 'Submit Review';
+                });
             });
         }
 

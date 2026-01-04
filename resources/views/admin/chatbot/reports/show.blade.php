@@ -4,10 +4,10 @@
 
 @section('content')
 <div class="content-header">
-    <div class="content-header-left">
+    <!-- <div class="content-header-left">
         <h1>Conversation #{{ $session->id }}</h1>
         <p class="text-muted">Visitor {{ $session->visitor_uuid ?? 'Anonymous' }} · {{ ucfirst($session->status) }}</p>
-    </div>
+    </div> -->
     <div class="content-header-right">
         <a href="{{ route('admin.chatbot.reports.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Back to Logs
@@ -16,63 +16,55 @@
 </div>
 
 <div class="row g-3">
-    <div class="col-lg-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Session Summary</h5>
-                <dl class="row">
-                    <dt class="col-5">Visitor UUID</dt>
-                    <dd class="col-7">{{ $session->visitor_uuid ?? '—' }}</dd>
-
-                    <dt class="col-5">Source</dt>
-                    <dd class="col-7">{{ $session->source ?? '—' }}</dd>
-
-                    <dt class="col-5">Status</dt>
-                    <dd class="col-7"><span class="badge bg-light text-dark">{{ ucfirst($session->status) }}</span></dd>
-
-                    <dt class="col-5">Messages</dt>
-                    <dd class="col-7">{{ $session->messages_count }}</dd>
-
-                    <dt class="col-5">Started</dt>
-                    <dd class="col-7">{{ optional($session->started_at)->format('d M Y, h:i A') ?: '—' }}</dd>
-
-                    <dt class="col-5">Ended</dt>
-                    <dd class="col-7">{{ optional($session->ended_at)->format('d M Y, h:i A') ?: '—' }}</dd>
-                </dl>
-
-                @if($session->context)
-                    <h6 class="mt-4">Context</h6>
-                    <pre class="bg-light p-3 rounded small">{{ json_encode($session->context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-                @endif
-            </div>
-        </div>
-    </div>
     <div class="col-lg-8">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Conversation Transcript</h5>
-                @if($session->messages->count())
+                <h5 class="card-title">Conversation Chat</h5>
+                @php
+                    $transcript = data_get($session->context, 'transcript', []);
+                    $transcriptCount = is_array($transcript) ? count($transcript) : 0;
+                @endphp
+
+                @if($transcriptCount)
                     <div class="chat-log">
-                        @foreach($session->messages as $message)
-                            <div class="chat-entry {{ $message->sender === 'bot' ? 'bot' : 'user' }}">
+                        @foreach($transcript as $entry)
+                            @php
+                                $sender = $entry['sender'] ?? 'user';
+                                $payload = $entry['payload'] ?? [];
+                                $time = $entry['at'] ?? null;
+                                $botPrompt = data_get($payload, 'question.prompt');
+                                $selectedLabel = data_get($payload, 'answer.option_label');
+                                $selectedValue = data_get($payload, 'answer.option_value');
+                                $inputValue = data_get($payload, 'answer.input_value');
+                            @endphp
+
+                            <div class="chat-entry {{ $sender === 'bot' ? 'bot' : 'user' }}">
                                 <div class="chat-meta">
-                                    <span class="chat-sender">{{ ucfirst($message->sender) }}</span>
-                                    <span class="chat-time">{{ $message->created_at?->format('d M Y, h:i A') }}</span>
+                                    <span class="chat-sender">{{ ucfirst($sender) }}</span>
+                                    <span class="chat-time">{{ $time ? \Carbon\Carbon::parse($time)->format('d M Y, h:i A') : '—' }}</span>
                                 </div>
                                 <div class="chat-content">
-                                    @if($message->sender === 'bot')
-                                        <p class="mb-1">{{ $message->question?->prompt }}</p>
+                                    @if($sender === 'bot')
+                                        <p class="mb-0">{{ $botPrompt ?: '—' }}</p>
                                     @else
-                                        @if($message->option)
-                                            <p class="mb-1"><strong>Selected:</strong> {{ $message->option->label }}</p>
+                                        @if($selectedLabel || $selectedValue)
+                                            <p class="mb-1"><strong>Selected:</strong> {{ $selectedLabel ?: $selectedValue }}</p>
                                         @endif
-                                        @if($message->input_value)
-                                            <p class="mb-0"><strong>Input:</strong> {{ $message->input_value }}</p>
+                                        @if($inputValue)
+                                            <p class="mb-0"><strong>Input:</strong> {{ $inputValue }}</p>
+                                        @endif
+
+                                        @if(!($selectedLabel || $selectedValue || $inputValue))
+                                            <p class="mb-0">—</p>
                                         @endif
                                     @endif
-                                    @if($message->payload)
-                                        <pre class="bg-white border rounded small p-2 mt-2">{{ json_encode($message->payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-                                    @endif
+
+                                    <!-- @if(!empty($payload))
+                                        <details class="payload-details mt-2">
+                                            <summary class="payload-summary">View raw payload</summary>
+                                            <pre class="bg-white border rounded small p-2 mt-2 mb-0">{{ json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+                                        </details>
+                                    @endif -->
                                 </div>
                             </div>
                         @endforeach
@@ -123,6 +115,16 @@
 }
 pre {
     white-space: pre-wrap;
+}
+
+.payload-details {
+    user-select: text;
+}
+
+.payload-summary {
+    cursor: pointer;
+    color: #475569;
+    font-size: 0.85rem;
 }
 </style>
 @endpush

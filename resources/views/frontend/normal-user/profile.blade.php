@@ -403,155 +403,233 @@
 
 
       .tp-review-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
 
 
 
 
-.company-info {
-    margin-top: 1rem;
-    padding: 1rem;
-    border-top: 1px solid #e4dfd6;
-    background-color: #f7f5f0;
-}
+        .company-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-top: 1px solid #e4dfd6;
+            background-color: #f7f5f0;
+        }
 
-.company-name {
-    font-weight: 600;
-    font-size: 1rem;
-}
+        .company-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
 
-.company-website {
-    font-size: 0.9rem;
-    color: #6b7280;
-}
+        .company-website {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
 
-.company-website a {
-    color: #5325c7;
-    text-decoration: none;
-}
+        .company-website a {
+            color: #5325c7;
+            text-decoration: none;
+        }
 
-.company-website a:hover {
-    text-decoration: underline;
-}
-
-
-
-
-
-
-
-
-
-
-.review-card,
-.tp-review-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.review-card:hover,
-.tp-review-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 25px 55px rgba(17, 24, 39, 0.08);
-}
+        .company-website a:hover {
+            text-decoration: underline;
+        }
 
 
 
 
 
 
-.company-info {
-    margin-top: 1.25rem;
-    padding: 0.9rem 1rem;
-    border-radius: 12px;
-    background: #f9fafb;
-    border: 1px dashed #e5e7eb;
-}
-
-.company-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-}
-
-.company-name a {
-    color: #5325c7;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.company-name a:hover {
-    text-decoration: underline;
-}
-
-.company-website {
-    margin-top: 0.35rem;
-    font-size: 0.8rem;
-}
 
 
 
-.badge.bg-warning {
-    background: #fef3c7 !important;
-    color: #92400e !important;
-    font-size: 0.7rem;
-    font-weight: 600;
-    border-radius: 999px;
-    padding: 0.25rem 0.55rem;
-}
+
+        .review-card,
+        .tp-review-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .review-card:hover,
+        .tp-review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 55px rgba(17, 24, 39, 0.08);
+        }
+
+        .review-media-strip {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .review-media-thumb {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 10px;
+            padding: 0;
+            width: 64px;
+            height: 64px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .review-media-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .review-media-more {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .review-image-lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1.5rem;
+        }
+
+        .review-image-lightbox.is-visible {
+            display: flex;
+        }
+
+        .review-image-lightbox-inner {
+            position: relative;
+            max-width: min(980px, 100%);
+            max-height: min(80vh, 100%);
+        }
+
+        .review-image-lightbox-inner img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 14px;
+            display: block;
+            background: #fff;
+        }
+
+        .review-image-lightbox-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: none;
+            background: #ffffff;
+            color: #111827;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 12px 25px rgba(15, 23, 42, 0.25);
+        }
 
 
 
-.review-company {
-    line-height: 1.4;
-}
-
-.review-company a {
-    color: var(--accent);
-    font-weight: 600;
-}
-
-.review-company a:hover {
-    text-decoration: underline;
-}
-.rating-stars,
-.tp-stars {
-    letter-spacing: 0.05rem;
-}
-
-
-.review-actions button,
-.review-actions a,
-.tp-action {
-    padding: 0.25rem 0.4rem;
-    border-radius: 6px;
-}
-
-.review-actions button:hover,
-.review-actions a:hover,
-.tp-action:hover {
-    background: #f3f4f6;
-}
 
 
 
-#drafts .tp-review-card {
-    border-style: dashed;
-    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
-}
+        .company-info {
+            margin-top: 1.25rem;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px dashed #e5e7eb;
+        }
+
+        .company-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .company-name a {
+            color: #5325c7;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .company-name a:hover {
+            text-decoration: underline;
+        }
+
+        .company-website {
+            margin-top: 0.35rem;
+            font-size: 0.8rem;
+        }
 
 
-.section-title {
-    letter-spacing: -0.01em;
-}
 
-.section-description {
-    font-weight: 500;
-}
+        .badge.bg-warning {
+            background: #fef3c7 !important;
+            color: #92400e !important;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 0.25rem 0.55rem;
+        }
+
+
+
+        .review-company {
+            line-height: 1.4;
+        }
+
+        .review-company a {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .review-company a:hover {
+            text-decoration: underline;
+        }
+        .rating-stars,
+        .tp-stars {
+            letter-spacing: 0.05rem;
+        }
+
+
+        .review-actions button,
+        .review-actions a,
+        .tp-action {
+            padding: 0.25rem 0.4rem;
+            border-radius: 6px;
+        }
+
+        .review-actions button:hover,
+        .review-actions a:hover,
+        .tp-action:hover {
+            background: #f3f4f6;
+        }
+
+
+
+        #drafts .tp-review-card {
+            border-style: dashed;
+            background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+        }
+
+
+        .section-title {
+            letter-spacing: -0.01em;
+        }
+
+        .section-description {
+            font-weight: 500;
+        }
 
 
     </style>
@@ -661,6 +739,28 @@
     <div class="tp-text">
         {{ Str::limit(strip_tags($draft->review_text), 180) }}
     </div>
+
+    @php
+        $draftMedia = collect($draft->media_paths ?? [])->filter()->values();
+        if ($draftMedia->isEmpty() && !empty($draft->primary_media_path)) {
+            $draftMedia = collect([$draft->primary_media_path]);
+        }
+    @endphp
+    @if($draftMedia->isNotEmpty())
+        <div class="review-media-strip" data-review-media-strip>
+            @foreach($draftMedia->take(4) as $media)
+                @php
+                    $mediaUrl = preg_replace('~(?<!:)/{2,}~', '/', $media);
+                @endphp
+                <button type="button" class="review-media-thumb" data-review-image="{{ $mediaUrl }}">
+                    <img src="{{ $mediaUrl }}" alt="Review image">
+                </button>
+            @endforeach
+            @if($draftMedia->count() > 4)
+                <span class="review-media-more">+{{ $draftMedia->count() - 4 }}</span>
+            @endif
+        </div>
+    @endif
     
     
     
@@ -781,6 +881,28 @@
                     <div class="review-title">{{ $review->review_title ?? 'Review' }}</div>
                     <p class="review-text">{{ Str::limit(strip_tags($review->review_text), 420) }}</p>
 
+                    @php
+                        $publishedMedia = collect($review->media_paths ?? [])->filter()->values();
+                        if ($publishedMedia->isEmpty() && !empty($review->primary_media_path)) {
+                            $publishedMedia = collect([$review->primary_media_path]);
+                        }
+                    @endphp
+                    @if($publishedMedia->isNotEmpty())
+                        <div class="review-media-strip" data-review-media-strip>
+                            @foreach($publishedMedia->take(4) as $media)
+                                @php
+                                    $mediaUrl = preg_replace('~(?<!:)/{2,}~', '/', $media);
+                                @endphp
+                                <button type="button" class="review-media-thumb" data-review-image="{{ $mediaUrl }}">
+                                    <img src="{{ $mediaUrl }}" alt="Review image">
+                                </button>
+                            @endforeach
+                            @if($publishedMedia->count() > 4)
+                                <span class="review-media-more">+{{ $publishedMedia->count() - 4 }}</span>
+                            @endif
+                        </div>
+                    @endif
+
                     <div class="review-meta-tags">
                         <span class="review-tag">{{ optional($review->review_date ?? $review->created_at)->format('F j, Y') }}</span>
                         <span class="review-tag">{{ $review->source ? Str::title($review->source) : 'Unprompted review' }}</span>
@@ -838,6 +960,13 @@
 @include('components.frontend.chatbot-widget')
 @include('components.frontend.footer')
 
+<div id="reviewImageLightbox" class="review-image-lightbox" aria-hidden="true">
+    <div class="review-image-lightbox-inner">
+        <button type="button" class="review-image-lightbox-close" data-review-image-close>&times;</button>
+        <img src="" alt="Review image preview" data-review-image-preview>
+    </div>
+</div>
+
 <button type="button" id="profileReviewModalTrigger" data-review-modal-trigger="profileReviewModal" style="display: none;"></button>
 
 <x-frontend.review-modal
@@ -848,6 +977,48 @@
     :companies="collect()"
     :allow-company-selection="false"
 />
+
+<script>
+    (function () {
+        const lightbox = document.getElementById('reviewImageLightbox');
+        const preview = lightbox ? lightbox.querySelector('[data-review-image-preview]') : null;
+        const closeBtn = lightbox ? lightbox.querySelector('[data-review-image-close]') : null;
+
+        const close = () => {
+            if (!lightbox) return;
+            lightbox.classList.remove('is-visible');
+            lightbox.setAttribute('aria-hidden', 'true');
+            if (preview) preview.removeAttribute('src');
+        };
+
+        const open = (src) => {
+            if (!lightbox || !preview || !src) return;
+            preview.setAttribute('src', src);
+            lightbox.classList.add('is-visible');
+            lightbox.setAttribute('aria-hidden', 'false');
+        };
+
+        document.addEventListener('click', (event) => {
+            const thumb = event.target.closest('[data-review-image]');
+            if (thumb) {
+                event.preventDefault();
+                open(thumb.getAttribute('data-review-image'));
+                return;
+            }
+
+            if (event.target === lightbox || event.target === closeBtn) {
+                event.preventDefault();
+                close();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                close();
+            }
+        });
+    })();
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

@@ -54,28 +54,34 @@
 <div class="card">
     <div class="card-body">
         @if($sessions->count())
-            <div class="table-responsive">
-                <table class="table align-middle">
+            <div class="table-responsive chatbot-reports-table-responsive">
+                <table class="table align-middle chatbot-reports-table">
                     <thead>
                         <tr>
                             <th width="60">ID</th>
-                            <th>Visitor UUID</th>
+                            <th>User</th>
                             <th>Source</th>
                             <th>Status</th>
-                            <th>Messages</th>
-                            <th>Started</th>
-                            <th>Ended</th>
+                            <th width="90">Messages</th>
+                            <th width="170">Started</th>
+                            <th width="170">Ended</th>
                             <th width="120">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($sessions as $session)
+                            @php
+                                $transcript = data_get($session->context, 'transcript', []);
+                                $transcriptCount = is_array($transcript) ? count($transcript) : 0;
+                            @endphp
                             <tr>
                                 <td>{{ $session->id }}</td>
-                                <td>{{ $session->visitor_uuid ?? '—' }}</td>
-                                <td>{{ $session->source ?? '—' }}</td>
-                                <td><span class="badge bg-light text-dark text-uppercase">{{ $session->status }}</span></td>
-                                <td>{{ $session->messages_count }}</td>
+                                <td class="uuid-cell">{{ $session->user_id ? ($userNames[$session->user_id] ?? 'Guest User') : 'Guest User' }}</td>
+                                <td class="source-cell">{{ $session->source ?? '—' }}</td>
+                                <td>
+                                    <span class="badge bg-light text-dark text-uppercase">{{ $session->status ?? '—' }}</span>
+                                </td>
+                                <td>{{ $transcriptCount }}</td>
                                 <td>{{ optional($session->started_at)->format('d M Y, h:i A') ?: '—' }}</td>
                                 <td>{{ optional($session->ended_at)->format('d M Y, h:i A') ?: '—' }}</td>
                                 <td>
@@ -94,7 +100,7 @@
         @else
             <div class="empty-state">
                 <i class="fas fa-comments"></i>
-                <h3>No Sessions Yet</h3>
+                <h3>No Conversations Yet</h3>
                 <p>Once users start interacting with the chatbot, their conversations will appear here.</p>
             </div>
         @endif
@@ -106,6 +112,41 @@
 
 @push('styles')
 <style>
+/* Keep this page from introducing horizontal scroll */
+.chatbot-reports-table-responsive {
+    overflow-x: hidden;
+}
+
+.chatbot-reports-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.chatbot-reports-table th,
+.chatbot-reports-table td {
+    vertical-align: middle;
+}
+
+.uuid-cell,
+.source-cell,
+.message-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.uuid-cell {
+    max-width: 220px;
+}
+
+.source-cell {
+    max-width: 160px;
+}
+
+.message-cell {
+    max-width: 420px;      /* aap kam / zyada kar sakte ho */
+}
+
 /* Chatbot filters layout */
 .chatbot-filters {
     display: flex;

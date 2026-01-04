@@ -102,7 +102,8 @@ class ChatbotController extends Controller
 
     protected function getOrCreateSession(Request $request): ChatbotUserSession
     {
-        $visitorUuid = $request->cookie('chatbot_visitor_uuid') ?: (string) Str::uuid();
+        $existingCookie = $request->cookie('chatbot_visitor_uuid');
+        $visitorUuid = $existingCookie ?: (string) Str::uuid();
 
         $session = ChatbotUserSession::firstOrCreate(
             [
@@ -115,7 +116,7 @@ class ChatbotController extends Controller
             ]
         );
 
-        if ($session->wasRecentlyCreated) {
+        if (! $existingCookie) {
             cookie()->queue(cookie('chatbot_visitor_uuid', $visitorUuid, 60 * 24 * 30));
         }
 

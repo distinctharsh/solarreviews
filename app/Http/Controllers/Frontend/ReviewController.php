@@ -144,6 +144,9 @@ class ReviewController extends Controller
     {
         $requiresManualIdentity = $this->shouldRequireManualIdentity($request);
 
+        $sessionNormalUserId = Session::get('normal_user_id');
+        $sessionNormalUser = $sessionNormalUserId ? NormalUser::find($sessionNormalUserId) : null;
+
         // Handle manual company case
         $companyId = $request->input('company_id');
         $isManualCompany = $companyId === '0' || $companyId === 0 || empty($companyId);
@@ -177,14 +180,40 @@ class ReviewController extends Controller
             ],
             'state_id' => 'nullable|exists:states,id',
             'category_id' => 'nullable|exists:categories,id',
-            'reviewer_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'reviewer_name' => ($sessionNormalUser ? 'nullable' : 'required') . '|string|max:255',
+            'email' => ($sessionNormalUser ? 'nullable' : 'required') . '|email|max:255',
             'rating' => 'required|integer|min:1|max:5',
             'review_title' => 'nullable|string|max:255',
             'review_text' => 'required|string|min:1',
             'metrics' => 'nullable|array',
             'metrics.*' => 'nullable|integer|min:1|max:5',
-            'photos.*' => 'nullable|image|max:5120',
+            'photos' => 'nullable|array',
+            'photos.*' => [
+                'nullable',
+                'file',
+                'max:5120',
+                function ($attribute, $value, $fail) {
+                    $extension = strtolower((string) $value->getClientOriginalExtension());
+                    $mime = strtolower((string) $value->getMimeType());
+
+                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+                    $allowedMimes = [
+                        'image/jpeg',
+                        'image/pjpeg',
+                        'image/png',
+                        'image/x-png',
+                        'image/svg+xml',
+                        'image/svg',
+                    ];
+
+                    $extensionAllowed = $extension !== '' && in_array($extension, $allowedExtensions, true);
+                    $mimeAllowed = $mime !== '' && in_array($mime, $allowedMimes, true);
+
+                    if (!$extensionAllowed && !$mimeAllowed) {
+                        $fail('The ' . $attribute . ' field must be a file of type: ' . implode(', ', $allowedExtensions) . '.');
+                    }
+                },
+            ],
             'system_size' => 'nullable|numeric|min:0',
             'system_price' => 'nullable|numeric|min:0',
             'year_installed' => 'nullable|integer|min:2000|max:' . now()->year,
@@ -193,6 +222,16 @@ class ReviewController extends Controller
             'user_state' => ($requiresManualIdentity ? 'required' : 'nullable') . '|exists:states,id',
             'user_city' => ($requiresManualIdentity ? 'required' : 'nullable') . '|string|max:255',
         ]);
+
+        if ($sessionNormalUser) {
+            if (empty($validated['reviewer_name'])) {
+                $validated['reviewer_name'] = $sessionNormalUser->name;
+            }
+
+            if (empty($validated['email'])) {
+                $validated['email'] = $sessionNormalUser->email;
+            }
+        }
 
         try {
             // Start database transaction
@@ -303,7 +342,12 @@ class ReviewController extends Controller
             ->map(function ($file) {
                 $hashPath = Str::random(40) . '.' . $file->getClientOriginalExtension();
                 $path = $file->storeAs('reviews', $hashPath, 'public');
-                return $path ? Storage::disk('public')->url($path) : null;
+                if (!$path) {
+                    return null;
+                }
+
+                $url = Storage::disk('public')->url($path);
+                return preg_replace('~(?<!:)/{2,}~', '/', $url);
             })
             ->filter()
             ->values();

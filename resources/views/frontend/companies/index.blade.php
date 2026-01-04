@@ -525,7 +525,17 @@
                                     <p class="text-muted mb-0 text-16">Click any company name to view the full profile.</p>
                                 </div>
                                 
-                                    <div class="search-box">
+                                    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+
+                                        <select id="companySortSelect" class="form-select" style="max-width: 220px;" onchange="applySort()">
+                                            <option value="">Sort: Default</option>
+                                            <option value="rating_desc" selected>Rating (High to Low)</option>
+                                            <option value="rating_asc">Rating (Low to High)</option>
+                                            <option value="reviews_desc">Reviews (High to Low)</option>
+                                            <option value="reviews_asc">Reviews (Low to High)</option>
+                                        </select>
+
+                                        <div class="search-box">
   <i class="fas fa-search search-icon ml-1"></i>
   <input 
     type="text" 
@@ -535,6 +545,8 @@
     oninput="filterGlobal()"
   >
 </div>
+
+                                    </div>
 
                                 <!--<input type="text" class="search-input" placeholder="Search companies" oninput="filterCompanies(this.value)">-->
                             </div>
@@ -552,10 +564,17 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($companies as $company)
-                                            <tr class="company-row" data-name="{{ \Illuminate\Support\Str::lower($company->owner_name ?? $company->name ?? '') }}" data-state-id="{{ $company->state_id }}">
+                                            <tr class="company-row"
+                                                data-name="{{ \Illuminate\Support\Str::lower($company->owner_name ?? $company->name ?? '') }}"
+                                                data-state-id="{{ $company->state_id }}"
+                                                data-rating="{{ (float) $company->avg_rating }}"
+                                                data-reviews="{{ (int) $company->total_reviews }}">
                                                 <td>
                                                     <a href="{{ route('companies.show', $company->slug) }}" class="company-name text-decoration-none">
                                                         {{ $company->owner_name ?? $company->name ?? 'Company' }}
+                                                        @if($company->state?->name)
+                                                            <span class="text-muted">({{ $company->state->name }})</span>
+                                                        @endif
                                                     </a>
                                                 </td>
                                                 <td>
@@ -592,6 +611,41 @@
 </div>
 
 <script>
+    function getVisibleCompanyRows() {
+        const rows = Array.from(document.querySelectorAll('#companiesTable tbody tr.company-row'));
+        return rows.filter(row => row.style.display !== 'none');
+    }
+
+    function applySort() {
+        const sortValue = document.getElementById('companySortSelect')?.value || '';
+        const tbody = document.querySelector('#companiesTable tbody');
+        if (!tbody) return;
+
+        const rows = getVisibleCompanyRows();
+
+        if (!sortValue) {
+            return;
+        }
+
+        const [field, direction] = sortValue.split('_');
+        const multiplier = direction === 'asc' ? 1 : -1;
+
+        rows.sort((a, b) => {
+            const aVal = parseFloat(a.getAttribute(field === 'rating' ? 'data-rating' : 'data-reviews') || '0');
+            const bVal = parseFloat(b.getAttribute(field === 'rating' ? 'data-rating' : 'data-reviews') || '0');
+
+            if (aVal === bVal) {
+                const aName = (a.getAttribute('data-name') || '').toString();
+                const bName = (b.getAttribute('data-name') || '').toString();
+                return aName.localeCompare(bName);
+            }
+
+            return (aVal - bVal) * multiplier;
+        });
+
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
     function setStateFilter(stateId) {
         const stateSelect = document.getElementById('stateSelect');
         if (!stateSelect) return;
@@ -623,7 +677,13 @@
                 row.style.display = 'none';
             }
         });
+
+        applySort();
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        applySort();
+    });
 </script>
 </body>
 </html>

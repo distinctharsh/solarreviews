@@ -1762,8 +1762,8 @@
 
 
         .stats-section {
-            padding: 70px 0 16px 0;
-            margin: 60px 0;
+            padding: 70px 0 0 0;
+            margin: 60px 0 0 0;
             background: #fff;
         }
 
@@ -1884,6 +1884,7 @@
                 flex-direction: column;
                 text-align: center;
                 gap: 16px;
+                margin-top: 0px !important;
             }
 
             .cta-content {
@@ -1928,7 +1929,7 @@
 
         /* ================= SECTION ================= */
         .bank-section {
-            padding: 70px 0 70px 0;
+            padding: 80px 0;
         }
 
         /* ================= HEADER ================= */
@@ -2420,7 +2421,7 @@
     </section>
 
     <div class="container-custom">
-        <div class="cta-wrapper mb-4">
+        <div class="cta-wrapper" style="margin-top: 80px;">
             <div class="cta-content">
                 <h3>Looking to grow your business?</h3>
                 <p>Strengthen your reputation with reviews on Solar Reviews.</p>
@@ -2506,7 +2507,7 @@
                             <h3>{{ $company['name'] }}</h3>
 
                             @if(!empty($company['website_url']))
-                                <a class="site-link" href="{{ $company['website_url'] }}" target="_blank" rel="noopener">
+                                <a class="site-link" target="_blank" rel="noopener">
                                     {{ $company['website_host'] ?? $company['website_url'] }}
                                 </a>
                             @endif

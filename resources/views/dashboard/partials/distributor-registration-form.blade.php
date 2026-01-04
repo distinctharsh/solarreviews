@@ -39,6 +39,15 @@
                     <input type="text" name="company_name" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400" required>
                 </div>
                 <div>
+                    <label class="{{ $labelClass }}">State*</label>
+                    <select name="state_id" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                        <option value="">Select State</option>
+                        @foreach(($states ?? collect()) as $state)
+                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
                     <label class="{{ $labelClass }}">Business Type</label>
                     <select name="business_type" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400" required>
                         <option value="">Select</option>

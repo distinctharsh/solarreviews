@@ -30,6 +30,7 @@ use App\Models\NormalUser;
 use App\Models\State;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
+use App\Http\Controllers\Admin\GetQuoteController as AdminGetQuoteController;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -435,6 +436,10 @@ Route::prefix('admin')
     Route::get('profile-submissions', [AdminProfileSubmissionController::class, 'index'])->name('profile-submissions.index');
     Route::get('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'show'])->name('profile-submissions.show');
     Route::patch('profile-submissions/{submission}', [AdminProfileSubmissionController::class, 'update'])->name('profile-submissions.update');
+
+    // Get Quote requests
+    Route::get('get-quotes', [AdminGetQuoteController::class, 'index'])->name('get-quotes.index');
+    Route::get('get-quotes/{quote}', [AdminGetQuoteController::class, 'show'])->name('get-quotes.show');
 
 });
 

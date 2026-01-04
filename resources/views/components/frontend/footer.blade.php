@@ -409,3 +409,5 @@
         }
     });
 </script>
+
+@include('components.frontend.social-proof-toast')

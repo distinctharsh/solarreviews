@@ -384,13 +384,14 @@
             loading: false,
             error: null,
             sessionId: null,
+            bootstrapped: false,
             currentQuestion: null,
             messages: [],
             inputValue: '',
             completed: false,
             csrfToken: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
             init() {
-                this.bootstrap();
+                // Delay bootstrap until the user explicitly opens the chatbot.
             },
             get inputType() {
                 const typeMap = {
@@ -405,10 +406,15 @@
             toggle() {
                 this.isOpen = !this.isOpen;
                 if (this.isOpen) {
+                    if (!this.bootstrapped) {
+                        this.bootstrap();
+                    }
                     this.scrollToEnd();
                 }
             },
             async bootstrap() {
+                if (this.bootstrapped) return;
+
                 this.loading = true;
                 this.error = null;
                 try {
@@ -421,6 +427,7 @@
                     const data = await response.json();
                     this.sessionId = data.session_id;
                     this.setQuestion(data.question);
+                    this.bootstrapped = true;
                 } catch (err) {
                     this.error = err.message || 'Something went wrong.';
                 } finally {

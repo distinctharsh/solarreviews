@@ -32,7 +32,9 @@
                     </div>
                 </div>
             </div>
+            @if(!$isBusinessUser)
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
+            @endif
             @if($normalUserSession)
                 @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
                 <div class="mega-nav-item position-relative">
@@ -128,10 +130,11 @@
                     </li>
                 @endauth
             @endif
+            @if(!$isBusinessUser)
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             </li>
-
+            @endif
             @if($normalUserSession)
                 <li class="nav-item">
                     <a class="nav-link fw-medium py-3 nav-normal-login w-100 text-start" href="{{ route('normal-user.reviews.index') }}">

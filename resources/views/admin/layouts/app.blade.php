@@ -67,6 +67,13 @@
                     Profile Submissions
                 </a>
 
+                <div class="sidebar-section-title">Leads</div>
+
+                <a href="{{ route('admin.get-quotes.index') }}" class="sidebar-link {{ request()->routeIs('admin.get-quotes.*') ? 'active' : '' }}">
+                    <i class="fas fa-file-signature"></i>
+                    Get Quotes
+                </a>
+
                 <div class="sidebar-section-title">Chatbot</div>
 
                 <a href="{{ route('admin.chatbot.questions.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.questions.*') ? 'active' : '' }}">

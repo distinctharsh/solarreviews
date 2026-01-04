@@ -65,6 +65,31 @@
                     <input type="text" id="search" name="search" class="form-control"
                            value="{{ $filters['search'] }}" placeholder="Title or comment keywords">
                 </div>
+
+                <div class="form-group">
+                    <label for="date_from">From Date</label>
+                    <input
+                        type="date"
+                        id="date_from"
+                        name="date_from"
+                        class="form-control"
+                        value="{{ $filters['date_from'] }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="date_to">To Date</label>
+                    <input
+                        type="date"
+                        id="date_to"
+                        name="date_to"
+                        class="form-control"
+                        value="{{ $filters['date_to'] }}"
+                    >
+                </div>
+
+
+
                 <div class="form-group align-self-end mt-5">
                     <button class="btn btn-primary"><i class="fas fa-filter"></i> Apply</button>
                     <a href="{{ route('admin.reviews.index') }}" class="btn btn-link" style="margin-top: 25px;">Reset</a>
@@ -93,8 +118,22 @@
                         @forelse($companyReviews as $review)
                             <tr>
                                 <td>
-                                    <strong>{{ $review->company->owner_name ?? $review->company->name ?? 'Company' }}</strong>
-                                    <div class="text-muted small">#{{ $review->company_id }}</div>
+                                    @php
+                                        $companyName = $review->company_id
+                                            ? (optional($review->company)->owner_name ?? 'Company')
+                                            : ($review->manual_company_name ?? 'Company');
+                                    @endphp
+                                    <strong>{{ $companyName }}</strong>
+                                    @if($review->company_id)
+                                        <div class="text-muted small">#{{ $review->company_id }}</div>
+                                        @if(optional($review->company)->website_url)
+                                            <div class="text-muted small">{{ $review->company->website_url }}</div>
+                                        @endif
+                                    @else
+                                        @if($review->company_url)
+                                            <div class="text-muted small">{{ $review->company_url }}</div>
+                                        @endif
+                                    @endif
                                 </td>
                                 <td>
                                     <div>{{ $review->reviewer_name ?? 'Anonymous' }}</div>

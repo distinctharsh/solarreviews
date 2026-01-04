@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChatbotUserSession;
+use App\Models\NormalUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -12,7 +14,6 @@ class ChatbotReportController extends Controller
     public function index(Request $request): View
     {
         $query = ChatbotUserSession::query()
-            ->withCount('messages')
             ->latest('started_at')
             ->latest();
 
@@ -29,12 +30,26 @@ class ChatbotReportController extends Controller
 
         $sessions = $query->paginate(20)->withQueryString();
 
+        $userIds = $sessions->pluck('user_id')->filter()->unique()->values();
+        $businessUsers = $userIds->isNotEmpty()
+            ? User::query()->whereIn('id', $userIds)->pluck('name', 'id')
+            : collect();
+        $normalUsers = $userIds->isNotEmpty()
+            ? NormalUser::query()->whereIn('id', $userIds)->pluck('name', 'id')
+            : collect();
+
+        $userNames = $userIds->mapWithKeys(function ($id) use ($businessUsers, $normalUsers) {
+            $name = $businessUsers->get($id) ?? $normalUsers->get($id);
+
+            return [$id => $name ?: 'Guest User'];
+        });
+
         $statusOptions = ChatbotUserSession::query()
             ->select('status')
             ->distinct()
             ->pluck('status');
 
-        return view('admin.chatbot.reports.index', compact('sessions', 'statusOptions'));
+        return view('admin.chatbot.reports.index', compact('sessions', 'statusOptions', 'userNames'));
     }
 
     public function show(ChatbotUserSession $report): View

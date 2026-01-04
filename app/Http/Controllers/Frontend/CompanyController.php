@@ -39,6 +39,7 @@ class CompanyController extends Controller
             ->leftJoinSub($reviewStats, 'review_stats', function ($join) {
                 $join->on('review_stats.company_id', '=', 'companies.id');
             })
+            ->with('state')
             ->where('is_active', true)
             ->orderBy('companies.owner_name')
             ->get();
@@ -218,12 +219,82 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        $company->loadMissing('ratingSummary');
+        // Get approved company reviews
+        $reviews = $company->companyReviews()
+            ->with('normalUser')
+            ->select([
+                'id', 'reviewer_name', 'normal_user_id', 'rating', 'review_text as review', 'review_title',
+                'created_at', 'sales_process_rating', 'price_charged_as_quoted_rating',
+                'on_schedule_rating', 'installation_quality_rating', 'after_sales_support_rating',
+                'system_size_kw', 'system_price', 'year_installed', 'panel_brand', 'inverter_brand',
+                'review_date', 'is_featured', 'is_approved', 'media_paths', 'primary_media_path'
+            ])
+            ->where('is_approved', true)
+            ->orderBy('is_featured', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($review) {
+                $ratings = [
+                    $review->sales_process_rating,
+                    $review->price_charged_as_quoted_rating,
+                    $review->on_schedule_rating,
+                    $review->installation_quality_rating,
+                    $review->after_sales_support_rating,
+                ];
 
-        $averageRating = round((float) ($company->ratingSummary->avg_rating ?? $company->average_rating ?? 0), 2);
-        $totalReviews = (int) ($company->ratingSummary->total_reviews ?? $company->total_reviews ?? 0);
+                $validRatings = array_filter($ratings, function ($rating) {
+                    return !is_null($rating) && $rating > 0;
+                });
 
-        $ratingDistribution = $this->getRatingDistribution($company->id);
+                $computedRating = !empty($validRatings)
+                    ? (array_sum($validRatings) / count($validRatings))
+                    : (float) ($review->rating ?? 0);
+
+                return [
+                    'id' => $review->id,
+                    'reviewer' => $review->reviewer_name ?: ($review->normalUser ? $review->normalUser->name : 'Anonymous'),
+                    'avatar' => $review->reviewer_name ? strtoupper(substr($review->reviewer_name, 0, 2)) : ($review->normalUser ? strtoupper(substr($review->normalUser->name, 0, 2)) : 'SR'),
+                    'rating' => (int) round($computedRating),
+                    'rating_raw' => (float) $computedRating,
+                    'title' => $review->review_title,
+                    'text' => $review->review,
+                    'created_at' => $review->created_at?->toIso8601String(),
+                    'created_at_timestamp' => $review->created_at?->timestamp,
+                    'created_at_human' => $review->created_at?->diffForHumans(),
+                    'date' => $review->review_date ? $review->review_date->format('M j, Y') : $review->created_at->format('M j, Y'),
+                    'is_featured' => (bool) $review->is_featured,
+                    'media_paths' => $review->media_paths ?? [],
+                    'primary_media_path' => $review->primary_media_path,
+                    'system_details' => [
+                        'size_kw' => $review->system_size_kw,
+                        'price' => $review->system_price,
+                        'year_installed' => $review->year_installed,
+                        'panel_brand' => $review->panel_brand,
+                        'inverter_brand' => $review->inverter_brand,
+                    ],
+                    'ratings' => [
+                        'overall' => (int) ($review->rating ?? 0),
+                        'sales_process' => $review->sales_process_rating,
+                        'pricing' => $review->price_charged_as_quoted_rating,
+                        'timing' => $review->on_schedule_rating,
+                        'installation' => $review->installation_quality_rating,
+                        'after_sales' => $review->after_sales_support_rating,
+                    ],
+                ];
+            });
+
+        $totalReviews = $reviews->count();
+        $averageRating = round((float) $reviews->avg('rating_raw'), 2);
+
+        $ratingDistribution = array_fill_keys([1, 2, 3, 4, 5], 0);
+        $distributionCounts = $reviews->pluck('rating')->countBy()->all();
+        foreach ($distributionCounts as $star => $count) {
+            $starInt = (int) $star;
+            if ($starInt >= 1 && $starInt <= 5) {
+                $ratingDistribution[$starInt] = (int) $count;
+            }
+        }
+
         $ratingBreakdown = $this->buildRatingBreakdown($company, $averageRating);
         $expertScoreRaw = collect($ratingBreakdown)->avg('score');
 
@@ -232,63 +303,6 @@ class CompanyController extends Controller
             'label' => $this->expertScoreLabel($expertScoreRaw),
             'stars' => round($expertScoreRaw / 20, 1),
         ];
-
-        // Get approved company reviews with pagination
-        $reviews = $company->companyReviews()
-            ->with('normalUser') // Eager load the normalUser relationship
-            ->select([
-                'id', 'reviewer_name', 'normal_user_id', 'rating', 'review_text as review', 'review_title',
-                'created_at', 'sales_process_rating', 'price_charged_as_quoted_rating',
-                'on_schedule_rating', 'installation_quality_rating', 'after_sales_support_rating',
-                'system_size_kw', 'system_price', 'year_installed', 'panel_brand', 'inverter_brand',
-                'review_date', 'is_featured', 'is_approved'
-            ])
-            ->where('is_approved', true)
-            ->orderBy('is_featured', 'desc') // Show featured reviews first
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($review) use ($company) {
-                // Calculate average of all ratings if available
-                $ratings = [
-                    $review->sales_process_rating,
-                    $review->price_charged_as_quoted_rating,
-                    $review->on_schedule_rating,
-                    $review->installation_quality_rating,
-                    $review->after_sales_support_rating
-                ];
-                
-                $validRatings = array_filter($ratings, function($rating) {
-                    return !is_null($rating) && $rating > 0;
-                });
-                
-                $averageRating = !empty($validRatings) ? array_sum($validRatings) / count($validRatings) : $review->rating;
-                
-                return [
-                    'id' => $review->id,
-                    'reviewer' => $review->reviewer_name ?: ($review->normalUser ? $review->normalUser->name : 'Anonymous'),
-                    'avatar' => $review->reviewer_name ? strtoupper(substr($review->reviewer_name, 0, 2)) : ($review->normalUser ? strtoupper(substr($review->normalUser->name, 0, 2)) : 'SR'),
-                    'rating' => (int) round($averageRating),
-                    'title' => $review->review_title,
-                    'text' => $review->review,
-                    'date' => $review->review_date ? $review->review_date->format('M j, Y') : $review->created_at->format('M j, Y'),
-                    'is_featured' => (bool) $review->is_featured,
-                    'system_details' => [
-                        'size_kw' => $review->system_size_kw,
-                        'price' => $review->system_price,
-                        'year_installed' => $review->year_installed,
-                        'panel_brand' => $review->panel_brand,
-                        'inverter_brand' => $review->inverter_brand
-                    ],
-                    'ratings' => [
-                        'overall' => (int) $review->rating,
-                        'sales_process' => $review->sales_process_rating,
-                        'pricing' => $review->price_charged_as_quoted_rating,
-                        'timing' => $review->on_schedule_rating,
-                        'installation' => $review->installation_quality_rating,
-                        'after_sales' => $review->after_sales_support_rating
-                    ]
-                ];
-            });
 
         return view('frontend.companies.show', [
             'company' => $company,
@@ -314,10 +328,12 @@ class CompanyController extends Controller
      */
     private function getRatingDistribution(int $companyId): array
     {
-        $distribution = CompanyReview::select('rating', DB::raw('COUNT(*) as total'))
+        $distribution = CompanyReview::query()
+            ->select(DB::raw('ROUND(rating) as rating_bucket'), DB::raw('COUNT(*) as total'))
             ->where('company_id', $companyId)
-            ->groupBy('rating')
-            ->pluck('total', 'rating')
+            ->where('is_approved', true)
+            ->groupBy('rating_bucket')
+            ->pluck('total', 'rating_bucket')
             ->toArray();
 
         $result = [];

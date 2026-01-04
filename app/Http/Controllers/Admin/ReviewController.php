@@ -11,6 +11,8 @@ use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -41,14 +43,19 @@ class ReviewController extends Controller
 
     // Set default filters if not provided
     $filters = array_merge([
-        'type' => 'company',  // Default to 'company' type
-        'rating' => null,     // Default to no rating filter
-        'search' => '',       // Default to empty search
+        'type'      => 'company',
+        'rating'    => null,
+        'search'    => '',
+        'date_from' => null,
+        'date_to'   => null,
     ], $request->validate([
         'type' => ['nullable', Rule::in(array_keys($reviewableTypes))],
         'rating' => ['nullable', 'integer', 'between:1,5'],
         'search' => ['nullable', 'string', 'max:100'],
+        'date_from' => ['nullable', 'date'],
+        'date_to' => ['nullable', 'date'],
     ]));
+
 
     $isCompanyReviewListing = $filters['type'] === 'company';
 
@@ -57,7 +64,7 @@ class ReviewController extends Controller
 
     if ($isCompanyReviewListing) {
         $companyReviewsQuery = CompanyReview::query()
-            ->with(['company:id,owner_name,slug']);
+            ->with(['company:id,owner_name,slug,website_url']);
 
         if ($filters['rating']) {
             $companyReviewsQuery->where('rating', (int) $filters['rating']);
@@ -74,6 +81,23 @@ class ReviewController extends Controller
                     });
             });
         }
+
+        if ($filters['date_from']) {
+            $companyReviewsQuery->whereDate(
+                'created_at',
+                '>=',
+                $filters['date_from']
+            );
+        }
+
+        if ($filters['date_to']) {
+            $companyReviewsQuery->whereDate(
+                'created_at',
+                '<=',
+                $filters['date_to']
+            );
+        }
+
 
         $companyReviews = $companyReviewsQuery
             ->latest()
@@ -145,9 +169,68 @@ class ReviewController extends Controller
      */
     public function approveCompanyReview(CompanyReview $companyReview): RedirectResponse
     {
-        $companyReview->update([
-            'is_approved' => true,
-        ]);
+        try {
+            DB::transaction(function () use ($companyReview) {
+                if (!$companyReview->company_id) {
+                    $manualCompanyName = trim((string) $companyReview->manual_company_name);
+                    $companyUrl = trim((string) $companyReview->company_url);
+
+                    if ($manualCompanyName === '' && $companyUrl === '') {
+                        throw new \RuntimeException('Missing company reference for review approval.');
+                    }
+
+                    $company = null;
+
+                    if ($companyUrl !== '') {
+                        $company = Company::query()->where('website_url', $companyUrl)->first();
+                    }
+
+                    if (!$company && $manualCompanyName !== '') {
+                        $company = Company::query()->where('owner_name', $manualCompanyName)->first();
+                    }
+
+                    if (!$company) {
+                        $slugBase = Str::slug($manualCompanyName !== '' ? $manualCompanyName : $companyUrl);
+                        $slug = $slugBase !== '' ? $slugBase : 'company';
+                        $originalSlug = $slug;
+                        $suffix = 2;
+
+                        while (Company::query()->where('slug', $slug)->exists()) {
+                            $slug = $originalSlug . '-' . $suffix;
+                            $suffix++;
+                        }
+
+                        $company = Company::create([
+                            'owner_id' => null,
+                            'slug' => $slug,
+                            'company_type' => 'installer',
+                            'owner_name' => $manualCompanyName !== '' ? $manualCompanyName : $companyUrl,
+                            'phone' => null,
+                            'website_url' => $companyUrl !== '' ? $companyUrl : null,
+                            'logo_url' => null,
+                            'description' => null,
+                            'status' => 'active',
+                            'email' => null,
+                            'years_in_business' => null,
+                            'gst_number' => null,
+                            'address' => '',
+                            'city' => '',
+                            'pincode' => '',
+                            'state_id' => null,
+                            'city_id' => null,
+                            'is_active' => true,
+                        ]);
+                    }
+
+                    $companyReview->company_id = $company->id;
+                }
+
+                $companyReview->is_approved = true;
+                $companyReview->save();
+            });
+        } catch (\Throwable $e) {
+            return back()->with('error', __('Unable to approve company review.'));
+        }
 
         return back()->with('success', __('Company review approved.'));
     }
