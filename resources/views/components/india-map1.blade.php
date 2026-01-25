@@ -1,34 +1,3 @@
-@php
-    $stateRows = \App\Models\State::query()
-        ->where('is_active', true)
-        ->withCount(['companies' => function ($query) {
-            $query->where('is_active', true);
-        }])
-        ->get(['id', 'name']);
-
-    $reviewStatsByStateId = \App\Models\CompanyReview::query()
-        ->where('is_approved', true)
-        ->selectRaw('state_id, COUNT(*) as reviews_count, AVG(rating) as avg_rating')
-        ->groupBy('state_id')
-        ->get()
-        ->keyBy('state_id');
-
-    $normalizeKey = function ($name) {
-        return strtolower(preg_replace('/\s+/', '-', trim((string) $name)));
-    };
-
-    $stateMapStats = [];
-    foreach ($stateRows as $stateRow) {
-        $reviewRow = $reviewStatsByStateId->get($stateRow->id);
-        $stateMapStats[$normalizeKey($stateRow->name)] = [
-            'state' => $stateRow->name,
-            'companies' => (int) ($stateRow->companies_count ?? 0),
-            'reviews' => (int) ($reviewRow->reviews_count ?? 0),
-            'avg_rating' => $reviewRow && $reviewRow->avg_rating !== null ? round((float) $reviewRow->avg_rating, 1) : 0,
-        ];
-    }
-@endphp
-
 <div class="state-map-container">
     <div class="state-selector">
         <div id="state-dropdown" class="state-dropdown hidden">
@@ -37,14 +6,6 @@
     </div>
     
     <div class="map-container">
-        <div class="map-info" data-map-info>
-            <div class="map-info-title" data-map-info-title>Hover a state</div>
-            <ul class="map-info-list">
-                <li><strong data-map-info-companies>0</strong> listed companies</li>
-                <!-- <li><strong data-map-info-reviews>0</strong> approved reviews</li> -->
-                <!-- <li><strong data-map-info-rating>0</strong> avg rating</li> -->
-            </ul>
-        </div>
 <svg id="chart"  viewBox="0 0 432 488" preserveAspectRatio="xMidYMid meet"
       pointer-events="auto">
       <g class="regions">
@@ -243,53 +204,19 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff" stroke="#f5c9b4" id="Karnataka
     
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const statsByStateKey = @json($stateMapStats);
         // Get all state paths
         const statePaths = document.querySelectorAll('#chart .regions path');
-
-        const normalizeStateKey = (name) => String(name || '')
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, '-');
-
-        const infoTitle = document.querySelector('[data-map-info-title]');
-        const infoCompanies = document.querySelector('[data-map-info-companies]');
-        const infoReviews = document.querySelector('[data-map-info-reviews]');
-        const infoRating = document.querySelector('[data-map-info-rating]');
-
-        const updateInfoPanel = (stateName) => {
-            const key = normalizeStateKey(stateName);
-            const stats = statsByStateKey[key] || { state: stateName, companies: 0, reviews: 0, avg_rating: 0 };
-            if (infoTitle) infoTitle.textContent = stats.state || stateName;
-            if (infoCompanies) infoCompanies.textContent = String(stats.companies ?? 0);
-            if (infoReviews) infoReviews.textContent = String(stats.reviews ?? 0);
-            if (infoRating) infoRating.textContent = String(stats.avg_rating ?? 0);
-        };
         
         // Add click event to each state
         statePaths.forEach(state => {
-            const stateName = state.id;
-            const key = normalizeStateKey(stateName);
-            const stats = statsByStateKey[key];
-            const titleEl = state.querySelector('title');
-            if (titleEl) {
-                const companiesCount = stats ? (stats.companies ?? 0) : 0;
-                titleEl.textContent = `${companiesCount} companies in ${stateName}`;
-            }
-
             state.addEventListener('click', function() {
                 const stateName = this.id;
                 if (stateName) {
-                    updateInfoPanel(stateName);
                     // Convert to lowercase and replace spaces with hyphens
                     const formattedStateName = stateName.toLowerCase().replace(/\s+/g, '-');
                     // Redirect to the state page
                     window.location.href = `/state/${formattedStateName}`;
                 }
-            });
-
-            state.addEventListener('mouseenter', function() {
-                if (this.id) updateInfoPanel(this.id);
             });
         });
     });
@@ -359,59 +286,6 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff" stroke="#f5c9b4" id="Karnataka
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin-top: 2rem;
-    position: relative;
-}
-
-.map-info {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgb(61 77 92);
-    color: #fff;
-    border-radius: 10px;
-    padding: 0.75rem 0.9rem;
-    min-width: 220px;
-    z-index: 5;
-}
-
-.map-info-title {
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.map-info-list {
-    margin: 0;
-    padding-left: 1.1rem;
-    font-size: 0.9rem;
-}
-
-.map-info-list strong {
-    font-weight: 700;
-}
-
-@media (max-width: 575.98px) {
-    .map-container {
-        padding: 0.75rem;
-    }
-
-    .map-info {
-        top: 8px;
-        right: 8px;
-        min-width: 0;
-        max-width: 200px;
-        padding: 0.55rem 0.65rem;
-        border-radius: 8px;
-    }
-
-    .map-info-title {
-        font-size: 0.95rem;
-        margin-bottom: 0.35rem;
-    }
-
-    .map-info-list {
-        font-size: 0.85rem;
-        padding-left: 1rem;
-    }
 }
 
 #india-map {

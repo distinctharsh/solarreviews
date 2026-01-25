@@ -1376,30 +1376,7 @@
                 <i class="fas fa-map-marker-alt"></i>
                 Solar in Your State
             </h3>
-            
-            <!-- Mobile Dropdown -->
-            <select class="form-select d-lg-none" onchange="if (this.value) window.location.href=this.value" style="width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem; margin-bottom: 0;">
-                <option value="">Select state</option>
-                @foreach($states as $s)
-                    <option value="{{ url('state/'.$s->slug) }}" {{ (isset($state) && $state['slug'] == $s->slug) ? 'selected' : '' }}>{{ $s->name }}</option>
-                @endforeach
-            </select>
-
-            <!-- Desktop List -->
-            <div class="d-none d-lg-block" style="margin-bottom: 0.75rem;">
-                <input
-                    type="text"
-                    class="form-control"
-                    data-state-search
-                    placeholder="Search your state..."
-                    autocomplete="off"
-                    style="border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem;"
-                >
-            </div>
-            <div class="d-none d-lg-block" data-state-no-results style="display:none; padding: 0.75rem 0.25rem; color: var(--text-muted); font-size: 0.9rem;">
-                No matching states found.
-            </div>
-            <ul class="state-list d-none d-lg-block">
+            <ul class="state-list">
                 @foreach($states as $s)
                     <li><a href="{{ url('state/'.$s->slug) }}">{{ $s->name }}</a></li>
                 @endforeach
@@ -1455,7 +1432,6 @@
                                     </span>
                                 </div>
                             </div>
-                              @if(!auth()->check() )
                             <div class="action-buttons">
                                 <button
                                     type="button"
@@ -1481,7 +1457,6 @@
                                     Get Quote
                                 </button>
                             </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -1594,11 +1569,68 @@
 </div>
 
 <!-- Get Quote Modal -->
-@include('components.frontend.get-quote-modal', [
-    'states' => $states ?? collect(),
-    'defaultStateId' => $state['id'] ?? null,
-    'defaultStateName' => $state['name'] ?? null,
-])
+<div class="quote-modal" id="quoteModal" aria-hidden="true">
+    <div class="quote-modal__dialog" role="dialog" aria-labelledby="quoteModalTitle">
+        <div class="quote-modal__header">
+            <div>
+                <!-- <p class="mb-1 text-uppercase small fw-semibold" style="letter-spacing: 0.08em;">Quick solar quote</p> -->
+                <h3 id="quoteModalTitle">Get a quote from <span data-quote-company>our partners</span></h3>
+            </div>
+            <button type="button" class="quote-modal__close" data-quote-close>&times;</button>
+        </div>
+        <form class="quote-form" id="quoteForm">
+            @csrf
+            <input type="hidden" name="company_id" data-quote-company-id>
+            <input type="hidden" name="state_id" value="{{ $state['id'] ?? '' }}">
+            <div class="quote-modal__body">
+                <div class="form-group">
+                    <label for="serviceType">What do you need?</label>
+                    <select id="serviceType" name="service_type" required>
+                        <option value="">Select option</option>
+                        <option value="Solar Panel">Solar Panel</option>
+                        <option value="Solar Battery">Solar Battery</option>
+                        <option value="Solar Inverter">Solar Inverter</option>
+                        <option value="EPC">EPC</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="quote-form-row">
+                    <div class="form-group">
+                        <label for="quoteName">Name *</label>
+                        <input type="text" id="quoteName" name="name" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quoteMobile">Mobile Number *</label>
+                        <input type="tel" id="quoteMobile" name="mobile_number" placeholder="10 digit mobile number" required minlength="10" maxlength="20">
+                    </div>
+                </div>
+                <div class="quote-form-row">
+                    <div class="form-group">
+                        <label for="quoteEmail">Email ID</label>
+                        <input type="email" id="quoteEmail" name="email" placeholder="name@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="quoteLocation">Preferred State *</label>
+                        <select id="quoteLocation" name="location" required>
+                            <option value="">Select state</option>
+                            @foreach($states as $s)
+                                <option value="{{ $s->name }}">{{ $s->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="quoteNotes">Anything else?</label>
+                    <textarea id="quoteNotes" name="notes" placeholder="Tell us about your requirement (optional)"></textarea>
+                </div>
+            </div>
+            <div class="quote-modal__footer">
+                <button type="submit" data-quote-submit>Submit &amp; Get Call</button>
+                <div class="quote-modal__status" data-quote-status></div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <x-frontend.review-modal
     modalId="stateReviewModal"
@@ -1669,31 +1701,86 @@
     document.addEventListener('DOMContentLoaded', function() {
         setupPincodeRedirect('.state-calculator-input', '.state-calculator-btn');
 
-        const stateSearchInput = document.querySelector('[data-state-search]');
-        const stateList = document.querySelector('.state-list');
-        const noResults = document.querySelector('[data-state-no-results]');
+        const quoteModal = document.getElementById('quoteModal');
+        const quoteForm = document.getElementById('quoteForm');
+        const quoteStatus = quoteModal?.querySelector('[data-quote-status]');
+        const quoteSubmitBtn = quoteModal?.querySelector('[data-quote-submit]');
+        const companyNameHolder = quoteModal?.querySelector('[data-quote-company]');
+        const companyIdInput = quoteModal?.querySelector('[data-quote-company-id]');
+        const closeBtn = quoteModal?.querySelector('[data-quote-close]');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-        if (stateSearchInput && stateList) {
-            const items = Array.from(stateList.querySelectorAll('li'));
-            const applyFilter = () => {
-                const q = (stateSearchInput.value || '').trim().toLowerCase();
-                let visibleCount = 0;
+        function toggleQuoteModal(show = true) {
+            if (!quoteModal) return;
+            quoteModal.classList.toggle('active', show);
+            quoteModal.setAttribute('aria-hidden', show ? 'false' : 'true');
+            document.body.style.overflow = show ? 'hidden' : '';
+            if (!show) {
+                quoteForm.reset();
+                companyNameHolder.textContent = 'our partners';
+                companyIdInput.value = '';
+                quoteStatus?.classList.remove('is-visible', 'success', 'error');
+                quoteStatus.textContent = '';
+            }
+        }
 
-                items.forEach((li) => {
-                    const text = (li.textContent || '').trim().toLowerCase();
-                    const match = q === '' || text.includes(q);
-                    li.style.display = match ? '' : 'none';
-                    if (match) visibleCount += 1;
+        document.querySelectorAll('.btn-get-quote').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const companyName = btn.dataset.companyName || 'our partners';
+                const companyId = btn.dataset.companyId || '';
+                companyNameHolder.textContent = companyName;
+                companyIdInput.value = companyId;
+                toggleQuoteModal(true);
+            });
+        });
+
+        closeBtn?.addEventListener('click', () => toggleQuoteModal(false));
+        quoteModal?.addEventListener('click', (event) => {
+            if (event.target === quoteModal) {
+                toggleQuoteModal(false);
+            }
+        });
+
+        quoteForm?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (!quoteSubmitBtn) return;
+
+            quoteSubmitBtn.disabled = true;
+            quoteSubmitBtn.textContent = 'Submitting...';
+            quoteStatus?.classList.remove('is-visible', 'success', 'error');
+            quoteStatus.textContent = '';
+
+            try {
+                const formData = new FormData(quoteForm);
+                const response = await fetch('{{ route('get-quote.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
                 });
 
-                if (noResults) {
-                    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-                }
-            };
+                const data = await response.json();
 
-            stateSearchInput.addEventListener('input', applyFilter);
-            applyFilter();
-        }
+                if (!response.ok || !data.success) {
+                    throw data;
+                }
+
+                quoteStatus?.classList.add('is-visible', 'success');
+                quoteStatus.textContent = data.message ?? 'Request submitted successfully!';
+                quoteForm.reset();
+
+                setTimeout(() => toggleQuoteModal(false), 1500);
+            } catch (error) {
+                const errorMessage = error?.message ?? 'Unable to submit request. Please try again.';
+                quoteStatus?.classList.add('is-visible', 'error');
+                quoteStatus.textContent = errorMessage;
+            } finally {
+                quoteSubmitBtn.disabled = false;
+                quoteSubmitBtn.textContent = 'Submit & Get Call';
+            }
+        });
     });
 </script>
 

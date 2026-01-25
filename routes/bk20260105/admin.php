@@ -49,7 +49,7 @@ Route::group([
     
     // Redirect to dashboard as the admin home
     Route::resource('companies', \App\Http\Controllers\Admin\CompanyController::class)->except(['show']);
-    Route::get('companies/{company}', [\App\Http\Controllers\Admin\CompanyController::class, 'show'])->name('companies.show');
+    Route::get('companies/{company}', \App\Http\Controllers\Admin\CompanyController::class)->name('companies.show');
     
     Route::redirect('/', '/admin/dashboard');
 });

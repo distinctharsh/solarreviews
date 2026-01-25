@@ -216,9 +216,6 @@
         .footer-toggle .toggle-icon {
             display: none;
         }
-        
-        
-   
     }
     
     .text-set{
@@ -270,7 +267,8 @@
                     <a href="/" class="d-inline-block mb-3">
                         <img src="{{ asset('images/logo-b.png') }}" alt="SolarReviews Logo" class="footer-logo">
                     </a>
-                    <p class="mb-3 text-set">Find, compare, and review the best solar installers in your area since 2023.</p>
+                   <p class="mb-3 text-set">Compare top solar installers — {{ now()->year }} reviews.</p>
+
                     <div class="d-flex gap-0">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -288,7 +286,7 @@
                     <div class="footer-collapse is-open">
                         <ul>
                             <li class="mb-2"><a href="#" class="text-set">How It Works</a></li>
-                            <li class="mb-2"><a href="#" class="text-set">Solar Companies</a></li>
+                            <li class="mb-2"><a href="{{ url('compare/companies') }}" class="text-set">Solar Companies</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Reviews</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Blog</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Contact Us</a></li>
@@ -305,8 +303,8 @@
                     <div class="footer-collapse is-open">
                         <ul>
                             <li class="mb-2"><a href="#" class="text-set">Solar Guides</a></li>
-                            <li class="mb-2"><a href="#" class="text-set">Solar Calculator</a></li>
-                            <li class="mb-2"><a href="#" class="text-set">Solar Incentives</a></li>
+                            <!-- <li class="mb-2"><a href="#" class="text-set">Solar Calculator</a></li> -->
+                            <li class="mb-2"><a href="#" class="text-set">Subsidy</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Financing Options</a></li>
                             <li class="mb-2"><a href="#" class="text-set">FAQ</a></li>
                         </ul>

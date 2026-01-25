@@ -1081,9 +1081,9 @@
                 </div>
 
                 <!-- ROW 2 -->
-                <h2 class="left-title">Contact info</h2>
+                <!-- <h2 class="left-title">Contact info</h2> -->
 
-                <ul class="right-content contact-list">
+                <!-- <ul class="right-content contact-list">
                     @if($company->address || $company->city || $company->state || $company->pincode)
                     <li>📍 
                     @if($company->address){{ $company->address }}, @endif
@@ -1109,7 +1109,7 @@
                     @if($company->gst_number)
                     <li>  <span>GST: {{ $company->gst_number }}</span></li>
                     @endif
-                </ul>
+                </ul> -->
 
                 </section>
 

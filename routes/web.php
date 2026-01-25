@@ -4,17 +4,21 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ChatbotQuestionController as ChatbotQuestionController;
+use App\Http\Controllers\Admin\ChatbotReportController as ChatbotReportController;
+use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
 use App\Http\Controllers\Admin\StateController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\ChatbotOptionController;
-use App\Http\Controllers\Admin\ChatbotQuestionController;
-use App\Http\Controllers\Admin\ChatbotReportController;
+use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminUserProfileSubmissionController;
+use App\Http\Controllers\Auth\BusinessGoogleLoginController;
+use App\Http\Controllers\Auth\SocialLoginController;
+use App\Http\Controllers\Auth\UserGoogleLoginController;
+use App\Http\Controllers\Auth\UserGoogleRegisterController;
+use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController;
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
-use App\Http\Controllers\Frontend\BrandController as FrontendBrandController;
 use App\Http\Controllers\Frontend\NormalUserProfileController;
 use App\Http\Controllers\Frontend\GetQuoteController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
@@ -23,13 +27,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Controllers\Auth\SocialLoginController;
 use App\Models\Company;
 use App\Models\CompanyReview;
 use App\Models\NormalUser;
 use App\Models\State;
 use Illuminate\Support\Str;
-use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
 use App\Http\Controllers\Admin\GetQuoteController as AdminGetQuoteController;
 use Illuminate\Support\Facades\Artisan;
 
@@ -368,6 +370,14 @@ Route::get('/auth/google/redirect', [SocialLoginController::class, 'redirectToGo
 Route::get('/auth/google/callback', [SocialLoginController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 Route::post('/auth/google/disconnect', [SocialLoginController::class, 'disconnect'])->name('oauth.google.disconnect');
 Route::post('/reviews/session/logout', [SocialLoginController::class, 'disconnect'])->name('reviews.session.logout');
+
+// Auth login (users table) - separate Google login flow
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/login/google', [UserGoogleLoginController::class, 'redirect'])->name('auth.google.login.redirect');
+    Route::get('/auth/login/google/callback', [UserGoogleLoginController::class, 'callback'])->name('auth.google.login.callback');
+
+    Route::post('/auth/register/google', [UserGoogleRegisterController::class, 'redirect'])->name('auth.google.register.redirect');
+});
 
 // Normal user email login
 Route::prefix('auth/normal-user')->name('normal-user.login.')->group(function () {

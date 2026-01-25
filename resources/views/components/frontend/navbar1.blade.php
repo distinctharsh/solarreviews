@@ -27,7 +27,7 @@
                         <p class="mega-heading">Guides</p>
                         <a href="#" class="mega-link">Buying Guide</a>
                         <a href="#" class="mega-link">Installation Checklist</a>
-                        <a href="#" class="mega-link">Financing & Subsidy</a>
+                        <a href="#" class="mega-link">Financing & Incentives</a>
                         <a href="#" class="mega-link">Maintenance Tips</a>
                     </div>
                 </div>
@@ -112,11 +112,6 @@
                     <a class="nav-link fw-medium nav-btn-primary" href="{{ route('login') }}">For Business</a>
                 @endauth
             @endif
-
-            <div class="nav-translate mt-1" aria-label="Translate website">
-                <i class="fa-solid fa-globe nav-translate-icon" aria-hidden="true"></i>
-                <div id="google_translate_element"></div>
-            </div>
         </div>
         
         <!-- Mobile Toggle Button -->
@@ -139,12 +134,6 @@
         </button>
     </div>
     <div class="offcanvas-body">
-        <div class="mt-3" aria-label="Translate website">
-            <div class="nav-translate nav-translate-mobile">
-                <i class="fa-solid fa-globe nav-translate-icon" aria-hidden="true"></i>
-                <div id="google_translate_element_mobile"></div>
-            </div>
-        </div>
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" >Learn About Solar</a>
@@ -199,7 +188,6 @@
 </div>
 
 <style>
-    
     body {
         padding-top: 72px;
     }
@@ -570,97 +558,6 @@
     width: 35px;
     height: 35px;
 }
-
-.nav-translate {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    border-radius: 999px;
-    padding: 0.25rem 0.6rem;
-    background: #fff;
-    position: relative;
-}
-
-.nav-translate-icon {
-    color: #1e293b;
-    font-size: 16px;
-    line-height: 1;
-    pointer-events: none;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-/* Google uses a default cleardot.gif icon in the widget. Hide it and use our own icon above. */
-.nav-translate .goog-te-gadget img,
-.nav-translate .goog-te-gadget-icon {
-    display: none !important;
-}
-
-.nav-translate-mobile {
-    width: 100%;
-}
-
-.offcanvas-body .nav-translate-mobile {
-    border-radius: 12px;
-    padding: 0.65rem 0.75rem;
-    background: #fff;
-    gap: 0.6rem;
-}
-
-.offcanvas-body .nav-translate-mobile .nav-translate-icon {
-    position: static;
-    left: auto;
-    top: auto;
-    transform: none;
-}
-
-.offcanvas-body .nav-translate-mobile select.goog-te-combo {
-    padding: 0.2rem 0.2rem;
-}
-
-.offcanvas-body .nav-translate-mobile .goog-te-gadget-simple,
-.offcanvas-body .nav-translate-mobile .goog-te-gadget-simple a {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.nav-translate .goog-te-gadget {
-    font-family: inherit;
-    font-size: 14px;
-    color: #1e293b;
-}
-
-.nav-translate .goog-te-gadget span {
-    display: none;
-}
-
-.nav-translate select.goog-te-combo {
-    border: none;
-    border-radius: 0;
-    padding: 0.25rem 0.2rem 0.25rem 1.4rem;
-    background: transparent;
-    color: #0f172a;
-    font-size: 14px;
-    outline: none;
-    cursor: pointer;
-    width: 100%;
-    max-width: 100%;
-}
-
-.nav-translate #google_translate_element,
-.nav-translate #google_translate_element_mobile {
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-}
-
-.offcanvas-body #google_translate_element_mobile select.goog-te-combo {
-    width: 100%;
-}
 </style>
 
 <!--<script>-->
@@ -742,162 +639,6 @@ document.addEventListener('DOMContentLoaded', () => {
             trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
     });
-
-    const translateWrappers = document.querySelectorAll('.nav-translate');
-    translateWrappers.forEach((wrap) => {
-        if (!wrap || wrap.dataset.translateBound === '1') return;
-        wrap.addEventListener('click', (e) => {
-            const target = e.target;
-            if (target && (target.tagName === 'SELECT' || target.closest('select.goog-te-combo'))) {
-                return;
-            }
-
-            if (target && (target.tagName === 'A' || target.closest('.goog-te-gadget-simple a'))) {
-                return;
-            }
-
-            const select = wrap.querySelector('select.goog-te-combo');
-
-            if (select) {
-                try {
-                    select.focus();
-                    select.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-                    select.click();
-                } catch (err) {
-                    // ignore
-                }
-                return;
-            }
-
-            const simpleLink = wrap.querySelector('.goog-te-gadget-simple a');
-            if (simpleLink) {
-                try {
-                    simpleLink.click();
-                } catch (err) {
-                    // ignore
-                }
-            }
-        });
-        wrap.style.cursor = 'pointer';
-        wrap.dataset.translateBound = '1';
-    });
 });
 </script>
-
-@once
-    <script>
-        (function () {
-            try {
-                const storedLang = localStorage.getItem('site_lang');
-                if (storedLang) {
-                    const cookieValue = `/en/${storedLang}`;
-                    document.cookie = `googtrans=${cookieValue};path=/;max-age=31536000`;
-                    document.cookie = `googtrans=${cookieValue};path=/;max-age=31536000;SameSite=Lax`;
-                }
-            } catch (e) {
-                // ignore
-            }
-        })();
-
-        function googleTranslateElementInit() {
-            if (window.google && window.google.translate && window.google.translate.TranslateElement) {
-                // const includedLanguages = 'en,hi,es,fr,de,it,zh-CN,ja';
-                const includedLanguages = 'hi,bn,te,mr,ta,ur,gu,kn,ml,or,pa,as,sd,ks,ne,sa,mai,doi,bo,sat,es,fr,de,it,zh-CN,ja';
-
-
-                new window.google.translate.TranslateElement(
-                    {
-                        pageLanguage: 'en',
-                        includedLanguages: includedLanguages,
-                        autoDisplay: false,
-                        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-                    },
-                    'google_translate_element'
-                );
-
-                const mountTranslateTo = (targetId) => {
-                    const target = document.getElementById(targetId);
-                    if (!target) return;
-
-                    const desktopHost = document.getElementById('google_translate_element');
-                    if (!desktopHost) return;
-
-                    const gadget = desktopHost.querySelector('.goog-te-gadget');
-                    if (!gadget) return;
-
-                    if (!target.contains(gadget)) {
-                        target.innerHTML = '';
-                        target.appendChild(gadget);
-                    }
-                };
-
-                const mountTranslateBackToDesktop = () => {
-                    const desktopHost = document.getElementById('google_translate_element');
-                    if (!desktopHost) return;
-
-                    const gadget = document.querySelector('#google_translate_element_mobile .goog-te-gadget');
-                    if (!gadget) return;
-
-                    if (!desktopHost.contains(gadget)) {
-                        desktopHost.innerHTML = '';
-                        desktopHost.appendChild(gadget);
-                    }
-                };
-
-                const persistLang = (lang) => {
-                    if (!lang || lang === 'en') {
-                        try { localStorage.removeItem('site_lang'); } catch (e) {}
-                        document.cookie = 'googtrans=/en/en;path=/;max-age=31536000';
-                        document.cookie = 'googtrans=/en/en;path=/;max-age=31536000;SameSite=Lax';
-                        return;
-                    }
-
-                    try { localStorage.setItem('site_lang', lang); } catch (e) {}
-                    const cookieValue = `/en/${lang}`;
-                    document.cookie = `googtrans=${cookieValue};path=/;max-age=31536000`;
-                    document.cookie = `googtrans=${cookieValue};path=/;max-age=31536000;SameSite=Lax`;
-                };
-
-                const syncTranslateSelects = () => {
-                    const selects = document.querySelectorAll('select.goog-te-combo');
-                    if (!selects.length) return;
-
-                    let storedLang = 'en';
-                    try { storedLang = localStorage.getItem('site_lang') || 'en'; } catch (e) {}
-
-                    selects.forEach((select) => {
-                        if (!select) return;
-                        if (select.value !== storedLang) {
-                            select.value = storedLang;
-                        }
-                        if (!select.dataset.langPersistBound) {
-                            select.addEventListener('change', function () {
-                                const lang = this.value || 'en';
-                                persistLang(lang);
-                            });
-                            select.dataset.langPersistBound = '1';
-                        }
-                    });
-                };
-
-                const scheduleSync = () => setTimeout(syncTranslateSelects, 400);
-                scheduleSync();
-
-                const offcanvas = document.getElementById('mobileSidebar');
-                if (offcanvas) {
-                    offcanvas.addEventListener('shown.bs.offcanvas', () => {
-                        mountTranslateTo('google_translate_element_mobile');
-                        scheduleSync();
-                    });
-
-                    offcanvas.addEventListener('hidden.bs.offcanvas', () => {
-                        mountTranslateBackToDesktop();
-                        scheduleSync();
-                    });
-                }
-            }
-        }
-    </script>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-@endonce
 

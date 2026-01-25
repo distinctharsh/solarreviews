@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Registered;
 use App\Mail\SendEmail;
 use App\Models\NormalUser;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialLoginController extends Controller
@@ -35,6 +40,78 @@ class SocialLoginController extends Controller
 
             return redirect($this->consumeReturnUrl() ?? route('reviews.create'))
                 ->with('google_oauth_error', 'Unable to sign in with Google. Please try again.');
+        }
+
+        if (Session::pull('auth_google_register_flow')) {
+            $payload = Session::pull('auth_google_register_payload');
+            if (! is_array($payload) || empty($payload['user_type_id']) || empty($payload['phone'])) {
+                return redirect()->route('register')
+                    ->withErrors(['email' => 'Please complete registration details before continuing with Google.']);
+            }
+
+            $email = $googleUser->getEmail();
+            if (! $email) {
+                return redirect()->route('register')
+                    ->withErrors(['email' => 'Google account did not provide an email address.']);
+            }
+
+            $existing = User::query()->where('email', $email)->first();
+            if ($existing) {
+                return redirect()->route('login')
+                    ->withErrors(['email' => 'An account already exists for this Google email. Please log in.']);
+            }
+
+            $user = User::create([
+                'name' => $googleUser->getName() ?: ($email ? explode('@', $email)[0] : 'Account'),
+                'email' => $email,
+                'phone' => (string) $payload['phone'],
+                'user_type_id' => (int) $payload['user_type_id'],
+                'password' => Hash::make(Str::random(40)),
+            ]);
+
+            event(new Registered($user));
+
+            Auth::login($user);
+
+            Session::forget('normal_user_id');
+            Session::forget('review_profile');
+            Session::forget('google_review_return_url');
+
+            return redirect()->route('dashboard');
+        }
+
+        if (Session::pull('auth_google_login_flow')) {
+            $email = $googleUser->getEmail();
+            if (! $email) {
+                return redirect()->route('login')
+                    ->withErrors(['email' => 'Google account did not provide an email address.']);
+            }
+
+            $user = User::query()->where('email', $email)->first();
+
+            if (! $user) {
+                return redirect()->route('login')
+                    ->withErrors(['email' => 'No account found for this Google email. Please use your email & password.']);
+            }
+
+            Auth::login($user);
+
+            Session::forget('normal_user_id');
+            Session::forget('review_profile');
+            Session::forget('google_review_return_url');
+
+            $redirectTo = Session::pull('auth_google_intended');
+            if (! is_string($redirectTo) || $redirectTo === '') {
+                $redirectTo = route('dashboard');
+            } else {
+                $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+                $targetHost = parse_url($redirectTo, PHP_URL_HOST);
+                if ($targetHost && $appHost && strcasecmp($targetHost, $appHost) !== 0) {
+                    $redirectTo = route('dashboard');
+                }
+            }
+
+            return redirect($redirectTo);
         }
 
         $normalUser = NormalUser::updateOrCreate(

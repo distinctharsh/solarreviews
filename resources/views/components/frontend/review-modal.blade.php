@@ -176,6 +176,41 @@
             resize: vertical;
         }
 
+        .review-text-wrapper {
+            position: relative;
+        }
+
+        .review-mic-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            border: 2px solid var(--border, #e2e8f0);
+            background: var(--surface, #ffffff);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .review-mic-btn:hover {
+            border-color: var(--primary, #3ba14c);
+        }
+
+        .review-mic-btn.is-recording {
+            background: rgba(220, 38, 38, 0.08);
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .review-mic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .input-group {
             display: flex;
             gap: 0.75rem;
@@ -789,7 +824,12 @@
                 
                 <div class="form-group">
                     <label class="form-label" for="{{ $modalId }}ReviewText">Your Review *</label>
-                    <textarea id="{{ $modalId }}ReviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
+                    <div class="review-text-wrapper">
+                        <textarea id="{{ $modalId }}ReviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
+                        <button type="button" class="review-mic-btn" data-review-mic aria-label="Voice input" title="Voice input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1051,9 +1091,196 @@
         const metricGroups = modal.querySelectorAll('[data-metric-stars]');
         const categoryInput = document.getElementById(`${modalId}CategoryId`);
         const emailInput = document.querySelector(`[data-review-modal="#${modalId}"] [name="email"]`);
+        const reviewTextArea = document.getElementById(`${modalId}ReviewText`);
+        const micBtn = modal.querySelector('[data-review-mic]');
         const submitReviewBtn = modal.querySelector('[data-review-submit]');
         const closeBtn = modal.querySelector('.close-btn');
         const cancelBtn = modal.querySelector('.cancel-btn');
+
+        const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let speechRecognition = null;
+        let isRecording = false;
+        let isStarting = false;
+        let pendingRestart = false;
+        let baseSpeechText = '';
+        const isMobileSpeechEnv = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+
+        const updateMicUi = () => {
+            if (!micBtn) return;
+            micBtn.classList.toggle('is-recording', isRecording);
+            const icon = micBtn.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-microphone', !isRecording);
+                icon.classList.toggle('fa-stop', isRecording);
+            }
+            micBtn.setAttribute('aria-label', isRecording ? 'Stop voice input' : 'Voice input');
+            micBtn.setAttribute('title', isRecording ? 'Stop voice input' : 'Voice input');
+        };
+
+        const stopRecording = () => {
+            pendingRestart = false;
+            isStarting = false;
+            if (!speechRecognition) {
+                isRecording = false;
+                updateMicUi();
+                return;
+            }
+            try {
+                speechRecognition.abort();
+            } catch (error) {
+                // ignore
+            }
+            isRecording = false;
+            updateMicUi();
+            try {
+                speechRecognition.onresult = null;
+                speechRecognition.onerror = null;
+                speechRecognition.onend = null;
+            } catch (error) {
+                // ignore
+            }
+            speechRecognition = null;
+        };
+
+        const startRecording = () => {
+            if (!SpeechRecognitionCtor || !reviewTextArea) return;
+            if (isStarting) return;
+            if (isRecording) return;
+            isStarting = true;
+
+            if (speechRecognition) {
+                try {
+                    console.log(speechRecognition);
+                    speechRecognition.abort();
+                } catch (error) {
+                    // ignore
+                    console.log(error);
+                }
+                try {
+                    speechRecognition.onresult = null;
+                    speechRecognition.onerror = null;
+                    speechRecognition.onend = null;
+                } catch (error) {
+                    // ignore
+                }
+                speechRecognition = null;
+            }
+
+            speechRecognition = new SpeechRecognitionCtor();
+            speechRecognition.continuous = !isMobileSpeechEnv;
+            speechRecognition.interimResults = true;
+            speechRecognition.lang = 'en-IN';
+
+            const normalizeSpeechText = (text) => {
+                if (!text) return '';
+                let cleaned = String(text)
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+                const tokens = cleaned.split(' ');
+                if (tokens.length <= 1) return cleaned;
+
+                const collapsed = [];
+                let lastToken = null;
+                let run = 0;
+
+                for (const token of tokens) {
+                    const t = token.trim();
+                    if (!t) continue;
+
+                    if (t.toLowerCase() === (lastToken || '').toLowerCase()) {
+                        run += 1;
+                        if (run <= 2) {
+                            collapsed.push(t);
+                        }
+                    } else {
+                        lastToken = t;
+                        run = 0;
+                        collapsed.push(t);
+                    }
+                }
+
+                cleaned = collapsed.join(' ').replace(/\s+/g, ' ').trim();
+                return cleaned;
+            };
+
+            speechRecognition.onresult = (event) => {
+                let finalText = '';
+                let interimText = '';
+
+                for (let i = 0; i < event.results.length; i++) {
+                    const result = event.results[i];
+                    const transcript = result[0] && result[0].transcript ? result[0].transcript : '';
+                    if (result.isFinal) {
+                        finalText += transcript;
+                    } else {
+                        interimText += transcript;
+                    }
+                }
+
+                const base = (reviewTextArea.getAttribute('data-speech-base') ?? baseSpeechText ?? '').trimEnd();
+                if (!reviewTextArea.hasAttribute('data-speech-base')) {
+                    reviewTextArea.setAttribute('data-speech-base', base);
+                }
+
+                const combined = (finalText + interimText).trim();
+                const safeCombined = normalizeSpeechText(combined);
+                reviewTextArea.value = safeCombined
+                    ? (base ? `${base} ${safeCombined}` : safeCombined)
+                    : base;
+                updateSubmitState();
+                scheduleDraftSave();
+            };
+
+            speechRecognition.onerror = () => {
+                stopRecording();
+            };
+
+            speechRecognition.onend = () => {
+                if (isRecording) {
+                    isRecording = false;
+                    updateMicUi();
+                }
+                isStarting = false;
+                if (pendingRestart) {
+                    pendingRestart = false;
+                    setTimeout(() => startRecording(), 150);
+                }
+            };
+
+            try {
+                baseSpeechText = reviewTextArea.value || '';
+                speechRecognition.start();
+                isRecording = true;
+                updateMicUi();
+                isStarting = false;
+            } catch (error) {
+                pendingRestart = true;
+                isRecording = false;
+                isStarting = false;
+                updateMicUi();
+            }
+        };
+
+        if (micBtn) {
+            console.log(micBtn);
+            if (!SpeechRecognitionCtor || !reviewTextArea) {
+                micBtn.disabled = true;
+                micBtn.style.display = 'none';
+            } else {
+                micBtn.addEventListener('click', () => {
+                    if (isRecording) {
+                        stopRecording();
+                        reviewTextArea.removeAttribute('data-speech-base');
+                        return;
+                    }
+                    reviewTextArea.removeAttribute('data-speech-base');
+                    startRecording();
+                });
+
+                updateMicUi();
+            }
+        }
         const systemToggle = modal.querySelector('[data-system-toggle]');
         const systemToggleIcon = systemToggle ? systemToggle.querySelector('span i') : null;
         const systemDetails = modal.querySelector('[data-system-details]');
@@ -1752,6 +1979,9 @@
         }
 
         function closeModal() {
+            if (isRecording) {
+                stopRecording();
+            }
             modal.style.display = 'none';
             document.body.style.overflow = '';
             document.documentElement.style.overflow = '';

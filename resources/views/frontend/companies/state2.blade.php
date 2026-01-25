@@ -1386,19 +1386,6 @@
             </select>
 
             <!-- Desktop List -->
-            <div class="d-none d-lg-block" style="margin-bottom: 0.75rem;">
-                <input
-                    type="text"
-                    class="form-control"
-                    data-state-search
-                    placeholder="Search your state..."
-                    autocomplete="off"
-                    style="border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 0.9rem;"
-                >
-            </div>
-            <div class="d-none d-lg-block" data-state-no-results style="display:none; padding: 0.75rem 0.25rem; color: var(--text-muted); font-size: 0.9rem;">
-                No matching states found.
-            </div>
             <ul class="state-list d-none d-lg-block">
                 @foreach($states as $s)
                     <li><a href="{{ url('state/'.$s->slug) }}">{{ $s->name }}</a></li>
@@ -1668,32 +1655,6 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         setupPincodeRedirect('.state-calculator-input', '.state-calculator-btn');
-
-        const stateSearchInput = document.querySelector('[data-state-search]');
-        const stateList = document.querySelector('.state-list');
-        const noResults = document.querySelector('[data-state-no-results]');
-
-        if (stateSearchInput && stateList) {
-            const items = Array.from(stateList.querySelectorAll('li'));
-            const applyFilter = () => {
-                const q = (stateSearchInput.value || '').trim().toLowerCase();
-                let visibleCount = 0;
-
-                items.forEach((li) => {
-                    const text = (li.textContent || '').trim().toLowerCase();
-                    const match = q === '' || text.includes(q);
-                    li.style.display = match ? '' : 'none';
-                    if (match) visibleCount += 1;
-                });
-
-                if (noResults) {
-                    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-                }
-            };
-
-            stateSearchInput.addEventListener('input', applyFilter);
-            applyFilter();
-        }
     });
 </script>
 

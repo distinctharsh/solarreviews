@@ -2490,7 +2490,7 @@
 
 
 
-    <section class="bank-section">
+    <section class="bank-section notranslate" translate="no" >
         <div class="container-custom">
             <div class="bank-header">
                 <h2>Trending Companies on Solar Reviews</h2>
@@ -2625,7 +2625,7 @@
 
 
 
-    <section class="reviews-section">
+    <section class="reviews-section notranslate" translate="no">
         <div class="container-custom">
 
             <div class="reviews-header ">
