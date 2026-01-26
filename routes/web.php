@@ -411,6 +411,7 @@ Route::prefix('admin')
     // Companies
     Route::resource('companies', CompanyController::class);
     Route::patch('companies/{company}/toggle-status', [CompanyController::class, 'toggleStatus'])->name('companies.toggle-status');
+    Route::patch('companies/{company}/verification', [CompanyController::class, 'updateVerification'])->name('companies.verification');
     
     // Products
     Route::resource('products', ProductController::class);

@@ -847,7 +847,11 @@
                         <img src="{{ $logoUrl }}" class="logo">
 
                         <div class="info">
-                            <span class="claimed">✔ Claimed profile</span>
+                            <!-- <span class="claimed">✔ Claimed profile</span> -->
+
+                            @if($company->is_verified)
+                                <span class="claimed">✔ Verified profile</span>
+                            @endif
 
                             <h1>{{ $company->owner_name }}</h1>
                             

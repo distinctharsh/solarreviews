@@ -112,13 +112,21 @@
                             <!-- <a href="{{ route('admin.companies.show', $company) }}" class="btn btn-sm btn-outline-secondary" title="View">
                                 <i class="fas fa-eye"></i>
                             </a> -->
-                            <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-sm btn-primary" title="Edit">
+                            <form action="{{ route('admin.companies.verification', $company) }}" method="POST" class="js-verify-form" data-company-id="{{ $company->id }}" style="display:inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="is_verified" value="{{ $company->is_verified ? 0 : 1 }}">
+                                <button type="submit" class="btn btn-sm action-btn {{ $company->is_verified ? 'btn-success verified-pill' : 'btn-outline-secondary' }}" title="{{ $company->is_verified ? 'Verified profile' : 'Mark as verified' }}">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            </form>
+                            <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-sm btn-primary action-btn" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('admin.companies.destroy', $company) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                <button type="submit" class="btn btn-sm btn-danger action-btn" onclick="return confirm('Are you sure?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -154,7 +162,29 @@
 .pagination-wrapper .pagination {
     margin: 0;
 }
- 
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verified-pill {
+    background-color: #198754;
+    border-color: #198754;
+    color: #fff;
+    box-shadow: none;
+}
+
+.verified-pill:hover {
+    background-color: #157347;
+    border-color: #146c43;
+    color: #fff;
+}
+
 .pagination .page-link {
     padding: 0.5rem 0.75rem;
     color: #4b5563;
@@ -307,4 +337,62 @@
 }
 
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    document.querySelectorAll('form.js-verify-form').forEach((form) => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            const input = form.querySelector('input[name="is_verified"]');
+            if (!button || !input) return;
+
+            const url = form.getAttribute('action');
+            const nextValue = input.value;
+
+            const originalHtml = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf || '',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ is_verified: Number(nextValue) }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+
+                const data = await response.json();
+                const isVerified = !!data.is_verified;
+
+                input.value = isVerified ? 0 : 1;
+
+                button.classList.remove('btn-success', 'btn-outline-secondary', 'verified-pill');
+                button.classList.add(isVerified ? 'btn-success' : 'btn-outline-secondary');
+                if (isVerified) {
+                    button.classList.add('verified-pill');
+                }
+                button.title = isVerified ? 'Verified profile' : 'Mark as verified';
+                button.innerHTML = originalHtml;
+            } catch (err) {
+                button.innerHTML = originalHtml;
+                alert('Unable to update verification. Please try again.');
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
+});
+</script>
 @endpush

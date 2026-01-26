@@ -29,11 +29,13 @@ class Company extends Model
         'state_id',
         'city_id',
         'is_active',
+        'is_verified',
     ];
 
     protected $casts = [
         'status' => 'string',
         'is_active' => 'boolean',
+        'is_verified' => 'boolean',
     ];
 
     public function getRouteKeyName()

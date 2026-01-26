@@ -50,6 +50,8 @@ Route::group([
     // Redirect to dashboard as the admin home
     Route::resource('companies', \App\Http\Controllers\Admin\CompanyController::class)->except(['show']);
     Route::get('companies/{company}', [\App\Http\Controllers\Admin\CompanyController::class, 'show'])->name('companies.show');
+    Route::patch('companies/{company}/verification', [\App\Http\Controllers\Admin\CompanyController::class, 'updateVerification'])
+        ->name('companies.verification');
     
     Route::redirect('/', '/admin/dashboard');
 });
