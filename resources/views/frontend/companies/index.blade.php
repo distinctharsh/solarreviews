@@ -110,6 +110,40 @@
             padding: 3rem 0 4rem;
         }
 
+        .directory-pagination {
+            display: flex;
+            justify-content: center;
+        }
+
+        .directory-pagination .pagination {
+            gap: 8px;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+
+        .directory-pagination .page-link {
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            color: #0f172a;
+            background: #ffffff;
+            box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+        }
+
+        .directory-pagination .page-link:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+        }
+
+        .directory-pagination .page-item.active .page-link {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            color: #fff;
+        }
+
+        .directory-pagination .page-item.disabled .page-link {
+            opacity: 0.6;
+        }
+
         .top-reviews-section {
             padding: 0px 0 1rem;
             background: #f1f5f9;
@@ -499,7 +533,7 @@
                     <select class="form-select d-lg-none mb-3" id="stateSelect" onchange="filterGlobal()">
                         <option value="">Select a state</option>
                         @foreach($states as $state)
-                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                            <option value="{{ $state->id }}" @selected((string) request('state') === (string) $state->id)>{{ $state->name }}</option>
                         @endforeach
                     </select>
 
@@ -529,10 +563,10 @@
 
                                         <select id="companySortSelect" class="form-select" style="max-width: 220px;" onchange="applySort()">
                                             <option value="">Sort: Default</option>
-                                            <option value="rating_desc" selected>Rating (High to Low)</option>
-                                            <option value="rating_asc">Rating (Low to High)</option>
-                                            <option value="reviews_desc">Reviews (High to Low)</option>
-                                            <option value="reviews_asc">Reviews (Low to High)</option>
+                                            <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating (High to Low)</option>
+                                            <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating (Low to High)</option>
+                                            <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews (High to Low)</option>
+                                            <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews (Low to High)</option>
                                         </select>
 
                                         <div class="search-box">
@@ -543,6 +577,7 @@
     class="search-input" 
     placeholder="Search companies"
     oninput="filterGlobal()"
+    value="{{ request('q') }}"
   >
 </div>
 
@@ -599,6 +634,10 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="directory-pagination mt-4">
+                                {{ $companies->links('pagination::bootstrap-5') }}
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -611,39 +650,29 @@
 </div>
 
 <script>
-    function getVisibleCompanyRows() {
-        const rows = Array.from(document.querySelectorAll('#companiesTable tbody tr.company-row'));
-        return rows.filter(row => row.style.display !== 'none');
+    let filterTimeout = null;
+
+    function buildDirectoryUrl(overrides = {}) {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+
+        Object.entries(overrides).forEach(([key, value]) => {
+            if (value === null || value === undefined || String(value).trim() === '') {
+                params.delete(key);
+            } else {
+                params.set(key, String(value));
+            }
+        });
+
+        params.delete('page');
+
+        url.search = params.toString();
+        return url.toString();
     }
 
     function applySort() {
         const sortValue = document.getElementById('companySortSelect')?.value || '';
-        const tbody = document.querySelector('#companiesTable tbody');
-        if (!tbody) return;
-
-        const rows = getVisibleCompanyRows();
-
-        if (!sortValue) {
-            return;
-        }
-
-        const [field, direction] = sortValue.split('_');
-        const multiplier = direction === 'asc' ? 1 : -1;
-
-        rows.sort((a, b) => {
-            const aVal = parseFloat(a.getAttribute(field === 'rating' ? 'data-rating' : 'data-reviews') || '0');
-            const bVal = parseFloat(b.getAttribute(field === 'rating' ? 'data-rating' : 'data-reviews') || '0');
-
-            if (aVal === bVal) {
-                const aName = (a.getAttribute('data-name') || '').toString();
-                const bName = (b.getAttribute('data-name') || '').toString();
-                return aName.localeCompare(bName);
-            }
-
-            return (aVal - bVal) * multiplier;
-        });
-
-        rows.forEach(row => tbody.appendChild(row));
+        window.location.href = buildDirectoryUrl({ sort: sortValue });
     }
 
     function setStateFilter(stateId) {
@@ -651,38 +680,36 @@
         if (!stateSelect) return;
 
         stateSelect.value = String(stateId ?? '');
-        filterGlobal();
-
-        const table = document.getElementById('companiesTable');
-        if (table) {
-            table.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        window.location.href = buildDirectoryUrl({ state: stateSelect.value });
     }
 
     function filterGlobal() {
-        const searchText = document.getElementById('companySearchInput').value.trim().toLowerCase();
-        const stateId = document.getElementById('stateSelect').value;
-        const rows = document.querySelectorAll('#companiesTable tbody tr.company-row');
+        const searchText = document.getElementById('companySearchInput')?.value || '';
+        const stateId = document.getElementById('stateSelect')?.value || '';
 
-        rows.forEach(row => {
-            const name = row.getAttribute('data-name');
-            const rowStateId = row.getAttribute('data-state-id');
-
-            const matchesSearch = name.includes(searchText);
-            const matchesState = stateId === '' || rowStateId === stateId;
-
-            if (matchesSearch && matchesState) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        applySort();
+        clearTimeout(filterTimeout);
+        filterTimeout = setTimeout(() => {
+            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId });
+        }, 350);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        applySort();
+        const params = new URLSearchParams(window.location.search);
+
+        const stateSelect = document.getElementById('stateSelect');
+        if (stateSelect && params.has('state')) {
+            stateSelect.value = params.get('state') || '';
+        }
+
+        const searchInput = document.getElementById('companySearchInput');
+        if (searchInput && params.has('q')) {
+            searchInput.value = params.get('q') || '';
+        }
+
+        const sortSelect = document.getElementById('companySortSelect');
+        if (sortSelect && params.has('sort')) {
+            sortSelect.value = params.get('sort') || '';
+        }
     });
 </script>
 </body>

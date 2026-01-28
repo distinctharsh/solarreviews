@@ -74,6 +74,11 @@
                     Get Quotes
                 </a>
 
+                <a href="{{ route('admin.company-detail-requests.index') }}" class="sidebar-link {{ request()->routeIs('admin.company-detail-requests.*') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-list"></i>
+                    Company Detail Requests
+                </a>
+
                 <div class="sidebar-section-title">Chatbot</div>
 
   <a href="{{ route('admin.chatbot.questions.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.questions.*') ? 'active' : '' }}">

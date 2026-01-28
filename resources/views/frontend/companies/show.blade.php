@@ -912,6 +912,8 @@
                                 'defaultStateId' => $company->state_id ?? null,
                                 'defaultStateName' => is_object($company->state) ? $company->state->name : $company->state,
                             ])
+
+                            @include('components.frontend.company-detail-request-modal')
                         </div>
                     </div>
 
@@ -1054,6 +1056,15 @@
                 <h2 class="left-title">Company details</h2>
 
                 <div class="right-content">
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                        <button type="button"
+                                class="nav-link fw-medium nav-btn-primary bg-white text-dark btn-get-details"
+                                style="border: 1px solid #1d4ed8;"
+                                data-company-id="{{ $company->id }}"
+                                data-company-name="{{ $company->owner_name }}">
+                            Get details now
+                        </button>
+                    </div>
                     @if($company->categories->isNotEmpty())
                     <div class="category-row">
                     @foreach($company->categories as $category)

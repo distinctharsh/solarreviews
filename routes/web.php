@@ -21,6 +21,7 @@ use App\Http\Controllers\Frontend\CompanyController as FrontendCompanyController
 use App\Http\Controllers\Frontend\ReviewController as FrontendReviewController;
 use App\Http\Controllers\Frontend\NormalUserProfileController;
 use App\Http\Controllers\Frontend\GetQuoteController;
+use App\Http\Controllers\Frontend\CompanyDetailRequestController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,7 @@ use App\Models\NormalUser;
 use App\Models\State;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\GetQuoteController as AdminGetQuoteController;
+use App\Http\Controllers\Admin\CompanyDetailRequestController as AdminCompanyDetailRequestController;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -237,6 +239,12 @@ Route::post('/reviews/send-otp', [\App\Http\Controllers\Frontend\ReviewControlle
 
 Route::view('/faq', 'frontend.faq')->name('faq');
 
+Route::view('/how-it-works/customers', 'frontend.how-it-works.customers')
+    ->name('how-it-works.customers');
+
+Route::view('/how-it-works/epc-companies', 'frontend.how-it-works.epc-companies')
+    ->name('how-it-works.epc-companies');
+
 Route::get('/top-reviews', function (Request $request) {
     $stateFilter = $request->query('state');
 
@@ -357,6 +365,9 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
 
 Route::post('/get-quote', [GetQuoteController::class, 'store'])->name('get-quote.store');
 
+Route::post('/company-detail-requests', [CompanyDetailRequestController::class, 'store'])
+    ->name('company-detail-requests.store');
+
 Route::prefix('profile/reviews')->name('normal-user.reviews.')->group(function () {
     Route::get('/', [NormalUserProfileController::class, 'index'])->name('index');
     Route::put('/{companyReview}', [NormalUserProfileController::class, 'update'])->name('update');
@@ -451,6 +462,10 @@ Route::prefix('admin')
     // Get Quote requests
     Route::get('get-quotes', [AdminGetQuoteController::class, 'index'])->name('get-quotes.index');
     Route::get('get-quotes/{quote}', [AdminGetQuoteController::class, 'show'])->name('get-quotes.show');
+
+    // Company detail requests
+    Route::get('company-detail-requests', [AdminCompanyDetailRequestController::class, 'index'])->name('company-detail-requests.index');
+    Route::get('company-detail-requests/{companyDetailRequest}', [AdminCompanyDetailRequestController::class, 'show'])->name('company-detail-requests.show');
 
 });
 

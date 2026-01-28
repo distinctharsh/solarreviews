@@ -32,6 +32,20 @@
                     </div>
                 </div>
             </div>
+            <div class="mega-nav-item position-relative">
+                <button class="nav-link fw-medium mega-trigger d-inline-flex align-items-center gap-1" data-mega-trigger>
+                    How it works
+                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <div class="mega-dropdown shadow" style="min-width: 220px; padding: 16px 20px;">
+                    <div class="mega-column">
+                        <a href="{{ route('how-it-works.customers') }}" class="mega-link">For Customers</a>
+                        <a href="{{ route('how-it-works.epc-companies') }}" class="mega-link">For EPC Companies</a>
+                    </div>
+                </div>
+            </div>
             @if(!$isBusinessUser)
             <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
             @endif
@@ -148,6 +162,12 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link fw-medium py-3" >Learn About Solar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-medium py-3" href="{{ route('how-it-works.customers') }}">How it works - For Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-medium py-3" href="{{ route('how-it-works.epc-companies') }}">How it works - For EPC Companies</a>
             </li>
             @if(!$normalUserSession && Route::has('login'))
                 @auth

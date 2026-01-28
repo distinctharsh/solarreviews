@@ -19,8 +19,12 @@ class CompanyController extends Controller
     /**
      * Display all active companies in a tabular directory.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $searchQuery = trim((string) $request->query('q', ''));
+        $stateId = $request->query('state');
+        $sort = (string) $request->query('sort', '');
+
         $reviewStats = CompanyReview::query()
             ->select(
                 'company_id',
@@ -30,7 +34,7 @@ class CompanyController extends Controller
             ->where('is_approved', true)
             ->groupBy('company_id');
 
-        $companies = Company::query()
+        $companiesQuery = Company::query()
             ->select(
                 'companies.*',
                 DB::raw('COALESCE(review_stats.avg_rating, 0) as avg_rating'),
@@ -41,8 +45,37 @@ class CompanyController extends Controller
             })
             ->with('state')
             ->where('is_active', true)
-            ->orderBy('companies.owner_name')
-            ->get();
+            ->when($searchQuery !== '', function ($query) use ($searchQuery) {
+                $query->where(function ($inner) use ($searchQuery) {
+                    $inner->where('companies.owner_name', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('companies.slug', 'like', '%' . $searchQuery . '%');
+                });
+            })
+            ->when($stateId !== null && $stateId !== '', function ($query) use ($stateId) {
+                $query->where('companies.state_id', $stateId);
+            });
+
+        switch ($sort) {
+            case 'rating_desc':
+                $companiesQuery->orderByDesc('avg_rating')->orderByDesc('total_reviews');
+                break;
+            case 'rating_asc':
+                $companiesQuery->orderBy('avg_rating')->orderByDesc('total_reviews');
+                break;
+            case 'reviews_desc':
+                $companiesQuery->orderByDesc('total_reviews')->orderByDesc('avg_rating');
+                break;
+            case 'reviews_asc':
+                $companiesQuery->orderBy('total_reviews')->orderByDesc('avg_rating');
+                break;
+            default:
+                $companiesQuery->orderBy('companies.owner_name');
+                break;
+        }
+
+        $companies = $companiesQuery
+            ->paginate(25)
+            ->appends($request->query());
 
         $states = State::select('id', 'name', 'slug')
             ->where('is_active', true)
@@ -51,7 +84,7 @@ class CompanyController extends Controller
 
         return view('frontend.companies.index', [
             'companies' => $companies,
-            'totalCompanies' => $companies->count(),
+            'totalCompanies' => $companies->total(),
             'states' => $states,
         ]);
     }
