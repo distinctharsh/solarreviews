@@ -187,7 +187,11 @@ Route::get('/', function () {
         ->get()
         ->map(function ($review) use ($formatWebsiteHost, $resolveLogoUrl, $computeInitials) {
             $company = $review->company;
-            $companyName = $company?->owner_name ?? $company?->slug ?? 'Solar EPC';
+            $manualCompanyName = trim((string) ($review->manual_company_name ?? ''));
+            $companyName = $company?->owner_name
+                ?? ($manualCompanyName !== '' ? $manualCompanyName : null)
+                ?? $company?->slug
+                ?? 'Solar EPC';
             $reviewerName = $review->reviewer_name ?: 'Verified customer';
 
             $avatar = Str::upper(Str::substr($reviewerName, 0, 1)) ?: Str::upper(Str::substr($companyName, 0, 1));

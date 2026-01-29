@@ -71,56 +71,66 @@
             }
         }
 
-        .step {
-            display: grid;
-            grid-template-columns: 44px 1fr;
-            gap: 1rem;
-            padding: 1.15rem 1rem;
+        .faq-accordion .accordion-item {
             border: 1px solid #e2e8f0;
             border-radius: 16px;
-            background: #fdfefe;
+            overflow: hidden;
+            background: #ffffff;
         }
 
-        .step + .step {
+        .faq-accordion .accordion-item + .accordion-item {
             margin-top: 1rem;
         }
 
-        .step-number {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            background: rgba(30,58,138,0.12);
-            color: #1e3a8a;
+        .faq-accordion .accordion-button {
             font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .step h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin: 0 0 0.35rem;
             color: #0f172a;
+            background: #fdfefe;
+            padding: 1.1rem 1.1rem;
         }
 
-        .step p {
-            margin: 0;
-            color: #4b5563;
-            line-height: 1.65;
+        .faq-accordion .accordion-button:not(.collapsed) {
+            color: #0f172a;
+            background: #f8fafc;
+            box-shadow: none;
         }
 
-        .note {
-            margin-top: 1.75rem;
-            border-radius: 16px;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 1.25rem 1.25rem;
-            color: #1e3a8a;
+        .faq-accordion .accordion-button:focus {
+            box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.15);
         }
 
-        .note strong {
-            color: #0b2a5b;
+        .faq-accordion .accordion-body {
+            padding: 1.1rem 1.1rem;
+            color: #4b5563 !important;
+            line-height: 1.75;
+            background: #ffffff;
+            visibility: visible;
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-accordion .accordion-body * {
+            color: inherit !important;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .faq-accordion .accordion-collapse {
+            background: #ffffff;
+        }
+
+        .faq-accordion .accordion-body p {
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-accordion .accordion-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .faq-accordion .accordion-body ul {
+            margin: 0.25rem 0 0.75rem;
+            padding-left: 1.15rem;
         }
     </style>
 </head>
@@ -139,40 +149,179 @@
         <section class="content">
             <div class="container-custom">
                 <div class="content-card">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div>
-                            <h3>Create and optimize your company profile</h3>
-                            <p>Ensure your company details are accurate so customers can understand your offerings, service areas and experience.</p>
+                    <div class="accordion faq-accordion" id="howItWorksEpcFaq">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseOne" aria-expanded="true" aria-controls="epcFaqCollapseOne">
+                                    1. Why should my EPC business be on SolaReviews?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="epcFaqHeadingOne" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>Being on SolaReviews.in boosts your online reputation by showing real customer feedback, increases visibility to potential solar buyers, and helps you stand out from competitors. Reviews build trust and lead customers to choose your services.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div>
-                            <h3>Deliver great installations</h3>
-                            <p>High-quality installs and responsive support lead to better reviews and higher conversion rates.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseTwo" aria-expanded="false" aria-controls="epcFaqCollapseTwo">
+                                    2. Is creating an EPC profile free?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingTwo" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>Yes — creating and listing your EPC business profile on SolaReviews.in is free. You only pay for optional premium features (if any) that increase visibility or marketing reach.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div>
-                            <h3>Collect and respond to customer feedback</h3>
-                            <p>Encourage customers to leave honest reviews and address concerns quickly to build credibility.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseThree" aria-expanded="false" aria-controls="epcFaqCollapseThree">
+                                    3. How do I claim my EPC profile?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseThree" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingThree" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>To claim your EPC profile:</p>
+                                    <ul>
+                                        <li>Search for your business on SolarReviews.in.</li>
+                                        <li>Click “Claim this Profile.”</li>
+                                        <li>Verify ownership through email or business documents.</li>
+                                        <li>Once confirmed, you can manage and update your profile.</li>
+                                    </ul>
+                                    <p>This ensures only you control your business listing.</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div>
-                            <h3>Grow through visibility and trust</h3>
-                            <p>Strong ratings and consistent engagement help you stand out when customers compare EPC partners.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseFour" aria-expanded="false" aria-controls="epcFaqCollapseFour">
+                                    4. Can I respond to customer reviews?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseFour" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingFour" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>Yes — once you’ve claimed your EPC profile, you can respond publicly to customer reviews. This lets you:</p>
+                                    <ul>
+                                        <li>Thank satisfied customers</li>
+                                        <li>Address concerns professionally</li>
+                                        <li>Show transparency and customer care</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="note">
-                        <strong>Tip:</strong> Keep your contact information, service locations and website up to date so customers can reach you easily.
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseFive" aria-expanded="false" aria-controls="epcFaqCollapseFive">
+                                    5. How does SolaReviews rank EPCs?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseFive" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingFive" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>SolaReviews uses a ranking algorithm based on:</p>
+                                    <ul>
+                                        <li>Number of verified reviews</li>
+                                        <li>Average rating</li>
+                                        <li>Recency of reviews</li>
+                                        <li>Customer engagement (responses, photos)</li>
+                                    </ul>
+                                    <p>This helps highlight consistently high-quality EPCs for users.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseSix" aria-expanded="false" aria-controls="epcFaqCollapseSix">
+                                    6. What benefit do I get with more verified reviews?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseSix" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingSix" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>More verified reviews help your business by:</p>
+                                    <ul>
+                                        <li>Increasing trust among potential customers</li>
+                                        <li>Improving your rank in search and lists</li>
+                                        <li>Highlighting strengths through real experiences</li>
+                                        <li>Reducing uncertainty for buyers</li>
+                                    </ul>
+                                    <p>Verified reviews act as social proof that your services are reliable.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingSeven">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseSeven" aria-expanded="false" aria-controls="epcFaqCollapseSeven">
+                                    7. Can a negative review harm my business?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseSeven" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingSeven" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>A single negative review won’t ruin your reputation — and honestly, potential customers expect a mix of feedback. What matters most is:</p>
+                                    <ul>
+                                        <li>How you respond professionally</li>
+                                        <li>Learning from feedback to improve services</li>
+                                    </ul>
+                                    <p>Consistent positive reviews outweigh occasional negatives.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingEight">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseEight" aria-expanded="false" aria-controls="epcFaqCollapseEight">
+                                    8. Can I upload my own project photos & certifications?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseEight" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingEight" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>Yes — once your EPC profile is claimed, you can upload:</p>
+                                    <ul>
+                                        <li>Project installation photos</li>
+                                        <li>Certifications & accreditations</li>
+                                        <li>Team and equipment photos</li>
+                                    </ul>
+                                    <p>These visuals build credibility and show your expertise to users.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingNine">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseNine" aria-expanded="false" aria-controls="epcFaqCollapseNine">
+                                    9. Do you provide leads?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseNine" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingNine" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>SolaReviews.in doesn’t sell leads directly, but a strong presence on the platform drives organic inquiries. Customers looking for installers often contact businesses directly after reading reviews — effectively turning your profile into a lead-generation tool.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="epcFaqHeadingTen">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#epcFaqCollapseTen" aria-expanded="false" aria-controls="epcFaqCollapseTen">
+                                    10. How do I get a Verified EPC badge?
+                                </button>
+                            </h2>
+                            <div id="epcFaqCollapseTen" class="accordion-collapse collapse" aria-labelledby="epcFaqHeadingTen" data-bs-parent="#howItWorksEpcFaq">
+                                <div class="accordion-body">
+                                    <p>The Verified EPC badge is awarded when your business:</p>
+                                    <ul>
+                                        <li>Has an authenticated profile</li>
+                                        <li>Has several verified customer reviews</li>
+                                        <li>Meets quality standards in engagement and responsiveness</li>
+                                    </ul>
+                                    <p>This badge signals trust and reliability to solar buyers.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
