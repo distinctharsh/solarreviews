@@ -1549,7 +1549,7 @@
             width: 100%;
             min-height: calc(100vh - 80px);
             padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
-            background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat;
+            /* background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat; */
             background-color: #f5f5f5; 
             display: flex;
             align-items: flex-start; /* 👈 center se upar */
@@ -1685,7 +1685,7 @@
                 width: 100%;
                 min-height: calc(100vh - 80px);
                 padding-top: 40px;
-                background: url('/images/im/bg-m.jpg') center center / cover no-repeat;
+                /* background: url('/images/im/bg-m.jpg') center center / cover no-repeat; */
                 background-color: #f5f5f5;
                 display: flex;
                 align-items: flex-start;
