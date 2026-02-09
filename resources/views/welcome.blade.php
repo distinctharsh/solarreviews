@@ -2749,14 +2749,13 @@
     </section> -->
 
 
-    <section class="latest-articles section-spacing py-5">
+    <!-- <section class="latest-articles section-spacing py-5">
         <div class="container-custom">
 
             <h3 class=" mb-3 heading-3" >Latest articles</h3>
 
             <div class="row g-4">
 
-            <!-- Article 1 -->
             <div class="col-md-4">
                 <a href="#" class="article-card">
                     <div class="article-image">
@@ -2768,7 +2767,6 @@
                 </a>
             </div>
 
-            <!-- Article 2 -->
             <div class="col-md-4">
                 <a href="#" class="article-card">
                     <div class="article-image">
@@ -2780,7 +2778,6 @@
                 </a>
             </div>
 
-            <!-- Article 3 -->
             <div class="col-md-4">
                 <a href="#" class="article-card">
                     <div class="article-image">
@@ -2794,7 +2791,7 @@
 
             </div>
         </div>
-    </section>
+    </section> -->
 
 
     @include('components.frontend.footer')
