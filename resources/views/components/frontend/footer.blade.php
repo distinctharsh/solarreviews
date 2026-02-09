@@ -79,6 +79,37 @@
         color: #dbeafe;
     }
 
+    .footer-sub-links {
+        margin-top: 0.5rem;
+        padding-left: 0.9rem;
+        display: none;
+        margin-left: 20px !important;
+    }
+
+    .footer-sub-links.is-open {
+        display: block;
+    }
+
+    .footer-sub-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .footer-sub-toggle-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+
     .footer .border-top {
         border-color: #ffffff !important;
     }
@@ -285,7 +316,20 @@
                     </button>
                     <div class="footer-collapse is-open">
                         <ul>
-                            <li class="mb-2"><a href="#" class="text-set">How It Works</a></li>
+                            <li class="mb-2">
+                                <a href="#" class="text-set footer-sub-toggle" data-footer-sub-toggle aria-expanded="false">
+                                    <span>How It Works</span>
+                                    <span class="footer-sub-toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                                </a>
+                                <ul class="footer-sub-links" data-footer-sub-links>
+                                    <li class="mb-2">
+                                        <a href="{{ route('how-it-works.customers') }}" class="text-set">For Customers</a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{{ route('how-it-works.epc-companies') }}" class="text-set">For EPC Companies</a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="mb-2"><a href="{{ url('compare/companies') }}" class="text-set">Solar Companies</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Reviews</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Blog</a></li>
@@ -343,6 +387,8 @@
             return;
         }
 
+        const subToggles = document.querySelectorAll('[data-footer-sub-toggle]');
+
         const mobileQuery = window.matchMedia('(max-width: 575px)');
 
         const applyFooterState = () => {
@@ -386,6 +432,17 @@
 
         footerToggles.forEach(toggle => {
             toggle.addEventListener('click', handleToggleClick);
+        });
+
+        subToggles.forEach(toggle => {
+            toggle.addEventListener('click', (event) => {
+                event.preventDefault();
+                const subLinks = toggle.parentElement && toggle.parentElement.querySelector('[data-footer-sub-links]');
+                if (!subLinks) return;
+
+                const isNowOpen = subLinks.classList.toggle('is-open');
+                toggle.setAttribute('aria-expanded', isNowOpen ? 'true' : 'false');
+            });
         });
 
         applyFooterState();
