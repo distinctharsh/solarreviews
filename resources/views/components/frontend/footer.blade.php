@@ -331,7 +331,7 @@
                                 </ul>
                             </li>
                             <li class="mb-2"><a href="{{ url('compare/companies') }}" class="text-set">Solar Companies</a></li>
-                            <li class="mb-2"><a href="#" class="text-set">Reviews</a></li>
+                            <li class="mb-2"><a href="{{ url('top-reviews') }}" class="text-set">Reviews</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Blog</a></li>
                             <li class="mb-2"><a href="#" class="text-set">Contact Us</a></li>
                         </ul>
