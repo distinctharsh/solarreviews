@@ -25,7 +25,7 @@
                     </div> -->
                     <div class="mega-column">
                         <p class="mega-heading">Guides</p>
-                        <a href="#" class="mega-link">Buying Guide</a>
+                        <a href="https://solareviews.in/blogs" class="mega-link">Buying Guide</a>
                         <a href="#" class="mega-link">Installation Checklist</a>
                         <a href="#" class="mega-link">Financing & Subsidy</a>
                         <a href="#" class="mega-link">Maintenance Tips</a>

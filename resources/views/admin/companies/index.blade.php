@@ -116,17 +116,17 @@
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="is_verified" value="{{ $company->is_verified ? 0 : 1 }}">
-                                <button type="submit" class="btn btn-sm action-btn {{ $company->is_verified ? 'btn-success verified-pill' : 'btn-outline-secondary' }}" title="{{ $company->is_verified ? 'Verified profile' : 'Mark as verified' }}">
+                                <button type="submit" class="btn btn-sm {{ $company->is_verified ? 'btn-success verified-pill' : 'btn-outline-secondary' }}" title="{{ $company->is_verified ? 'Verified profile' : 'Mark as verified' }}">
                                     <i class="fas fa-check-circle"></i>
                                 </button>
                             </form>
-                            <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-sm btn-primary action-btn" title="Edit">
+                            <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-sm btn-primary" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('admin.companies.destroy', $company) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger action-btn" onclick="return confirm('Are you sure?')">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -161,15 +161,6 @@
 <style>
 .pagination-wrapper .pagination {
     margin: 0;
-}
-
-.action-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .verified-pill {
