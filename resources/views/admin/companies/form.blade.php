@@ -267,33 +267,18 @@
 
                     <div class="form-group">
                         <label class="form-label">Location</label>
-                        <div class="form-row" style="gap:10px;">
-                            <select id="state_id" name="state_id" required
-                                    class="form-input @error('state_id') border-red-500 @enderror">
-                                <option value="">Select State</option>
-                                @foreach($states as $state)
-                                    <option value="{{ $state->id }}" {{ $selectedStateId == $state->id ? 'selected' : '' }}>
-                                        {{ $state->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="city" placeholder="City *" required
-                                   class="form-input @error('city') border-red-500 @enderror"
-                                   value="{{ old('city', $company->city) }}">
-                        </div>
-                        <div class="form-row" style="gap:10px; margin-top:10px;">
-                            <select id="city_id" name="city_id" class="form-input @error('city_id') border-red-500 @enderror">
-                                <option value="">Linked City (optional)</option>
-                                @foreach($cities as $cityOption)
-                                    <option value="{{ $cityOption->id }}" {{ old('city_id', $company->city_id) == $cityOption->id ? 'selected' : '' }}>
-                                        {{ $cityOption->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="pincode" placeholder="Pincode *" required
-                                   class="form-input @error('pincode') border-red-500 @enderror"
-                                   value="{{ old('pincode', $company->pincode) }}">
-                        </div>
+                        @include('components.location-fields', [
+                            'idPrefix' => 'admin_company_location',
+                            'states' => $states ?? collect(),
+                            'selectedStateId' => $selectedStateId ?? old('state_id', $company->state_id),
+                            'selectedCityName' => old('city', $company->city),
+                            'selectedLinkedCityId' => old('city_id', $company->city_id),
+                            'selectedPincode' => old('pincode', $company->pincode),
+                            'labelClass' => 'form-label',
+                            'wrapperClass' => '',
+                            'gridClass' => 'form-row',
+                            'controlClass' => 'form-input',
+                        ])
                         @error('state_id')<p class="error-message">{{ $message }}</p>@enderror
                         @error('city')<p class="error-message">{{ $message }}</p>@enderror
                         @error('city_id')<p class="error-message">{{ $message }}</p>@enderror

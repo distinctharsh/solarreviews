@@ -33,6 +33,76 @@
     <form method="POST" action="{{ route('dashboard.supplier-profile.store') }}" enctype="multipart/form-data" class="space-y-10">
         @csrf
 
+        <input type="hidden" name="company_type" value="manufacturer">
+        <input type="hidden" name="status" value="active">
+        <input type="hidden" name="is_active" value="1">
+
+        <div class="space-y-6">
+            <div>
+                <h4 class="text-lg font-semibold text-slate-900">Company Information</h4>
+                <p class="text-sm text-slate-500">These fields match the admin create-company form.</p>
+            </div>
+            <div class="grid gap-5 md:grid-cols-2">
+                <div>
+                    <label class="{{ $labelClass }}">Company Name*</label>
+                    <input type="text" name="owner_name" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Phone*</label>
+                    <input type="text" name="phone" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Email*</label>
+                    <input type="email" name="email" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Website URL</label>
+                    <input type="url" name="website_url" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">Years in Business</label>
+                    <input type="number" name="years_in_business" min="0" max="200" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div>
+                    <label class="{{ $labelClass }}">GST Number</label>
+                    <input type="text" name="gst_number" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="{{ $labelClass }}">Description</label>
+                    <textarea name="description" rows="3" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="{{ $labelClass }}">Address*</label>
+                    <textarea name="address" rows="2" required class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400"></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    @include('components.location-fields', [
+                        'idPrefix' => 'supplier_company_location',
+                        'states' => $states ?? collect(),
+                        'selectedStateId' => old('state_id'),
+                        'selectedCityName' => old('city'),
+                        'selectedLinkedCityId' => old('city_id'),
+                        'selectedPincode' => old('pincode'),
+                        'labelClass' => $labelClass,
+                        'wrapperClass' => 'space-y-3',
+                        'gridClass' => 'grid gap-5 md:grid-cols-2',
+                        'controlClass' => 'w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400',
+                    ])
+                </div>
+                <div class="md:col-span-2">
+                    <label class="{{ $labelClass }}">Logo</label>
+                    <input type="file" name="logo" accept=".jpg,.jpeg,.png,.gif" class="w-full rounded-xl border-slate-200 focus:border-amber-400 focus:ring-amber-400">
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
+            <p class="text-sm text-slate-500">Your data is securely stored and reviewed within 2 business days.</p>
+            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-amber-500 rounded-xl hover:bg-amber-600" style="background-color: #42c058;">Submit Supplier Details</button>
+        </div>
+
+        @php /*
+
         {{-- Company Information --}}
         <div class="space-y-6">
             <div>
@@ -315,9 +385,6 @@
             </div>
         </div>
 
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
-            <p class="text-sm text-slate-500">Your data is securely stored and reviewed within 2 business days.</p>
-            <button type="submit" class="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-amber-500 rounded-xl hover:bg-amber-600" style="background-color: #42c058;">Submit Supplier Details</button>
-        </div>
+        */ @endphp
     </form>
 </section>

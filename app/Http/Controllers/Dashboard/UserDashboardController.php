@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
+use App\Models\Project;
 use App\Models\State;
 use App\Models\UserProfileSubmission;
 use Illuminate\Http\Request;
@@ -14,9 +16,19 @@ class UserDashboardController extends Controller
     {
         $user = $request->user();
 
+        $projects = Project::query()
+            ->where('user_id', $user?->id)
+            ->with('images')
+            ->latest()
+            ->get();
+
         $states = State::query()
             ->orderBy('name')
             ->get(['id', 'name']);
+
+        $cities = City::query()
+            ->orderBy('name')
+            ->get(['id', 'name', 'state_id']);
 
         $requiresDistributorIntake = $user?->isDistributor() &&
             !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_DISTRIBUTOR);
@@ -41,6 +53,8 @@ $supplierStatus = $user?->isSupplier()
             'requiresDistributorIntake' => $requiresDistributorIntake,
             'requiresSupplierIntake' => $requiresSupplierIntake,
             'states' => $states,
+            'cities' => $cities,
+            'projects' => $projects,
         ]);
     }
 }

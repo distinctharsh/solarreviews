@@ -430,6 +430,138 @@
             background: #f9fafb;
             padding: 24px;
         }
+
+        .projects-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .projects-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .project-card {
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 18px;
+            background: var(--surface);
+            box-shadow: 0 14px 30px rgba(16, 24, 40, 0.05);
+        }
+
+        .project-images {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .project-image {
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 9999;
+        }
+
+        .modal-overlay.is-open {
+            display: flex;
+        }
+
+        .modal-dialog {
+            width: 100%;
+            max-width: 760px;
+            background: #fff;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 45px 80px rgba(15, 23, 42, 0.35);
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            background: #f8fafc;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 999px;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 20px 22px 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid.two-col {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .control {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0.75rem 0.9rem;
+            outline: none;
+        }
+
+        .control:focus {
+            border-color: rgba(59, 161, 76, 0.6);
+            box-shadow: 0 0 0 4px rgba(59, 161, 76, 0.16);
+        }
+
+        .muted-help {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
     </style>
 </head>
 <body>
@@ -684,10 +816,202 @@
 
         <section class="section">
             <div class="container-custom">
+                <div class="section-card space-y-4">
+                    <div class="projects-header">
+                        <div>
+                            <p class="text-sm text-muted uppercase tracking-[0.2em]">Portfolio</p>
+                            <h3 class="text-xl font-semibold">Projects</h3>
+                            <p class="text-sm text-muted">Add your best installations. Maximum 4 images per project.</p>
+                        </div>
+                        <button type="button" class="btn-primary" data-project-open>+ Add Project</button>
+                    </div>
+
+                    @if (session('status') === 'project-created')
+                        <div class="alert alert-success mb-0">Project added successfully.</div>
+                    @endif
+                    @if (session('status') === 'project-deleted')
+                        <div class="alert alert-secondary mb-0">Project deleted.</div>
+                    @endif
+
+                    <div class="projects-grid">
+                        @forelse(($projects ?? collect()) as $project)
+                            <article class="project-card">
+                                <div class="d-flex align-items-start justify-content-between gap-3">
+                                    <div>
+                                        <p class="fw-semibold mb-1">{{ $project->site_name }}</p>
+                                        <p class="text-muted mb-0">{{ $project->site_location }}</p>
+                                        @if(!is_null($project->total_capacity_kw))
+                                            <p class="text-muted mb-0">Capacity: {{ $project->total_capacity_kw }} kW</p>
+                                        @endif
+                                    </div>
+                                    <form method="POST" action="{{ route('dashboard.projects.destroy', $project) }}" onsubmit="return confirm('Delete this project?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-link p-0 fw-semibold text-danger">Delete</button>
+                                    </form>
+                                </div>
+
+                                @if(($project->images ?? collect())->isNotEmpty())
+                                    <div class="project-images">
+                                        @foreach($project->images as $image)
+                                            <div class="project-image">
+                                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Project image">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="muted-help">No images uploaded.</p>
+                                @endif
+                            </article>
+                        @empty
+                            <div class="upgrade-card">
+                                <p class="mb-0 text-muted">No projects added yet.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container-custom">
                 @include('components.frontend.chatbot-widget')
             </div>
         </section>
     </main>
+
+    <div class="modal-overlay" data-project-modal>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Add Project">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Project</h3>
+                <button type="button" class="modal-close" aria-label="Close" data-project-close>×</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('dashboard.projects.store') }}" enctype="multipart/form-data" class="form-grid">
+                    @csrf
+
+                    <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Site Name*</label>
+                            <input type="text" name="site_name" class="control" required>
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Site Location*</label>
+                            <input type="text" name="site_location" class="control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Total Capacity (kW)</label>
+                            <input type="number" name="total_capacity_kw" class="control" min="0" step="0.01">
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Installation Type</label>
+                            <input type="text" name="installation_type" class="control">
+                        </div>
+                    </div>
+
+                    <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Financial Model</label>
+                            <input type="text" name="financial_model" class="control">
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Avg Generation (units/kW/year)</label>
+                            <input type="number" name="average_generation_units_per_kw_year" class="control" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Contact No</label>
+                            <input type="text" name="contact_no" class="control">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" value="1" name="show_contact_on_frontend" id="show_contact_on_frontend">
+                                <label class="form-check-label" for="show_contact_on_frontend">Show on frontend</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Email</label>
+                            <input type="email" name="email_id" class="control">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" value="1" name="show_email_on_frontend" id="show_email_on_frontend">
+                                <label class="form-check-label" for="show_email_on_frontend">Show on frontend</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="fw-semibold">Project Images (max 4)</label>
+                        <input type="file" name="images[]" class="control" accept="image/*" multiple data-project-images>
+                        <p class="muted-help" data-project-images-help>Select up to 4 images (max 5MB each).</p>
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end pt-2">
+                        <button type="button" class="btn btn-outline-secondary" data-project-close>Cancel</button>
+                        <button type="submit" class="btn-primary">Save Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.querySelector('[data-project-modal]');
+            const openBtn = document.querySelector('[data-project-open]');
+            const closeBtns = document.querySelectorAll('[data-project-close]');
+            const imagesInput = document.querySelector('[data-project-images]');
+            const imagesHelp = document.querySelector('[data-project-images-help]');
+
+            function openModal() {
+                if (!modal) return;
+                modal.classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                if (!modal) return;
+                modal.classList.remove('is-open');
+                document.body.style.overflow = '';
+            }
+
+            openBtn?.addEventListener('click', openModal);
+            closeBtns.forEach((btn) => btn.addEventListener('click', closeModal));
+
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
+                    closeModal();
+                }
+            });
+
+            imagesInput?.addEventListener('change', () => {
+                const files = imagesInput.files ? Array.from(imagesInput.files) : [];
+                if (files.length > 4) {
+                    imagesInput.value = '';
+                    if (imagesHelp) {
+                        imagesHelp.textContent = 'Please select maximum 4 images.';
+                        imagesHelp.style.color = '#dc2626';
+                    }
+                    return;
+                }
+
+                if (imagesHelp) {
+                    imagesHelp.textContent = files.length
+                        ? `${files.length} image(s) selected (max 4).`
+                        : 'Select up to 4 images (max 5MB each).';
+                    imagesHelp.style.color = '';
+                }
+            });
+        })();
+    </script>
 
 
 

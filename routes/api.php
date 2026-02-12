@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ChatbotController;
+use App\Http\Controllers\Api\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,10 @@ Route::prefix('companies')->group(function () {
 Route::prefix('chatbot')->group(function () {
     Route::get('/bootstrap', [ChatbotController::class, 'bootstrap']);
     Route::post('/answer', [ChatbotController::class, 'answer']);
+});
+
+Route::prefix('locations')->group(function () {
+    Route::get('/states/{stateId}/cities', [LocationController::class, 'citiesByState']);
+    Route::get('/cities/{cityId}/pincodes', [LocationController::class, 'pincodesByCity']);
+    Route::get('/resolve', [LocationController::class, 'resolveByPincode']);
 });

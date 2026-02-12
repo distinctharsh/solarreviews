@@ -1,5 +1,6 @@
 <?php
-
+set_time_limit(0);
+ini_set('memory_limit', '-1');
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Frontend\GetQuoteController;
 use App\Http\Controllers\Frontend\CompanyDetailRequestController;
 use App\Http\Controllers\Dashboard\UserDashboardController;
 use App\Http\Controllers\Dashboard\UserProfileSubmissionController;
+use App\Http\Controllers\Dashboard\ProjectController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -36,13 +38,137 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Admin\GetQuoteController as AdminGetQuoteController;
 use App\Http\Controllers\Admin\CompanyDetailRequestController as AdminCompanyDetailRequestController;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Api\LocationController;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
+
+
+Route::get('/import-pincode-data', function () {
+
+    $filePath = storage_path('app/pincode_data.csv');
+
+    if (!file_exists($filePath)) {
+        return "File not found!";
+    }
+
+    $handle = fopen($filePath, 'r');
+
+    $header = fgetcsv($handle); // Skip header
+
+    $now = Carbon::now();
+
+    $stateMap = [];
+    $cityMap = [];
+
+    while (($row = fgetcsv($handle)) !== false) {
+
+        $pincode = trim($row[0]);
+        $cityName = trim($row[1]);
+        $stateName = trim($row[2]);
+
+        if (!$pincode || !$cityName || !$stateName) {
+            continue;
+        }
+
+        // =========================
+        // STATE INSERT
+        // =========================
+        if (!isset($stateMap[$stateName])) {
+
+            $stateSlug = Str::slug($stateName);
+            $stateCode = strtoupper(substr($stateSlug, 0, 5));
+
+            $state = DB::table('states')->where('slug', $stateSlug)->first();
+
+            if (!$state) {
+                $stateId = DB::table('states')->insertGetId([
+                    'name' => $stateName,
+                    'slug' => $stateSlug,
+                    'code' => $stateCode,
+                    'is_active' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            } else {
+                $stateId = $state->id;
+            }
+
+            $stateMap[$stateName] = $stateId;
+        }
+
+        $stateId = $stateMap[$stateName];
+
+        // =========================
+        // CITY INSERT
+        // =========================
+        $cityKey = $stateId . '_' . $cityName;
+
+        if (!isset($cityMap[$cityKey])) {
+
+            $citySlug = Str::slug($cityName);
+
+            $city = DB::table('cities')
+                ->where('state_id', $stateId)
+                ->where('slug', $citySlug)
+                ->first();
+
+            if (!$city) {
+                $cityId = DB::table('cities')->insertGetId([
+                    'state_id' => $stateId,
+                    'name' => $cityName,
+                    'slug' => $citySlug,
+                    'is_active' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            } else {
+                $cityId = $city->id;
+            }
+
+            $cityMap[$cityKey] = $cityId;
+        }
+
+        $cityId = $cityMap[$cityKey];
+
+        // =========================
+        // PINCODE INSERT
+        // =========================
+        $exists = DB::table('pincodes')
+            ->where('state_id', $stateId)
+            ->where('city_id', $cityId)
+            ->where('pincode', $pincode)
+            ->exists();
+
+        if (!$exists) {
+            DB::table('pincodes')->insert([
+                'state_id' => $stateId,
+                'city_id' => $cityId,
+                'city_name' => $cityName,
+                'pincode' => $pincode,
+                'is_active' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+    }
+
+    fclose($handle);
+
+    return "Import Completed Successfully ✔";
+});
 
 Route::get('/create-symlink', function () {
     Artisan::call('storage:link');
     return 'Symbolic link created successfully!';
 });
 
+
+Route::prefix('locations')->group(function () {
+    Route::get('/states/{stateId}/cities', [LocationController::class, 'citiesByState']);
+    Route::get('/cities/{cityId}/pincodes', [LocationController::class, 'pincodesByCity']);
+    Route::get('/resolve', [LocationController::class, 'resolveByPincode']);
+});
 
 Route::get('/optimize-clear', function () {
     Artisan::call('optimize:clear');
@@ -486,6 +612,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/supplier-profile', [UserProfileSubmissionController::class, 'storeSupplier'])
         ->middleware('verified')
         ->name('dashboard.supplier-profile.store');
+
+    Route::post('/dashboard/projects', [ProjectController::class, 'store'])
+        ->middleware('verified')
+        ->name('dashboard.projects.store');
+    Route::delete('/dashboard/projects/{project}', [ProjectController::class, 'destroy'])
+        ->middleware('verified')
+        ->name('dashboard.projects.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

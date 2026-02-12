@@ -1547,12 +1547,12 @@
         /* Full Hero Wrapper */
         .solarHero-wrap {
             width: 100%;
-            min-height: calc(100vh - 80px);
-            padding-top: 120px; /* 👈 yaha se control karo kitna upar chahiye */
-            /* background: url('/images/im/bg-m.jpg') center bottom / cover no-repeat; */
-            background-color: #f5f5f5; 
+            min-height: 78vh;
+            padding-top: 90px; /* 👈 yaha se control karo kitna upar chahiye */
+            /* background: url('/images/im/bg.jpg') center center / cover no-repeat; */
+            background-color: #f5f5f5;
             display: flex;
-            align-items: flex-start; /* 👈 center se upar */
+            align-items: flex-start;
             justify-content: center;
             padding-left: 20px;
             padding-right: 20px;
@@ -1762,8 +1762,8 @@
 
 
         .stats-section {
-            padding: 70px 0 0 0;
-            margin: 60px 0 0 0;
+            padding: 28px 0 0 0;
+            margin: -22px 0 0 0;
             background: #fff;
         }
 

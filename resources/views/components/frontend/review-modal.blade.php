@@ -325,6 +325,81 @@
             display: none;
         }
 
+        .metrics-accordion {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .metrics-section {
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 12px;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        .metrics-section summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 0.75rem 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-weight: 700;
+            color: #0f172a;
+            background: #f8fafc;
+        }
+
+        .metrics-section summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .metrics-section summary .metrics-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metrics-section summary .metrics-chevron {
+            transition: transform 0.2s ease;
+            opacity: 0.75;
+        }
+
+        .metrics-section[open] summary .metrics-chevron {
+            transform: rotate(180deg);
+        }
+
+        .metrics-section .metrics-body {
+            padding: 0.85rem 0.9rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+        }
+
+        @media (min-width: 520px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .metric-select {
+            width: 100%;
+            padding: 0.65rem 0.85rem;
+            border: 2px solid var(--border, #e2e8f0);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            background: #ffffff;
+        }
+
+        .metric-select:focus {
+            outline: none;
+            border-color: var(--primary, #3ba14c);
+            box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.1);
+        }
+
         .system-toggle {
             width: 100%;
             background: #f1f5f9;
@@ -779,41 +854,279 @@
                         @endfor
                         <input type="hidden" name="rating" id="{{ $modalId }}Rating" required>
                     </div>
+
                 </div>
 
-                @php
-                    $experienceMetrics = [
-                        'Sales process',
-                        'Price charged as quoted',
-                        'On schedule',
-                        'Installation quality',
-                        'After sales support',
-                    ];
-                @endphp
                 <div class="form-group">
                     <label class="form-label">Tell us more about your experience - rate the following (optional)</label>
-                    <div class="row row-cols-1 row-cols-md-2 g-3 multi-rating">
-                        @foreach($experienceMetrics as $metric)
-                            @php
-                                $metricSlug = \Illuminate\Support\Str::slug($metric, '_');
-                            @endphp
-                            <div class="col">
-                                <div class="rating-field rating-field-sm">
-                                    <label class="form-label small mb-1">{{ $metric }}</label>
-                                    <div class="metric-stars" data-metric-stars>
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @php
-                                                $metricInputId = $modalId . '-' . $metricSlug . '-rating-' . $i;
-                                            @endphp
-                                            <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
-                                                <i class="far fa-star"></i>
-                                            </button>
-                                        @endfor
-                                        <input type="hidden" name="metrics[{{ $metricSlug }}]" data-metric-input>
+                    <div class="metrics-accordion">
+                        <details class="metrics-section" open>
+                            <summary>
+                                <span class="metrics-title">A. Sales &amp; Commercial Experience</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Sales Process Experience</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[sales_process_experience]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Price Charged vs Price Quoted</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[price_charged_vs_quoted]" data-metric-input>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">B. Project Execution &amp; Timelines</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Adherence to Project Schedule</label>
+                                        <select class="metric-select" name="metrics[adherence_to_project_schedule]">
+                                            <option value="">Select</option>
+                                            <option value="on_time">On Time</option>
+                                            <option value="0_30_days_delay">0–30 Days Delay</option>
+                                            <option value="30_90_days_delay">30–90 Days Delay</option>
+                                            <option value="90_plus_days_delay">90+ Days Delay</option>
+                                        </select>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Commissioning Timeliness</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[commissioning_timeliness]" data-metric-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">C. Design &amp; Engineering</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Smart System Design</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[smart_system_design]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Space Utilisation Efficiency</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[space_utilisation_efficiency]" data-metric-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">D. Installation &amp; Quality</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Installation Quality &amp; Workmanship</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[installation_quality_workmanship]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Material Quality</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[material_quality]" data-metric-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">E. Performance &amp; Maintenance</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Plant Generation Performance</label>
+                                        <select class="metric-select" name="metrics[plant_generation_performance]">
+                                            <option value="">Select</option>
+                                            <option value="as_committed">As Committed</option>
+                                            <option value="plus_minus_5_percent_variation">±5% Variation</option>
+                                            <option value="plus_minus_10_percent_variation">±10% Variation</option>
+                                            <option value="plus_minus_20_percent_or_more">±20% or More</option>
+                                        </select>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">O&amp;M Schedule Adherence</label>
+                                        <select class="metric-select" name="metrics[om_schedule_adherence]">
+                                            <option value="">Select</option>
+                                            <option value="stable">Stable</option>
+                                            <option value="inconsistent">Inconsistent</option>
+                                            <option value="not_applicable_unknown">Not Applicable / Unknown</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">F. Process &amp; Approvals</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Documentation Quality &amp; Timeliness</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[documentation_quality_timeliness]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Subsidy Approval Experience</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[subsidy_approval_experience]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Net Metering Process Experience</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[net_metering_process_experience]" data-metric-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">G. Customer Support &amp; Team</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">After-Sales Support</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[after_sales_support]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Team Behaviour &amp; Professionalism</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[team_behaviour_professionalism]" data-metric-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="metrics-section">
+                            <summary>
+                                <span class="metrics-title">H. Overall Experience</span>
+                                <i class="fas fa-chevron-down metrics-chevron"></i>
+                            </summary>
+                            <div class="metrics-body">
+                                <div class="metrics-grid">
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Overall Satisfaction</label>
+                                        <div class="metric-stars" data-metric-stars>
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="metric-star-btn" data-metric-star data-value="{{ $i }}" aria-label="{{ $i }} stars">
+                                                    <i class="far fa-star"></i>
+                                                </button>
+                                            @endfor
+                                            <input type="hidden" name="metrics[overall_satisfaction]" data-metric-input>
+                                        </div>
+                                    </div>
+                                    <div class="rating-field rating-field-sm">
+                                        <label class="form-label small mb-1">Would you recommend us to others?</label>
+                                        <select class="metric-select" name="metrics[would_recommend]">
+                                            <option value="">Select</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
                     </div>
                 </div>
                 

@@ -186,7 +186,23 @@ class ReviewController extends Controller
             'review_title' => 'nullable|string|max:255',
             'review_text' => 'required|string|min:1',
             'metrics' => 'nullable|array',
-            'metrics.*' => 'nullable|integer|min:1|max:5',
+            'metrics.sales_process_experience' => 'nullable|integer|min:1|max:5',
+            'metrics.price_charged_vs_quoted' => 'nullable|integer|min:1|max:5',
+            'metrics.adherence_to_project_schedule' => 'nullable|string|in:on_time,0_30_days_delay,30_90_days_delay,90_plus_days_delay',
+            'metrics.commissioning_timeliness' => 'nullable|integer|min:1|max:5',
+            'metrics.smart_system_design' => 'nullable|integer|min:1|max:5',
+            'metrics.space_utilisation_efficiency' => 'nullable|integer|min:1|max:5',
+            'metrics.installation_quality_workmanship' => 'nullable|integer|min:1|max:5',
+            'metrics.material_quality' => 'nullable|integer|min:1|max:5',
+            'metrics.plant_generation_performance' => 'nullable|string|in:as_committed,plus_minus_5_percent_variation,plus_minus_10_percent_variation,plus_minus_20_percent_or_more',
+            'metrics.om_schedule_adherence' => 'nullable|string|in:stable,inconsistent,not_applicable_unknown',
+            'metrics.documentation_quality_timeliness' => 'nullable|integer|min:1|max:5',
+            'metrics.subsidy_approval_experience' => 'nullable|integer|min:1|max:5',
+            'metrics.net_metering_process_experience' => 'nullable|integer|min:1|max:5',
+            'metrics.after_sales_support' => 'nullable|integer|min:1|max:5',
+            'metrics.team_behaviour_professionalism' => 'nullable|integer|min:1|max:5',
+            'metrics.overall_satisfaction' => 'nullable|integer|min:1|max:5',
+            'metrics.would_recommend' => 'nullable|string|in:yes,no',
             'photos' => 'nullable|array',
             'photos.*' => [
                 'nullable',
@@ -254,19 +270,43 @@ class ReviewController extends Controller
             $review->rating = $validated['rating'];
             $review->experience_metrics = collect($request->input('metrics', []))
                 ->filter(fn ($value) => filled($value))
-                ->map(fn ($value) => (int) $value)
+                ->map(function ($value) {
+                    if (is_numeric($value)) {
+                        return (int) $value;
+                    }
+                    return is_string($value) ? trim($value) : (string) $value;
+                })
                 ->toArray();
+
             $metricMap = [
-                'sales_process' => 'sales_process_rating',
-                'price_charged_as_quoted' => 'price_charged_as_quoted_rating',
-                'on_schedule' => 'on_schedule_rating',
-                'installation_quality' => 'installation_quality_rating',
+                'sales_process_experience' => 'sales_process_experience_rating',
+                'price_charged_vs_quoted' => 'price_charged_vs_quoted_rating',
+                'commissioning_timeliness' => 'commissioning_timeliness_rating',
+                'smart_system_design' => 'smart_system_design_rating',
+                'space_utilisation_efficiency' => 'space_utilisation_efficiency_rating',
+                'installation_quality_workmanship' => 'installation_quality_workmanship_rating',
+                'material_quality' => 'material_quality_rating',
+                'documentation_quality_timeliness' => 'documentation_quality_timeliness_rating',
                 'after_sales_support' => 'after_sales_support_rating',
+                'team_behaviour_professionalism' => 'team_behaviour_professionalism_rating',
+                'overall_satisfaction' => 'overall_satisfaction_rating',
             ];
 
             foreach ($metricMap as $metricKey => $column) {
                 $review->{$column} = $request->integer("metrics.{$metricKey}");
             }
+
+            $review->sales_process_rating = $review->sales_process_experience_rating;
+            $review->price_charged_as_quoted_rating = $review->price_charged_vs_quoted_rating;
+            $review->installation_quality_rating = $review->installation_quality_workmanship_rating;
+            $review->after_sales_support_rating = $review->after_sales_support_rating;
+
+            $review->adherence_to_project_schedule = $request->input('metrics.adherence_to_project_schedule');
+            $review->plant_generation_performance = $request->input('metrics.plant_generation_performance');
+            $review->om_schedule_adherence = $request->input('metrics.om_schedule_adherence');
+            $review->subsidy_approval_experience = $request->integer('metrics.subsidy_approval_experience');
+            $review->net_metering_process_experience = $request->integer('metrics.net_metering_process_experience');
+            $review->would_recommend = $request->input('metrics.would_recommend');
 
             $review->system_size_kw = $request->input('system_size');
             $review->system_price = $request->input('system_price');
