@@ -691,6 +691,22 @@
             margin-left: 8px;
         }
 
+        .verified-badge-inline {
+            color: #1d9bf0;
+            font-size: 20px;
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .verified-badge-inline i {
+            font-size: 18px;
+        }
+
+        .verified-badge-inline:hover {
+            color: #1a8cd8;
+        }
+
         .review-title {
             font-size: 16px;
             margin: 6px 0;
@@ -847,13 +863,14 @@
                         <img src="{{ $logoUrl }}" class="logo">
 
                         <div class="info">
-                            <!-- <span class="claimed">✔ Claimed profile</span> -->
-
-                            @if($company->is_verified)
-                                <span class="claimed">✔ Verified profile</span>
-                            @endif
-
-                            <h1>{{ $company->owner_name }}</h1>
+                            <h1 class="d-flex align-items-center gap-2">
+                                {{ $company->owner_name }}
+                                @if($company->is_verified)
+                                    <span class="verified-badge-inline" title="Verified Company">
+                                        <img src="{{ asset('images/company/verified.png?v=' . time() . '') }}" alt="Verified" width="18" height="18">
+                                    </span>
+                                @endif
+                            </h1>
                             
                                         <div class="rating mb-2">
                                             <span class="reviews">

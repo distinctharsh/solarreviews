@@ -198,6 +198,116 @@
             box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
         }
 
+        .table-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filters-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin: 0;
+        }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 0.75rem;
+            color: #94a3b8;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .filter-input,
+        .filter-select {
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 0.5rem 0.75rem;
+            font-size: 14px;
+            font-weight: 500;
+            background: #fff;
+            transition: all 0.18s ease;
+            outline: none;
+        }
+
+        .filter-input {
+            padding-left: 2.25rem;
+            width: 160px;
+        }
+
+        .filter-select {
+            width: 140px;
+            cursor: pointer;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: #3ba14c;
+            box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.12);
+        }
+
+        .filter-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .verified-badge {
+            color: #1d9bf0;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .verified-badge i {
+            font-size: 14px;
+        }
+
+        .verified-badge:hover {
+            color: #1a8cd8;
+        }
+
+        @media (max-width: 768px) {
+            .table-card-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filters-row {
+                justify-content: stretch;
+            }
+            .filter-group {
+                flex: 1;
+                min-width: 0;
+            }
+            .filter-input,
+            .filter-select {
+                width: 100%;
+            }
+        }
+
         .sidebar-card {
             grid-area: sidebar;
             padding: 1.75rem;
@@ -559,29 +669,49 @@
                                     <p class="text-muted mb-0 text-16">Click any company name to view the full profile.</p>
                                 </div>
                                 
-                                    <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                                    <div class="filters-row">
+    <div class="filter-group">
+        <label class="filter-label">Search</label>
+        <div class="input-with-icon">
+            <i class="fas fa-search"></i>
+            <input 
+                type="text" 
+                id="companySearchInput"
+                class="filter-input" 
+                placeholder="Company name"
+                oninput="filterGlobal()"
+                value="{{ request('q') }}"
+            >
+        </div>
+    </div>
 
-                                        <select id="companySortSelect" class="form-select" style="max-width: 220px;" onchange="applySort()">
-                                            <option value="">Sort: Default</option>
-                                            <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating (High to Low)</option>
-                                            <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating (Low to High)</option>
-                                            <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews (High to Low)</option>
-                                            <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews (Low to High)</option>
-                                        </select>
+    <div class="filter-group">
+        <label class="filter-label">Pincode</label>
+        <div class="input-with-icon">
+            <i class="fas fa-map-marker-alt"></i>
+            <input 
+                type="text" 
+                id="pincodeInput"
+                class="filter-input" 
+                placeholder="e.g. 110001"
+                maxlength="6"
+                oninput="filterGlobal()"
+                value="{{ request('pincode') }}"
+            >
+        </div>
+    </div>
 
-                                        <div class="search-box">
-  <i class="fas fa-search search-icon ml-1"></i>
-  <input 
-    type="text" 
-    id="companySearchInput"
-    class="search-input" 
-    placeholder="Search companies"
-    oninput="filterGlobal()"
-    value="{{ request('q') }}"
-  >
+    <div class="filter-group">
+        <label class="filter-label">Sort</label>
+        <select id="companySortSelect" class="filter-select" onchange="applySort()">
+            <option value="">Default</option>
+            <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating ↓</option>
+            <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating ↑</option>
+            <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews ↓</option>
+            <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews ↑</option>
+        </select>
+    </div>
 </div>
-
-                                    </div>
 
                                 <!--<input type="text" class="search-input" placeholder="Search companies" oninput="filterCompanies(this.value)">-->
                             </div>
@@ -605,12 +735,19 @@
                                                 data-rating="{{ (float) $company->avg_rating }}"
                                                 data-reviews="{{ (int) $company->total_reviews }}">
                                                 <td>
-                                                    <a href="{{ route('companies.show', $company->slug) }}" class="company-name text-decoration-none">
-                                                        {{ $company->owner_name ?? $company->name ?? 'Company' }}
-                                                        @if($company->state?->name)
-                                                            <span class="text-muted">({{ $company->state->name }})</span>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <a href="{{ route('companies.show', $company->slug) }}" class="company-name text-decoration-none">
+                                                            {{ $company->owner_name ?? $company->name ?? 'Company' }}
+                                                            @if($company->state?->name)
+                                                                <span class="text-muted">({{ $company->state->name }})</span>
+                                                            @endif
+                                                        </a>
+                                                        @if($company->is_verified)
+                                                            <span class="verified-badge" title="Verified Company">
+                                                                <img src="{{ asset('images/company/verified.png?v=' . time() . '') }}" alt="Verified" width="14" height="14">
+                                                            </span>
                                                         @endif
-                                                    </a>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <span class="rating-chip">
@@ -686,10 +823,11 @@
     function filterGlobal() {
         const searchText = document.getElementById('companySearchInput')?.value || '';
         const stateId = document.getElementById('stateSelect')?.value || '';
+        const pincode = document.getElementById('pincodeInput')?.value || '';
 
         clearTimeout(filterTimeout);
         filterTimeout = setTimeout(() => {
-            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId });
+            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId, pincode: pincode });
         }, 350);
     }
 
@@ -704,6 +842,11 @@
         const searchInput = document.getElementById('companySearchInput');
         if (searchInput && params.has('q')) {
             searchInput.value = params.get('q') || '';
+        }
+
+        const pincodeInput = document.getElementById('pincodeInput');
+        if (pincodeInput && params.has('pincode')) {
+            pincodeInput.value = params.get('pincode') || '';
         }
 
         const sortSelect = document.getElementById('companySortSelect');

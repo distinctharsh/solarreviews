@@ -23,6 +23,7 @@ class CompanyController extends Controller
     {
         $searchQuery = trim((string) $request->query('q', ''));
         $stateId = $request->query('state');
+        $pincode = trim((string) $request->query('pincode', ''));
         $sort = (string) $request->query('sort', '');
 
         $reviewStats = CompanyReview::query()
@@ -53,6 +54,9 @@ class CompanyController extends Controller
             })
             ->when($stateId !== null && $stateId !== '', function ($query) use ($stateId) {
                 $query->where('companies.state_id', $stateId);
+            })
+            ->when($pincode !== '', function ($query) use ($pincode) {
+                $query->where('companies.pincode', $pincode);
             });
 
         switch ($sort) {

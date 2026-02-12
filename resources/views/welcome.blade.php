@@ -3121,6 +3121,12 @@
                     return;
                 }
 
+                // Check if input is a pincode (6 digits)
+                if (/^\d{6}$/.test(term)) {
+                    window.location.href = `{{ route('companies.index') }}?pincode=${encodeURIComponent(term)}`;
+                    return;
+                }
+
                 const matches = filterCompanies(term);
                 if (matches.length === 1) {
                     goToCompany(matches[0]);
