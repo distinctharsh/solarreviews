@@ -867,7 +867,7 @@
                                 {{ $company->owner_name }}
                                 @if($company->is_verified)
                                     <span class="verified-badge-inline" title="Verified Company">
-                                        <img src="{{ asset('images/company/verified.png?v=' . time() . '') }}" alt="Verified" width="18" height="18">
+                                        <img src="https://www.citypng.com/public/uploads/preview/hd-blue-badge-verified-tick-mark-png-704081694710438adyvtbqafw.png" alt="Verified" width="18" height="18">
                                     </span>
                                 @endif
                             </h1>

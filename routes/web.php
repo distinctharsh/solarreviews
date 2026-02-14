@@ -609,9 +609,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/distributor-profile', [UserProfileSubmissionController::class, 'storeDistributor'])
         ->middleware('verified')
         ->name('dashboard.distributor-profile.store');
+    Route::put('/dashboard/distributor-profile', [UserProfileSubmissionController::class, 'updateDistributor'])
+        ->middleware('verified')
+        ->name('dashboard.distributor-profile.update');
     Route::post('/dashboard/supplier-profile', [UserProfileSubmissionController::class, 'storeSupplier'])
         ->middleware('verified')
         ->name('dashboard.supplier-profile.store');
+    Route::put('/dashboard/supplier-profile', [UserProfileSubmissionController::class, 'updateSupplier'])
+        ->middleware('verified')
+        ->name('dashboard.supplier-profile.update');
 
     Route::post('/dashboard/projects', [ProjectController::class, 'store'])
         ->middleware('verified')
@@ -620,9 +626,25 @@ Route::middleware('auth')->group(function () {
         ->middleware('verified')
         ->name('dashboard.projects.destroy');
 
+    Route::post('/dashboard/testimonials', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'store'])
+        ->middleware('verified')
+        ->name('dashboard.testimonials.store');
+    Route::delete('/dashboard/testimonials/{testimonial}', [\App\Http\Controllers\Dashboard\TestimonialController::class, 'destroy'])
+        ->middleware('verified')
+        ->name('dashboard.testimonials.destroy');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Company Management Routes (for approved users)
+    Route::get('/company/edit', [ProfileController::class, 'editCompany'])->name('company.edit');
+    Route::patch('/company', [ProfileController::class, 'updateCompany'])->name('company.update');
+    
+    // Additional Profile Actions
+    Route::get('/profile/view', [ProfileController::class, 'viewProfile'])->name('profile.view');
+    Route::get('/profile/download', [ProfileController::class, 'downloadProfile'])->name('profile.download');
+    Route::post('/profile/resubmit', [ProfileController::class, 'resubmitProfile'])->name('profile.resubmit');
 });
 
 require __DIR__.'/auth.php';

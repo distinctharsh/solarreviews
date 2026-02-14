@@ -9,6 +9,7 @@ use App\Models\State;
 use App\Models\UserProfileSubmission;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\Testimonial;
 
 class UserDashboardController extends Controller
 {
@@ -19,6 +20,11 @@ class UserDashboardController extends Controller
         $projects = Project::query()
             ->where('user_id', $user?->id)
             ->with('images')
+            ->latest()
+            ->get();
+
+        $testimonials = Testimonial::query()
+            ->where('user_id', $user?->id)
             ->latest()
             ->get();
 
@@ -48,13 +54,14 @@ $supplierStatus = $user?->isSupplier()
 
 
         return view('dashboard', [
-             'distributorStatus' => $distributorStatus,
-             'supplierStatus' => $supplierStatus,
+            'distributorStatus' => $distributorStatus,
+            'supplierStatus' => $supplierStatus,
             'requiresDistributorIntake' => $requiresDistributorIntake,
             'requiresSupplierIntake' => $requiresSupplierIntake,
             'states' => $states,
             'cities' => $cities,
             'projects' => $projects,
+            'testimonials' => $testimonials,
         ]);
     }
 }

@@ -744,7 +744,7 @@
                                                         </a>
                                                         @if($company->is_verified)
                                                             <span class="verified-badge" title="Verified Company">
-                                                                <img src="{{ asset('images/company/verified.png?v=' . time() . '') }}" alt="Verified" width="14" height="14">
+                                                                <img src="https://www.citypng.com/public/uploads/preview/hd-blue-badge-verified-tick-mark-png-704081694710438adyvtbqafw.png" alt="Verified" width="14" height="14">
                                                             </span>
                                                         @endif
                                                     </div>

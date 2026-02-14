@@ -2373,8 +2373,8 @@
                         type="text"
                         class="hero-search-input"
                         name="q"
-                        placeholder="Search Company"
-                        aria-label="Search Company"
+                        placeholder="Search Company by PIN code"
+                        aria-label="Search Company by PIN code"
                         data-hero-company-input
                     >
                 </form>

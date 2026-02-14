@@ -662,7 +662,7 @@
                 </div>
             </section>
         @else
-            <section class="section">
+            <!-- <section class="section">
                 <div class="container-custom">
                     <div class="section-heading">
                         <h3>Start with the essentials</h3>
@@ -683,18 +683,10 @@
                             </div>
                             <button class="btn-primary mt-4">Finish profile</button>
                         </article>
-                        <!-- <article class="highlight-card">
-                            <p class="chip">Quick actions</p>
-                            <h3>Stay responsive</h3>
-                            <div class="grid gap-3 mt-4">
-                                <button class="tag-button">Update contact info</button>
-                                <button class="tag-button">Invite teammates</button>
-                                <button class="tag-button">Contact support</button>
-                            </div>
-                        </article> -->
+                       
                     </div>
                 </div>
-            </section>
+            </section> -->
 
             <section class="section">
                 <div class="container-custom">
@@ -727,18 +719,6 @@
                                 </h3>
                             </div>
                             <a href="#" class="link-green">Add update →</a>
-                        </div>
-                        <div class="grid gap-4 md:grid-cols-2">
-                            @if($user?->isManufacturer())
-                                @include('dashboard.partials._manufacturer-suggestions')
-                            @elseif($user?->isDistributor())
-                                @include('dashboard.partials._distributor-suggestions')
-                            @else
-                                <div class="rounded-2xl border border-dashed border-gray-200 bg-slate-50 p-4">
-                                    <h4 class="font-semibold text-slate-900">Upgrade your account</h4>
-                                    <p class="text-sm text-muted mt-1">Switch to manufacturer or distributor to unlock advanced tools.</p>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -784,7 +764,7 @@
                 </div>
             </section>
 
-            <section class="section">
+            <!-- <section class="section">
                 <div class="container-custom">
                     <div class="section-heading flex flex-wrap items-center justify-between gap-3">
                         <div>
@@ -811,7 +791,7 @@
                         @endforeach
                     </div>
                 </div>
-            </section>
+            </section> -->
         @endif
 
         <section class="section">
@@ -866,6 +846,72 @@
                         @empty
                             <div class="upgrade-card">
                                 <p class="mb-0 text-muted">No projects added yet.</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container-custom">
+                <div class="section-card space-y-4">
+                    <div class="projects-header">
+                        <div>
+                            <p class="text-sm text-muted uppercase tracking-[0.2em]">Social Proof</p>
+                            <h3 class="text-xl font-semibold">Testimonials</h3>
+                            <p class="text-sm text-muted">Add customer testimonials to build trust and credibility.</p>
+                        </div>
+                        <button type="button" class="btn-primary" data-testimonial-open>+ Add Testimonial</button>
+                    </div>
+
+                    @if (session('status') === 'testimonial-created')
+                        <div class="alert alert-success mb-0">Testimonial added successfully.</div>
+                    @endif
+                    @if (session('status') === 'testimonial-deleted')
+                        <div class="alert alert-secondary mb-0">Testimonial deleted.</div>
+                    @endif
+
+                    <div class="projects-grid">
+                        @forelse(($testimonials ?? collect()) as $testimonial)
+                            <article class="project-card">
+                                <div class="d-flex align-items-start justify-content-between gap-3">
+                                    <div>
+                                        <p class="fw-semibold mb-1">{{ $testimonial->customer_name }}</p>
+                                        <p class="text-muted mb-0">{{ $testimonial->customer_company ?? 'Individual' }}</p>
+                                        @if(!is_null($testimonial->project_type))
+                                            <p class="text-muted mb-0">Project: {{ $testimonial->project_type }}</p>
+                                        @endif
+                                    </div>
+                                    <form method="POST" action="{{ route('dashboard.testimonials.destroy', $testimonial) }}" onsubmit="return confirm('Delete this testimonial?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-link p-0 fw-semibold text-danger">Delete</button>
+                                    </form>
+                                </div>
+
+                                <div class="mt-3">
+                                    <p class="text-muted">{{ Str::limit($testimonial->testimonial_text, 150) }}</p>
+                                    @if($testimonial->rating)
+                                        <div class="mt-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <span class="text-warning">{{ $testimonial->rating >= $i ? '★' : '☆' }}</span>
+                                            @endfor
+                                        </div>
+                                    @endif
+                                </div>
+
+                                @if($testimonial->customer_image)
+                                    <div class="project-images mt-3">
+                                        <div class="project-image">
+                                            <img src="{{ asset('storage/' . $testimonial->customer_image) }}" alt="Customer image">
+                                        </div>
+                                    </div>
+                                @endif
+                            </article>
+                        @empty
+                            <div class="upgrade-card">
+                                <p class="mb-0 text-muted">No testimonials added yet.</p>
                             </div>
                         @endforelse
                     </div>
@@ -957,6 +1003,70 @@
         </div>
     </div>
 
+    <div class="modal-overlay" data-testimonial-modal>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Add Testimonial">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Testimonial</h3>
+                <button type="button" class="modal-close" aria-label="Close" data-testimonial-close>×</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('dashboard.testimonials.store') }}" enctype="multipart/form-data" class="form-grid">
+                    @csrf
+
+                    <!-- <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Customer Name*</label>
+                            <input type="text" name="customer_name" class="control" required>
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Customer Company</label>
+                            <input type="text" name="customer_company" class="control" placeholder="Optional">
+                        </div>
+                    </div>
+
+                    <div class="form-grid two-col">
+                        <div>
+                            <label class="fw-semibold">Project Type</label>
+                            <input type="text" name="project_type" class="control" placeholder="e.g., Residential Solar, Commercial Solar">
+                        </div>
+                        <div>
+                            <label class="fw-semibold">Rating</label>
+                            <select name="rating" class="control">
+                                <option value="">Select Rating</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="fw-semibold">Testimonial Text*</label>
+                        <textarea name="testimonial_text" class="control" rows="4" required placeholder="What did the customer say about your work?"></textarea>
+                    </div> -->
+
+                    <div>
+                        <label class="fw-semibold">Customer Image</label>
+                        <input type="file" name="customer_image" class="control" accept="image/*">
+                        <p class="muted-help">Optional: Upload customer photo (max 5MB).</p>
+                    </div>
+
+                    <!-- <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" name="show_on_frontend" id="show_on_frontend" checked>
+                        <label class="form-check-label" for="show_on_frontend">Show on frontend</label>
+                    </div> -->
+
+                    <div class="d-flex gap-2 justify-content-end pt-2">
+                        <button type="button" class="btn btn-outline-secondary" data-testimonial-close>Cancel</button>
+                        <button type="submit" class="btn-primary">Save Testimonial</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function () {
             const modal = document.querySelector('[data-project-modal]');
@@ -1008,6 +1118,40 @@
                         ? `${files.length} image(s) selected (max 4).`
                         : 'Select up to 4 images (max 5MB each).';
                     imagesHelp.style.color = '';
+                }
+            });
+        })();
+
+        // Testimonial Modal Script
+        (function () {
+            const testimonialModal = document.querySelector('[data-testimonial-modal]');
+            const testimonialOpenBtn = document.querySelector('[data-testimonial-open]');
+            const testimonialCloseBtns = document.querySelectorAll('[data-testimonial-close]');
+
+            function openTestimonialModal() {
+                if (!testimonialModal) return;
+                testimonialModal.classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeTestimonialModal() {
+                if (!testimonialModal) return;
+                testimonialModal.classList.remove('is-open');
+                document.body.style.overflow = '';
+            }
+
+            testimonialOpenBtn?.addEventListener('click', openTestimonialModal);
+            testimonialCloseBtns.forEach((btn) => btn.addEventListener('click', closeTestimonialModal));
+
+            testimonialModal?.addEventListener('click', (e) => {
+                if (e.target === testimonialModal) {
+                    closeTestimonialModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && testimonialModal?.classList.contains('is-open')) {
+                    closeTestimonialModal();
                 }
             });
         })();
