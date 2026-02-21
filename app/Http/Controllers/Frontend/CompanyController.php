@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
+use App\Models\City;
 use App\Models\Company;
 use App\Models\CompanyReview;
 use App\Models\Product;
@@ -23,6 +24,7 @@ class CompanyController extends Controller
     {
         $searchQuery = trim((string) $request->query('q', ''));
         $stateId = $request->query('state');
+        $cityId = $request->query('city');
         $pincode = trim((string) $request->query('pincode', ''));
         $sort = (string) $request->query('sort', '');
 
@@ -54,6 +56,9 @@ class CompanyController extends Controller
             })
             ->when($stateId !== null && $stateId !== '', function ($query) use ($stateId) {
                 $query->where('companies.state_id', $stateId);
+            })
+            ->when($cityId !== null && $cityId !== '', function ($query) use ($cityId) {
+                $query->where('companies.city_id', $cityId);
             })
             ->when($pincode !== '', function ($query) use ($pincode) {
                 $query->where('companies.pincode', $pincode);
@@ -90,6 +95,7 @@ class CompanyController extends Controller
             'companies' => $companies,
             'totalCompanies' => $companies->total(),
             'states' => $states,
+            'cities' => City::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -341,6 +347,16 @@ class CompanyController extends Controller
             'stars' => round($expertScoreRaw / 20, 1),
         ];
 
+        // Get projects for company owner
+        $projects = [];
+        if ($company->owner_id) {
+            $projects = \App\Models\Project::query()
+                ->where('user_id', $company->owner_id)
+                ->with('images')
+                ->latest()
+                ->get();
+        }
+
         return view('frontend.companies.show', [
             'company' => $company,
             'logoUrl' => $this->companyLogoUrl($company),
@@ -357,6 +373,7 @@ class CompanyController extends Controller
             'ratingBreakdown' => $ratingBreakdown,
             'expertScore' => $expertScore,
             'reviews' => $reviews,
+            'projects' => $projects, // Add projects to view
         ]);
     }
 

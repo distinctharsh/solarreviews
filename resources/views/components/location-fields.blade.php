@@ -32,12 +32,12 @@
             </select>
         </div>
 
-        <div>
+        <!-- <div>
             <label class="{{ $labelClass }}">Linked City (optional)</label>
             <select id="{{ $idPrefix }}_linked_city_id" name="city_id" class="{{ $controlClass }}" data-location-linked-city-id>
                 <option value="">Linked City (optional)</option>
             </select>
-        </div>
+        </div> -->
 
         <div>
             <label class="{{ $labelClass }}">Pincode*</label>
@@ -65,6 +65,7 @@
         const selectedPincode = @json($selectedPincode);
 
         const clearSelect = (select, placeholder) => {
+            if (!select) return;
             select.innerHTML = '';
             const opt = document.createElement('option');
             opt.value = '';
@@ -121,6 +122,7 @@
         };
 
         const fillSelect = (select, items, valueKey, labelKey, selectedValue) => {
+            if (!select) return;
             items.forEach(item => {
                 const opt = document.createElement('option');
                 opt.value = item[valueKey];

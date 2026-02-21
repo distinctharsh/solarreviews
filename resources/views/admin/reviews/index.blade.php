@@ -160,18 +160,30 @@
                                     </div>
                                 </td>
                                 <td class="text-end">
-                                    <form action="{{ route('admin.reviews.company.approve', $review) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-success" {{ $review->is_approved ? 'disabled' : '' }}>
-                                            Approve
+                                    @php
+                                        $isDefaultDummyName = !$review->company_id && $review->manual_company_name === 'Other Solar Company';
+                                    @endphp
+                                    
+                                    @if($isDefaultDummyName)
+                                        <!-- Show Edit Name button for default dummy company -->
+                                        <button type="button" class="btn btn-sm btn-primary" data-edit-company-name="{{ $review->id }}" title="Update company name before approval">
+                                            <i class="fas fa-edit"></i> Update Name
                                         </button>
-                                    </form>
-                                    <form action="{{ route('admin.reviews.company.reject', $review) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-outline-warning" {{ !$review->is_approved ? 'disabled' : '' }}>
-                                            Reject
-                                        </button>
-                                    </form>
+                                    @else
+                                        <!-- Show Approve/Reject buttons for real companies or already-named manual companies -->
+                                        <form action="{{ route('admin.reviews.company.approve', $review) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-success" {{ $review->is_approved ? 'disabled' : '' }}>
+                                                Approve
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.reviews.company.reject', $review) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-warning" {{ !$review->is_approved ? 'disabled' : '' }}>
+                                                Reject
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -188,6 +200,35 @@
 
             <div class="mt-3">
                 {{ $companyReviews->onEachSide(1)->links('components.admin.pagination') }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Company Name Modal -->
+    <div id="editCompanyNameModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Company Name</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editCompanyNameForm" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" name="manual_company_name" class="form-control" required>
+                            <small class="text-muted">Enter the actual company name</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update & Approve</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -327,5 +368,186 @@
 .table td .btn {
     margin-bottom: 0;
 }
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+}
+
+.modal.show {
+    overflow-y: auto;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+}
+
+.modal-backdrop.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: auto;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header .close {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.modal-header .close:hover {
+    opacity: 0.75;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.modal-footer > :not(:last-child) {
+    margin-right: 0.25rem;
+}
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modalEl = document.getElementById('editCompanyNameModal');
+    const form = document.getElementById('editCompanyNameForm');
+    const companyNameInput = document.getElementById('companyName');
+    
+    function closeModal() {
+        modalEl.style.display = 'none';
+        modalEl.classList.remove('show');
+        modalEl.setAttribute('aria-hidden', 'true');
+        
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+        
+        document.body.classList.remove('modal-open');
+    }
+    
+    function openModal(reviewId, currentName) {
+        // Set current name in input
+        companyNameInput.value = currentName;
+        
+        // Set form action using proper Laravel route
+        const baseUrl = '{{ route('admin.reviews.company.update-name', ':id') }}';
+        form.action = baseUrl.replace(':id', reviewId);
+        
+        // Show modal
+        modalEl.style.display = 'block';
+        modalEl.classList.add('show');
+        modalEl.setAttribute('aria-hidden', 'false');
+        
+        // Add backdrop
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.addEventListener('click', closeModal);
+            document.body.appendChild(backdrop);
+        }
+        
+        document.body.classList.add('modal-open');
+        companyNameInput.focus();
+    }
+    
+    // Handle Edit Company Name button clicks
+    document.querySelectorAll('[data-edit-company-name]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const reviewId = this.getAttribute('data-edit-company-name');
+            const row = this.closest('tr');
+            const companyNameElement = row.querySelector('td strong');
+            const currentName = companyNameElement.textContent.trim();
+            
+            openModal(reviewId, currentName);
+        });
+    });
+    
+    // Handle modal close button
+    document.querySelectorAll('[data-dismiss="modal"]').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeModal();
+        });
+    });
+    
+    // Close modal when clicking outside
+    modalEl.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+});
+</script>
 @endpush

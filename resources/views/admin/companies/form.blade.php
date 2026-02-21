@@ -215,6 +215,22 @@
                         </label>
                     </div>
 
+                    <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                        <input type="hidden" name="is_verified" value="0">
+                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <input type="checkbox" id="is_verified" name="is_verified" value="1" {{ old('is_verified', $company->is_verified ?? 0) ? 'checked' : '' }}>
+                            Verified company
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                        <input type="hidden" name="is_subscribed" value="0">
+                        <label class="form-label" style="margin:0; display:flex; align-items:center; gap:6px;">
+                            <input type="checkbox" id="is_subscribed" name="is_subscribed" value="1" {{ old('is_subscribed', $company->is_subscribed ?? 0) ? 'checked' : '' }}>
+                            Subscribed (Premium)
+                        </label>
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Contact Details</label>
                         <input type="text" name="phone" placeholder="Phone *" required

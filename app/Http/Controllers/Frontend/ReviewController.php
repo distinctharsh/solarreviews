@@ -174,7 +174,7 @@ class ReviewController extends Controller
                 'max:255'
             ],
             'company_url' => [
-                $isManualCompany ? 'required' : 'nullable',
+                'nullable',
                 'url',
                 'max:255'
             ],

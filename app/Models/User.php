@@ -84,11 +84,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship: User owns a company
+     * Relationship: User belongs to a company
      */
-    public function company(): HasOne
+    public function company()
     {
-        return $this->hasOne(Company::class, 'owner_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function profileSubmissions(): HasMany

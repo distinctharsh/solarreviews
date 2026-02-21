@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserProfileSubmissionController as AdminProfileSubmissionController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -52,6 +53,14 @@ Route::group([
     Route::get('companies/{company}', [\App\Http\Controllers\Admin\CompanyController::class, 'show'])->name('companies.show');
     Route::patch('companies/{company}/verification', [\App\Http\Controllers\Admin\CompanyController::class, 'updateVerification'])
         ->name('companies.verification');
+    Route::patch('companies/{company}/subscription', [\App\Http\Controllers\Admin\CompanyController::class, 'updateSubscription'])
+        ->name('companies.subscription');
+    Route::post('companies/{company}/update-owner', [\App\Http\Controllers\Admin\CompanyController::class, 'updateOwner'])
+        ->name('companies.update-owner');
+    
+    // Users
+    Route::resource('users', UserController::class);
+    Route::post('users/{user}/assign-company', [UserController::class, 'assignCompany'])->name('users.assign-company');
     
     Route::redirect('/', '/admin/dashboard');
 });

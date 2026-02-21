@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Throwable;
+use Exception;
 
 return new class extends Migration
 {
@@ -19,13 +19,13 @@ return new class extends Migration
         // Ensure `id` behaves like Laravel's $table->id() (AUTO_INCREMENT primary key)
         try {
             DB::statement('ALTER TABLE `get_quotes` MODIFY `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT');
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             // Ignore if already correct or DB does not support this change.
         }
 
         try {
             DB::statement('ALTER TABLE `get_quotes` ADD PRIMARY KEY (`id`)');
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             // Ignore if primary key already exists.
         }
     }

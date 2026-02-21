@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,8 +14,39 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::latest()->paginate(10);
-        return view('admin.users.index', compact('users'));
+        // Test 1: Get all users without any relationships
+        $usersWithoutRelation = User::latest()->get();
+        \Log::info('Users without relation count: ' . $usersWithoutRelation->count());
+        
+        // Test 2: Get users with company relationship
+        $usersWithRelation = User::with('company')->latest()->get();
+        \Log::info('Users with relation count: ' . $usersWithRelation->count());
+        
+        $users = $usersWithRelation;
+        $availableCompanies = Company::whereNull('owner_id')->get();
+        
+        return view('admin.users.index', compact('users', 'availableCompanies'));
+    }
+
+    /**
+     * Assign a company to a user.
+     */
+    public function assignCompany(Request $request, User $user)
+    {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id'
+        ]);
+
+        $company = Company::find($request->company_id);
+        
+        // Update user's company_id
+        $user->update(['company_id' => $request->company_id]);
+        
+        // Update company's owner_id
+        $company->update(['owner_id' => $user->id]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Company assigned to user successfully.');
     }
 
     /**

@@ -628,7 +628,7 @@
         <div class="container-custom">
             <!--<div class="section-label">Consumer Reviews</div>-->
             <h2 class="page-title page-title-top">Top Solar Installers Ranked by Reviews</h2>
-            <p class="lede">Solar Reviews publishes the largest volume of verified installer feedback. These highlights from our Top Reviews page make it easy to compare expert ratings and homeowner sentiment before you dive into the full directory.</p>
+            <p class="lede">Solar Reviews offers the most verified installer reviews. Compare expert ratings and homeowner feedback at a glance before browsing the full directory.</p>
 
             <div class="content-grid">
                 <aside class="sidebar-card">
@@ -657,6 +657,25 @@
                             <li class="text-muted">States coming soon.</li>
                         @endforelse
                     </ul>
+
+                    <!-- <hr class="my-4">
+                    <h5>Filter by City</h5>
+                    
+                    <select class="form-select d-lg-none mb-3" id="citySelect" onchange="filterGlobal()">
+                        <option value="">Select a city</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city->id }}" @selected((string) request('city') === (string) $city->id)>{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <div class="city-filter d-none d-lg-block mb-3">
+                        <select class="form-select" id="citySelectDesktop" onchange="filterGlobal()">
+                            <option value="">Select a city</option>
+                            @foreach($cities as $city)
+                                <option value="{{ $city->id }}" @selected((string) request('city') === (string) $city->id)>{{ $city->name }}</option>
+                            @endforeach
+                        </select>
+                    </div> -->
                 </aside>
 
                <section class="top-reviews-section directory-list-section">
@@ -823,11 +842,12 @@
     function filterGlobal() {
         const searchText = document.getElementById('companySearchInput')?.value || '';
         const stateId = document.getElementById('stateSelect')?.value || '';
+        const cityId = document.getElementById('citySelect')?.value || document.getElementById('citySelectDesktop')?.value || '';
         const pincode = document.getElementById('pincodeInput')?.value || '';
 
         clearTimeout(filterTimeout);
         filterTimeout = setTimeout(() => {
-            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId, pincode: pincode });
+            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId, city: cityId, pincode: pincode });
         }, 350);
     }
 
@@ -837,6 +857,14 @@
         const stateSelect = document.getElementById('stateSelect');
         if (stateSelect && params.has('state')) {
             stateSelect.value = params.get('state') || '';
+        }
+
+        const citySelect = document.getElementById('citySelect');
+        const citySelectDesktop = document.getElementById('citySelectDesktop');
+        if (params.has('city')) {
+            const cityValue = params.get('city') || '';
+            if (citySelect) citySelect.value = cityValue;
+            if (citySelectDesktop) citySelectDesktop.value = cityValue;
         }
 
         const searchInput = document.getElementById('companySearchInput');

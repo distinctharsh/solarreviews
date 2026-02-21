@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\State;
 use App\Models\City;
+use App\Models\User;
 use App\Http\Requests\Admin\StoreCompanyRequest;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use Illuminate\Support\Str;
@@ -85,8 +86,12 @@ class CompanyController extends Controller
         $companyTypes = $this->companyTypes();
         $states = State::orderBy('name')->get();
         $cities = City::orderBy('name')->get();
+        $availableUsers = User::whereNull('company_id')
+                              ->where('is_admin', 0)
+                              ->where('id', '!=', $company->owner_id ?? 0)
+                              ->get();
         
-        return view('admin.companies.edit', compact('company', 'companyTypes', 'states', 'cities'));
+        return view('admin.companies.edit', compact('company', 'companyTypes', 'states', 'cities', 'availableUsers'));
     }
 
     public function update(UpdateCompanyRequest $request, Company $company)
@@ -171,6 +176,51 @@ class CompanyController extends Controller
         return redirect()
             ->route('admin.companies.index', $request->query())
             ->with('success', 'Company verification updated successfully.');
+    }
+
+    public function updateSubscription(Request $request, Company $company)
+    {
+        $data = $request->validate([
+            'is_subscribed' => 'required|boolean',
+        ]);
+
+        $company->update([
+            'is_subscribed' => (bool) $data['is_subscribed'],
+        ]);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'company_id' => $company->id,
+                'is_subscribed' => (bool) $company->is_subscribed,
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.companies.index', $request->query())
+            ->with('success', 'Company subscription updated successfully.');
+    }
+
+    public function updateOwner(Request $request, Company $company)
+    {
+        $request->validate([
+            'owner_id' => 'nullable|exists:users,id'
+        ]);
+
+        // Use database transaction to ensure both updates succeed or fail together
+        \DB::transaction(function () use ($request, $company) {
+            // Update company owner_id
+            $company->update(['owner_id' => $request->owner_id]);
+
+            // Update selected user's company_id
+            if ($request->owner_id) {
+                $user = User::find($request->owner_id);
+                $user->update(['company_id' => $company->id]);
+            }
+        });
+
+        return redirect()->route('admin.companies.edit', $company->id)
+            ->with('success', 'Company owner updated successfully.');
     }
 
     protected function companyTypes(): array

@@ -707,6 +707,18 @@
             color: #1a8cd8;
         }
 
+        .subscribed-badge-inline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+
+        .subscribed-badge-inline:hover {
+            transform: scale(1.15);
+        }
+
         .review-title {
             font-size: 16px;
             margin: 6px 0;
@@ -870,6 +882,11 @@
                                         <img src="https://www.citypng.com/public/uploads/preview/hd-blue-badge-verified-tick-mark-png-704081694710438adyvtbqafw.png" alt="Verified" width="18" height="18">
                                     </span>
                                 @endif
+                                @if($company->is_subscribed)
+                                    <span class="subscribed-badge-inline" title="Premium Subscribed Company">
+                                        <i class="fas fa-star" style="color: #f59e0b; font-size: 18px;"></i>
+                                    </span>
+                                @endif
                             </h1>
                             
                                         <div class="rating mb-2">
@@ -907,7 +924,7 @@
                                 </button>
                                 <!-- Get Quote Button -->
                                 <button type="button" 
-                                class="nav-link fw-medium nav-btn-primary bg-white text-dark btn-get-quote" 
+                                class="nav-link fw-medium nav-btn-primary  text-dark btn-get-quote" 
                                 style="border: 1px solid #1d4ed8;"
                                 data-company-id="{{ $company->id }}"
                                 data-company-name="{{ $company->name }}">
@@ -979,6 +996,83 @@
                         </button>
 
                     </section>
+
+                    <!-- Projects Section -->
+                    @if($projects && $projects->count() > 0)
+                    <section class="projects-section" style="margin-top: 2rem;">
+                        <div class="container-custom">
+                            <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 600;">
+                                <i class="fas fa-solar-panel" style="color: #3ba14c; margin-right: 0.5rem;"></i>
+                                Recent Solar Projects
+                            </h3>
+                            
+                            <div class="projects-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+                                @forelse($projects as $project)
+                                    <div class="project-card" style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                        <div class="project-header" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                            <div>
+                                                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #1f2937;">
+                                                    {{ $project->site_name }}
+                                                </h4>
+                                                <p style="margin: 0.25rem 0; color: #6b7280; font-size: 0.9rem;">
+                                                    <i class="fas fa-map-marker-alt" style="margin-right: 0.25rem;"></i>
+                                                    {{ $project->site_location }}
+                                                </p>
+                                            </div>
+                                            @if($project->images && $project->images->count() > 0)
+                                                <div class="project-image" style="width: 80px; height: 80px; border-radius: 8px; overflow: hidden; background: #f3f4f6;">
+                                                    <img src="{{ asset($project->images->first()->image_path) }}" 
+                                                         alt="{{ $project->site_name }}"
+                                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                                </div>
+                                            @endif
+                                        </div>
+                                        
+                                        <div class="project-details" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                                            <div class="detail-item">
+                                                <span style="display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                                    <i class="fas fa-bolt" style="margin-right: 0.25rem;"></i>Capacity
+                                                </span>
+                                                <strong style="color: #1f2937;">{{ number_format($project->total_capacity_kw, 2) }} kW</strong>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span style="display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                                    <i class="fas fa-cogs" style="margin-right: 0.25rem;"></i>Installation
+                                                </span>
+                                                <strong style="color: #1f2937;">{{ $project->installation_type ?? 'Residential' }}</strong>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span style="display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                                    <i class="fas fa-chart-line" style="margin-right: 0.25rem;"></i>Financial Model
+                                                </span>
+                                                <strong style="color: #1f2937;">{{ $project->financial_model ?? 'CAPEX' }}</strong>
+                                            </div>
+                                            <div class="detail-item">
+                                                <span style="display: block; font-size: 0.8rem; color: #6b7280; margin-bottom: 0.25rem;">
+                                                    <i class="fas fa-sun" style="margin-right: 0.25rem;"></i>Avg Generation
+                                                </span>
+                                                <strong style="color: #1f2937;">{{ number_format($project->average_genration_units_per_kw ?? 0, 2) }} units/kW</strong>
+                                            </div>
+                                        </div>
+                                        
+                                        @if($project->description)
+                                            <div class="project-description" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f3f4f6;">
+                                                <p style="margin: 0; color: #4b5563; font-size: 0.9rem; line-height: 1.5;">
+                                                    {{ Str::limit($project->description, 150) }}
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @empty
+                                    <div class="no-projects" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #6b7280;">
+                                        <i class="fas fa-solar-panel" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                        <p>No projects available yet.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </section>
+                    @endif
 
                     <!-- Reviews Section -->
                     <section class="" style="margin-top: 2rem;">
@@ -1075,7 +1169,7 @@
                 <div class="right-content">
                     <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
                         <button type="button"
-                                class="nav-link fw-medium nav-btn-primary bg-white text-dark btn-get-details"
+                                class="nav-link fw-medium nav-btn-primary text-dark btn-get-details"
                                 style="border: 1px solid #1d4ed8;"
                                 data-company-id="{{ $company->id }}"
                                 data-company-name="{{ $company->owner_name }}">

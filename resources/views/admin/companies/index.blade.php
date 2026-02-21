@@ -112,12 +112,40 @@
                             <!-- <a href="{{ route('admin.companies.show', $company) }}" class="btn btn-sm btn-outline-secondary" title="View">
                                 <i class="fas fa-eye"></i>
                             </a> -->
-                            <form action="{{ route('admin.companies.verification', $company) }}" method="POST" class="js-verify-form" data-company-id="{{ $company->id }}" style="display:inline;">
+                            <form action="{{ route('admin.companies.verification', $company) }}" 
+                                method="POST" 
+                                class="js-verify-form" 
+                                style="display:inline;">
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="is_verified" value="{{ $company->is_verified ? 0 : 1 }}">
-                                <button type="submit" class="btn btn-sm {{ $company->is_verified ? 'btn-success verified-pill' : 'btn-outline-secondary' }}" title="{{ $company->is_verified ? 'Verified profile' : 'Mark as verified' }}">
-                                    <i class="fas fa-check-circle"></i>
+
+                                <button type="submit"
+                                    class="btn btn-sm {{ $company->is_verified ? 'btn-success verified-pill' : 'btn-outline-primary' }}">
+                                    
+                                    @if($company->is_verified)
+                                        <i class="fas fa-check-circle me-1"></i> Verified
+                                    @else
+                                        Verify Now
+                                    @endif
+                                </button>
+                            </form>
+                           <form action="{{ route('admin.companies.subscription', $company) }}" 
+                                method="POST" 
+                                class="js-subscribe-form" 
+                                style="display:inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="is_subscribed" value="{{ $company->is_subscribed ? 0 : 1 }}">
+
+                                <button type="submit"
+                                    class="btn btn-sm {{ $company->is_subscribed ? 'btn-warning subscribed-pill' : 'btn-outline-dark' }}">
+                                    
+                                    @if($company->is_subscribed)
+                                        <i class="fas fa-star me-1"></i> Subscribed
+                                    @else
+                                        Subscribe Now
+                                    @endif
                                 </button>
                             </form>
                             <a href="{{ route('admin.companies.edit', $company) }}" class="btn btn-sm btn-primary" title="Edit">
@@ -159,174 +187,200 @@
 
 @push('styles')
 <style>
-.pagination-wrapper .pagination {
-    margin: 0;
-}
+    .pagination-wrapper .pagination {
+        margin: 0;
+    }
+
+    .verified-pill {
+        background-color: #198754;
+        border-color: #198754;
+        color: #fff;
+        box-shadow: none;
+    }
+
+    .verified-pill:hover {
+        background-color: #157347;
+        border-color: #146c43;
+        color: #fff;
+    }
+
+    .subscribed-pill {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #000;
+        box-shadow: none;
+    }
+
+    .subscribed-pill:hover {
+        background-color: #e0a800;
+        border-color: #d39e00;
+        color: #000;
+    }
+
+    .pagination .page-link {
+        padding: 0.5rem 0.75rem;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+        margin: 0 0.25rem;
+        border-radius: 0.375rem;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        color: #9ca3af;
+        background-color: #f9fafb;
+        border-color: #e5e7eb;
+    }
+
+
+
+
+
+    .pagination-wrapper .pagination {
+        margin: 0;
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        font-family: 'Inter', sans-serif; /* Optional: Better font */
+    }
+
+    .pagination .page-link {
+        padding: 0.5rem 0.9rem;
+        color: #374151; /* Dark gray */
+        border: 1px solid #d1d5db; /* Light gray border */
+        margin: 0 0.2rem;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 38px;
+    }
+
+    .pagination .page-link:hover:not(.disabled):not(.active) {
+        background-color: #f3f4f6; /* Slightly lighter bg on hover */
+        border-color: #93c5fd; /* Light blue border on hover */
+        color: #2563eb; /* Blue text on hover */
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #2563eb; /* Blue */
+        border-color: #2563eb;
+        color: white;
+        cursor: default;
+        font-weight: 600;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #9ca3af; /* Light gray */
+        background-color: #f9fafb;
+        border-color: #e5e7eb;
+        cursor: not-allowed;
+    }
+
+    .pagination .page-item {
+        list-style: none;
+    }
+
+    /* Responsive: center pagination on small screens */
+    @media (max-width: 576px) {
+        .pagination-wrapper .pagination {
+            justify-content: center;
+        }
+    }
+    .table-actions form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .table-actions .input-group {
+        flex: 1 1 auto; /* Makes input expand nicely */
+        min-width: 250px;
+    }
+
+    .table-actions .btn {
+        white-space: nowrap;
+    }
+
+
+
+
+    /* Container form */
+    .search-form {
+        flex-wrap: nowrap; /* Keep on one line */
+        gap: 0.5rem;
+        flex-wrap: wrap; /* Responsive wrap on very small screens */
+    }
+
+    /* Input group styling */
+    .search-form .input-group {
+        flex-grow: 1; /* Input takes available space */
+        min-width: 250px;
+        max-width: 500px;
+    }
+
+    /* Input field inside input-group */
+    .search-form .form-control {
+        border-top-left-radius: 0.375rem;
+        border-bottom-left-radius: 0.375rem;
+    }
+
+    /* Icon inside input group */
+    .search-form .input-group-text {
+        background-color: #fff;
+        border-right: 0;
+        border-top-left-radius: 0.375rem;
+        border-bottom-left-radius: 0.375rem;
+    }
+
+    /* Reset button spacing */
+    .search-form a.btn-outline-secondary {
+        padding: 0.375rem 0.5rem;
+    }
+
+    /* Submit button */
+    .search-form button.btn-primary {
+        white-space: nowrap;
+    }
+
+    /* On very small screens, stack vertically */
+    @media (max-width: 480px) {
+        .search-form {
+            flex-wrap: wrap;
+        }
+        .search-form .input-group,
+        .search-form a.btn-outline-secondary,
+        .search-form button.btn-primary {
+            flex-grow: 1;
+            max-width: 100%;
+        }
+    }
+
+
 
 .verified-pill {
-    background-color: #198754;
-    border-color: #198754;
-    color: #fff;
-    box-shadow: none;
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
 }
 
-.verified-pill:hover {
-    background-color: #157347;
-    border-color: #146c43;
-    color: #fff;
+.subscribed-pill {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #000 !important;
 }
-
-.pagination .page-link {
-    padding: 0.5rem 0.75rem;
-    color: #4b5563;
-    border: 1px solid #e5e7eb;
-    margin: 0 0.25rem;
-    border-radius: 0.375rem;
-}
- 
-.pagination .page-item.active .page-link {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    color: white;
-}
- 
-.pagination .page-item.disabled .page-link {
-    color: #9ca3af;
-    background-color: #f9fafb;
-    border-color: #e5e7eb;
-}
-
-
-
-
-
-.pagination-wrapper .pagination {
-    margin: 0;
-    display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-family: 'Inter', sans-serif; /* Optional: Better font */
-}
-
-.pagination .page-link {
-    padding: 0.5rem 0.9rem;
-    color: #374151; /* Dark gray */
-    border: 1px solid #d1d5db; /* Light gray border */
-    margin: 0 0.2rem;
-    border-radius: 0.5rem;
-    background-color: #fff;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 38px;
-}
-
-.pagination .page-link:hover:not(.disabled):not(.active) {
-    background-color: #f3f4f6; /* Slightly lighter bg on hover */
-    border-color: #93c5fd; /* Light blue border on hover */
-    color: #2563eb; /* Blue text on hover */
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #2563eb; /* Blue */
-    border-color: #2563eb;
-    color: white;
-    cursor: default;
-    font-weight: 600;
-}
-
-.pagination .page-item.disabled .page-link {
-    color: #9ca3af; /* Light gray */
-    background-color: #f9fafb;
-    border-color: #e5e7eb;
-    cursor: not-allowed;
-}
-
-.pagination .page-item {
-    list-style: none;
-}
-
-/* Responsive: center pagination on small screens */
-@media (max-width: 576px) {
-    .pagination-wrapper .pagination {
-        justify-content: center;
-    }
-}
-.table-actions form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.table-actions .input-group {
-    flex: 1 1 auto; /* Makes input expand nicely */
-    min-width: 250px;
-}
-
-.table-actions .btn {
-    white-space: nowrap;
-}
-
-
-
-
-/* Container form */
-.search-form {
-    flex-wrap: nowrap; /* Keep on one line */
-    gap: 0.5rem;
-    flex-wrap: wrap; /* Responsive wrap on very small screens */
-}
-
-/* Input group styling */
-.search-form .input-group {
-    flex-grow: 1; /* Input takes available space */
-    min-width: 250px;
-    max-width: 500px;
-}
-
-/* Input field inside input-group */
-.search-form .form-control {
-    border-top-left-radius: 0.375rem;
-    border-bottom-left-radius: 0.375rem;
-}
-
-/* Icon inside input group */
-.search-form .input-group-text {
-    background-color: #fff;
-    border-right: 0;
-    border-top-left-radius: 0.375rem;
-    border-bottom-left-radius: 0.375rem;
-}
-
-/* Reset button spacing */
-.search-form a.btn-outline-secondary {
-    padding: 0.375rem 0.5rem;
-}
-
-/* Submit button */
-.search-form button.btn-primary {
-    white-space: nowrap;
-}
-
-/* On very small screens, stack vertically */
-@media (max-width: 480px) {
-    .search-form {
-        flex-wrap: wrap;
-    }
-    .search-form .input-group,
-    .search-form a.btn-outline-secondary,
-    .search-form button.btn-primary {
-        flex-grow: 1;
-        max-width: 100%;
-    }
-}
-
 </style>
 @endpush
 
@@ -334,6 +388,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    // Handle verification forms
     document.querySelectorAll('form.js-verify-form').forEach((form) => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -369,16 +425,72 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 input.value = isVerified ? 0 : 1;
 
-                button.classList.remove('btn-success', 'btn-outline-secondary', 'verified-pill');
-                button.classList.add(isVerified ? 'btn-success' : 'btn-outline-secondary');
+                button.classList.remove('btn-success', 'btn-outline-primary', 'verified-pill');
+
                 if (isVerified) {
-                    button.classList.add('verified-pill');
+                    button.classList.add('btn-success', 'verified-pill');
+                    button.innerHTML = '<i class="fas fa-check-circle me-1"></i> Verified';
+                } else {
+                    button.classList.add('btn-outline-primary');
+                    button.innerHTML = 'Verify Now';
                 }
-                button.title = isVerified ? 'Verified profile' : 'Mark as verified';
-                button.innerHTML = originalHtml;
             } catch (err) {
                 button.innerHTML = originalHtml;
                 alert('Unable to update verification. Please try again.');
+            } finally {
+                button.disabled = false;
+            }
+        });
+    });
+
+    // Handle subscription forms
+    document.querySelectorAll('form.js-subscribe-form').forEach((form) => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            const input = form.querySelector('input[name="is_subscribed"]');
+            if (!button || !input) return;
+
+            const url = form.getAttribute('action');
+            const nextValue = input.value;
+
+            const originalHtml = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf || '',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ is_subscribed: Number(nextValue) }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Request failed');
+                }
+
+                const data = await response.json();
+                const isSubscribed = !!data.is_subscribed;
+
+                input.value = isSubscribed ? 0 : 1;
+
+                button.classList.remove('btn-warning', 'btn-outline-dark', 'subscribed-pill');
+
+                if (isSubscribed) {
+                    button.classList.add('btn-warning', 'subscribed-pill');
+                    button.innerHTML = '<i class="fas fa-star me-1"></i> Subscribed';
+                } else {
+                    button.classList.add('btn-outline-dark');
+                    button.innerHTML = 'Subscribe Now';
+                }
+            } catch (err) {
+                button.innerHTML = originalHtml;
+                alert('Unable to update subscription. Please try again.');
             } finally {
                 button.disabled = false;
             }

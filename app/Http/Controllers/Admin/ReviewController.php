@@ -248,6 +248,86 @@ class ReviewController extends Controller
     }
 
     /**
+     * Update company name and approve review.
+     */
+    public function updateCompanyName(Request $request, CompanyReview $companyReview): RedirectResponse
+    {
+        $validated = $request->validate([
+            'manual_company_name' => ['required', 'string', 'max:255'],
+        ]);
+
+        // Update the manual company name
+        $companyReview->manual_company_name = trim($validated['manual_company_name']);
+        $companyReview->save();
+
+        // Then approve it using the existing approval logic
+        try {
+            DB::transaction(function () use ($companyReview) {
+                if (!$companyReview->company_id) {
+                    $manualCompanyName = trim((string) $companyReview->manual_company_name);
+                    $companyUrl = trim((string) $companyReview->company_url);
+
+                    if ($manualCompanyName === '' && $companyUrl === '') {
+                        throw new \RuntimeException('Missing company reference for review approval.');
+                    }
+
+                    $company = null;
+
+                    if ($companyUrl !== '') {
+                        $company = Company::query()->where('website_url', $companyUrl)->first();
+                    }
+
+                    if (!$company && $manualCompanyName !== '') {
+                        $company = Company::query()->where('owner_name', $manualCompanyName)->first();
+                    }
+
+                    if (!$company) {
+                        $slugBase = Str::slug($manualCompanyName !== '' ? $manualCompanyName : $companyUrl);
+                        $slug = $slugBase !== '' ? $slugBase : 'company';
+                        $originalSlug = $slug;
+                        $suffix = 2;
+
+                        while (Company::query()->where('slug', $slug)->exists()) {
+                            $slug = $originalSlug . '-' . $suffix;
+                            $suffix++;
+                        }
+
+                        $company = Company::create([
+                            'owner_id' => null,
+                            'slug' => $slug,
+                            'company_type' => 'installer',
+                            'owner_name' => $manualCompanyName !== '' ? $manualCompanyName : $companyUrl,
+                            'phone' => null,
+                            'website_url' => $companyUrl !== '' ? $companyUrl : null,
+                            'logo_url' => null,
+                            'description' => null,
+                            'status' => 'active',
+                            'email' => null,
+                            'years_in_business' => null,
+                            'gst_number' => null,
+                            'address' => '',
+                            'city' => '',
+                            'pincode' => '',
+                            'state_id' => null,
+                            'city_id' => null,
+                            'is_active' => true,
+                        ]);
+                    }
+
+                    $companyReview->company_id = $company->id;
+                }
+
+                $companyReview->is_approved = true;
+                $companyReview->save();
+            });
+        } catch (\Throwable $e) {
+            return back()->with('error', __('Unable to update company name and approve review.'));
+        }
+
+        return back()->with('success', __('Company name updated and review approved.'));
+    }
+
+    /**
      * Remove a legacy morph review (brands/products) from storage.
      */
     public function destroy(Review $review): RedirectResponse

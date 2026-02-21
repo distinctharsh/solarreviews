@@ -36,11 +36,13 @@ class UserDashboardController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'state_id']);
 
-        $requiresDistributorIntake = $user?->isDistributor() &&
-            !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_DISTRIBUTOR);
+        $requiresDistributorIntake = $user?->isDistributor() && 
+            !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_DISTRIBUTOR) &&
+            !$user->company_id; // Don't show if user already has company
 
-        $requiresSupplierIntake = $user?->isSupplier() &&
-            !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_SUPPLIER);
+        $requiresSupplierIntake = $user?->isSupplier() && 
+            !$user->hasCompletedProfileForm(UserProfileSubmission::FORM_SUPPLIER) &&
+            !$user->company_id; // Don't show if user already has company
 
 
             $distributorStatus = $user?->isDistributor() 

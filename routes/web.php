@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Api\LocationController;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Controllers\Admin\UserController;
 
 
 
@@ -495,6 +496,15 @@ Route::prefix('reviews')->name('reviews.')->group(function () {
 
 Route::post('/get-quote', [GetQuoteController::class, 'store'])->name('get-quote.store');
 
+Route::post('/solar-enquiry', [\App\Http\Controllers\Frontend\SolarEnquiryController::class, 'store'])->name('solar-enquiry.store');
+
+Route::get('/companies-by-location', [\App\Http\Controllers\Frontend\CompaniesByLocationController::class, 'index'])->name('companies-by-location.index');
+
+Route::post('/get-solution', [\App\Http\Controllers\Frontend\GetSolutionController::class, 'store'])->name('get-solution.store');
+
+// API Routes
+Route::get('/api/companies-by-pincode/{pincode}', [\App\Http\Controllers\Frontend\GetSolutionController::class, 'getCompaniesByPincode'])->name('api.companies-by-pincode');
+
 Route::post('/company-detail-requests', [CompanyDetailRequestController::class, 'store'])
     ->name('company-detail-requests.store');
 
@@ -535,6 +545,10 @@ Route::prefix('admin')
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::resource('users', UserController::class);
+       Route::post('users/{user}/assign-company', [UserController::class, 'assignCompany'])->name('users.assign-company');
+    
+        
     // States
     Route::resource('states', StateController::class);
 
@@ -553,7 +567,9 @@ Route::prefix('admin')
     Route::resource('companies', CompanyController::class);
     Route::patch('companies/{company}/toggle-status', [CompanyController::class, 'toggleStatus'])->name('companies.toggle-status');
     Route::patch('companies/{company}/verification', [CompanyController::class, 'updateVerification'])->name('companies.verification');
-    
+    Route::patch('companies/{company}/subscription', [CompanyController::class, 'updateSubscription'])->name('companies.subscription');
+        Route::post('companies/{company}/update-owner', [\App\Http\Controllers\Admin\CompanyController::class, 'updateOwner'])
+        ->name('companies.update-owner');
     // Products
     Route::resource('products', ProductController::class);
     Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
@@ -564,6 +580,8 @@ Route::prefix('admin')
         ->name('reviews.company.approve');
     Route::post('reviews/company/{companyReview}/reject', [AdminReviewController::class, 'rejectCompanyReview'])
         ->name('reviews.company.reject');
+    Route::patch('reviews/company/{companyReview}/update-name', [AdminReviewController::class, 'updateCompanyName'])
+        ->name('reviews.company.update-name');
 
     // Chatbot (Questions + Options)
     Route::prefix('chatbot')->name('chatbot.')->group(function () {
