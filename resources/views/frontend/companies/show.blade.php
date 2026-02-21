@@ -938,7 +938,10 @@
                                 'company' => $company,
                                 'states' => \App\Models\State::where('is_active', true)->get(),
                                 'categories' => \App\Models\Category::where('is_active', true)->get(),
-                                'modalId' => 'reviewModal'
+                                'companies' => \App\Models\Company::where('is_active', true)->orderBy('owner_name')->get(),
+                                'modalId' => 'reviewModal',
+                                'defaultCompanyId' => $company->id,
+                                'defaultCompanyName' => $company->owner_name ?? $company->name
                             ])@endcomponent
 
                             @include('components.frontend.get-quote-modal', [
@@ -1170,7 +1173,6 @@
                     <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
                         <button type="button"
                                 class="nav-link fw-medium nav-btn-primary text-dark btn-get-details"
-                                style="border: 1px solid #1d4ed8;"
                                 data-company-id="{{ $company->id }}"
                                 data-company-name="{{ $company->owner_name }}">
                             Get details now
@@ -1655,60 +1657,6 @@
                     }
                 });
             })();
-        </script>
-
-        <script>
-            // Global helper to open review modal and set company id
-            function showReviewModal(companyId, companyName) {
-                const modalEl = document.getElementById('reviewModal');
-                const companyIdInput = document.getElementById('modal_company_id');
-                if (!companyIdInput) {
-                    return;
-                }
-
-                // Set hidden input value if present
-                const input = modalEl.querySelector('input[name="company_id"]');
-                if (input) {
-                    input.value = companyId;
-                } else {
-                    const alt = modalEl.querySelector('[data-company-id-input]');
-                    if (alt) alt.value = companyId;
-                }
-
-                // Optionally set a display name inside modal
-                const nameEl = modalEl.querySelector('.modal-company-name');
-                if (nameEl) nameEl.textContent = companyName;
-
-                // Show bootstrap modal
-                try {
-                    const modal = new bootstrap.Modal(modalEl);
-                    modal.show();
-                } catch (e) {
-                    // Fallback: simple display toggle
-                    modalEl.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                    document.body.style.position = 'fixed';
-                }
-            }
-
-            // Handle Write a Review button click
-            document.addEventListener('DOMContentLoaded', function() {
-                const reviewButtons = document.querySelectorAll('.open-review-modal');
-                
-                reviewButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const companyId = this.getAttribute('data-company-id');
-                        const companyName = this.getAttribute('data-company-name');
-                        
-                        // Use the global showReviewModal function to display the modal
-                        if (typeof window.showReviewModal === 'function') {
-                            window.showReviewModal(companyId, companyName);
-                        } else {
-                            console.error('showReviewModal function not found');
-                        }
-                    });
-                });
-            });
         </script>
 
         <script>

@@ -27,6 +27,10 @@ class CompanyController extends Controller
         $cityId = $request->query('city');
         $pincode = trim((string) $request->query('pincode', ''));
         $sort = (string) $request->query('sort', '');
+        $fromForm = $request->query('from_form'); // Check if coming from form submission
+        
+        // Get city name if cityId is provided
+        $cityName = $cityId ? City::find($cityId)?->name : null;
 
         $reviewStats = CompanyReview::query()
             ->select(
@@ -48,19 +52,69 @@ class CompanyController extends Controller
             })
             ->with('state')
             ->where('is_active', true)
+            ->when($fromForm, function ($query) {
+                // Only apply subscription filter when coming from forms
+                $query->where('is_subscribed', 1);
+            })
             ->when($searchQuery !== '', function ($query) use ($searchQuery) {
                 $query->where(function ($inner) use ($searchQuery) {
                     $inner->where('companies.owner_name', 'like', '%' . $searchQuery . '%')
                         ->orWhere('companies.slug', 'like', '%' . $searchQuery . '%');
                 });
             })
-            ->when($stateId !== null && $stateId !== '', function ($query) use ($stateId) {
+            ->when($fromForm && ($pincode !== '' || $cityId !== null || $stateId !== null), function ($query) use ($pincode, $cityId, $stateId) {
+                // Priority-based filtering for form submissions
+                if ($pincode !== '') {
+                    // Try pincode first
+                    $pincodeCompanies = Company::where('pincode', $pincode)
+                        ->where('is_active', true)
+                        ->where('is_subscribed', 1)
+                        ->count();
+                    
+                    if ($pincodeCompanies > 0) {
+                        $query->where('companies.pincode', $pincode);
+                    } elseif ($cityId !== null) {
+                        // Try city if pincode has no results
+                        $cityCompanies = Company::where('city_id', $cityId)
+                            ->where('is_active', true)
+                            ->where('is_subscribed', 1)
+                            ->count();
+                        
+                        if ($cityCompanies > 0) {
+                            $query->where('companies.city_id', $cityId);
+                        } elseif ($stateId !== null) {
+                            // Try state if city also has no results
+                            $query->where('companies.state_id', $stateId);
+                        }
+                    }
+                } elseif ($cityId !== null) {
+                    // If no pincode, try city first
+                    $cityCompanies = Company::where('city_id', $cityId)
+                        ->where('is_active', true)
+                        ->where('is_subscribed', 1)
+                        ->count();
+                    
+                    if ($cityCompanies > 0) {
+                        $query->where('companies.city_id', $cityId);
+                    } elseif ($stateId !== null) {
+                        // Try state if city has no results
+                        $query->where('companies.state_id', $stateId);
+                    }
+                } elseif ($stateId !== null) {
+                    // If only state is available
+                    $query->where('companies.state_id', $stateId);
+                }
+            })
+            ->when(!$fromForm && ($stateId !== null && $stateId !== ''), function ($query) use ($stateId) {
+                // For non-form requests, apply state filter directly
                 $query->where('companies.state_id', $stateId);
             })
-            ->when($cityId !== null && $cityId !== '', function ($query) use ($cityId) {
+            ->when(!$fromForm && ($cityId !== null && $cityId !== ''), function ($query) use ($cityId) {
+                // For non-form requests, apply city filter directly
                 $query->where('companies.city_id', $cityId);
             })
-            ->when($pincode !== '', function ($query) use ($pincode) {
+            ->when(!$fromForm && ($pincode !== ''), function ($query) use ($pincode) {
+                // For non-form requests, apply pincode filter directly
                 $query->where('companies.pincode', $pincode);
             });
 
@@ -82,6 +136,51 @@ class CompanyController extends Controller
                 break;
         }
 
+        // Generate search message for form submissions
+        $searchMessage = '';
+        if ($fromForm && ($pincode !== '' || $cityId !== null || $stateId !== null)) {
+            if ($pincode !== '') {
+                // Check if we have pincode results
+                $pincodeCompanies = Company::where('pincode', $pincode)
+                    ->where('is_active', true)
+                    ->where('is_subscribed', 1)
+                    ->count();
+                
+                if ($pincodeCompanies > 0) {
+                    $searchMessage = "Showing verified companies for pincode {$pincode}.";
+                } elseif ($cityId !== null) {
+                    // Check if we have city results
+                    $cityCompanies = Company::where('city_id', $cityId)
+                        ->where('is_active', true)
+                        ->where('is_subscribed', 1)
+                        ->count();
+                    
+                    if ($cityCompanies > 0) {
+                        $searchMessage = "No verified companies found for pincode {$pincode}. Showing companies in {$cityName} instead.";
+                    } elseif ($stateId !== null) {
+                        $stateName = State::find($stateId)?->name ?? 'selected state';
+                        $searchMessage = "No verified companies found for pincode {$pincode} or in {$cityName}. Showing companies in {$stateName} instead.";
+                    }
+                }
+            } elseif ($cityId !== null) {
+                // Check if we have city results (when no pincode)
+                $cityCompanies = Company::where('city_id', $cityId)
+                    ->where('is_active', true)
+                    ->where('is_subscribed', 1)
+                    ->count();
+                
+                if ($cityCompanies > 0) {
+                    $searchMessage = "Showing verified companies in {$cityName}.";
+                } elseif ($stateId !== null) {
+                    $stateName = State::find($stateId)?->name ?? 'selected state';
+                    $searchMessage = "No verified companies found in {$cityName}. Showing companies in {$stateName} instead.";
+                }
+            } elseif ($stateId !== null) {
+                $stateName = State::find($stateId)?->name ?? 'selected state';
+                $searchMessage = "Showing verified companies in {$stateName}.";
+            }
+        }
+
         $companies = $companiesQuery
             ->paginate(25)
             ->appends($request->query());
@@ -96,6 +195,7 @@ class CompanyController extends Controller
             'totalCompanies' => $companies->total(),
             'states' => $states,
             'cities' => City::where('is_active', true)->orderBy('name')->get(),
+            'searchMessage' => $searchMessage
         ]);
     }
 

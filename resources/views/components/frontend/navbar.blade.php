@@ -50,7 +50,7 @@
                 </div>
             </div>
             @if(!$isBusinessUser)
-            <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
+            <button type="button" class="nav-link fw-medium py-3" onclick="window.openReviewModal && window.openReviewModal()">Write a review</button>
             @endif
             @if(!$isBusinessUser && $normalUserSession)
                 @php($normalUserName = $normalUserSession->name ?? ($normalUserSession->email ? explode('@', $normalUserSession->email)[0] : 'Reviewer'))
@@ -84,13 +84,13 @@
                 </div>
 
             @elseif(!$isBusinessUser)
-                <a
+                <!-- <a
                     class="nav-link fw-medium py-3 nav-normal-login"
                     href="javascript:void(0)"
                     onclick="window.openNormalUserLoginModal && window.openNormalUserLoginModal()"
                 >
                     Login
-                </a>
+                </a> -->
             @endif
             @if($isBusinessUser)
                 <div class="mega-nav-item position-relative">
@@ -191,7 +191,7 @@
             @endif
             @if(!$isBusinessUser)
             <li class="nav-item">
-                <a class="nav-link fw-medium py-3" href="{{ route('reviews.write') }}">Write a review</a>
+                <button type="button" class="nav-link fw-medium py-3 w-100 text-start" onclick="window.openReviewModal && window.openReviewModal()">Write a review</button>
             </li>
             @endif
             @if(!$isBusinessUser && $normalUserSession)
@@ -207,7 +207,7 @@
                     </form>
                 </li>
             @elseif(!$isBusinessUser)
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a
                         class="nav-link fw-medium py-3 nav-normal-login w-100 text-start"
                         href="javascript:void(0)"
@@ -215,7 +215,7 @@
                     >
                         Login
                     </a>
-                </li>
+                </li> -->
             @endif
         </ul>
     </div>
@@ -268,6 +268,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 @include('components.frontend.login-choice-modal')
+
+<script>
+// Global function to open review modal
+window.openReviewModal = function() {
+    // Try to find any review modal on the page
+    const modalTriggers = document.querySelectorAll('[data-review-modal-trigger]');
+    if (modalTriggers.length > 0) {
+        // Use the first available modal trigger
+        modalTriggers[0].click();
+    } else {
+        // Fallback: navigate to write review page
+        window.location.href = '{{ route("reviews.write") }}';
+    }
+};
+</script>
 
 
 <script>

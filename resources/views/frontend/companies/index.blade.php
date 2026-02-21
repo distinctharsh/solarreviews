@@ -264,6 +264,33 @@
             cursor: pointer;
         }
 
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #3ba14c, #2d8f3e);
+            color: white;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+        }
+
+        .filter-btn:hover {
+            background: linear-gradient(135deg, #2d8f3e, #22c55e);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 161, 76, 0.25);
+        }
+
+        .filter-btn:active {
+            transform: translateY(0);
+        }
+
         .filter-input:focus,
         .filter-select:focus {
             border-color: #3ba14c;
@@ -626,9 +653,22 @@
 
     <section class="top-reviews-section">
         <div class="container-custom">
+          
+            
             <!--<div class="section-label">Consumer Reviews</div>-->
             <h2 class="page-title page-title-top">Top Solar Installers Ranked by Reviews</h2>
             <p class="lede">Solar Reviews offers the most verified installer reviews. Compare expert ratings and homeowner feedback at a glance before browsing the full directory.</p>
+
+
+
+              @if($searchMessage)
+                <div class="alert alert-info alert-dismissible fade show mt-2" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {{ $searchMessage }}
+                </div>
+            @endif
+
+
 
             <div class="content-grid">
                 <aside class="sidebar-card">
@@ -698,7 +738,6 @@
                 id="companySearchInput"
                 class="filter-input" 
                 placeholder="Company name"
-                oninput="filterGlobal()"
                 value="{{ request('q') }}"
             >
         </div>
@@ -714,7 +753,6 @@
                 class="filter-input" 
                 placeholder="e.g. 110001"
                 maxlength="6"
-                oninput="filterGlobal()"
                 value="{{ request('pincode') }}"
             >
         </div>
@@ -722,13 +760,20 @@
 
     <div class="filter-group">
         <label class="filter-label">Sort</label>
-        <select id="companySortSelect" class="filter-select" onchange="applySort()">
+        <select id="companySortSelect" class="filter-select">
             <option value="">Default</option>
             <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating ↓</option>
             <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating ↑</option>
             <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews ↓</option>
             <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews ↑</option>
         </select>
+    </div>
+    
+    <div class="filter-group">
+        <label class="filter-label">&nbsp;</label>
+        <button type="button" class="btn btn-primary filter-btn" onclick="applyFilters()">
+            <i class="fas fa-filter me-2"></i>Apply Filters
+        </button>
     </div>
 </div>
 
@@ -808,6 +853,28 @@
 <script>
     let filterTimeout = null;
 
+    // Helper function to handle from_form parameter clearing
+    function buildCleanDirectoryUrl(overrides = {}) {
+        const url = new URL(window.location.href);
+        const params = new URLSearchParams(url.search);
+        
+        if (params.has('from_form')) {
+            // If from_form exists, clear all form-related params first
+            const cleanOverrides = {
+                pincode: null,
+                city: null,
+                state: null,
+                from_form: null,
+                q: null,
+                ...overrides
+            };
+            return buildDirectoryUrl(cleanOverrides);
+        } else {
+            // Regular navigation
+            return buildDirectoryUrl(overrides);
+        }
+    }
+
     function buildDirectoryUrl(overrides = {}) {
         const url = new URL(window.location.href);
         const params = new URLSearchParams(url.search);
@@ -828,7 +895,7 @@
 
     function applySort() {
         const sortValue = document.getElementById('companySortSelect')?.value || '';
-        window.location.href = buildDirectoryUrl({ sort: sortValue });
+        window.location.href = buildCleanDirectoryUrl({ sort: sortValue });
     }
 
     function setStateFilter(stateId) {
@@ -836,19 +903,26 @@
         if (!stateSelect) return;
 
         stateSelect.value = String(stateId ?? '');
-        window.location.href = buildDirectoryUrl({ state: stateSelect.value });
+        window.location.href = buildCleanDirectoryUrl({ state: stateSelect.value });
     }
 
-    function filterGlobal() {
+    function applyFilters() {
         const searchText = document.getElementById('companySearchInput')?.value || '';
         const stateId = document.getElementById('stateSelect')?.value || '';
         const cityId = document.getElementById('citySelect')?.value || document.getElementById('citySelectDesktop')?.value || '';
         const pincode = document.getElementById('pincodeInput')?.value || '';
+        const sortValue = document.getElementById('companySortSelect')?.value || '';
 
-        clearTimeout(filterTimeout);
-        filterTimeout = setTimeout(() => {
-            window.location.href = buildDirectoryUrl({ q: searchText, state: stateId, city: cityId, pincode: pincode });
-        }, 350);
+        const overrides = {};
+        
+        // Only add parameters that have values
+        if (searchText) overrides.q = searchText;
+        if (stateId) overrides.state = stateId;
+        if (cityId) overrides.city = cityId;
+        if (pincode) overrides.pincode = pincode;
+        if (sortValue) overrides.sort = sortValue;
+
+        window.location.href = buildCleanDirectoryUrl(overrides);
     }
 
     document.addEventListener('DOMContentLoaded', function () {

@@ -4,6 +4,8 @@
     'companies' => collect(),
     'defaultStateId' => null,
     'defaultStateName' => null,
+    'defaultCompanyId' => null,
+    'defaultCompanyName' => null,
     'modalId' => 'reviewModal',
     'triggerSelector' => '.btn-review',
     'allowCompanySelection' => false,
@@ -12,6 +14,8 @@
 @php
     $resolvedStateId = $defaultStateId ?? data_get($state ?? null, 'id');
     $resolvedStateName = $defaultStateName ?? data_get($state ?? null, 'name');
+    $resolvedCompanyId = $defaultCompanyId ?? null;
+    $resolvedCompanyName = $defaultCompanyName ?? null;
     $categoryOptions = collect($categories ?? []);
     $reviewProfile = session('review_profile');
 @endphp
@@ -136,6 +140,172 @@
         .modal-body::-webkit-scrollbar-thumb {
             background: var(--primary-light, #6dc47d);
             border-radius: 3px;
+        }
+
+        /* Company Search Styles */
+        .company-search-wrapper {
+            position: relative;
+        }
+
+        .company-selection-fixed .company-search-input {
+            background: var(--surface-muted, #f1f5f9);
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .search-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .company-search-input {
+            width: 100%;
+            padding-right: 40px;
+            font-size: 0.95rem;
+            border: 2px solid var(--border-light, #e5e7eb);
+            transition: all 0.3s ease;
+        }
+
+        .company-search-input:focus {
+            border-color: var(--primary, #3ba14c);
+            box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.1);
+        }
+
+        .search-clear-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted, #6b7280);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .search-clear-btn:hover {
+            color: var(--text-primary, #0f172a);
+            background: var(--border-light, #e5e7eb);
+        }
+
+        .company-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--surface, #ffffff);
+            border: 1px solid var(--border-light, #e5e7eb);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1));
+            max-height: 320px;
+            overflow-y: auto;
+            z-index: 1050;
+            margin-top: 4px;
+        }
+
+        .search-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light, #e5e7eb);
+            background: var(--background-secondary, #f8fafc);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .results-count {
+            font-size: 0.875rem;
+            color: var(--text-muted, #6b7280);
+            font-weight: 500;
+        }
+
+        .show-all-btn {
+            background: var(--primary, #3ba14c);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .show-all-btn:hover {
+            background: var(--primary-dark, #2d8f3e);
+            transform: translateY(-1px);
+        }
+
+        .search-results-list {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border-light, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--background-secondary, #f8fafc);
+        }
+
+        .search-result-item.selected {
+            background: var(--primary-light, #dcfce7);
+            border-left: 3px solid var(--primary, #3ba14c);
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: var(--text-primary, #0f172a);
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .company-website {
+            font-size: 0.8rem;
+            color: var(--text-muted, #6b7280);
+            text-decoration: none;
+        }
+
+        .company-website:hover {
+            color: var(--primary, #3ba14c);
+        }
+
+        .no-results {
+            padding: 20px 16px;
+            text-align: center;
+            color: var(--text-muted, #6b7280);
+            font-size: 0.9rem;
+        }
+
+        .search-loading {
+            padding: 20px 16px;
+            text-align: center;
+            color: var(--text-muted, #6b7280);
+        }
+
+        .search-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .form-group {
@@ -659,6 +829,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            width:100%;
         }
 
         .btn-submit:hover:not(:disabled) {
@@ -691,119 +862,119 @@
 
 
         .google-btn {
-    width: 100%;
-    height: 39px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+            width: 100%;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
 
-    background: #ffffff;
-    color: #3c4043;
+            background: #ffffff;
+            color: #3c4043;
 
-    border: 1px solid #dadce0;
-    border-radius: 999px;
+            border: 1px solid #dadce0;
+            border-radius: 999px;
 
-    font-size: 16px;
-    font-weight: 500;
-    font-family: "Roboto", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: "Roboto", Arial, sans-serif;
 
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
-.google-btn img {
-    width: 20px;
-    height: 20px;
-}
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
 
-.google-btn:hover {
-    background-color: #f7f8f8;
-    box-shadow: 0 1px 2px rgba(60,64,67,.3),
-                0 1px 3px rgba(60,64,67,.15);
-}
+        .google-btn:hover {
+            background-color: #f7f8f8;
+            box-shadow: 0 1px 2px rgba(60,64,67,.3),
+                        0 1px 3px rgba(60,64,67,.15);
+        }
 
-.google-btn:active {
-    background-color: #eeeeee;
-}
+        .google-btn:active {
+            background-color: #eeeeee;
+        }
 
-.google-btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
+        .google-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
 
-/* Connected state */
-.google-btn.connected {
-    border-color: #34a853;
-    color: #34a853;
-    font-weight: 600;
-}
+        /* Connected state */
+        .google-btn.connected {
+            border-color: #34a853;
+            color: #34a853;
+            font-weight: 600;
+        }
 
 
 
-.google-btn {
-    width: 100%;
-    height: 39px;
-      max-width: 252px;
-    display: flex;
-    align-items: center;
+        .google-btn {
+            width: 100%;
+            height: 39px;
+            max-width: 252px;
+            display: flex;
+            align-items: center;
 
-    padding: 0 16px;
+            padding: 0 16px;
 
-    background: #ffffff;
-    color: #3c4043;
+            background: #ffffff;
+            color: #3c4043;
 
-    border: 1px solid #dadce0;
-    border-radius: 999px;
+            border: 1px solid #dadce0;
+            border-radius: 999px;
 
-    font-size: 16px;
-    font-weight: 500;
-    font-family: "Roboto", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: "Roboto", Arial, sans-serif;
 
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
-/* Google logo – LEFT SIDE */
-.google-btn img {
-    width: 20px;
-    height: 20px;
-    margin-right: 12px;
-}
+        /* Google logo – LEFT SIDE */
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+        }
 
-/* Text center jaisa feel kare */
-.google-btn span {
-    flex: 1;
-    text-align: center;
-    margin-right: 20px; /* logo ke balance ke liye */
-}
+        /* Text center jaisa feel kare */
+        .google-btn span {
+            flex: 1;
+            text-align: center;
+            margin-right: 20px; /* logo ke balance ke liye */
+        }
 
-.google-btn:hover {
-    background-color: #f7f8f8;
-    box-shadow: 0 1px 2px rgba(60,64,67,.3),
-                0 1px 3px rgba(60,64,67,.15);
-}
+        .google-btn:hover {
+            background-color: #f7f8f8;
+            box-shadow: 0 1px 2px rgba(60,64,67,.3),
+                        0 1px 3px rgba(60,64,67,.15);
+        }
 
-.google-btn:active {
-    background-color: #eeeeee;
-}
+        .google-btn:active {
+            background-color: #eeeeee;
+        }
 
-.google-btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
+        .google-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
 
-/* Connected state */
-.google-btn.connected {
-    border-color: #34a853;
-    color: #34a853;
-    font-weight: 600;
-}
+        /* Connected state */
+        .google-btn.connected {
+            border-color: #34a853;
+            color: #34a853;
+            font-weight: 600;
+        }
 
-.google-center {
-    display: flex;
-    justify-content: center;
-}
+        .google-center {
+            display: flex;
+            justify-content: center;
+        }
     </style>
 @endonce
 
@@ -832,17 +1003,53 @@
                     <span data-draft-message>We restored your review draft.</span>
                     <button type="button" data-draft-clear>Clear draft</button>
                 </div>
-                @if($allowCompanySelection)
-                    <div class="form-group" data-company-select-wrapper style="display: none;">
-                        <label class="form-label" for="{{ $modalId }}CompanySelect">Select Company *</label>
-                        <select id="{{ $modalId }}CompanySelect" class="form-select" data-company-select {{ $companies->isEmpty() ? 'disabled' : '' }}>
-                            <option value="">Select Company</option>
-                            @foreach($companies as $companyOption)
-                                <option value="{{ $companyOption->id }}">{{ $companyOption->name }}</option>
-                            @endforeach
-                        </select>
+                <div class="form-group">
+                    <label class="form-label" for="{{ $modalId }}CompanySelect">Select Company *</label>
+                    
+                    <!-- Company Search Input -->
+                    <div class="company-search-wrapper">
+                        <div class="search-input-group">
+                            <input 
+                                type="text" 
+                                id="{{ $modalId }}CompanySearch" 
+                                class="form-input company-search-input" 
+                                placeholder="Search for a company..."
+                                autocomplete="off"
+                            >
+                            <button type="button" class="search-clear-btn" data-search-clear hidden>
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search Results Dropdown -->
+                        <div class="company-search-results" data-search-results style="display: none;">
+                            <div class="search-results-header" data-results-header>
+                                <span class="results-count" data-results-count>0 companies found</span>
+                                <button type="button" class="show-all-btn" data-show-all hidden>Show All</button>
+                            </div>
+                            <div class="search-results-list" data-results-list>
+                                <!-- Results will be populated here -->
+                            </div>
+                        </div>
                     </div>
-                @endif
+                    
+                    <!-- Hidden Select for Form Submission -->
+                    <select id="{{ $modalId }}CompanySelect" class="form-select" data-company-select style="display: none;">
+                        <option value="">-- Select Company --</option>
+                        @foreach($companies as $companyOption)
+                            <option value="{{ $companyOption['id'] ?? $companyOption->id }}" data-company-name="{{ $companyOption['name'] ?? $companyOption->owner_name }}" data-company-url="{{ $companyOption['website_url'] ?? $companyOption->website_url ?? '' }}">{{ $companyOption['name'] ?? $companyOption->owner_name }}</option>
+                        @endforeach
+                        <option value="other">Other Solar Company</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="{{ $modalId }}ManualCompanyGroup" style="display: none;">
+                    <label class="form-label" for="{{ $modalId }}ManualCompanyNameInput">Company Name *</label>
+                    <input type="text" id="{{ $modalId }}ManualCompanyNameInput" class="form-input" placeholder="Enter company name" maxlength="255">
+                    
+                    <label class="form-label" for="{{ $modalId }}ManualCompanyUrlInput" style="margin-top: 0.5rem;">Company Website (Optional)</label>
+                    <input type="url" id="{{ $modalId }}ManualCompanyUrlInput" class="form-input" placeholder="https://example.com" maxlength="255">
+                </div>
 
                 <input type="hidden" name="category_id" id="{{ $modalId }}CategoryId">
                 
@@ -855,6 +1062,21 @@
                         <input type="hidden" name="rating" id="{{ $modalId }}Rating" required>
                     </div>
 
+                </div>
+
+                 <div class="form-group">
+                    <label class="form-label" for="{{ $modalId }}ReviewTitle">Review Title (Optional)</label>
+                    <input type="text" id="{{ $modalId }}ReviewTitle" name="review_title" class="form-input" placeholder="Summarize your experience">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="{{ $modalId }}ReviewText">Your Review *</label>
+                    <div class="review-text-wrapper">
+                        <textarea id="{{ $modalId }}ReviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
+                        <button type="button" class="review-mic-btn" data-review-mic aria-label="Voice input" title="Voice input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1130,20 +1352,7 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label" for="{{ $modalId }}ReviewTitle">Review Title (Optional)</label>
-                    <input type="text" id="{{ $modalId }}ReviewTitle" name="review_title" class="form-input" placeholder="Summarize your experience">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="{{ $modalId }}ReviewText">Your Review *</label>
-                    <div class="review-text-wrapper">
-                        <textarea id="{{ $modalId }}ReviewText" name="review_text" class="form-textarea" required placeholder="Share details of your experience..."></textarea>
-                        <button type="button" class="review-mic-btn" data-review-mic aria-label="Voice input" title="Voice input">
-                            <i class="fas fa-microphone"></i>
-                        </button>
-                    </div>
-                </div>
+               
 
                 <div class="form-group">
                     <label class="form-label">Add photos of your system <span>(optional, jpg/png/svg, max 5MB)</span></label>
@@ -1369,7 +1578,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-cancel cancel-btn">Cancel</button>
+                <!-- <button type="button" class="btn-cancel cancel-btn">Cancel</button> -->
                 <button type="submit" class="btn-submit" data-review-submit>Submit Review</button>
             </div>
         </form>
@@ -1387,8 +1596,48 @@
             triggerSelector: @json($triggerSelector),
             defaultStateId: '{{ $resolvedStateId ?? '' }}',
             defaultStateName: '{{ $resolvedStateName ?? '' }}',
+            defaultCompanyId: '{{ $resolvedCompanyId ?? '' }}',
+            defaultCompanyName: '{{ $resolvedCompanyName ?? '' }}',
             modalId,
         };
+
+        // Debug logs
+        console.log('Review Modal Config:', config);
+        console.log('Modal Element:', modal);
+
+        // Check for persisted company data from session storage
+        const persistedCompanyId = sessionStorage.getItem(`reviewModal_companyId_${modalId}`);
+        const persistedCompanyName = sessionStorage.getItem(`reviewModal_companyName_${modalId}`);
+        
+        if (persistedCompanyId && persistedCompanyName) {
+            console.log('Found persisted data:', { persistedCompanyId, persistedCompanyName });
+            
+            // Apply persisted data after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                const companyIdInput = document.getElementById(`${modalId}CompanyId`);
+                const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
+                const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+                
+                if (companyIdInput) companyIdInput.value = persistedCompanyId;
+                if (companyNameDisplay) companyNameDisplay.textContent = persistedCompanyName;
+                if (companySearchInput) companySearchInput.value = persistedCompanyName;
+                
+                // Restore company selection UI state
+                if (manualCompanySelectionEnabled && persistedCompanyId && persistedCompanyId !== '0') {
+                    // Select company in dropdown
+                    companySelect.value = persistedCompanyId;
+                    // Hide manual input and search results
+                    toggleManualCompanyInput(false);
+                    const searchResults = document.querySelector('[data-search-results]');
+                    if (searchResults) {
+                        searchResults.style.display = 'none';
+                    }
+                    console.log('Restored company selection UI state');
+                }
+                
+                console.log('Applied persisted company data');
+            }, 100);
+        }
 
         const form = modal.querySelector('form');
         
@@ -1396,11 +1645,31 @@
         const hasConnectedProfile = @json((bool) $reviewProfile);
         const companyIdInput = document.getElementById(`${modalId}CompanyId`);
         const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
-        const companySelectWrapper = modal.querySelector('[data-company-select-wrapper]');
         const companySelect = modal.querySelector('[data-company-select]');
+        const manualCompanyGroup = document.getElementById(`${modalId}ManualCompanyGroup`);
+        const manualCompanyNameInput = document.getElementById(`${modalId}ManualCompanyNameInput`);
+        const manualCompanyUrlInput = document.getElementById(`${modalId}ManualCompanyUrlInput`);
         const stateIdInput = document.getElementById(`${modalId}StateId`);
         const ratingStars = modal.querySelectorAll('[data-review-stars] i');
         const ratingInput = document.getElementById(`${modalId}Rating`);
+        
+        // Company Search Variables
+        const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+        const searchResults = modal.querySelector('[data-search-results]');
+        const resultsList = modal.querySelector('[data-results-list]');
+        const resultsHeader = modal.querySelector('[data-results-header]');
+        const resultsCount = modal.querySelector('[data-results-count]');
+        const showAllBtn = modal.querySelector('[data-show-all]');
+        const searchClearBtn = modal.querySelector('[data-search-clear]');
+        
+        // Company Data
+        let allCompanies = @json($companies);
+        let filteredCompanies = [];
+        let searchTimeout = null;
+        let selectedIndex = -1;
+        
+        // Make companies array globally available
+        window.allCompanies = allCompanies;
         const metricGroups = modal.querySelectorAll('[data-metric-stars]');
         const categoryInput = document.getElementById(`${modalId}CategoryId`);
         const emailInput = document.querySelector(`[data-review-modal="#${modalId}"] [name="email"]`);
@@ -1648,7 +1917,7 @@
         let draftApplied = false;
         let isApplyingDraft = false;
 
-        const manualCompanySelectionEnabled = !!companySelectWrapper && !!companySelect;
+        const manualCompanySelectionEnabled = !!companySelect;
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
 
@@ -1678,16 +1947,16 @@
         const triggers = triggerCandidates.filter((element, index, self) => self.indexOf(element) === index);
 
         const companyUrlInput = document.getElementById(`${modalId}CompanyUrl`);
-        const manualCompanyNameInput = document.getElementById(`${modalId}ManualCompanyName`);
+        const manualCompanyNameHiddenInput = document.getElementById(`${modalId}ManualCompanyName`);
 
         function setCompanyContext(companyId, companyName, companyUrl = '') {
             const normalizedCompanyId = companyId && companyId !== '0' ? companyId : '0';
             if (companyIdInput) companyIdInput.value = normalizedCompanyId;
-            if (companyNameDisplay) companyNameDisplay.textContent = companyName || 'this company';
+            if (companyNameDisplay) companyNameDisplay.textContent = companyName || config.defaultCompanyName || 'this company';
             if (companyUrlInput) companyUrlInput.value = companyUrl || '';
-            if (manualCompanyNameInput) {
-                manualCompanyNameInput.value = normalizedCompanyId === '0'
-                    ? (companyName || '')
+            if (manualCompanyNameHiddenInput) {
+                manualCompanyNameHiddenInput.value = normalizedCompanyId === '0'
+                    ? (companyName || config.defaultCompanyName || '')
                     : '';
             }
         }
@@ -1705,10 +1974,311 @@
 
         function toggleCompanySelect(show) {
             if (!manualCompanySelectionEnabled) return;
-            companySelectWrapper.style.display = show ? 'block' : 'none';
             companySelect.required = !!show;
             if (show) {
                 companySelect.value = '';
+            }
+        }
+
+        function toggleManualCompanyInput(show) {
+            if (!manualCompanyGroup) return;
+            manualCompanyGroup.style.display = show ? 'block' : 'none';
+            if (manualCompanyNameInput) {
+                manualCompanyNameInput.required = !!show;
+                if (!show) {
+                    manualCompanyNameInput.value = '';
+                    manualCompanyUrlInput.value = '';
+                }
+            }
+        }
+
+        /** When fixed: company is pre-set (e.g. from company page); disable dropdown and search so user cannot change. */
+        function setCompanySelectionFixed(fixed) {
+            if (!manualCompanySelectionEnabled || !companySelect) return;
+            const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+            const wrapper = companySearchInput ? companySearchInput.closest('.company-search-wrapper') : null;
+            if (fixed) {
+                companySelect.disabled = true;
+                if (companySearchInput) {
+                    companySearchInput.readOnly = true;
+                    companySearchInput.style.pointerEvents = 'none';
+                }
+                if (wrapper) wrapper.classList.add('company-selection-fixed');
+            } else {
+                companySelect.disabled = false;
+                if (companySearchInput) {
+                    companySearchInput.readOnly = false;
+                    companySearchInput.style.pointerEvents = '';
+                }
+                if (wrapper) wrapper.classList.remove('company-selection-fixed');
+            }
+        }
+
+        function handleCompanySelection() {
+            if (!companySelect) return;
+            
+            const selectedValue = companySelect.value;
+            const selectedOption = companySelect.options[companySelect.selectedIndex];
+            
+            if (selectedValue === 'other') {
+                // Show manual input for "Other Solar Company"
+                toggleManualCompanyInput(true);
+                setCompanyContext('0', 'Other Solar Company', '');
+                companySelect.required = false;
+            } else if (selectedValue === '') {
+                // No selection - hide manual input
+                toggleManualCompanyInput(false);
+                setCompanyContext('0', 'this company', '');
+            } else {
+                // Company selected from dropdown
+                toggleManualCompanyInput(false);
+                const companyName = selectedOption.getAttribute('data-company-name') || '';
+                const companyUrl = selectedOption.getAttribute('data-company-url') || '';
+                setCompanyContext(selectedValue, companyName, companyUrl);
+            }
+        }
+
+        // Company Search Functions
+        function initializeCompanySearch() {
+            if (!companySearchInput) return;
+            
+            // Focus event - show all companies
+            companySearchInput.addEventListener('focus', function() {
+                showAllCompanies();
+            });
+            
+            // Input event - search companies
+            companySearchInput.addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                clearTimeout(searchTimeout);
+                
+                if (query === '') {
+                    showAllCompanies();
+                } else {
+                    searchTimeout = setTimeout(() => {
+                        searchCompanies(query);
+                    }, 300); // Debounce search
+                }
+            });
+            
+            // Keyboard navigation
+            companySearchInput.addEventListener('keydown', function(e) {
+                handleSearchKeydown(e);
+            });
+            
+            // Clear button
+            if (searchClearBtn) {
+                searchClearBtn.addEventListener('click', function() {
+                    clearSearch();
+                });
+            }
+            
+            // Click outside to close
+            document.addEventListener('click', function(e) {
+                if (!searchResults.contains(e.target) && e.target !== companySearchInput) {
+                    hideSearchResults();
+                }
+            });
+        }
+
+        function searchCompanies(query) {
+            const lowercaseQuery = query.toLowerCase();
+            filteredCompanies = allCompanies.filter(company => 
+                company.name.toLowerCase().includes(lowercaseQuery) ||
+                (company.website_url && company.website_url.toLowerCase().includes(lowercaseQuery))
+            );
+            
+            displaySearchResults(filteredCompanies, query);
+        }
+
+        function displaySearchResults(companies, query) {
+            if (!resultsList) return;
+            
+            resultsList.innerHTML = '';
+            
+            if (companies.length === 0) {
+                resultsList.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search mb-2"></i>
+                        <div>No companies found for "${query}"</div>
+                        <div class="mt-2">
+                            <button type="button" class="show-all-btn" onclick="showAllCompanies()">
+                                Show All Companies
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                companies.forEach((company, index) => {
+                    const resultItem = createSearchResultItem(company, index);
+                    resultsList.appendChild(resultItem);
+                });
+            }
+            
+            // Update results count
+            if (resultsCount) {
+                resultsCount.textContent = `${companies.length} compan${companies.length === 1 ? 'y' : 'ies'} found`;
+            }
+            
+            // Show/hide "Show All" button
+            if (showAllBtn) {
+                const hasMore = companies.length < allCompanies.length;
+                showAllBtn.style.display = hasMore ? 'block' : 'none';
+                showAllBtn.onclick = () => showAllCompanies();
+            }
+            
+            // Show results
+            searchResults.style.display = 'block';
+            selectedIndex = -1;
+        }
+
+        function createSearchResultItem(company, index) {
+            const div = document.createElement('div');
+            div.className = 'search-result-item';
+            div.setAttribute('data-company-id', company.id);
+            div.setAttribute('data-company-name', company.name);
+            div.setAttribute('data-company-url', company.website_url || '');
+            
+            const companyInfo = document.createElement('div');
+            companyInfo.className = 'company-info';
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'company-name';
+            nameDiv.textContent = company.name;
+            
+            companyInfo.appendChild(nameDiv);
+            
+            if (company.website_url) {
+                const websiteLink = document.createElement('a');
+                websiteLink.className = 'company-website';
+                websiteLink.href = company.website_url;
+                websiteLink.target = '_blank';
+                websiteLink.rel = 'noopener noreferrer';
+                websiteLink.textContent = company.website_url.replace(/^https?:\/\//, '');
+                companyInfo.appendChild(websiteLink);
+            }
+            
+            div.appendChild(companyInfo);
+            
+            // Click event
+            div.addEventListener('click', function() {
+                selectCompany(company);
+            });
+            
+            // Hover event
+            div.addEventListener('mouseenter', function() {
+                highlightSearchResult(index);
+            });
+            
+            return div;
+        }
+
+        function selectCompany(company) {
+            // Update search input
+            companySearchInput.value = company.name;
+            
+            // Update hidden select
+            companySelect.value = company.id;
+            
+            // Set company context
+            setCompanyContext(company.id, company.name, company.website_url || '');
+            
+            // Hide manual input
+            toggleManualCompanyInput(false);
+            
+            // Hide search results
+            hideSearchResults();
+            
+            // Show clear button
+            if (searchClearBtn) {
+                searchClearBtn.hidden = false;
+            }
+        }
+
+        function showAllCompanies() {
+            displaySearchResults(allCompanies.slice(0, 50), ''); // Show first 50 for performance
+            companySearchInput.value = '';
+            if (searchClearBtn) {
+                searchClearBtn.hidden = true;
+            }
+        }
+
+        function clearSearch() {
+            companySearchInput.value = '';
+            hideSearchResults();
+            companySearchInput.focus();
+            if (searchClearBtn) {
+                searchClearBtn.hidden = true;
+            }
+        }
+
+        function hideSearchResults() {
+            if (searchResults) {
+                searchResults.style.display = 'none';
+            }
+            selectedIndex = -1;
+        }
+
+        function highlightSearchResult(index) {
+            const items = resultsList.querySelectorAll('.search-result-item');
+            items.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            selectedIndex = index;
+        }
+
+        function handleSearchKeydown(e) {
+            const items = resultsList.querySelectorAll('.search-result-item');
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    if (selectedIndex < items.length - 1) {
+                        highlightSearchResult(selectedIndex + 1);
+                        scrollToView(items[selectedIndex + 1]);
+                    }
+                    break;
+                    
+                case 'ArrowUp':
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        highlightSearchResult(selectedIndex - 1);
+                        scrollToView(items[selectedIndex - 1]);
+                    }
+                    break;
+                    
+                case 'Enter':
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && items[selectedIndex]) {
+                        const company = {
+                            id: items[selectedIndex].getAttribute('data-company-id'),
+                            name: items[selectedIndex].getAttribute('data-company-name'),
+                            website_url: items[selectedIndex].getAttribute('data-company-url')
+                        };
+                        selectCompany(company);
+                    }
+                    break;
+                    
+                case 'Escape':
+                    hideSearchResults();
+                    break;
+            }
+        }
+
+        function scrollToView(element) {
+            if (element && resultsList) {
+                const listRect = resultsList.getBoundingClientRect();
+                const itemRect = element.getBoundingClientRect();
+                
+                if (itemRect.bottom > listRect.bottom) {
+                    element.scrollIntoView({ block: 'nearest' });
+                } else if (itemRect.top < listRect.top) {
+                    element.scrollIntoView({ block: 'nearest' });
+                }
             }
         }
 
@@ -2056,7 +2626,9 @@
             toggleSystemDetails(false);
 
             if (manualCompanySelectionEnabled) {
-                toggleCompanySelect(true);
+                companySelect.value = '';
+                toggleManualCompanyInput(false);
+                setCompanySelectionFixed(false);
             }
             setCompanyContext('', 'this company', '');
             if (stateIdInput) stateIdInput.value = '';
@@ -2072,12 +2644,27 @@
             resetForm();
 
             const dataset = trigger ? trigger.dataset : {};
-            const companyId = dataset.companyId || '';
-            const companyName = dataset.companyName || 'this company';
+            let companyId = dataset.companyId || config.defaultCompanyId || '';
+            let companyName = dataset.companyName || config.defaultCompanyName || 'this company';
             const categoryIds = dataset.categoryIds || '';
             const stateId = dataset.stateId || config.defaultStateId || '';
             const stateName = dataset.stateName || config.defaultStateName || 'State';
             const companyUrl = dataset.companyUrl || '';
+
+            // If we have companyId but no companyName, fetch from companies array
+            if (companyId && companyId !== '0' && (!companyName || companyName === 'this company')) {
+                console.log('Looking for company with ID:', companyId);
+                console.log('Available companies:', allCompanies);
+                
+                const company = allCompanies.find(c => c.id == companyId);
+                if (company) {
+                    companyName = company.owner_name || company.name;
+                    console.log('Found company name from array:', companyName);
+                    console.log('Company data:', company);
+                } else {
+                    console.log('Company not found in array!');
+                }
+            }
 
             setCategoryContext(categoryIds);
             setStateDisplay(stateId);
@@ -2086,14 +2673,41 @@
 
             if (manualCompanySelectionEnabled) {
                 if (hasLinkedCompany) {
-                    toggleCompanySelect(false);
+                    // Auto-select the company in dropdown
+                    companySelect.value = companyId;
                     setCompanyContext(companyId, companyName, companyUrl);
+                    
+                    // Also set the search input to show selected company
+                    const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+                    if (companySearchInput) {
+                        companySearchInput.value = companyName;
+                        console.log('Set company search input:', companyName);
+                    }
+                    
+                    // Hide manual input and show company is selected
+                    toggleManualCompanyInput(false);
+                    
+                    // Hide search results and show company is selected
+                    const searchResults = document.querySelector('[data-search-results]');
+                    if (searchResults) {
+                        searchResults.style.display = 'none';
+                    }
+                    setCompanySelectionFixed(true);
+                    console.log('Company selected and manual input hidden');
                 } else {
-                    toggleCompanySelect(true);
+                    // Reset to default state
+                    companySelect.value = '';
+                    const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+                    if (companySearchInput) {
+                        companySearchInput.value = '';
+                    }
                     setCompanyContext('', 'this company', companyUrl);
+                    toggleManualCompanyInput(true);
+                    setCompanySelectionFixed(false);
                 }
             } else {
-                setCompanyContext(hasLinkedCompany ? companyId : '0', companyName, companyUrl);
+                // Set company context if company selection is not enabled
+                setCompanyContext(companyId, companyName, companyUrl);
             }
 
             // Calculate scrollbar width BEFORE hiding overflow
@@ -2178,6 +2792,36 @@
                 });
             });
         });
+
+        // Add company selection change event listener
+        if (companySelect) {
+            companySelect.addEventListener('change', handleCompanySelection);
+        }
+
+        // Initialize company search functionality
+        initializeCompanySearch();
+
+        // Add manual company input event listeners
+        if (manualCompanyNameInput) {
+            manualCompanyNameInput.addEventListener('input', function() {
+                const companyName = this.value.trim();
+                const companyUrl = manualCompanyUrlInput ? manualCompanyUrlInput.value.trim() : '';
+                setCompanyContext('0', companyName, companyUrl);
+                
+                // Update the display name
+                if (companyNameDisplay) {
+                    companyNameDisplay.textContent = companyName || 'this company';
+                }
+            });
+        }
+
+        if (manualCompanyUrlInput) {
+            manualCompanyUrlInput.addEventListener('input', function() {
+                const companyName = manualCompanyNameInput ? manualCompanyNameInput.value.trim() : '';
+                const companyUrl = this.value.trim();
+                setCompanyContext('0', companyName, companyUrl);
+            });
+        }
 
         metricGroups.forEach(group => {
             const buttons = group.querySelectorAll('[data-metric-star]');
@@ -2500,7 +3144,30 @@
 
         function applyDraftContext(context = {}) {
             if (context.companyId || context.companyName) {
-                setCompanyContext(context.companyId, context.companyName);
+                setCompanyContext(context.companyId, context.companyName, context.companyUrl || '');
+                
+                // Handle company selection restoration
+                if (manualCompanySelectionEnabled && companySelect) {
+                    if (context.companyId && context.companyId !== '0') {
+                        // Try to find and select the company in dropdown
+                        companySelect.value = context.companyId;
+                        toggleManualCompanyInput(false);
+                    } else if (context.companyName && context.companyName !== 'this company') {
+                        // Manual company name was entered
+                        companySelect.value = 'other';
+                        toggleManualCompanyInput(true);
+                        if (manualCompanyNameInput) {
+                            manualCompanyNameInput.value = context.companyName;
+                        }
+                        if (manualCompanyUrlInput && context.companyUrl) {
+                            manualCompanyUrlInput.value = context.companyUrl;
+                        }
+                    } else {
+                        // Reset to default
+                        companySelect.value = '';
+                        toggleManualCompanyInput(false);
+                    }
+                }
             }
             if (context.stateId) {
                 setStateDisplay(context.stateId);
@@ -2625,5 +3292,58 @@
         } else {
             initReviewModal();
         }
+    })();
+
+    // Global helper: open review modal with a specific company (dropdown pre-selected and disabled)
+    (function() {
+        function showReviewModal(companyId, companyName) {
+            var modalEl = document.querySelector('[data-review-modal]');
+            if (!modalEl) return;
+            var modalId = modalEl.id;
+            if (!companyId) return;
+            try {
+                sessionStorage.setItem('reviewModal_companyId_' + modalId, companyId);
+                sessionStorage.setItem('reviewModal_companyName_' + modalId, companyName || '');
+            } catch (e) {}
+            if (!companyName && window.allCompanies && window.allCompanies.length) {
+                var company = window.allCompanies.find(function(c) { return c.id == companyId; });
+                if (company) companyName = company.owner_name || company.name;
+            }
+            var companyIdInput = document.getElementById(modalId + 'CompanyId');
+            var companyNameDisplay = document.getElementById(modalId + 'CompanyName');
+            var companySearchInput = document.getElementById(modalId + 'CompanySearch');
+            var companySelect = document.getElementById(modalId + 'CompanySelect');
+            var companyUrlInput = document.getElementById(modalId + 'CompanyUrl');
+            if (companyIdInput) companyIdInput.value = companyId;
+            if (companyNameDisplay) companyNameDisplay.textContent = companyName || 'this company';
+            if (companySearchInput) companySearchInput.value = companyName || '';
+            if (companySelect) {
+                companySelect.value = companyId;
+                companySelect.disabled = true;
+                var opt = companySelect.options[companySelect.selectedIndex];
+                var companyUrl = (opt && opt.getAttribute('data-company-url')) ? opt.getAttribute('data-company-url') : '';
+                if (companyUrlInput) companyUrlInput.value = companyUrl || '';
+            }
+            if (companySearchInput) {
+                companySearchInput.readOnly = true;
+                companySearchInput.style.pointerEvents = 'none';
+                var wrapper = companySearchInput.closest('.company-search-wrapper');
+                if (wrapper) wrapper.classList.add('company-selection-fixed');
+            }
+            modalEl.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+        }
+        window.showReviewModal = showReviewModal;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.open-review-modal').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var companyId = this.getAttribute('data-company-id');
+                    var companyName = this.getAttribute('data-company-name');
+                    if (typeof window.showReviewModal === 'function') window.showReviewModal(companyId, companyName);
+                });
+            });
+        });
     })();
 </script>

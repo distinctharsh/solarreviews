@@ -29,12 +29,13 @@
                 <div class="form-group">
                     <label for="useLocation">Location Preference *</label>
                     <select id="useLocation" name="use_location" required>
+                        <option value="">Select location preference</option>
                         <option value="dropdown">Select State, City & Pincode</option>
                         <option value="other">Enter Location Manually</option>
                     </select>
                 </div>
 
-                <div class="form-group" id="locationFieldsGroup">
+                <div class="form-group" id="locationFieldsGroup" style="display: none;">
                     <label>Location Details *</label>
                     <x-location-fields 
                         id-prefix="enquiry" 
@@ -418,6 +419,10 @@
        LOCATION TOGGLE
     -------------------------------------------------- */
 
+    // Initialize location fields as hidden
+    locationFieldsGroup.style.display = 'none';
+    otherLocationGroup.style.display = 'none';
+
     function toggleLocationFields() {
         if (useLocationSelect.value === 'dropdown') {
             locationFieldsGroup.style.display = 'block';
@@ -482,9 +487,10 @@
 
                 const stateSelect = document.getElementById('enquiry_state_id');
                 const citySelect = document.getElementById('enquiry_city');
+                const cityLookupInput = document.querySelector('[data-location-city-lookup]');
 
                 locationInfo.stateId = stateSelect?.value || '';
-                locationInfo.cityId = citySelect?.value || '';
+                locationInfo.cityId = cityLookupInput?.value || '';
                 locationInfo.state = stateSelect?.options[stateSelect.selectedIndex]?.text || '';
                 locationInfo.city = citySelect?.options[citySelect.selectedIndex]?.text || '';
                 locationInfo.pincode = pincode;
@@ -505,7 +511,7 @@
             if (pincode && pincode.length === 6) {
                 // Redirect to companies index page with filters
                 setTimeout(() => {
-                    window.location.href = `/compare/companies?pincode=${encodeURIComponent(pincode)}&state=${encodeURIComponent(locationInfo.stateId)}&city=${encodeURIComponent(locationInfo.cityId)}`;
+                    window.location.href = `/compare/companies?pincode=${encodeURIComponent(pincode)}&state=${encodeURIComponent(locationInfo.stateId)}&city=${encodeURIComponent(locationInfo.cityId)}&from_form=enquiry`;
                 }, 1500);
             } else {
                 // Show fallback message

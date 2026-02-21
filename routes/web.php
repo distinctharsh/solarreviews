@@ -354,11 +354,33 @@ Route::get('/', function () {
         'active_users' => NormalUser::query()->count(),
     ];
 
+    // Get states for review modal
+    $states = \App\Models\State::select('id', 'name')
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get();
+
+    // Get all active companies for review modal dropdown
+    $allCompanies = \App\Models\Company::query()
+        ->select('id', 'owner_name', 'website_url')
+        ->where('is_active', true)
+        ->orderBy('owner_name')
+        ->get()
+        ->map(function ($company) {
+            return [
+                'id' => $company->id,
+                'name' => $company->owner_name,
+                'website_url' => $company->website_url,
+            ];
+        });
+
     return view('welcome', [
         'companies' => $companies,
         'trendingCompanies' => $trendingCompanies,
         'recentReviews' => $recentReviews,
         'stats' => $stats,
+        'states' => $states,
+        'allCompanies' => $allCompanies,
     ]);
 });
 

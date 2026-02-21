@@ -605,7 +605,7 @@
         if (useLocation === 'dropdown') {
             locationData = {
                 stateId: formData.get('state_id'),
-                cityId: formData.get('city'),
+                cityId: formData.get('city_lookup_id'),
                 pincode: formData.get('pincode')
             };
         } else {
@@ -651,9 +651,9 @@
                     if (locationData.cityId) {
                         params.append('city', locationData.cityId);
                     }
-                    if (locationData.city && useLocation !== 'dropdown') {
-                        params.append('city', locationData.city);
-                    }
+                                        
+                    // Add from_form parameter to indicate form submission
+                    params.append('from_form', 'solution');
                     
                     if (params.toString()) {
                         redirectUrl += '?' + params.toString();

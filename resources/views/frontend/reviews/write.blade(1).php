@@ -697,7 +697,8 @@
         triggerSelector="#landingReviewModalTrigger"
         :states="$states ?? collect()"
         :categories="collect()"
-        :allow-company-selection="false"
+        :companies="$companies ?? collect()"
+        :allow-company-selection="true"
     />
 
     @include('components.frontend.chatbot-widget')

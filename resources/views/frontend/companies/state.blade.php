@@ -1605,9 +1605,10 @@
     triggerSelector=".btn-review"
     :categories="$categories ?? collect()"
     :states="$states ?? collect()"
+    :companies="$companies ?? collect()"
     :default-state-id="$state['id'] ?? null"
     :default-state-name="$state['name'] ?? null"
-    :allow-company-selection="false"
+    :allow-company-selection="true"
 />
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
