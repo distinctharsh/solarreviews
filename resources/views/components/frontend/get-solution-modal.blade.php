@@ -1,6 +1,4 @@
-@php
-    $states = \App\Models\State::where('is_active', true)->orderBy('name')->get();
-?>
+
 
 <style>
 /* Get Solution Modal Styles */
@@ -536,18 +534,26 @@
     /* -----------------------------
        LOCATION PREFERENCE TOGGLE
     ----------------------------- */
-    useLocationSelect?.addEventListener('change', function () {
-        const preference = this.value;
-
+    useLocationSelect?.addEventListener('change', function toggleLocationFields() {
+        const preference = useLocationSelect.value;
+        
         if (preference === 'dropdown') {
             locationFields.style.display = 'block';
             manualLocationField.style.display = 'none';
-        } 
-        else if (preference === 'other') {
+            
+            // Add required attributes to dropdown location fields
+            document.getElementById('solution_state_id')?.setAttribute('required', 'required');
+            document.getElementById('solution_city')?.setAttribute('required', 'required');
+            document.getElementById('solution_pincode')?.setAttribute('required', 'required');
+        } else if (preference === 'other') {
             locationFields.style.display = 'none';
             manualLocationField.style.display = 'block';
-        } 
-        else {
+            
+            // Remove required attributes from hidden dropdown location fields
+            document.getElementById('solution_state_id')?.removeAttribute('required');
+            document.getElementById('solution_city')?.removeAttribute('required');
+            document.getElementById('solution_pincode')?.removeAttribute('required');
+        } else {
             locationFields.style.display = 'none';
             manualLocationField.style.display = 'none';
         }
@@ -609,10 +615,17 @@
                 pincode: formData.get('pincode')
             };
         } else {
+            // Handle manual location input with pincode extraction
+            const otherLocation = formData.get('other_location') || '';
+            
+            // Try to extract pincode from manual input
+            const match = otherLocation.match(/\b\d{6}\b/);
+            const pincode = match ? match[0] : '';
+            
             locationData = {
                 state: 'Manual Location',
-                city: formData.get('other_location'),
-                pincode: formData.get('pincode')
+                city: otherLocation,
+                pincode: pincode
             };
         }
 

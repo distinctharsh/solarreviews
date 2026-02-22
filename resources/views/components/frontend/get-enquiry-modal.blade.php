@@ -428,10 +428,20 @@
             locationFieldsGroup.style.display = 'block';
             otherLocationGroup.style.display = 'none';
             document.getElementById('otherLocation')?.removeAttribute('required');
+            
+            // Add required attributes to dropdown location fields
+            document.getElementById('enquiry_state_id')?.setAttribute('required', 'required');
+            document.getElementById('enquiry_city')?.setAttribute('required', 'required');
+            document.getElementById('enquiry_pincode')?.setAttribute('required', 'required');
         } else {
             locationFieldsGroup.style.display = 'none';
             otherLocationGroup.style.display = 'block';
             document.getElementById('otherLocation')?.setAttribute('required', 'required');
+            
+            // Remove required attributes from hidden dropdown location fields
+            document.getElementById('enquiry_state_id')?.removeAttribute('required');
+            document.getElementById('enquiry_city')?.removeAttribute('required');
+            document.getElementById('enquiry_pincode')?.removeAttribute('required');
         }
     }
 
@@ -498,27 +508,40 @@
             } else {
 
                 const otherLocation = formData.get('other_location') || '';
+                
+                // Try to extract pincode from manual input, but prioritize the full location text
                 const match = otherLocation.match(/\b\d{6}\b/);
                 pincode = match ? match[0] : '';
-
+                
+                // Use the complete manual location as the primary location info
                 locationInfo = {
                     state: 'Manual Location',
-                    city: otherLocation,
+                    city: otherLocation, // Use full manual location text
                     pincode: pincode
                 };
             }
 
-            if (pincode && pincode.length === 6) {
-                // Redirect to companies index page with filters
-                setTimeout(() => {
-                    window.location.href = `/compare/companies?pincode=${encodeURIComponent(pincode)}&state=${encodeURIComponent(locationInfo.stateId)}&city=${encodeURIComponent(locationInfo.cityId)}&from_form=enquiry`;
-                }, 1500);
-            } else {
-                // Show fallback message
-                setTimeout(() => {
-                    alert('Please provide a valid pincode to see available companies in your area.');
-                }, 1500);
-            }
+            // Always redirect with available location info
+            setTimeout(() => {
+                const params = new URLSearchParams();
+                params.append('from_form', 'enquiry');
+                
+                if (locationInfo.pincode) {
+                    params.append('pincode', locationInfo.pincode);
+                }
+                if (locationInfo.stateId) {
+                    params.append('state', locationInfo.stateId);
+                }
+                if (locationInfo.cityId) {
+                    params.append('city', locationInfo.cityId);
+                }
+                // For manual location, always pass the full location text
+                if (locationInfo.city && locationInfo.state === 'Manual Location') {
+                    params.append('manual_location', locationInfo.city);
+                }
+                
+                window.location.href = `/compare/companies?${params.toString()}`;
+            }, 1500);
 
         } catch (error) {
 

@@ -323,15 +323,46 @@ Route::get('/', function () {
 
             $avatar = Str::upper(Str::substr($reviewerName, 0, 1)) ?: Str::upper(Str::substr($companyName, 0, 1));
 
+            $canEdit = (int) $review->normal_user_id === (int) session('normal_user_id');
+
+            $editPayload = null;
+            if ($canEdit) {
+                $editPayload = [
+                    'id' => $review->id,
+                    'company_id' => $review->company_id ?? 0,
+                    'company_name' => $companyName,
+                    'manual_company_name' => $review->manual_company_name,
+                    'company_url' => $review->company_url,
+                    'state_id' => $review->state_id,
+                    'category_id' => $review->category_id,
+                    'rating' => $review->rating,
+                    'review_title' => $review->review_title,
+                    'review_text' => $review->review_text,
+                    'experience_metrics' => $review->experience_metrics ?? [],
+                    'reviewer_state_id' => $review->reviewer_state_id,
+                    'reviewer_city' => $review->reviewer_city,
+                    'system_size_kw' => $review->system_size_kw,
+                    'system_price' => $review->system_price,
+                    'year_installed' => $review->year_installed,
+                    'panel_brand' => $review->panel_brand,
+                    'inverter_brand' => $review->inverter_brand,
+                    'media_terms_accepted' => $review->media_terms_accepted,
+                    'update_url' => route('normal-user.reviews.update', $review),
+                ];
+            }
+
             $websiteUrl = $company?->website_url;
 
             return [
                 'id' => $review->id,
+                'normal_user_id' => $review->normal_user_id,
                 'reviewer' => $reviewerName,
                 'avatar' => $avatar,
                 'rating' => (int) $review->rating,
                 'text' => Str::limit(strip_tags((string) $review->review_text), 220),
                 'date' => optional($review->review_date ?? $review->created_at)->format('M d, Y'),
+                'can_edit' => $canEdit,
+                'edit_payload' => $editPayload,
                 'company' => [
                     'name' => $companyName,
                     'slug' => $company?->slug,
@@ -556,6 +587,10 @@ Route::middleware('guest')->group(function () {
 Route::prefix('auth/normal-user')->name('normal-user.login.')->group(function () {
     Route::post('/send-otp', [SocialLoginController::class, 'sendOtp'])->name('send-otp');
     Route::post('/verify-otp', [SocialLoginController::class, 'verifyOtp'])->name('verify-otp');
+    Route::post('/logout', function () {
+        Session::forget(['normal_user_id', 'review_profile']);
+        return response()->json(['success' => true]);
+    })->name('logout');
 });
 
 // Admin Routes

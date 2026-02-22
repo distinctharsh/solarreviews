@@ -26,6 +26,7 @@ class CompanyController extends Controller
         $stateId = $request->query('state');
         $cityId = $request->query('city');
         $pincode = trim((string) $request->query('pincode', ''));
+        $manualLocation = trim((string) $request->query('manual_location', ''));
         $sort = (string) $request->query('sort', '');
         $fromForm = $request->query('from_form'); // Check if coming from form submission
         
@@ -62,7 +63,7 @@ class CompanyController extends Controller
                         ->orWhere('companies.slug', 'like', '%' . $searchQuery . '%');
                 });
             })
-            ->when($fromForm && ($pincode !== '' || $cityId !== null || $stateId !== null), function ($query) use ($pincode, $cityId, $stateId) {
+            ->when($fromForm && ($pincode !== '' || $cityId !== null || $stateId !== null || $manualLocation !== ''), function ($query) use ($pincode, $cityId, $stateId, $manualLocation) {
                 // Priority-based filtering for form submissions
                 if ($pincode !== '') {
                     // Try pincode first
@@ -103,6 +104,9 @@ class CompanyController extends Controller
                 } elseif ($stateId !== null) {
                     // If only state is available
                     $query->where('companies.state_id', $stateId);
+                } elseif ($manualLocation !== '') {
+                    // Filter by manual location text - show all active companies since we can't parse specific location
+                    $query->where('is_active', true);
                 }
             })
             ->when(!$fromForm && ($stateId !== null && $stateId !== ''), function ($query) use ($stateId) {

@@ -1043,14 +1043,6 @@
                     </select>
                 </div>
 
-                <div class="form-group" id="{{ $modalId }}ManualCompanyGroup" style="display: none;">
-                    <label class="form-label" for="{{ $modalId }}ManualCompanyNameInput">Company Name *</label>
-                    <input type="text" id="{{ $modalId }}ManualCompanyNameInput" class="form-input" placeholder="Enter company name" maxlength="255">
-                    
-                    <label class="form-label" for="{{ $modalId }}ManualCompanyUrlInput" style="margin-top: 0.5rem;">Company Website (Optional)</label>
-                    <input type="url" id="{{ $modalId }}ManualCompanyUrlInput" class="form-input" placeholder="https://example.com" maxlength="255">
-                </div>
-
                 <input type="hidden" name="category_id" id="{{ $modalId }}CategoryId">
                 
                 <div class="form-group">
@@ -1457,26 +1449,7 @@
                         </button> -->
                     </div>
 
-                
-
-                    <div class="identity-options google-center">
-                        <button
-                            type="button"
-                            class="google-btn {{ $reviewProfile ? 'connected' : '' }}"
-                            data-google-login
-                            data-google-redirect="{{ route('oauth.google.redirect') }}"
-                            {{ $reviewProfile ? 'disabled' : '' }}
-                        >
-                            <img src="{{ asset('images/company/google.svg') }}" alt="Google logo">
-                            <span>
-                                {{ $reviewProfile ? 'Google connected' : 'Continue with Google' }}
-                            </span>
-                        </button>
-                    </div>
-
-
-
-                    <button
+                  <button
                         type="button"
                         class="identity-email-toggle"
                         data-show-manual-identity
@@ -1485,10 +1458,16 @@
                         <i class="far fa-envelope"></i>
                         Continue with email
                     </button>
+
+                  
+
+
+
+                  
                     @if($reviewProfile)
                         <input type="hidden" name="manual_identity_optional" value="1">
                     @endif
-                    <div class="identity-divider" data-manual-divider hidden>or continue manually</div>
+                    
                     <div class="manual-identity-controls" data-manual-controls hidden>
                         <span>Continuing with email</span>
                         <!-- <button type="button" class="manual-identity-close" data-hide-manual-identity>
@@ -1506,7 +1485,7 @@
                                 type="text"
                                 class="form-control {{ $reviewProfile ? 'identity-readonly' : '' }}"
                                 name="reviewer_name"
-                                placeholder="e.g., Priya M."
+                                placeholder="e.g., Harsh S."
                                 value="{{ old('reviewer_name', $reviewProfile['name'] ?? (optional(auth()->user())->name ?? '')) }}"
                                 {{ $reviewProfile ? 'readonly' : '' }}
                                 data-identity-name
@@ -1572,6 +1551,25 @@
                         </div>
                     </div>
                 </div>
+
+<div class="identity-divider" data-manual-divider hidden>or continue with gmail</div>
+
+                  <div class="identity-options google-center">
+                        <button
+                            type="button"
+                            class="google-btn {{ $reviewProfile ? 'connected' : '' }}"
+                            data-google-login
+                            data-google-redirect="{{ route('oauth.google.redirect') }}"
+                            {{ $reviewProfile ? 'disabled' : '' }}
+                        >
+                            <img src="{{ asset('images/company/google.svg') }}" alt="Google logo">
+                            <span>
+                                {{ $reviewProfile ? 'Google connected' : 'Continue with Google' }}
+                            </span>
+                        </button>
+                    </div>
+
+
                 @else
                     <input type="hidden" name="reviewer_name" value="{{ $reviewProfile['name'] }}">
                     <input type="hidden" name="email" value="{{ $reviewProfile['email'] }}">
@@ -1588,9 +1586,9 @@
 <script>
     (function () {
         function initReviewModal() {
-        const modalId = '{{ $modalId }}';
-        const modal = document.getElementById(modalId);
-        if (!modal) return;
+            const modalId = '{{ $modalId }}';
+            const modal = document.getElementById(modalId);
+            const form = modal ? modal.querySelector('form') : null;
 
         const config = {
             triggerSelector: @json($triggerSelector),
@@ -1601,16 +1599,12 @@
             modalId,
         };
 
-        // Debug logs
-        console.log('Review Modal Config:', config);
-        console.log('Modal Element:', modal);
 
         // Check for persisted company data from session storage
         const persistedCompanyId = sessionStorage.getItem(`reviewModal_companyId_${modalId}`);
         const persistedCompanyName = sessionStorage.getItem(`reviewModal_companyName_${modalId}`);
         
         if (persistedCompanyId && persistedCompanyName) {
-            console.log('Found persisted data:', { persistedCompanyId, persistedCompanyName });
             
             // Apply persisted data after a short delay to ensure DOM is ready
             setTimeout(() => {
@@ -1639,9 +1633,6 @@
             }, 100);
         }
 
-        const form = modal.querySelector('form');
-        
-        
         const hasConnectedProfile = @json((bool) $reviewProfile);
         const companyIdInput = document.getElementById(`${modalId}CompanyId`);
         const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
@@ -1845,7 +1836,6 @@
         };
 
         if (micBtn) {
-            console.log(micBtn);
             if (!SpeechRecognitionCtor || !reviewTextArea) {
                 micBtn.disabled = true;
                 micBtn.style.display = 'none';
@@ -2736,6 +2726,21 @@
             });
         });
 
+        // Allow opening this modal from outside via custom event (e.g. home page edit button)
+        document.addEventListener('review-modal-open', function (e) {
+            if (!e.detail || e.detail.modalId !== modalId) return;
+            const trigger = triggers[0] || document.querySelector(triggerSelector) || document.querySelector(`[data-review-modal-trigger="${modalId}"]`);
+            if (trigger) openModal(trigger);
+        });
+
+        // Global opener for welcome page edit – call this after setting trigger's data-* attributes
+        if (modalId === 'welcomeReviewModal') {
+            window.openWelcomeReviewModalForEdit = function () {
+                const trigger = triggers[0] || document.querySelector(triggerSelector) || document.querySelector('[data-review-modal-trigger="welcomeReviewModal"]');
+                if (trigger) openModal(trigger);
+            };
+        }
+
         if (googleLoginBtn) {
             googleLoginBtn.addEventListener('click', () => {
                 persistDraftNow(true);
@@ -2867,9 +2872,14 @@
                 if (emailInput && emailInput.value) {
                     formData.set('email', emailInput.value);
                 }
+                
+                // Check for _method field (for PUT requests during edit)
+                const methodField = form.querySelector('input[name="_method"]');
+                const method = methodField ? methodField.value : 'POST';
+                const url = form.action;
 
-                fetch(form.action, {
-                    method: 'POST',
+                fetch(url, {
+                    method: method,
                     body: formData,
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,

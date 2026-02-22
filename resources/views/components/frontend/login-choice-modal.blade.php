@@ -294,9 +294,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 otpSuccess.textContent = 'Verification successful! Redirecting...';
                 otpSuccess.style.display = 'block';
                 
-                // Redirect to profile page
+                // Redirect back to home instead of profile
                 setTimeout(() => {
-                    window.location.href = '{{ route("normal-user.reviews.index") }}';
+                    // window.location.href = '{{ route("normal-user.reviews.index") }}';
+                    window.location.href = '{{ url('/') }}';
                 }, 500);
             } else {
                 otpError.textContent = data.message || 'Invalid verification code. Please try again.';

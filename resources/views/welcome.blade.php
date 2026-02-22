@@ -26,7 +26,7 @@
     ])
 
 
-    <style>
+     <style>
 
          /* Products Section */
         .products-section {
@@ -194,38 +194,38 @@
         
 
             /* Tablet */
-@media (max-width: 992px) {
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-/* Mobile */
-@media (max-width: 576px) {
-    .products-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
+        /* Mobile */
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
 
-    .project-container {
-        padding: 0 1rem;
-        margin-bottom: 60px;
-    }
+            .project-container {
+                padding: 0 1rem;
+                margin-bottom: 60px;
+            }
 
-    .product-image {
-        height: 160px;
-        padding: 1.5rem;
-    }
+            .product-image {
+                height: 160px;
+                padding: 1.5rem;
+            }
 
-    .product-content {
-        padding: 1.25rem;
-    }
+            .product-content {
+                padding: 1.25rem;
+            }
 
-    .product-content h3 {
-        font-size: 1.1rem;
-    }
-}
-    </style>
+            .product-content h3 {
+                font-size: 1.1rem;
+            }
+        }
+    </style> 
     <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
@@ -485,6 +485,33 @@
                                     @endfor
                                 </div>
                             </div>
+
+                            @if($review['can_edit'])
+                                @php
+                                    $editPayload = $review['edit_payload'] ?? null;
+                                @endphp
+                                <button type="button"
+                                    class="btn btn-link p-0 ms-auto text-decoration-none review-edit-btn"
+                                    title="Edit this review"
+                                    data-home-edit='@json($editPayload, JSON_HEX_APOS | JSON_HEX_QUOT)'
+                                    data-review-modal-trigger="welcomeReviewModal"
+                                    data-company-id="{{ $editPayload['company_id'] ?? '' }}"
+                                    data-company-name="{{ $editPayload['company_name'] ?? '' }}"
+                                    data-company-url="{{ $editPayload['company_url'] ?? '' }}"
+                                    data-category-ids="{{ $editPayload['category_id'] ?? '' }}"
+                                    data-state-id="{{ $editPayload['state_id'] ?? '' }}"
+                                >
+                                    <i class="far fa-pen-to-square"></i>
+                                </button>
+                            @elseif(!session()->has('normal_user_id'))
+                                <button type="button"
+                                    class="btn btn-link p-0 ms-auto text-decoration-none login-to-edit-btn"
+                                    title="Login to edit your review"
+                                    data-login-choice-trigger="true"
+                                >
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </button>
+                            @endif
                         </div>
 
                         <p class="review-text">
@@ -680,332 +707,6 @@
             }
         });
 
-        // (function setupHeroCompanySearch() {
-        //     const companies = @json($companies ?? []);
-        //     const form = document.querySelector('[data-hero-company-form]');
-        //     const input = document.querySelector('[data-hero-company-input]');
-        //     const button = document.querySelector('[data-hero-company-button]');
-        //     const suggestions = document.querySelector('[data-hero-company-suggestions]');
-        //     const suggestionsList = document.querySelector('[data-hero-suggestions-list]');
-        //     const emptyState = document.querySelector('[data-hero-suggestions-empty]');
-        //     // const countLabel = document.querySelector('[data-hero-suggestions-count]');
-        //     const overlay = document.querySelector('[data-hero-overlay]');
-        //     const MAX_RESULTS = 5;
-        //     const curatedSuggestions = [
-        //         'Best Companies in Delhi',
-        //         'Solar installers near you',
-        //         'Search reviews by city or state',
-        //         'Best Solar Companies',
-        //         'Search verified customer reviews',
-        //     ];
-        //     const intentRoutes = [
-        //         {
-        //             keywords: ['delhi'],
-        //             url: "{{ url('state/delhi') }}",
-        //         },
-        //         {
-        //             keywords: ['installer'],
-        //             url: "{{ route('companies.index') }}",
-        //         },
-        //         {
-        //             keywords: ['reviews'],
-        //             url: "{{ route('reviews.top') }}",
-        //         },
-        //         {
-        //             keywords: ['best', 'solar', 'companies'],
-        //             url: "{{ route('companies.index') }}",
-        //         },
-        //         {
-        //             keywords: ['verified', 'customer', 'reviews'],
-        //             url: "{{ route('reviews.top') }}",
-        //         },
-        //         {
-        //             keywords: ['city'],
-        //             url: "{{ route('reviews.top') }}",
-        //         },
-        //         {
-        //             keywords: ['state'],
-        //             url: "{{ route('reviews.top') }}",
-        //         },
-        //         {
-        //             keywords: ['write', 'review'],
-        //             url: "{{ route('reviews.write') }}",
-        //         },
-        //         {
-        //             keywords: ['submit', 'review'],
-        //             url: "{{ route('reviews.write') }}",
-        //         },
-        //         {
-        //             keywords: ['compare', 'companies'],
-        //             url: "{{ route('companies.index') }}",
-        //         },
-        //         {
-        //             keywords: ['find', 'company'],
-        //             url: "{{ route('companies.index') }}",
-        //         },
-        //         {
-        //             keywords: ['near', 'me'],
-        //             url: "{{ route('companies.index') }}",
-        //         },
-        //     ];
-        //     const stateBaseUrl = "{{ url('state') }}/";
-        //     const locationIntents = {
-        //         'delhi': 'delhi',
-        //         'maharashtra': 'maharashtra',
-        //         'mumbai': 'maharashtra',
-        //         'pune': 'maharashtra',
-        //         'karnataka': 'karnataka',
-        //         'bengaluru': 'karnataka',
-        //         'bangalore': 'karnataka',
-        //         'tamil nadu': 'tamil-nadu',
-        //         'tamil-nadu': 'tamil-nadu',
-        //         'kerala': 'kerala',
-        //         'gujarat': 'gujarat',
-        //         'rajasthan': 'rajasthan',
-        //         'punjab': 'punjab',
-        //         'uttar pradesh': 'uttar-pradesh',
-        //         'uttar-pradesh': 'uttar-pradesh',
-        //         'madhya pradesh': 'madhya-pradesh',
-        //         'madhya-pradesh': 'madhya-pradesh',
-        //         'west bengal': 'west-bengal',
-        //         'west-bengal': 'west-bengal',
-        //         'telangana': 'telangana',
-        //         'hyderabad': 'telangana',
-        //         'haryana': 'haryana',
-        //         'odisha': 'odisha',
-        //         'odisa': 'odisha',
-        //         'andhra pradesh': 'andhra-pradesh',
-        //         'andhra-pradesh': 'andhra-pradesh',
-        //     };
-
-        //     if (!form || !input || !suggestions || !suggestionsList) {
-        //         return;
-        //     }
-
-        //     function formatCount(value) {
-        //         return value === 1 ? '1 company' : `${value} companies`;
-        //     }
-
-        //     function toggleOverlay(visible) {
-        //         if (!overlay) return;
-        //         overlay.hidden = !visible;
-        //     }
-
-        //     function hideSuggestions() {
-        //         suggestions.hidden = true;
-        //         toggleOverlay(false);
-        //         form.style.borderBottomLeftRadius = '';
-        //         form.style.borderBottomRightRadius = '';
-            
-        //         input.style.borderBottomLeftRadius = '';
-        //         input.style.borderBottomRightRadius = '';
-        //     }
-
-        //     function showSuggestions() {
-        //         suggestions.hidden = false;
-        //         toggleOverlay(true);
-        //         console.log("jjj");
-        //          // 👇 bottom radius remove
-        //         form.style.borderBottomLeftRadius = '0px';
-        //         form.style.borderBottomRightRadius = '0px';
-            
-        //         // agar radius input pe hai
-        //         input.style.borderBottomLeftRadius = '0px';
-        //         input.style.borderBottomRightRadius = '0px';
-        //     }
-
-        //     function goToCompany(company) {
-        //         if (!company?.slug) return;
-        //         window.location.href = `/companies/${company.slug}`;
-        //     }
-
-        //     function resolveIntent(term) {
-        //         if (!term) {
-        //             return null;
-        //         }
-
-        //         const normalized = term.toLowerCase();
-
-        //         const curatedMatch = curatedSuggestions.find(
-        //             suggestion => suggestion.toLowerCase() === normalized
-        //         );
-
-        //         if (curatedMatch) {
-        //             const exactIntent = intentRoutes.find(intent =>
-        //                 intent.keywords.every(keyword => normalized.includes(keyword))
-        //             );
-
-        //             return exactIntent?.url ?? "{{ route('companies.index') }}";
-        //         }
-
-        //         for (const intent of intentRoutes) {
-        //             if (intent.keywords.every(keyword => normalized.includes(keyword))) {
-        //                 return intent.url;
-        //             }
-        //         }
-
-        //         for (const [keyword, slug] of Object.entries(locationIntents)) {
-        //             if (normalized.includes(keyword)) {
-        //                 return `${stateBaseUrl}${slug}`;
-        //             }
-        //         }
-
-        //         return null;
-        //     }
-
-        //     function handleIntentNavigation(term) {
-        //         const intentUrl = resolveIntent(term);
-        //         if (intentUrl) {
-        //             window.location.href = intentUrl;
-        //             return true;
-        //         }
-        //         return false;
-        //     }
-
-        //     function renderCuratedSuggestions() {
-        //         suggestionsList.innerHTML = '';
-        //         curatedSuggestions.forEach(text => {
-        //             const item = document.createElement('li');
-        //             item.className = 'hero-suggestion-item';
-        //            item.innerHTML = `
-        //                 <span class="hero-suggestion-icon-2 mr-5">
-        //                     <i class="fas fa-search"></i>
-        //                 </span>
-        //                 <div class="hero-suggestion-name">${text}</div>
-        //             `;
-
-        //             item.addEventListener('click', () => {
-        //                 if (handleIntentNavigation(text)) {
-        //                     return;
-        //                 }
-        //                 input.value = text;
-        //                 input.dispatchEvent(new Event('input', { bubbles: true }));
-        //             });
-        //             suggestionsList.appendChild(item);
-        //         });
-        //         emptyState.style.display = 'none';
-        //         showSuggestions();
-        //     }
-
-        //     function renderSuggestions(matches) {
-        //         suggestionsList.innerHTML = '';
-
-        //         if (!input.value.trim()) {
-        //             renderCuratedSuggestions();
-        //             return;
-        //         }
-
-        //         if (!matches.length) {
-        //             emptyState.style.display = 'block';
-        //             // countLabel.textContent = '0 results';
-        //             showSuggestions();
-        //             return;
-        //         }
-
-        //         emptyState.style.display = 'none';
-        //         // countLabel.textContent = formatCount(matches.length);
-
-        //         matches.slice(0, MAX_RESULTS).forEach(company => {
-        //             const item = document.createElement('li');
-        //             item.className = 'hero-suggestion-item';
-        //            item.innerHTML = `
-        //                 <span class="hero-suggestion-icon-2 mr-5">
-        //                     <i class="fas fa-search"></i>
-        //                 </span>
-        //                 <div class="hero-suggestion-name">${company.name}</div>
-        //             `;
-
-        //             item.addEventListener('click', () => goToCompany(company));
-        //             suggestionsList.appendChild(item);
-        //         });
-
-        //         showSuggestions();
-        //     }
-
-        //     function filterCompanies(term) {
-        //         if (!term) {
-        //             return [...companies];
-        //         }
-
-        //         const normalized = term.toLowerCase();
-        //         return companies.filter(company =>
-        //             (company.name || '').toLowerCase().includes(normalized)
-        //         );
-        //     }
-
-        //     input.addEventListener('input', (event) => {
-        //         const matches = filterCompanies(event.target.value.trim());
-        //         renderSuggestions(matches);
-        //     });
-
-        //     input.addEventListener('focus', () => {
-        //         const matches = filterCompanies(input.value.trim());
-        //         renderSuggestions(matches);
-        //     });
-
-        //     function handleSearchTrigger() {
-        //         const term = input.value.trim();
-
-        //         if (handleIntentNavigation(term)) {
-        //             return;
-        //         }
-
-        //         // Check if input is a pincode (6 digits)
-        //         if (/^\d{6}$/.test(term)) {
-        //             window.location.href = `{{ route('companies.index') }}?pincode=${encodeURIComponent(term)}`;
-        //             return;
-        //         }
-
-        //         const matches = filterCompanies(term);
-        //         if (matches.length === 1) {
-        //             goToCompany(matches[0]);
-        //             return;
-        //         }
-
-        //          if (!matches.length) {
-        //             window.location.href = "{{ route('companies.index') }}";
-        //             return;
-        //         }
-
-        //         renderSuggestions(matches);
-        //     }
-
-        //     button?.addEventListener('click', () => {
-        //         handleSearchTrigger();
-        //     });
-
-        //     form.addEventListener('mouseenter', () => {
-        //         const matches = filterCompanies(input.value.trim());
-        //         renderSuggestions(matches);
-        //     });
-
-        //     function handleHoverExit() {
-        //         requestAnimationFrame(() => {
-        //             const hoveringForm = form.matches(':hover');
-        //             const hoveringSuggestions = suggestions.matches(':hover');
-        //             if (!hoveringForm && !hoveringSuggestions) {
-        //                 hideSuggestions();
-        //             }
-        //         });
-        //     }
-
-        //     form.addEventListener('mouseleave', handleHoverExit);
-        //     suggestions.addEventListener('mouseleave', handleHoverExit);
-
-        //     form.addEventListener('submit', (event) => {
-        //         event.preventDefault();
-        //         handleSearchTrigger();
-        //     });
-
-        //     overlay?.addEventListener('click', hideSuggestions);
-
-        //     document.addEventListener('click', (event) => {
-        //         if (!suggestions.contains(event.target) && !form.contains(event.target)) {
-        //             hideSuggestions();
-        //         }
-        //     });
-        // })(); 
-
         const heroPincodeInput = document.querySelector('.hero-search-input');
         const heroCalculateBtn = document.querySelector('.hero-calculate-btn');
 
@@ -1200,6 +901,10 @@
 
     </script>
 
+    <script>
+        window.isNormalUserLoggedIn = {{ session('normal_user_id') ? 'true' : 'false' }};
+    </script>
+
     <!-- Review Modal Component -->
     <button type="button" id="welcomeReviewModalTrigger" data-review-modal-trigger="welcomeReviewModal" style="display: none;"></button>
     
@@ -1212,6 +917,594 @@
         :allow-company-selection="true"
     />
 
+    <script>
+        // Run after full page load so Recent reviews (and any dynamic content) are in the DOM
+        function initHomeReviewEdit() {
+            // Prevent multiple initializations
+            if (window.homeReviewEditInitialized) {
+                return;
+            }
+            window.homeReviewEditInitialized = true;
+            
+            const modalTrigger = document.getElementById('welcomeReviewModalTrigger');
+            const modal = document.getElementById('welcomeReviewModal');
+            const reviewForm = modal ? modal.querySelector('form') : null;
+            const defaultAction = reviewForm ? reviewForm.getAttribute('action') : null;
+            const draftKey = 'review_modal_draft_welcomeReviewModal';
+            const DRAFT_VERSION = 1;
+            
+            // Add event listeners for edit buttons
+            const editButtons = document.querySelectorAll('[data-home-edit]');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    try {
+                        const editDataString = this.getAttribute('data-home-edit');
+                        console.log('Raw edit data string:', editDataString);
+                        
+                        if (!editDataString) {
+                            console.error('No edit data found on button');
+                            return;
+                        }
+                        
+                        const editData = JSON.parse(editDataString);
+                        console.log('Parsed edit data:', editData);
+                        
+                        if (!editData || !editData.id) {
+                            console.error('Invalid edit data structure:', editData);
+                            return;
+                        }
+                        
+                        window.homeReviewEditState = {
+                            reviewId: editData.id,
+                            updateUrl: editData.update_url,
+                            ...editData
+                        };
+                        
+                        // Set trigger data attributes for proper company selection
+                        const trigger = modalTrigger || document.querySelector('[data-review-modal-trigger="welcomeReviewModal"]');
+                        if (trigger) {
+                            trigger.dataset.companyId = editData.company_id || '';
+                            trigger.dataset.companyName = editData.company_name || '';
+                            trigger.dataset.companyUrl = editData.company_url || '';
+                        }
+                        
+                        // Open modal using the modal's openModal function
+                        if (typeof window.openWelcomeReviewModalForEdit === 'function') {
+                            window.openWelcomeReviewModalForEdit();
+                        } else {
+                            // Fallback: open modal manually
+                            if (modal) {
+                                modal.style.display = 'block';
+                                modal.classList.add('active');
+                                modal.setAttribute('aria-hidden', 'false');
+                                document.body.style.overflow = 'hidden';
+                            }
+                        }
+                        
+                        // Apply edit mode after a short delay to ensure modal is open
+                        setTimeout(function () {
+                            // Force company selection to be fixed in edit mode
+                            if (typeof window.setCompanySelectionFixed === 'function') {
+                                window.setCompanySelectionFixed(true);
+                            }
+                            
+                            // Additional fix: Ensure company search input is readonly and disabled
+                            const modalId = modal.id;
+                            const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+                            const companySelect = document.getElementById(`${modalId}CompanySelect`);
+                            
+                            if (companySearchInput) {
+                                companySearchInput.readOnly = true;
+                                companySearchInput.style.pointerEvents = 'none';
+                                companySearchInput.style.backgroundColor = '#f8f9fa';
+                                companySearchInput.style.cursor = 'not-allowed';
+                            }
+                            
+                            if (companySelect) {
+                                companySelect.disabled = true;
+                            }
+                            
+                            // Delay applyEditMode to allow modal's internal logic to complete
+                            setTimeout(() => {
+                                applyEditMode(window.homeReviewEditState);
+                            }, 100);
+                        }, 50);
+                    } catch (error) {
+                        console.error('Error parsing edit data:', error);
+                    }
+                });
+            });
+            
+            // Add event listeners for login buttons
+            const loginButtons = document.querySelectorAll('[data-login-choice-trigger]');
+            
+            loginButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    console.log('Login button clicked');
+                    
+                    // Open login choice modal using Bootstrap
+                    const loginModal = document.getElementById('normalUserLoginModal');
+                    console.log('Login modal found:', loginModal);
+                    
+                    if (loginModal) {
+                        console.log('Opening login modal with Bootstrap');
+                        
+                        // Use Bootstrap modal method if available
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                            const modal = new bootstrap.Modal(loginModal);
+                            modal.show();
+                        } else {
+                            // Fallback: manual Bootstrap modal display
+                            loginModal.classList.add('show');
+                            loginModal.style.display = 'block';
+                            loginModal.setAttribute('aria-hidden', 'false');
+                            document.body.style.overflow = 'hidden';
+                            document.body.classList.add('modal-open');
+                            
+                            // Add backdrop
+                            let backdrop = document.querySelector('.modal-backdrop');
+                            if (!backdrop) {
+                                backdrop = document.createElement('div');
+                                backdrop.className = 'modal-backdrop fade show';
+                                document.body.appendChild(backdrop);
+                            }
+                        }
+                    } else {
+                        console.error('Login modal not found in DOM');
+                    }
+                });
+            });
+            
+            const ensureMethodField = () => {
+                if (!reviewForm) return null;
+                let methodField = reviewForm.querySelector('[data-home-method]');
+                if (!methodField) {
+                    methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    methodField.dataset.homeMethod = '1';
+                    reviewForm.appendChild(methodField);
+                }
+                return methodField;
+            };
+
+            const applyEditMode = (config) => {
+                if (!reviewForm || !config?.updateUrl) return;
+                
+                console.log('=== APPLY EDIT MODE ===');
+                console.log('Config:', config);
+                
+                // Set form action and method
+                reviewForm.setAttribute('action', config.updateUrl);
+                const methodField = ensureMethodField();
+                if (methodField) {
+                    methodField.value = 'PUT';
+                }
+                
+                // Update modal title
+                const headerTitle = modal.querySelector('.modal-header h3');
+                if (headerTitle) {
+                    headerTitle.textContent = 'Edit review';
+                }
+                reviewForm.dataset.homeEditing = '1';
+                
+                // Populate form fields with review data
+                const modalId = modal.id;
+                console.log('Modal ID:', modalId);
+                
+                // Set company
+                if (config.company_id) {
+                    console.log('Setting company ID:', config.company_id);
+                    const companySelect = document.getElementById(`${modalId}CompanySelect`);
+                    const companyIdInput = document.getElementById(`${modalId}CompanyId`);
+                    const companySearchInput = document.getElementById(`${modalId}CompanySearch`);
+                    
+                    if (companySelect) {
+                        console.log('Company select found, setting value to:', config.company_id);
+                        companySelect.value = config.company_id;
+                        // Trigger company selection change event
+                        const changeEvent = new Event('change', { bubbles: true });
+                        companySelect.dispatchEvent(changeEvent);
+                    }
+                    if (companyIdInput) {
+                        console.log('Company ID input found, setting value to:', config.company_id);
+                        companyIdInput.value = config.company_id;
+                    }
+                    
+                    // Also update search input to show company name
+                    if (companySearchInput && config.company_name) {
+                        console.log('Company search input found, setting value to:', config.company_name);
+                        companySearchInput.value = config.company_name;
+                    }
+                }
+                
+                // Set company name display
+                const companyNameDisplay = document.getElementById(`${modalId}CompanyName`);
+                if (companyNameDisplay && config.company_name) {
+                    companyNameDisplay.textContent = config.company_name;
+                }
+                
+                // Set rating
+                if (config.rating) {
+                    const ratingStars = modal.querySelectorAll('.modal-rating-stars i');
+                    ratingStars.forEach((star, index) => {
+                        star.classList.toggle('active', index < config.rating);
+                    });
+                    const ratingInput = modal.querySelector('input[name="rating"]');
+                    if (ratingInput) {
+                        ratingInput.value = config.rating;
+                    }
+                }
+                
+                // Set review title
+                if (config.review_title) {
+                    const titleInput = modal.querySelector('input[name="review_title"]');
+                    if (titleInput) {
+                        titleInput.value = config.review_title;
+                    }
+                }
+                
+                // Set review text
+                if (config.review_text) {
+                    const reviewTextArea = document.getElementById(`${modalId}ReviewText`);
+                    if (reviewTextArea) {
+                        reviewTextArea.value = config.review_text;
+                    }
+                }
+                
+                // Set reviewer state
+                if (config.reviewer_state_id) {
+                    const stateSelect = document.getElementById(`${modalId}StateId`);
+                    if (stateSelect) {
+                        stateSelect.value = config.reviewer_state_id;
+                    }
+                }
+                
+                // Set reviewer city
+                if (config.reviewer_city) {
+                    const cityInput = modal.querySelector('input[name="reviewer_city"]');
+                    if (cityInput) {
+                        cityInput.value = config.reviewer_city;
+                    }
+                }
+                
+                // Set system details
+                if (config.system_size_kw) {
+                    const systemSizeInput = modal.querySelector('input[name="system_size_kw"]');
+                    if (systemSizeInput) {
+                        systemSizeInput.value = config.system_size_kw;
+                    }
+                }
+                
+                if (config.system_price) {
+                    const systemPriceInput = modal.querySelector('input[name="system_price"]');
+                    if (systemPriceInput) {
+                        systemPriceInput.value = config.system_price;
+                    }
+                }
+                
+                if (config.year_installed) {
+                    const yearInput = modal.querySelector('input[name="year_installed"]');
+                    if (yearInput) {
+                        yearInput.value = config.year_installed;
+                    }
+                }
+                
+                if (config.panel_brand) {
+                    const panelBrandInput = modal.querySelector('input[name="panel_brand"]');
+                    if (panelBrandInput) {
+                        panelBrandInput.value = config.panel_brand;
+                    }
+                }
+                
+                if (config.inverter_brand) {
+                    const inverterBrandInput = modal.querySelector('input[name="inverter_brand"]');
+                    if (inverterBrandInput) {
+                        inverterBrandInput.value = config.inverter_brand;
+                    }
+                }
+                
+                // Set experience metrics if available
+                if (config.experience_metrics) {
+                    Object.entries(config.experience_metrics).forEach(([key, value]) => {
+                        const metricInput = modal.querySelector(`input[name="metrics[${key}]"]`);
+                        if (metricInput) {
+                            metricInput.value = value;
+                            // Update star display
+                            const metricContainer = metricInput.closest('.metric-stars');
+                            if (metricContainer) {
+                                const stars = metricContainer.querySelectorAll('i');
+                                stars.forEach((star, index) => {
+                                    star.classList.toggle('active', index < value);
+                                });
+                            }
+                        }
+                    });
+                }
+            };
+            
+            // Make applyEditMode globally accessible
+            window.applyEditMode = applyEditMode;
+
+            const resetEditMode = () => {
+                if (!reviewForm || !defaultAction) return;
+                reviewForm.setAttribute('action', defaultAction);
+                const methodField = reviewForm.querySelector('[data-home-method]');
+                if (methodField) {
+                    methodField.remove();
+                }
+                const headerTitle = modal.querySelector('.modal-header h3');
+                if (headerTitle) {
+                    headerTitle.textContent = 'Write a Review';
+                }
+                reviewForm.dataset.homeEditing = '';
+            };
+
+            const metricsKeyMap = (metrics = {}) => {
+                const mapped = {};
+                Object.entries(metrics || {}).forEach(([key, value]) => {
+                    mapped[`metrics[${key}]`] = value;
+                });
+                return mapped;
+            };
+
+            const buildDraftPayload = (payload) => {
+                if (!payload) return null;
+                const fields = {
+                    company_id: payload.company_id || '',
+                    state_id: payload.state_id || '',
+                    category_id: payload.category_id || '',
+                    rating: payload.rating || '',
+                    review_title: payload.review_title || '',
+                    review_text: payload.review_text || '',
+                    user_state: payload.reviewer_state_id || '',
+                    user_city: payload.reviewer_city || '',
+                    system_size: payload.system_size_kw || '',
+                    system_price: payload.system_price || '',
+                    year_installed: payload.year_installed || '',
+                    panel_brand: payload.panel_brand || '',
+                    inverter_brand: payload.inverter_brand || '',
+                    media_terms: payload.media_terms_accepted ? true : false,
+                };
+
+                Object.assign(fields, metricsKeyMap(payload.experience_metrics || {}));
+
+                return {
+                    version: DRAFT_VERSION,
+                    savedAt: Date.now(),
+                    fields,
+                    meta: {
+                        manualIdentityVisible: false,
+                        systemDetailsVisible: Boolean(payload.system_size_kw || payload.system_price || payload.year_installed || payload.panel_brand || payload.inverter_brand),
+                    },
+                    context: {
+                        companyId: payload.company_id || '',
+                        companyName: payload.company_name || 'this company',
+                        companyUrl: payload.company_url || '',
+                        stateId: payload.state_id || '',
+                        categoryId: payload.category_id || '',
+                    },
+                };
+            };
+
+            const setTriggerContext = (payload) => {
+                if (!modalTrigger || !payload) return;
+                modalTrigger.dataset.companyId = payload.company_id || '';
+                modalTrigger.dataset.companyName = payload.company_name || 'this company';
+                modalTrigger.dataset.companyUrl = payload.company_url || '';
+                modalTrigger.dataset.categoryIds = payload.category_id ? String(payload.category_id) : '';
+                modalTrigger.dataset.stateId = payload.state_id || '';
+                modalTrigger.dataset.stateName = payload.company_state_name || '';
+            };
+
+            // Event delegation: works for current and dynamically added edit buttons
+            document.addEventListener('click', function (event) {
+                const button = event.target.closest('.review-edit-btn');
+                if (!button) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (!window.isNormalUserLoggedIn) {
+                    const loginModalEl = document.getElementById('normalUserLoginModal');
+                    if (loginModalEl && typeof bootstrap !== 'undefined') {
+                        const loginModal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
+                        loginModal.show();
+                    }
+                    return;
+                }
+
+                const raw = button.getAttribute('data-home-edit');
+                if (!raw) {
+                    return;
+                }
+
+                let payload;
+                try {
+                    payload = JSON.parse(raw);
+                } catch (e) {
+                    return;
+                }
+
+                const draftPayload = buildDraftPayload(payload);
+                if (draftPayload) {
+                    localStorage.setItem(draftKey, JSON.stringify(draftPayload));
+                }
+
+                window.homeReviewEditState = {
+                    reviewId: payload.id,
+                    updateUrl: payload.update_url,
+                };
+
+                setTriggerContext(payload);
+
+                // Prefer global opener so modal opens even if custom event fails
+               const modalEl = document.getElementById('welcomeReviewModal');
+
+                if (modalEl) {
+                    modalEl.style.display = 'block';
+                    modalEl.classList.add('active');
+                    modalEl.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+                setTimeout(function () {
+                    applyEditMode(window.homeReviewEditState);
+                }, 50);
+            });
+
+            if (modal) {
+                const observer = new MutationObserver(() => {
+                    if (modal.style.display === 'none') {
+                        resetEditMode();
+                        localStorage.removeItem(draftKey);
+                        window.homeReviewEditState = null;
+                    }
+                });
+                observer.observe(modal, { attributes: true, attributeFilter: ['style'] });
+                
+                // Add close button event listener
+                const closeBtn = modal.querySelector('.modal-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        modal.style.display = 'none';
+                        modal.classList.remove('active');
+                        modal.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                        resetEditMode();
+                        localStorage.removeItem(draftKey);
+                        window.homeReviewEditState = null;
+                    });
+                }
+                
+                // Add cancel button event listener
+                const cancelBtn = modal.querySelector('.cancel-btn');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        modal.style.display = 'none';
+                        modal.classList.remove('active');
+                        modal.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                        resetEditMode();
+                        localStorage.removeItem(draftKey);
+                        window.homeReviewEditState = null;
+                    });
+                }
+                
+                // Add click outside to close functionality
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        modal.classList.remove('active');
+                        modal.setAttribute('aria-hidden', 'true');
+                        document.body.style.overflow = '';
+                        resetEditMode();
+                        localStorage.removeItem(draftKey);
+                        window.homeReviewEditState = null;
+                    }
+                });
+                
+                // Handle form submission
+                reviewForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = reviewForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+                    
+                    try {
+                        const formData = new FormData(reviewForm);
+                        const response = await fetch(reviewForm.action, {
+                            method: reviewForm.method,
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                            },
+                            body: formData,
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok && result.success) {
+                            // Show success message
+                            const successMessage = document.createElement('div');
+                            successMessage.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+                            successMessage.style.zIndex = '9999';
+                            successMessage.style.minWidth = '300px';
+                            successMessage.innerHTML = `
+                                <i class="fas fa-check-circle me-2"></i>
+                                <strong>Review Updated Successfully!</strong><br>
+                                <small>Your review will be visible within 2 hours after approval. Thank you for your feedback!</small>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            `;
+                            document.body.appendChild(successMessage);
+                            
+                            // Close modal
+                            modal.style.display = 'none';
+                            modal.classList.remove('active');
+                            modal.setAttribute('aria-hidden', 'true');
+                            document.body.style.overflow = '';
+                            
+                            // Reset form and state
+                            resetEditMode();
+                            localStorage.removeItem(draftKey);
+                            window.homeReviewEditState = null;
+                            
+                            // Logout normal user
+                            fetch('/auth/normal-user/logout', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                }
+                            }).then(() => {
+                                // Reload page after logout to show updated state
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 3000);
+                            });
+                            
+                            // Auto-hide success message after 5 seconds
+                            setTimeout(() => {
+                                if (successMessage.parentNode) {
+                                    successMessage.remove();
+                                }
+                            }, 5000);
+                            
+                        } else {
+                            throw result;
+                        }
+                    } catch (error) {
+                        console.error('Submit error:', error);
+                        const errorMessage = error.message || 'Failed to update review. Please try again.';
+                        alert(errorMessage);
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'complete') {
+            initHomeReviewEdit();
+        } else {
+            window.addEventListener('load', initHomeReviewEdit);
+        }
+    </script>
+
     @include('components.frontend.chatbot-widget')
+    
+    <!-- Login Choice Modal -->
+    <x-frontend.login-choice-modal />
 </body>
 </html>
