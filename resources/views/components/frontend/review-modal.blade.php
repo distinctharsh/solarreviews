@@ -711,7 +711,7 @@
         }
 
         .draft-notice {
-            display: none;
+            display: none !important;
             padding: 0.75rem 1rem;
             border-radius: 10px;
             background: #fef9c3;
@@ -974,6 +974,47 @@
         .google-center {
             display: flex;
             justify-content: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 576px) {
+            .modal-overlay {
+                align-items: center;
+                padding: 0.5rem;
+            }
+
+            .modal-container {
+                max-width: none;
+                border-radius: 20px;
+                max-height: 90vh;
+                margin: auto;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .modal-header {
+                padding: 0.8rem 1rem;
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                background: linear-gradient(135deg, #3ba14c 0%, #2d8f3e 100%);
+                flex-shrink: 0;
+                min-height: 50px;
+            }
+
+            .modal-body {
+                padding: 0.5rem 1rem 0.25rem;
+                flex: 1;
+                overflow-y: auto;
+                min-height: 0;
+                max-height: 56vh;
+            }
+
+            .modal-footer {
+                flex-shrink: 0;
+                padding: 0.6rem 1rem 0.8rem;
+                border-top: 1px solid #f1f5f9;
+            }
         }
     </style>
 @endonce
@@ -1469,7 +1510,7 @@
                     @endif
                     
                     <div class="manual-identity-controls" data-manual-controls hidden>
-                        <span>Continuing with email</span>
+                        <span>Continue with email</span>
                         <!-- <button type="button" class="manual-identity-close" data-hide-manual-identity>
                             <i class="fas fa-times"></i>
                             Cancel
@@ -2565,11 +2606,6 @@
             if (manualIdentityToggle) {
                 manualIdentityToggle.style.display = 'none';
             }
-
-            const firstManualInput = manualIdentity.querySelector('input, select, textarea');
-            if (firstManualInput) {
-                requestAnimationFrame(() => firstManualInput.focus());
-            }
             scheduleDraftSave();
             if (!hasConnectedProfile) {
                 setOtpStatus('We’ll send a verification code to your email.', 'info');
@@ -2707,6 +2743,10 @@
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden';
             document.body.style.paddingRight = scrollbarWidth + 'px';
+            const modalBody = modal.querySelector('.modal-body');
+            if (modalBody) {
+                modalBody.scrollTop = 0;
+            }
             const primaryCategoryId = categoryInput ? categoryInput.value : '';
             restoreDraftIfAvailable({
                 expectedContext: {
@@ -2717,6 +2757,10 @@
                 },
             });
             enforceConnectedProfileState();
+            // Always show manual identity fields by default
+            if (!hasConnectedProfile) {
+                showManualIdentityFields();
+            }
         }
 
         triggers.forEach(trigger => {

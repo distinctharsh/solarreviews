@@ -307,27 +307,28 @@
 
     @media (max-width: 576px) {
         .enquiry-modal {
-            align-items: flex-end;
-            padding: 0.75rem;
+            align-items: center;
+            padding: 0.5rem;
         }
 
         .enquiry-modal__dialog {
             max-width: none;
-            border-radius: 20px 20px 0 0;
-            max-height: 80vh;
+            border-radius: 20px;
+            max-height: 85vh;
+            margin: auto;
         }
 
         .enquiry-modal__header {
-            padding: 1rem 1.25rem;
+            padding: 0.8rem 1rem;
         }
 
         .enquiry-modal__body {
-            padding: 0.75rem 1rem 0.25rem;
-            max-height: calc(80vh - 120px);
+            padding: 0.5rem 1rem 0.25rem;
+            max-height: calc(85vh - 120px);
         }
 
        .enquiry-modal__footer {
-            padding: 0.9rem 1.5rem 1.1rem;
+            padding: 0.6rem 1.5rem 0.8rem;
             background: #fff;
             border-top: 1px solid #e2e8f0;
         }
@@ -446,6 +447,51 @@
     }
 
     useLocationSelect?.addEventListener('change', toggleLocationFields);
+
+    /* --------------------------------------------------
+       PINCODE AUTO-SELECT (after city selection)
+    -------------------------------------------------- */
+
+    const stateSelect = document.getElementById('enquiry_state_id');
+    const citySelect = document.getElementById('enquiry_city');
+    const pincodeSelect = document.getElementById('enquiry_pincode');
+
+    function selectFirstAvailablePincode() {
+        if (!pincodeSelect) return;
+
+        const options = Array.from(pincodeSelect.options || []);
+        const firstValid = options.find(opt => {
+            if (!opt) return false;
+            const value = (opt.value ?? '').toString().trim();
+            return value !== '' && !opt.disabled;
+        });
+
+        if (!firstValid) return;
+
+        pincodeSelect.value = firstValid.value;
+        pincodeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function scheduleFirstPincodeSelect() {
+        // Allow any async city->pincode population logic to finish first.
+        setTimeout(selectFirstAvailablePincode, 0);
+        setTimeout(selectFirstAvailablePincode, 50);
+        setTimeout(selectFirstAvailablePincode, 150);
+    }
+
+    if (citySelect && pincodeSelect) {
+        citySelect.addEventListener('change', () => {
+            scheduleFirstPincodeSelect();
+        });
+    }
+
+    if (pincodeSelect) {
+        const observer = new MutationObserver(() => {
+            selectFirstAvailablePincode();
+        });
+
+        observer.observe(pincodeSelect, { childList: true, subtree: true });
+    }
 
     /* --------------------------------------------------
        FORM SUBMIT

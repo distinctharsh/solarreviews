@@ -19,88 +19,135 @@
     <div class="admin-shell">
         <aside class="admin-sidebar" id="adminSidebar">
             <div class="sidebar-header d-lg-none">
-                <!-- <div class="sidebar-logo mb-0">
-                    <i class="fas fa-solar-panel"></i>
-                    <span>Admin</span>
-                </div> -->
                 <button class="btn-close-sidebar" onclick="toggleSidebar()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="sidebar-logo">
-                <i class="fas fa-solar-panel"></i>
-                <span>Admin</span>
+            
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i class="fas fa-solar-panel"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Solar Reviews</h2>
+                    <span>Admin Panel</span>
+                </div>
             </div>
+            
+            <div class="sidebar-search">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search menu..." id="sidebarSearch">
+                </div>
+            </div>
+            
             <nav class="sidebar-nav">
-                <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-chart-pie"></i>
-                    Dashboard
-                </a>
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <i class="fas fa-home"></i>
+                        <span>Overview</span>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                    </div>
+                </div>
                 
-                <div class="sidebar-section-title">Master Data</div>
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <i class="fas fa-database"></i>
+                        <span>Master Data</span>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="{{ route('admin.companies.index') }}" class="nav-item {{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">
+                            <i class="fas fa-building"></i>
+                            <span>Companies</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                        <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <i class="fas fa-users"></i>
+                            <span>Users</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                    </div>
+                </div>
                 
-                <!-- <a href="{{ route('admin.categories.index') }}" class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                    <i class="fas fa-layer-group"></i>
-                    Categories
-                </a>
-                <a href="{{ route('admin.brands.index') }}" class="sidebar-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
-                    <i class="fas fa-tags"></i>
-                    Brands
-                </a> -->
-                <a href="{{ route('admin.companies.index') }}" class="sidebar-link {{ request()->routeIs('admin.companies.*') ? 'active' : '' }}">
-                    <i class="fas fa-building"></i>
-                    Companies
-                </a>
-                <a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    Users
-                </a>
-                <!-- <a href="{{ route('admin.products.index') }}" class="sidebar-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                    <i class="fas fa-box"></i>
-                    Products
-                </a> -->
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <i class="fas fa-star"></i>
+                        <span>Content Management</span>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="{{ route('admin.reviews.index') }}" class="nav-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>All Reviews</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                        <a href="{{ route('admin.profile-submissions.index') }}" class="nav-item {{ request()->routeIs('admin.profile-submissions.*') ? 'active' : '' }}">
+                            <i class="fas fa-user-check"></i>
+                            <span>Profile Submissions</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                    </div>
+                </div>
                 
-                <div class="sidebar-section-title">Reviews</div>
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <i class="fas fa-lead"></i>
+                        <span>Lead Management</span>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="{{ route('admin.get-quotes.index') }}" class="nav-item {{ request()->routeIs('admin.get-quotes.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-signature"></i>
+                            <span>Get Quotes</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                        <a href="{{ route('admin.company-detail-requests.index') }}" class="nav-item {{ request()->routeIs('admin.company-detail-requests.*') ? 'active' : '' }}">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Company Detail Requests</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                    </div>
+                </div>
                 
-                <a href="{{ route('admin.reviews.index') }}" class="sidebar-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
-                    <i class="fas fa-star"></i>
-                    All Reviews
-                </a>
-                <a href="{{ route('admin.profile-submissions.index') }}" class="sidebar-link {{ request()->routeIs('admin.profile-submissions.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-check"></i>
-                    Profile Submissions
-                </a>
-
-                <div class="sidebar-section-title">Leads</div>
-
-                <a href="{{ route('admin.get-quotes.index') }}" class="sidebar-link {{ request()->routeIs('admin.get-quotes.*') ? 'active' : '' }}">
-                    <i class="fas fa-file-signature"></i>
-                    Get Quotes
-                </a>
-
-                <a href="{{ route('admin.company-detail-requests.index') }}" class="sidebar-link {{ request()->routeIs('admin.company-detail-requests.*') ? 'active' : '' }}">
-                    <i class="fas fa-clipboard-list"></i>
-                    Company Detail Requests
-                </a>
-
-                <div class="sidebar-section-title">Chatbot</div>
-
-  <a href="{{ route('admin.chatbot.questions.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.questions.*') ? 'active' : '' }}">
-                    <i class="fas fa-robot"></i>
-                    Questions & Flows
-                </a>
-              
-                <a href="{{ route('admin.chatbot.reports.index') }}" class="sidebar-link {{ request()->routeIs('admin.chatbot.reports.*') ? 'active' : '' }}">
-                    <i class="fas fa-comments"></i>
-                    Conversation Logs
-                </a>
+                <div class="nav-section">
+                    <div class="nav-section-header">
+                        <i class="fas fa-robot"></i>
+                        <span>Chatbot</span>
+                    </div>
+                    <div class="nav-section-items">
+                        <a href="{{ route('admin.chatbot.questions.index') }}" class="nav-item {{ request()->routeIs('admin.chatbot.questions.*') ? 'active' : '' }}">
+                            <i class="fas fa-cogs"></i>
+                            <span>Questions & Flows</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                        <a href="{{ route('admin.chatbot.reports.index') }}" class="nav-item {{ request()->routeIs('admin.chatbot.reports.*') ? 'active' : '' }}">
+                            <i class="fas fa-comments"></i>
+                            <span>Conversation Logs</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                    </div>
+                </div>
             </nav>
+            
             <div class="sidebar-footer">
-                <form method="POST" action="{{ route('logout') }}">
+                <div class="footer-user-info">
+                    <div class="user-avatar">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                    </div>
+                    <div class="user-details">
+                        <p>{{ auth()->user()->name ?? 'Admin' }}</p>
+                        <span>{{ auth()->user()->email ?? '' }}</span>
+                    </div>
+                </div>
+                <form method="POST" action="{{ route('logout') }}" class="logout-form">
                     @csrf
-                    <button type="submit">
+                    <button type="submit" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        <span>Logout</span>
                     </button>
                 </form>
             </div>
@@ -155,6 +202,41 @@
             document.querySelector('.admin-sidebar').classList.toggle('show');
             document.querySelector('.admin-content-area').classList.toggle('blur');
         }
+
+        // Sidebar Search Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('sidebarSearch');
+            const navItems = document.querySelectorAll('.nav-item');
+            const navSections = document.querySelectorAll('.nav-section');
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    
+                    navSections.forEach(section => {
+                        let hasVisibleItems = false;
+                        const sectionItems = section.querySelectorAll('.nav-item');
+                        
+                        sectionItems.forEach(item => {
+                            const text = item.textContent.toLowerCase();
+                            if (text.includes(searchTerm)) {
+                                item.style.display = 'flex';
+                                hasVisibleItems = true;
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        });
+                        
+                        // Show/hide section based on whether it has visible items
+                        if (searchTerm === '') {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = hasVisibleItems ? 'block' : 'none';
+                        }
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

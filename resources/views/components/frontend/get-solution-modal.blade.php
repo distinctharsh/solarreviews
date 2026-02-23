@@ -361,27 +361,28 @@
 /* Mobile Responsive */
 @media (max-width: 576px) {
     .get-solution-modal {
-        align-items: flex-end;
-        padding: 0.75rem;
+        align-items: center;
+        padding: 0.5rem;
     }
 
     .get-solution-modal__dialog {
         max-width: none;
-        border-radius: 20px 20px 0 0;
-        max-height: 80vh;
+        border-radius: 20px;
+        max-height: 75vh;
+        margin: auto;
     }
 
     .get-solution-modal__header {
-        padding: 1rem 1.25rem;
+        padding: 0.8rem 1rem;
     }
 
     .get-solution-modal__body {
-        padding: 0.75rem 1rem 0.25rem;
-        max-height: calc(80vh - 120px);
+        padding: 0.5rem 1rem 0.25rem;
+        max-height: calc(85vh - 120px);
     }
 
     .get-solution-modal__footer {
-        padding: 0.75rem 1.25rem 1rem;
+        padding: 0.6rem 1rem 0.8rem;
         position: sticky;
         bottom: 0;
         background: #fff;
@@ -558,6 +559,50 @@
             manualLocationField.style.display = 'none';
         }
     });
+
+    /* --------------------------------------------------
+       PINCODE AUTO-SELECT (after city selection)
+    -------------------------------------------------- */
+
+    const solutionCitySelect = document.getElementById('solution_city');
+    const solutionPincodeSelect = document.getElementById('solution_pincode');
+
+    function selectFirstAvailableSolutionPincode() {
+        if (!solutionPincodeSelect) return;
+
+        const options = Array.from(solutionPincodeSelect.options || []);
+        const firstValid = options.find(opt => {
+            if (!opt) return false;
+            const value = (opt.value ?? '').toString().trim();
+            return value !== '' && !opt.disabled;
+        });
+
+        if (!firstValid) return;
+
+        solutionPincodeSelect.value = firstValid.value;
+        solutionPincodeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function scheduleFirstSolutionPincodeSelect() {
+        // Allow any async city->pincode population logic to finish first.
+        setTimeout(selectFirstAvailableSolutionPincode, 0);
+        setTimeout(selectFirstAvailableSolutionPincode, 50);
+        setTimeout(selectFirstAvailableSolutionPincode, 150);
+    }
+
+    if (solutionCitySelect && solutionPincodeSelect) {
+        solutionCitySelect.addEventListener('change', () => {
+            scheduleFirstSolutionPincodeSelect();
+        });
+    }
+
+    if (solutionPincodeSelect) {
+        const observer = new MutationObserver(() => {
+            selectFirstAvailableSolutionPincode();
+        });
+
+        observer.observe(solutionPincodeSelect, { childList: true, subtree: true });
+    }
 
     /* -----------------------------
        OPEN MODAL
