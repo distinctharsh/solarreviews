@@ -729,53 +729,63 @@
                                 </div>
                                 
                                     <div class="filters-row">
-    <div class="filter-group">
-        <label class="filter-label">Search</label>
-        <div class="input-with-icon">
-            <i class="fas fa-search"></i>
-            <input 
-                type="text" 
-                id="companySearchInput"
-                class="filter-input" 
-                placeholder="Company name"
-                value="{{ request('q') }}"
-            >
-        </div>
-    </div>
+                                        <div class="filter-group">
+                                            <label class="filter-label">State</label>
+                                            <select id="stateFilterSelect" class="filter-select">
+                                                <option value="">All States</option>
+                                                @foreach($states as $state)
+                                                    <option value="{{ $state->id }}" @selected((string) request('state') === (string) $state->id)>{{ $state->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-    <div class="filter-group">
-        <label class="filter-label">Pincode</label>
-        <div class="input-with-icon">
-            <i class="fas fa-map-marker-alt"></i>
-            <input 
-                type="text" 
-                id="pincodeInput"
-                class="filter-input" 
-                placeholder="e.g. 110001"
-                maxlength="6"
-                value="{{ request('pincode') }}"
-            >
-        </div>
-    </div>
+                                        <div class="filter-group">
+                                            <label class="filter-label">Search</label>
+                                            <div class="input-with-icon">
+                                                <i class="fas fa-search"></i>
+                                                <input 
+                                                    type="text" 
+                                                    id="companySearchInput"
+                                                    class="filter-input" 
+                                                    placeholder="Company name"
+                                                    value="{{ request('q') }}"
+                                                >
+                                            </div>
+                                        </div>
 
-    <div class="filter-group">
-        <label class="filter-label">Sort</label>
-        <select id="companySortSelect" class="filter-select">
-            <option value="">Default</option>
-            <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating ↓</option>
-            <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating ↑</option>
-            <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews ↓</option>
-            <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews ↑</option>
-        </select>
-    </div>
-    
-    <div class="filter-group">
-        <label class="filter-label">&nbsp;</label>
-        <button type="button" class="btn btn-primary filter-btn" onclick="applyFilters()">
-            <i class="fas fa-filter me-2"></i>Apply Filters
-        </button>
-    </div>
-</div>
+                                        <div class="filter-group">
+                                            <label class="filter-label">Pincode</label>
+                                            <div class="input-with-icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                <input 
+                                                    type="text" 
+                                                    id="pincodeInput"
+                                                    class="filter-input" 
+                                                    placeholder="e.g. 110001"
+                                                    maxlength="6"
+                                                    value="{{ request('pincode') }}"
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-group">
+                                            <label class="filter-label">Sort</label>
+                                            <select id="companySortSelect" class="filter-select">
+                                                <option value="">Default</option>
+                                                <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating ↓</option>
+                                                <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating ↑</option>
+                                                <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews ↓</option>
+                                                <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews ↑</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="filter-group">
+                                            <label class="filter-label">&nbsp;</label>
+                                            <button type="button" class="btn btn-primary filter-btn" onclick="applyFilters()">
+                                                <i class="fas fa-filter me-2"></i>Apply Filters
+                                            </button>
+                                        </div>
+                                    </div>
 
                                 <!--<input type="text" class="search-input" placeholder="Search companies" oninput="filterCompanies(this.value)">-->
                             </div>
@@ -900,15 +910,17 @@
 
     function setStateFilter(stateId) {
         const stateSelect = document.getElementById('stateSelect');
-        if (!stateSelect) return;
-
-        stateSelect.value = String(stateId ?? '');
-        window.location.href = buildCleanDirectoryUrl({ state: stateSelect.value });
+        const stateFilterSelect = document.getElementById('stateFilterSelect');
+        
+        if (stateSelect) stateSelect.value = String(stateId ?? '');
+        if (stateFilterSelect) stateFilterSelect.value = String(stateId ?? '');
+        
+        window.location.href = buildCleanDirectoryUrl({ state: stateId });
     }
 
     function applyFilters() {
         const searchText = document.getElementById('companySearchInput')?.value || '';
-        const stateId = document.getElementById('stateSelect')?.value || '';
+        const stateId = document.getElementById('stateFilterSelect')?.value || document.getElementById('stateSelect')?.value || '';
         const cityId = document.getElementById('citySelect')?.value || document.getElementById('citySelectDesktop')?.value || '';
         const pincode = document.getElementById('pincodeInput')?.value || '';
         const sortValue = document.getElementById('companySortSelect')?.value || '';
@@ -927,6 +939,11 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         const params = new URLSearchParams(window.location.search);
+
+        const stateFilterSelect = document.getElementById('stateFilterSelect');
+        if (stateFilterSelect && params.has('state')) {
+            stateFilterSelect.value = params.get('state') || '';
+        }
 
         const stateSelect = document.getElementById('stateSelect');
         if (stateSelect && params.has('state')) {

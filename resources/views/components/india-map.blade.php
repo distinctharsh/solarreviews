@@ -244,6 +244,7 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff" stroke="#f5c9b4" id="Karnataka
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const statsByStateKey = @json($stateMapStats);
+        const states = @json($stateRows);
         // Get all state paths
         const statePaths = document.querySelectorAll('#chart .regions path');
 
@@ -281,10 +282,12 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff" stroke="#f5c9b4" id="Karnataka
                 const stateName = this.id;
                 if (stateName) {
                     updateInfoPanel(stateName);
-                    // Convert to lowercase and replace spaces with hyphens
-                    const formattedStateName = stateName.toLowerCase().replace(/\s+/g, '-');
-                    // Redirect to the state page
-                    window.location.href = `/state/${formattedStateName}`;
+                    // Find state ID from the states data
+                    const stateData = states.find(s => s.name.toLowerCase() === stateName.toLowerCase());
+                    if (stateData && stateData.id) {
+                        // Redirect to the companies comparison page with state ID filter
+                        window.location.href = `/compare/companies?state=${stateData.id}`;
+                    }
                 }
             });
 
