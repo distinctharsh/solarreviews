@@ -165,6 +165,13 @@ Route::get('/create-symlink', function () {
 });
 
 
+Route::get('/run-import', function () {
+    \Artisan::call('import:companies companies.csv');
+    return 'Import Done';
+});
+
+
+
 Route::prefix('locations')->group(function () {
     Route::get('/states/{stateId}/cities', [LocationController::class, 'citiesByState']);
     Route::get('/cities/{cityId}/pincodes', [LocationController::class, 'pincodesByCity']);
