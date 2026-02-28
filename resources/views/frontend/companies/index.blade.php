@@ -260,7 +260,7 @@
         }
 
         .filter-select {
-            width: 140px;
+            width: 200px;
             cursor: pointer;
         }
 
@@ -322,16 +322,271 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+
+            .sidebar-card {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                grid-template-areas: "table";
+            }
+
             .filters-row {
                 justify-content: stretch;
             }
             .filter-group {
-                flex: 1;
-                min-width: 0;
+                flex: 1 1 calc(50% - 1rem);
+                min-width: 220px;
             }
             .filter-input,
             .filter-select {
                 width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .mobile-filter-dropdown {
+                position: relative;
+            }
+
+            .mobile-filter-toggle {
+                width: 100%;
+                padding: 0.75rem;
+                background: white;
+                border: 1px solid #d1d5db;
+                border-radius: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                font-weight: 500;
+                color: #374151;
+            }
+
+            .mobile-filter-toggle:hover {
+                border-color: #3ba14c;
+                box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.12);
+            }
+
+            .mobile-filter-toggle::after {
+                content: '▼';
+                font-size: 12px;
+                transition: transform 0.3s ease;
+            }
+
+            .mobile-filter-toggle.active::after {
+                transform: rotate(180deg);
+            }
+
+            .mobile-filter-content {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                border: 1px solid #d1d5db;
+                border-radius: 12px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                z-index: 10000;
+                max-height: 85vh;
+                overflow-y: auto;
+                width: 95vw;
+                max-width: 420px;
+            }
+
+            .mobile-filter-content.show {
+                display: block;
+            }
+
+            .mobile-filter-inner {
+                padding: 1.5rem;
+                max-height: 60vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .mobile-filter-inner .filter-group {
+                margin-bottom: 1.25rem;
+            }
+
+            .mobile-filter-inner .filter-group:last-child {
+                margin-bottom: 0;
+            }
+
+            .mobile-filter-inner select.filter-select {
+                max-height: 180px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 0.5rem center;
+                background-size: 1.5em 1.5em;
+                padding-right: 2.5rem;
+            }
+
+            .mobile-filter-actions {
+                padding: 1rem 1.5rem;
+                border-top: 1px solid #f3f4f6;
+                display: flex;
+                gap: 0.75rem;
+                background: #f9fafb;
+                border-radius: 0 0 12px 12px;
+            }
+
+            .mobile-filter-actions .btn {
+                flex: 1;
+                padding: 0.75rem;
+                font-weight: 500;
+            }
+
+            .filters-row {
+                display: none;
+            }
+
+            /* Overlay for mobile filter */
+            .mobile-filter-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+            .mobile-filter-overlay.show {
+                display: block;
+            }
+
+            /* Custom Choices.js styling */
+            .choices {
+                margin-bottom: 0;
+            }
+
+            .choices .choices__inner {
+                background: white;
+                border: 1px solid #d1d5db;
+                border-radius: 12px;
+                padding: 0.5rem 0.75rem;
+                min-height: 42px;
+                font-size: 14px;
+            }
+
+            .choices.is-focused .choices__inner {
+                border-color: #3ba14c;
+                box-shadow: 0 0 0 3px rgba(59, 161, 76, 0.12);
+            }
+
+            .choices .choices__list--dropdown {
+                background: white;
+                border: 1px solid #d1d5db;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 10001;
+                width: 100%;
+                min-width: 200px;
+            }
+
+            .choices .choices__item--choice {
+                padding: 0.5rem 0.75rem;
+                font-size: 14px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .choices .choices__item--choice:last-child {
+                border-bottom: none;
+            }
+
+            .choices .choices__item--selectable:hover {
+                background-color: #f9fafb;
+            }
+
+            .choices .choices__item--choice.is-highlighted {
+                background-color: #3ba14c;
+                color: white;
+            }
+
+            .choices .choices__input {
+                background: transparent;
+                border: none;
+                padding: 0.5rem 0.75rem;
+                font-size: 14px;
+                color: #000000 !important;
+            }
+
+            .choices .choices__input::placeholder {
+                color: #9ca3af !important;
+            }
+
+            .choices .choices__placeholder {
+                color: #9ca3af;
+            }
+
+            .choices .choices__list--single .choices__item {
+                color: #374151;
+            }
+
+            /* Ensure state dropdowns have proper width */
+            .choices[data-type*="select-one"] {
+                min-width: 200px;
+            }
+
+            .choices[data-type*="select-one"] .choices__inner {
+                min-width: 200px;
+            }
+
+            /* Ensure all text in choices is black */
+            .choices input[type="text"] {
+                color: #000000 !important;
+            }
+
+            .choices .choices__input[type="text"] {
+                color: #000000 !important;
+                background: transparent !important;
+            }
+
+            .choices.is-open .choices__input {
+                color: #000000 !important;
+            }
+
+            .choices .choices__list--dropdown .choices__item--choice {
+                color: #000000 !important;
+            }
+
+            .choices .choices__list--dropdown .choices__item--selectable {
+                color: #000000 !important;
+            }
+        }
+
+        @media (min-width: 577px) {
+            .mobile-filter-dropdown {
+                display: none;
+            }
+
+            .filters-row {
+                display: flex;
+            }
+
+            /* Desktop Choices.js improvements */
+            .choices[data-type*="select-one"] {
+                min-width: 200px;
+                max-width: 250px;
+            }
+
+            .choices[data-type*="select-one"] .choices__inner {
+                min-width: 200px;
+                max-width: 250px;
+            }
+
+            .choices[data-type*="select-one"] .choices__list--dropdown {
+                min-width: 250px;
+                max-width: 300px;
             }
         }
 
@@ -624,6 +879,8 @@
 }
 
     </style>
+<!-- Choices.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
 <div class="page-wrapper">
@@ -728,7 +985,75 @@
                                     <p class="text-muted mb-0 text-16">Click any company name to view the full profile.</p>
                                 </div>
                                 
-                                    <div class="filters-row">
+                                <!-- Mobile Filter Overlay -->
+                                <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+
+                                <!-- Mobile Filter Dropdown -->
+                                <div class="mobile-filter-dropdown">
+                                    <button class="mobile-filter-toggle" id="mobileFilterToggle">
+                                        <span>Filters</span>
+                                    </button>
+                                    <div class="mobile-filter-content" id="mobileFilterContent">
+                                        <div class="mobile-filter-inner">
+                                            <div class="filter-group">
+                                                <label class="filter-label">State</label>
+                                                <select id="mobileStateFilterSelect" class="filter-select">
+                                                    <option value="">All States</option>
+                                                    @foreach($states as $state)
+                                                        <option value="{{ $state->id }}" @selected((string) request('state') === (string) $state->id)>{{ $state->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="filter-group">
+                                                <label class="filter-label">Search</label>
+                                                <div class="input-with-icon">
+                                                    <i class="fas fa-search"></i>
+                                                    <input 
+                                                        type="text" 
+                                                        id="mobileCompanySearchInput"
+                                                        class="filter-input" 
+                                                        placeholder="Company name"
+                                                        value="{{ request('q') }}"
+                                                    >
+                                                </div>
+                                            </div>
+
+                                            <div class="filter-group">
+                                                <label class="filter-label">Pincode</label>
+                                                <div class="input-with-icon">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <input 
+                                                        type="text" 
+                                                        id="mobilePincodeInput"
+                                                        class="filter-input" 
+                                                        placeholder="e.g. 110001"
+                                                        maxlength="6"
+                                                        value="{{ request('pincode') }}"
+                                                    >
+                                                </div>
+                                            </div>
+
+                                            <div class="filter-group">
+                                                <label class="filter-label">Sort</label>
+                                                <select id="mobileCompanySortSelect" class="filter-select">
+                                                    <option value="">Default</option>
+                                                    <option value="rating_desc" @selected(request('sort') === 'rating_desc')>Rating ↓</option>
+                                                    <option value="rating_asc" @selected(request('sort') === 'rating_asc')>Rating ↑</option>
+                                                    <option value="reviews_desc" @selected(request('sort') === 'reviews_desc')>Reviews ↓</option>
+                                                    <option value="reviews_asc" @selected(request('sort') === 'reviews_asc')>Reviews ↑</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mobile-filter-actions">
+                                            <!-- <button type="button" class="btn btn-secondary" onclick="clearMobileFilters()">Clear</button> -->
+                                            <button type="button" class="btn btn-primary" onclick="applyMobileFilters()">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Desktop Filters -->
+                                <div class="filters-row">
                                         <div class="filter-group">
                                             <label class="filter-label">State</label>
                                             <select id="stateFilterSelect" class="filter-select">
@@ -798,7 +1123,7 @@
                                         
                                             <th scope="col">Avg Rating</th>
                                             <th scope="col">Reviews</th>
-                                            <th scope="col" class="text-end">Action</th>
+                                            <!-- <th scope="col" class="text-end">Action</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -830,12 +1155,12 @@
                                                     </span>
                                                 </td>
                                                 <td>{{ number_format($company->total_reviews) }}</td>
-                                                <td class="text-end">
+                                                <!-- <td class="text-end">
                                                     <a href="{{ route('companies.show', $company->slug) }}" class="view-link">
                                                         View
                                                         <i class="fas fa-arrow-right"></i>
                                                     </a>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         @empty
                                             <tr>
@@ -860,7 +1185,9 @@
     @include('components.frontend.footer')
 </div>
 
-<script>
+<!-- Choices.js JS -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
     let filterTimeout = null;
 
     // Helper function to handle from_form parameter clearing
@@ -880,8 +1207,17 @@
             };
             return buildDirectoryUrl(cleanOverrides);
         } else {
-            // Regular navigation
-            return buildDirectoryUrl(overrides);
+            // Regular navigation - always clear state if explicitly set to null/empty
+            const finalOverrides = {
+                ...overrides
+            };
+            
+            // If state is explicitly set to null or empty string, remove it
+            if (overrides.state === null || overrides.state === '') {
+                finalOverrides.state = null;
+            }
+            
+            return buildDirectoryUrl(finalOverrides);
         }
     }
 
@@ -918,9 +1254,84 @@
         window.location.href = buildCleanDirectoryUrl({ state: stateId });
     }
 
+    // Mobile filter functions
+    function toggleMobileFilter() {
+        const toggle = document.getElementById('mobileFilterToggle');
+        const content = document.getElementById('mobileFilterContent');
+        const overlay = document.getElementById('mobileFilterOverlay');
+        
+        if (content.classList.contains('show')) {
+            content.classList.remove('show');
+            toggle.classList.remove('active');
+            overlay.classList.remove('show');
+        } else {
+            content.classList.add('show');
+            toggle.classList.add('active');
+            overlay.classList.add('show');
+        }
+    }
+
+    function closeMobileFilter() {
+        const toggle = document.getElementById('mobileFilterToggle');
+        const content = document.getElementById('mobileFilterContent');
+        const overlay = document.getElementById('mobileFilterOverlay');
+        
+        if (content) content.classList.remove('show');
+        if (toggle) toggle.classList.remove('active');
+        if (overlay) overlay.classList.remove('show');
+    }
+
+    function applyMobileFilters() {
+        const searchText = document.getElementById('mobileCompanySearchInput')?.value || '';
+        const mobileStateSelect = document.getElementById('mobileStateFilterSelect');
+        const stateId = mobileStateSelect ? (mobileStateSelect.choices ? mobileStateSelect.choices.getValue(true) : mobileStateSelect.value) : '';
+        const pincode = document.getElementById('mobilePincodeInput')?.value || '';
+        const sortValue = document.getElementById('mobileCompanySortSelect')?.value || '';
+
+        const overrides = {};
+        
+        if (searchText) overrides.q = searchText;
+        if (stateId && stateId !== '') {
+            overrides.state = stateId;
+        } else {
+            // Explicitly pass null to clear state when "All States" is selected
+            overrides.state = null;
+        }
+        if (pincode) overrides.pincode = pincode;
+        if (sortValue) overrides.sort = sortValue;
+
+        window.location.href = buildCleanDirectoryUrl(overrides);
+    }
+
+    function clearMobileFilters() {
+        const mobileStateSelect = document.getElementById('mobileStateFilterSelect');
+        if (mobileStateSelect && mobileStateSelect.choices) {
+            mobileStateSelect.choices.setChoices([], 'value', 'label', true);
+        } else if (mobileStateSelect) {
+            mobileStateSelect.value = '';
+        }
+        
+        document.getElementById('mobileCompanySearchInput').value = '';
+        document.getElementById('mobilePincodeInput').value = '';
+        document.getElementById('mobileCompanySortSelect').value = '';
+    }
+
     function applyFilters() {
         const searchText = document.getElementById('companySearchInput')?.value || '';
-        const stateId = document.getElementById('stateFilterSelect')?.value || document.getElementById('stateSelect')?.value || '';
+        const desktopStateSelect = document.getElementById('stateFilterSelect');
+        const sidebarStateSelect = document.getElementById('stateSelect');
+        
+        let stateId = '';
+        if (desktopStateSelect && desktopStateSelect.choices) {
+            stateId = desktopStateSelect.choices.getValue(true) || '';
+        } else if (desktopStateSelect) {
+            stateId = desktopStateSelect.value || '';
+        } else if (sidebarStateSelect && sidebarStateSelect.choices) {
+            stateId = sidebarStateSelect.choices.getValue(true) || '';
+        } else if (sidebarStateSelect) {
+            stateId = sidebarStateSelect.value || '';
+        }
+        
         const cityId = document.getElementById('citySelect')?.value || document.getElementById('citySelectDesktop')?.value || '';
         const pincode = document.getElementById('pincodeInput')?.value || '';
         const sortValue = document.getElementById('companySortSelect')?.value || '';
@@ -929,7 +1340,12 @@
         
         // Only add parameters that have values
         if (searchText) overrides.q = searchText;
-        if (stateId) overrides.state = stateId;
+        if (stateId && stateId !== '') {
+            overrides.state = stateId;
+        } else {
+            // Explicitly pass null to clear state when "All States" is selected
+            overrides.state = null;
+        }
         if (cityId) overrides.city = cityId;
         if (pincode) overrides.pincode = pincode;
         if (sortValue) overrides.sort = sortValue;
@@ -971,6 +1387,119 @@
         const sortSelect = document.getElementById('companySortSelect');
         if (sortSelect && params.has('sort')) {
             sortSelect.value = params.get('sort') || '';
+        }
+
+        // Mobile filter toggle
+        const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+        if (mobileFilterToggle) {
+            mobileFilterToggle.addEventListener('click', toggleMobileFilter);
+        }
+
+        // Set mobile filter values
+        const mobileStateFilterSelect = document.getElementById('mobileStateFilterSelect');
+        if (mobileStateFilterSelect && params.has('state')) {
+            mobileStateFilterSelect.value = params.get('state') || '';
+        }
+
+        const mobileCompanySearchInput = document.getElementById('mobileCompanySearchInput');
+        if (mobileCompanySearchInput && params.has('q')) {
+            mobileCompanySearchInput.value = params.get('q') || '';
+        }
+
+        const mobilePincodeInput = document.getElementById('mobilePincodeInput');
+        if (mobilePincodeInput && params.has('pincode')) {
+            mobilePincodeInput.value = params.get('pincode') || '';
+        }
+
+        const mobileCompanySortSelect = document.getElementById('mobileCompanySortSelect');
+        if (mobileCompanySortSelect && params.has('sort')) {
+            mobileCompanySortSelect.value = params.get('sort') || '';
+        }
+
+        // Close mobile filter when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.mobile-filter-dropdown');
+            const overlay = document.getElementById('mobileFilterOverlay');
+            if (overlay && overlay.classList.contains('show') && 
+                !dropdown.contains(event.target) && 
+                !event.target.closest('.mobile-filter-content')) {
+                closeMobileFilter();
+            }
+        });
+
+        // Close mobile filter when clicking on overlay
+        const mobileFilterOverlay = document.getElementById('mobileFilterOverlay');
+        if (mobileFilterOverlay) {
+            mobileFilterOverlay.addEventListener('click', closeMobileFilter);
+        }
+
+        // Initialize Choices.js for state dropdowns
+        const desktopStateSelect = document.getElementById('stateFilterSelect');
+        const mobileStateSelect = document.getElementById('mobileStateFilterSelect');
+        const sidebarStateSelect = document.getElementById('stateSelect');
+
+        // Common Choices.js configuration
+        const choicesConfig = {
+            searchEnabled: true,
+            searchPlaceholderValue: 'Search states...',
+            noResultsText: 'No states found',
+            itemSelectText: 'Press to select',
+            shouldSort: false,
+            position: 'auto',
+            allowHTML: false,
+            classNames: {
+                containerOuter: 'choices',
+                containerInner: 'choices__inner',
+                input: 'choices__input',
+                inputCloned: 'choices__input--cloned',
+                list: 'choices__list',
+                listItems: 'choices__list--multiple',
+                listSingle: 'choices__list--single',
+                listDropdown: 'choices__list--dropdown',
+                item: 'choices__item',
+                itemSelectable: 'choices__item--selectable',
+                itemDisabled: 'choices__item--disabled',
+                itemChoice: 'choices__item--choice',
+                placeholder: 'choices__placeholder',
+                group: 'choices__group',
+                groupHeading: 'choices__heading',
+                button: 'choices__button',
+                activeState: 'is-active',
+                focusState: 'is-focused',
+                openState: 'is-open',
+                disabledState: 'is-disabled',
+                highlightedState: 'is-highlighted',
+                selectedState: 'is-selected',
+                flippedState: 'is-flipped',
+                loadingState: 'is-loading',
+                noResults: 'has-no-results',
+                noChoices: 'has-no-choices'
+            }
+        };
+
+        // Initialize desktop state dropdown
+        if (desktopStateSelect) {
+            new Choices(desktopStateSelect, {
+                ...choicesConfig,
+                searchPlaceholderValue: 'All States'
+            });
+        }
+
+        // Initialize mobile state dropdown
+        if (mobileStateSelect) {
+            new Choices(mobileStateSelect, {
+                ...choicesConfig,
+                searchPlaceholderValue: 'All States',
+                position: 'bottom'
+            });
+        }
+
+        // Initialize sidebar state dropdown
+        if (sidebarStateSelect) {
+            new Choices(sidebarStateSelect, {
+                ...choicesConfig,
+                searchPlaceholderValue: 'All States'
+            });
         }
     });
 </script>
