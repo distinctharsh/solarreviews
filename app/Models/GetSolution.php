@@ -13,6 +13,10 @@ class GetSolution extends Model
         'pincode',
         'service_type',
         'generation_variation',
+        'use_location',
+        'state_id',
+        'city',
+        'other_location',
         'name',
         'mobile_number',
         'email',
@@ -28,4 +32,9 @@ class GetSolution extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
 }

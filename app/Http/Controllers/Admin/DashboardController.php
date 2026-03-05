@@ -20,7 +20,7 @@ class DashboardController extends Controller
         // Basic counts - will add more as we create models
         $stats = [
             'total_categories' => Category::count(),
-            'total_brands' => Brand::count(),
+            // 'total_brands' => Brand::count(),
             'total_companies' => Company::count(),
             'total_products' => Product::count(), // Will update when Product model is created
             'total_reviews' => CompanyReview::count(), // Will update when Review model is created

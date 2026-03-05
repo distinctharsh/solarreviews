@@ -53,4 +53,12 @@ class SolarEnquiry extends Model
     {
         return $this->belongsTo(City::class, 'city_id');
     }
+
+    /**
+     * Relationship: enquiry belongs to a city (for city name field).
+     */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
 }

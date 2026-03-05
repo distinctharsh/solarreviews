@@ -675,6 +675,16 @@ Route::prefix('admin')
     Route::get('get-quotes', [AdminGetQuoteController::class, 'index'])->name('get-quotes.index');
     Route::get('get-quotes/{quote}', [AdminGetQuoteController::class, 'show'])->name('get-quotes.show');
 
+    // Solar Enquiries
+    Route::get('solar-enquiries', [\App\Http\Controllers\Admin\SolarEnquiryController::class, 'index'])->name('solar-enquiries.index');
+    Route::get('solar-enquiries/{solarEnquiry}', [\App\Http\Controllers\Admin\SolarEnquiryController::class, 'show'])->name('solar-enquiries.show');
+    Route::delete('solar-enquiries/{solarEnquiry}', [\App\Http\Controllers\Admin\SolarEnquiryController::class, 'destroy'])->name('solar-enquiries.destroy');
+
+    // Get Solutions
+    Route::get('get-solutions', [\App\Http\Controllers\Admin\GetSolutionController::class, 'index'])->name('get-solutions.index');
+    Route::get('get-solutions/{getSolution}', [\App\Http\Controllers\Admin\GetSolutionController::class, 'show'])->name('get-solutions.show');
+    Route::delete('get-solutions/{getSolution}', [\App\Http\Controllers\Admin\GetSolutionController::class, 'destroy'])->name('get-solutions.destroy');
+
     // Company detail requests
     Route::get('company-detail-requests', [AdminCompanyDetailRequestController::class, 'index'])->name('company-detail-requests.index');
     Route::get('company-detail-requests/{companyDetailRequest}', [AdminCompanyDetailRequestController::class, 'show'])->name('company-detail-requests.show');

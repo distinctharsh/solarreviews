@@ -130,47 +130,6 @@
         </div>
     </div>
 
-    <!-- <div class="setup-guide card">
-        <div class="card-header">
-            <h3><i class="fas fa-info-circle"></i> Setup Guide</h3>
-        </div>
-        <div class="card-body">
-            <div class="setup-steps">
-                <div class="setup-step {{ $stats['total_categories'] > 0 ? 'completed' : '' }}">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Add Categories</h4>
-                        <p>Create product categories like Inverter, Panel, Battery, EPC</p>
-                        <a href="{{ route('admin.categories.index') }}">Manage Categories →</a>
-                    </div>
-                </div>
-                <div class="setup-step {{ $stats['total_brands'] > 0 ? 'completed' : '' }}">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>Add Brands</h4>
-                        <p>Add brands like Tata Solar, Luminous, Havells, etc.</p>
-                        <a href="{{ route('admin.brands.index') }}">Manage Brands →</a>
-                    </div>
-                </div>
-                <div class="setup-step {{ $stats['total_companies'] > 0 ? 'completed' : '' }}">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Add Companies</h4>
-                        <p>Add distributors and manufacturers</p>
-                        <a href="{{ route('admin.companies.index') }}">Manage Companies →</a>
-                    </div>
-                </div>
-                <div class="setup-step {{ $stats['total_products'] > 0 ? 'completed' : '' }}">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>Add Products</h4>
-                        <p>Add products with category, brand, and specifications</p>
-                        <a href="{{ route('admin.products.index') }}">Manage Products →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
 
 <style>

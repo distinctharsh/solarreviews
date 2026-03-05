@@ -268,6 +268,15 @@ stroke-width="1.8" stroke-opacity="0" fill="#fff" stroke="#f5c9b4" id="Karnataka
         };
         
         // Add click event to each state
+        // Calculate total companies across all states
+        const totalCompanies = Object.values(statsByStateKey).reduce((sum, stats) => sum + (stats.companies || 0), 0);
+        
+        // Set initial state to show total companies
+        if (infoTitle) infoTitle.textContent = 'All India';
+        if (infoCompanies) infoCompanies.textContent = String(totalCompanies);
+        if (infoReviews) infoReviews.textContent = '0';
+        if (infoRating) infoRating.textContent = '0';
+
         statePaths.forEach(state => {
             const stateName = state.id;
             const key = normalizeStateKey(stateName);

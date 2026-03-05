@@ -160,10 +160,12 @@ class CompanyController extends Controller
                         ->count();
                     
                     if ($cityCompanies > 0) {
-                        $searchMessage = "No verified companies found for pincode {$pincode}. Showing companies in {$cityName} instead.";
+                        $searchMessage = "Thank you for submitting your review and details. Our marketing team will get back to you soon.";
+                        // $searchMessage = "No verified companies found for pincode {$pincode}. Showing companies in {$cityName} instead.";
                     } elseif ($stateId !== null) {
                         $stateName = State::find($stateId)?->name ?? 'selected state';
-                        $searchMessage = "No verified companies found for pincode {$pincode} or in {$cityName}. Showing companies in {$stateName} instead.";
+                        $searchMessage = "Thank you for submitting your review and details. Our marketing team will get back to you soon.";
+                        // $searchMessage = "No verified companies found for pincode {$pincode} or in {$cityName}. Showing companies in {$stateName} instead.";
                     }
                 }
             } elseif ($cityId !== null) {

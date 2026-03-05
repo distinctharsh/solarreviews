@@ -14,7 +14,7 @@
     justify-content: center;
     padding: calc(76px + 1rem) 1rem 1.5rem;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 1200;
     display: flex;
     opacity: 0;
     visibility: hidden;
@@ -378,7 +378,7 @@
 
     .get-solution-modal__body {
         padding: 0.5rem 1rem 0.25rem;
-        max-height: calc(85vh - 120px);
+        max-height: calc(75vh - 120px);
     }
 
     .get-solution-modal__footer {

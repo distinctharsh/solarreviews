@@ -36,6 +36,21 @@
             border-bottom: 1px solid #e2e8f0;
         }
         
+      
+        
+        @media (max-width: 768px) {
+         .hero-content{
+                padding-bottom: 5rem !important;
+         }
+           
+        }
+        
+        @media (max-width: 576px) {
+         .hero-content{
+                padding-bottom: 5rem !important;
+         }
+        }
+        
         .project-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -215,25 +230,6 @@
             .product-image {
                 height: 160px;
                 padding: 1.5rem;
-            }
-
-            /* Reviews Hero Button Mobile Styles */
-            #reviews-hero-btn {
-                display: block;
-                margin: 0 auto 1.5rem auto;
-                text-align: center;
-                width: fit-content;
-                white-space: nowrap;
-                font-size: 0.9rem;
-                padding: 0.6rem 1.2rem;
-            }
-
-            .product-content {
-                padding: 1.25rem;
-            }
-
-            .product-content h3 {
-                font-size: 1.1rem;
             }
         }
     </style> 

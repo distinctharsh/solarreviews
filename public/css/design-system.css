@@ -1028,10 +1028,6 @@ body {
         width: 100%;
     }
 
-    .reviews-hero .hero-wrapper {
-        padding: 4rem 1.25rem;
-    }
-
     .reviews-hero .hero-wrapper::after,
     .reviews-hero .overlay {
         left: 1.25rem;

@@ -105,6 +105,16 @@
                             <span>Get Quotes</span>
                             <div class="nav-indicator"></div>
                         </a>
+                        <a href="{{ route('admin.solar-enquiries.index') }}" class="nav-item {{ request()->routeIs('admin.solar-enquiries.*') ? 'active' : '' }}">
+                            <i class="fas fa-solar-panel"></i>
+                            <span>Solar Enquiries</span>
+                            <div class="nav-indicator"></div>
+                        </a>
+                        <a href="{{ route('admin.get-solutions.index') }}" class="nav-item {{ request()->routeIs('admin.get-solutions.*') ? 'active' : '' }}">
+                            <i class="fas fa-cogs"></i>
+                            <span>Get Solutions</span>
+                            <div class="nav-indicator"></div>
+                        </a>
                         <a href="{{ route('admin.company-detail-requests.index') }}" class="nav-item {{ request()->routeIs('admin.company-detail-requests.*') ? 'active' : '' }}">
                             <i class="fas fa-clipboard-list"></i>
                             <span>Company Detail Requests</span>
